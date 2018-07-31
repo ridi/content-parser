@@ -1,0 +1,7 @@
+.idea
+.vscode
+*.log
+*.js.map
+coverage
+lib
+node_modules

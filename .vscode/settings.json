@@ -1,0 +1,32 @@
+{
+    // .editorconfig와 맞춰야 한다.
+
+    // The default character set encoding to use when reading and writing files. This setting can be configured per language too.
+    "files.encoding": "utf8",
+
+    // The default end of line character. Use \n for LF and \r\n for CRLF.
+    "files.eol": "\n",
+
+    // Render vertical rulers after a certain number of monospace characters. Use multiple values for multiple rulers. No rulers are drawn if array is empty
+    "editor.rulers": [120],
+
+    // The number of spaces a tab is equal to. This setting is overridden based on the file contents when `editor.detectIndentation` is on.
+    "editor.tabSize": 2,
+
+    // Insert spaces when pressing Tab. This setting is overridden based on the file contents when `editor.detectIndentation` is on.
+    "editor.insertSpaces": true,
+
+    // When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.
+    "editor.detectIndentation": true,
+
+    // When enabled, insert a final new line at the end of the file when saving it.
+    "files.insertFinalNewline": true,
+
+    // Controls if the diff editor shows changes in leading or trailing whitespace as diffs
+    "diffEditor.ignoreTrimWhitespace": true,
+
+    // lint 설정
+
+    "eslint.enable": true,
+    "javascript.validate.enable": false,
+}

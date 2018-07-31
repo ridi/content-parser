@@ -1,0 +1,51 @@
+{
+  "name": "epub-parser",
+  "version": "0.0.1",
+  "description": "Common EPUB2 data parser for Ridibooks services written in ES6",
+  "author": {
+    "name": "Ridibooks Viewer Team",
+    "mail": "viewer.team@ridi.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ridi/epub-parser"
+  },
+  "bugs": "https://github.com/ridi/epub-parser/issues",
+  "homepage": "https://github.com/ridi/epub-parser",
+  "keywords": [
+    "EPUB"
+  ],
+  "files": [
+    "lib",
+    "src"
+  ],
+  "main": "./lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib coverage",
+    "build": "yarn lint && cross-env BABEL_ENV=production babel src --out-dir lib",
+    "watch": "yarn build -- --watch",
+    "test": "cross-env BABEL_ENV=production npm run cover",
+    "cover": "istanbul cover _mocha -- --require babel-core/register --require babel-polyfill --recursive",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "@ridi/eslint-config": "^4.1.0",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.6",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-minify": "^0.4.3",
+    "chai": "^4.1.2",
+    "cross-env": "^5.2.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0",
+    "istanbul": "^1.0.0-alpha",
+    "mocha": "^5.2.0",
+    "rimraf": "^2.6.2"
+  }
+}
