@@ -1,4 +1,7 @@
 {
   "parser": "babel-eslint",
-  "extends": "@ridi/eslint-config"
+  "extends": "@ridi/eslint-config",
+  "rules": {
+    "no-underscore-dangle": 0
+  }
 }
