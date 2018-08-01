@@ -8,7 +8,7 @@ class Item {
 
   get id() { return this._id; }
 
-  get herf() { return this._href; }
+  get href() { return this._href; }
 
   get mediaType() { return this._mediaType; }
 
