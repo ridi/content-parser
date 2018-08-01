@@ -24,6 +24,8 @@ class Guide {
   get type() { return this._type; }
 
   get href() { return this._href; }
+
+  get item() { return this._item; }
 }
 
 export default Guide;
