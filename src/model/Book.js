@@ -1,3 +1,4 @@
+import CoverImageItem from './CoverImageItem';
 import CssItem from './CssItem';
 import FontItem from './FontItem';
 import ImageItem from './ImageItem';
@@ -5,17 +6,29 @@ import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
 
 class Book {
-  get titles() { return this._titles || []; }
+  static get defaultProps() {
+    return {
+      titles: [],
+      creators: [],
+      subjects: [],
+      contributors: [],
+      checkSum: 0,
+      items: [],
+      guide: [],
+    };
+  }
 
-  get creators() { return this._creators || []; }
+  get titles() { return this._titles || Book.defaultProps.titles; }
 
-  get subjects() { return this._subjects || []; }
+  get creators() { return this._creators || Book.defaultProps.creators; }
+
+  get subjects() { return this._subjects || Book.defaultProps.subjects; }
 
   get description() { return this._description; }
 
   get publisher() { return this._publisher; }
 
-  get contributors() { return this._contributors || []; }
+  get contributors() { return this._contributors || Book.defaultProps.contributors; }
 
   get date() { return this._date; }
 
@@ -37,21 +50,23 @@ class Book {
 
   get epubVersion() { return this._epubVersion; }
 
-  get checkSum() { return this._checkSum || 0; }
+  get checkSum() { return this._checkSum || Book.defaultProps.checkSum; }
 
-  get items() { return this._items || []; }
+  get items() { return this._items || Book.defaultProps.items; }
 
-  get ncx() { return this.items.filter(item => item instanceof NcxItem)[0]; }
+  get ncx() { return this.items.find(item => item instanceof NcxItem); }
 
   get spines() { return this.items.filter(item => item instanceof SpineItem); }
 
   get fonts() { return this.items.filter(item => item instanceof FontItem); }
 
+  get cover() { return this.items.find(item => item instanceof CoverImageItem); }
+
   get images() { return this.items.filter(item => item instanceof ImageItem); }
 
   get styles() { return this.items.filter(item => item instanceof CssItem); }
 
-  get guide() { return this._guide || []; }
+  get guide() { return this._guide || Book.defaultProps.guide; }
 }
 
 export default Book;

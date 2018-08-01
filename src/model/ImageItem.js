@@ -1,4 +1,6 @@
-class ImageItem {
+import Item from './Item';
+
+class ImageItem extends Item {
 
 }
 

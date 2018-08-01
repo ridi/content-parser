@@ -1,4 +1,6 @@
-class CssItem {
+import Item from './Item';
+
+class CssItem extends Item {
 
 }
 

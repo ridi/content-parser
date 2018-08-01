@@ -29,6 +29,10 @@
     "cover": "istanbul cover _mocha -- --require babel-core/register --require babel-polyfill --recursive",
     "lint": "eslint src"
   },
+  "dependencies": {
+    "adm-zip": "^0.4.11",
+    "fast-xml-parser": "^3.11.2"
+  },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",
     "babel-cli": "^6.26.0",

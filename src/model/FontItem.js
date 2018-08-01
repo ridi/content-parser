@@ -1,4 +1,6 @@
-class FontItem {
+import Item from './Item';
+
+class FontItem extends Item {
 
 }
 
