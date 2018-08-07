@@ -1,10 +1,10 @@
 const Schemes = Object.freeze({
-  UNDEFINED: Symbol('undefined'),
-  DOI: Symbol('doi'),
-  ISBN: Symbol('isbn'),
-  ISSN: Symbol('issn'),
-  UUID: Symbol('uuid'),
-  URI: Symbol('uri'),
+  UNDEFINED: 'undefined',
+  DOI: 'doi',
+  ISBN: 'isbn',
+  ISSN: 'issn',
+  UUID: 'uuid',
+  URI: 'uri',
 });
 
 class Identifier {
