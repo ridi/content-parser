@@ -12,6 +12,8 @@ class Book {
       creators: [],
       subjects: [],
       contributors: [],
+      dates: [],
+      identifiers: [],
       checkSum: 0,
       items: [],
       guide: [],
@@ -30,13 +32,13 @@ class Book {
 
   get contributors() { return this._contributors || Book.defaultProps.contributors; }
 
-  get date() { return this._date; }
+  get dates() { return this._date || Book.defaultProps.dates; }
 
   get type() { return this._type; }
 
   get format() { return this._format; }
 
-  get identifier() { return this._identifier; }
+  get identifiers() { return this._identifiers || Book.defaultProps.identifiers; }
 
   get source() { return this._source; }
 
