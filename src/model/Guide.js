@@ -1,4 +1,14 @@
-const Types = Object.freeze({
+class Guide {
+  get title() { return this._title; }
+
+  get type() { return this._type; }
+
+  get href() { return this._href; }
+
+  get item() { return this._item; }
+}
+
+Guide.Types = Object.freeze({
   COVER: 'title', // The book cover(s, jacket information, etc.
   TITLE_PAGE: 'title-page', // Page with possibly title, author, publisher, and other metadata.
   TOC: 'toc', // Table Of Contents.
@@ -18,16 +28,4 @@ const Types = Object.freeze({
   TEXT: 'text', // First "real" page of content. (e.g. "Chapter 1")
 });
 
-class Guide {
-  get title() { return this._title; }
-
-  get type() { return this._type; }
-
-  get href() { return this._href; }
-
-  get item() { return this._item; }
-}
-
 export default Guide;
-
-export { Types };

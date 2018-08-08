@@ -1,16 +1,14 @@
-const Events = Object.freeze({
-  UNDEFINED: 'undefined',
-  CREATION: 'creation',
-  MODIFICATION: 'modification',
-  PUBLICATION: 'publication',
-});
-
 class Date {
   get value() { return this._value; }
 
   get event() { return this._event; }
 }
 
-export default Date;
+Date.Events = Object.freeze({
+  UNDEFINED: 'undefined',
+  CREATION: 'creation',
+  MODIFICATION: 'modification',
+  PUBLICATION: 'publication',
+});
 
-export { Events };
+export default Date;

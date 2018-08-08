@@ -1,4 +1,10 @@
-const Schemes = Object.freeze({
+class Identifier {
+  get value() { return this._value; }
+
+  get scheme() { return this._scheme; }
+}
+
+Identifier.Schemes = Object.freeze({
   UNDEFINED: 'undefined',
   DOI: 'doi',
   ISBN: 'isbn',
@@ -7,12 +13,4 @@ const Schemes = Object.freeze({
   URI: 'uri',
 });
 
-class Identifier {
-  get value() { return this._value; }
-
-  get scheme() { return this._scheme; }
-}
-
 export default Identifier;
-
-export { Schemes };

@@ -1,5 +1,12 @@
+class Author {
+  get name() { return this._name; }
+
+  get role() { return this._role; }
+}
+
 // See http://www.idpf.org/epub/20/spec/OPF_2.0.1_draft.htm#Section2.2.6 for a discussion of role.
-const Roles = Object.freeze({
+Author.Roles = Object.freeze({
+  UNDEFINED: 'undefined',
   ADAPTER: 'adp',
   ANNOTATOR: 'ann',
   ARRANGER: 'arr',
@@ -31,12 +38,4 @@ const Roles = Object.freeze({
   TRANSLATOR: 'trl',
 });
 
-class Author {
-  get name() { return this._name; }
-
-  get role() { return this._role; }
-}
-
 export default Author;
-
-export { Roles };
