@@ -1,11 +1,12 @@
 import Item from './Item';
+import NavPoint from './NavPoint';
 
 class NcxItem extends Item {
-  static get defaultProps() {
-    return Object.assign({}, Item.defaultProps, { navPoints: [] });
+  constructor(rawObj) {
+    super(rawObj);
+    this.navPoints = (rawObj.navPoints || []).map(ro => new NavPoint(ro));
+    Object.freeze(this);
   }
-
-  get navPoints() { return this._navPoints || NcxItem.defaultProps.navPoints; }
 }
 
 export default NcxItem;

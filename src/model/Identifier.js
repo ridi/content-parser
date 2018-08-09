@@ -1,7 +1,9 @@
 class Identifier {
-  get value() { return this._value; }
-
-  get scheme() { return this._scheme; }
+  constructor(rawObj) {
+    this.value = rawObj.value;
+    this.scheme = rawObj.scheme || Identifier.Schemes.UNDEFINED;
+    Object.freeze(this);
+  }
 }
 
 Identifier.Schemes = Object.freeze({

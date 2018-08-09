@@ -1,22 +1,14 @@
 class NavPoint {
-  static get defaultProps() {
-    return {
-      depth: 0,
-      children: [],
-    };
+  constructor(rawObj) {
+    this.id = rawObj.id;
+    this.label = rawObj.label;
+    this.src = rawObj.src;
+    this.anchor = ((src = '') => src.split('#')[1])(this.src);
+    this.depth = rawObj.depth || 0;
+    this.children = rawObj.children || [];
+    this.spine = rawObj.spine;
+    Object.freeze(this);
   }
-
-  get id() { return this._id; }
-
-  get label() { return this._label; }
-
-  get src() { return this._src; }
-
-  get depth() { return this._depth || NavPoint.defaultProps.depth; }
-
-  get children() { return this._children || NavPoint.defaultProps.children; }
-
-  get spine() { return this._spine; }
 }
 
 export default NavPoint;

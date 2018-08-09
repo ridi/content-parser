@@ -1,26 +1,16 @@
 class Item {
-  static get defaultProps() {
-    return {
-      checkSum: 0,
-      isFileExists: false,
-    };
+  constructor(rawObj) {
+    this.id = rawObj.id;
+    this.href = rawObj.href;
+    this.mediaType = rawObj.mediaType;
+    this.compressedSize = rawObj.compressedSize || 0;
+    this.uncompressedSize = rawObj.uncompressedSize || 0;
+    this.compressionMethod = rawObj.compressionMethod;
+    this.checkSum = rawObj.checkSum || 0;
+    if (this.constructor === Item) {
+      Object.freeze(this);
+    }
   }
-
-  get id() { return this._id; }
-
-  get href() { return this._href; }
-
-  get mediaType() { return this._mediaType; }
-
-  get compressedSize() { return this._compressedSize; }
-
-  get uncompressedSize() { return this._uncompressedSize; }
-
-  get compressionMethod() { return this._compressionMethod; }
-
-  get checkSum() { return this._checkSum || Item.defaultProps.checkSum; }
-
-  get isFileExists() { return this._isFileExists || Item.defaultProps.isFileExists; }
 }
 
 export default Item;

@@ -1,14 +1,15 @@
 class Guide {
-  get title() { return this._title; }
-
-  get type() { return this._type; }
-
-  get href() { return this._href; }
-
-  get item() { return this._item; }
+  constructor(rawObj) {
+    this.title = rawObj.title;
+    this.type = rawObj.type || Guide.Types.UNDEFINED;
+    this.href = rawObj.href;
+    this.item = rawObj.item;
+    Object.freeze(this);
+  }
 }
 
 Guide.Types = Object.freeze({
+  UNDEFINED: 'undefined',
   COVER: 'title', // The book cover(s, jacket information, etc.
   TITLE_PAGE: 'title-page', // Page with possibly title, author, publisher, and other metadata.
   TOC: 'toc', // Table Of Contents.

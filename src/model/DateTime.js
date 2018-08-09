@@ -1,7 +1,9 @@
 class DateTime {
-  get value() { return this._value; }
-
-  get event() { return this._event; }
+  constructor(rawObj) {
+    this.value = rawObj.value;
+    this.event = rawObj.event || DateTime.Events.UNDEFINED;
+    Object.freeze(this);
+  }
 }
 
 DateTime.Events = Object.freeze({

@@ -171,26 +171,25 @@ describe('Parsing Test', () => {
         item.compressedSize.should.be.above(0);
         item.uncompressedSize.should.be.above(0);
         item.checkSum.should.be.above(0);
-        item.isFileExists.should.be.true;
       });
 
       expectedList = [
-        { id: 'navPoint-1', label: 'Cover', src: 'Text/Cover.xhtml', depth: 0, childrenCount: 0, spine: book.spines[0] },
-        { id: 'navPoint-2', label: 'Chapter 1', src: 'Text/Section0001.xhtml', depth: 0, childrenCount: 2, spine: book.spines[1] },
-        { id: 'navPoint-3', label: '1.', src: 'Text/Section0001.xhtml', depth: 1, childrenCount: 2, spine: book.spines[1] },
-        { id: 'navPoint-4', label: '1.1.', src: 'Text/Section0001.xhtml', depth: 2, childrenCount: 0, spine: book.spines[1] },
-        { id: 'navPoint-5', label: '1.2.', src: 'Text/Section0001.xhtml', depth: 2, childrenCount: 0, spine: book.spines[1] },
-        { id: 'navPoint-6', label: '2.', src: 'Text/Section0001.xhtml', depth: 1, childrenCount: 2, spine: book.spines[1] },
-        { id: 'navPoint-7', label: '2.1.', src: 'Text/Section0001.xhtml', depth: 2, childrenCount: 0, spine: book.spines[1] },
-        { id: 'navPoint-8', label: '2.2.', src: 'Text/Section0001.xhtml', depth: 2, childrenCount: 0, spine: book.spines[1] },
-        { id: 'navPoint-9', label: 'Chapter 2', src: 'Text/Section0002.xhtml', depth: 0, childrenCount: 2, spine: book.spines[2] },
-        { id: 'navPoint-10', label: '1.', src: 'Text/Section0002.xhtml', depth: 0, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-11', label: '1.1.', src: 'Text/Section0002.xhtml', depth: 1, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-12', label: '1.2.', src: 'Text/Section0002.xhtml', depth: 1, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-13', label: '1.3.', src: 'Text/Section0002.xhtml', depth: 1, childrenCount: 1, spine: book.spines[2] },
-        { id: 'navPoint-14', label: '1.3.1.', src: 'Text/Section0002.xhtml', depth: 2, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-15', label: '2.', src: 'Text/Section0002.xhtml', depth: 0, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-16', label: 'Copyrights', src: '', depth: 0, childrenCount: 0, spine: undefined },
+        { id: 'navPoint-1', label: 'Cover', src: 'Text/Cover.xhtml', anchor: undefined, depth: 0, childrenCount: 0, spine: book.spines[0] },
+        { id: 'navPoint-2', label: 'Chapter 1', src: 'Text/Section0001.xhtml', anchor: undefined, depth: 0, childrenCount: 2, spine: book.spines[1] },
+        { id: 'navPoint-3', label: '1.', src: 'Text/Section0001.xhtml#1', anchor: '1', depth: 1, childrenCount: 2, spine: book.spines[1] },
+        { id: 'navPoint-4', label: '1.1.', src: 'Text/Section0001.xhtml#1_1', anchor: '1_1', depth: 2, childrenCount: 0, spine: book.spines[1] },
+        { id: 'navPoint-5', label: '1.2.', src: 'Text/Section0001.xhtml#1_2', anchor: '1_2', depth: 2, childrenCount: 0, spine: book.spines[1] },
+        { id: 'navPoint-6', label: '2.', src: 'Text/Section0001.xhtml#2', anchor: '2', depth: 1, childrenCount: 2, spine: book.spines[1] },
+        { id: 'navPoint-7', label: '2.1.', src: 'Text/Section0001.xhtml#2_1', anchor: '2_1', depth: 2, childrenCount: 0, spine: book.spines[1] },
+        { id: 'navPoint-8', label: '2.2.', src: 'Text/Section0001.xhtml#2_2', anchor: '2_2', depth: 2, childrenCount: 0, spine: book.spines[1] },
+        { id: 'navPoint-9', label: 'Chapter 2', src: 'Text/Section0002.xhtml', anchor: undefined, depth: 0, childrenCount: 2, spine: book.spines[2] },
+        { id: 'navPoint-10', label: '1.', src: 'Text/Section0002.xhtml#1', anchor: '1', depth: 0, childrenCount: 0, spine: book.spines[2] },
+        { id: 'navPoint-11', label: '1.1.', src: 'Text/Section0002.xhtml#1_1', anchor: '1_1', depth: 1, childrenCount: 0, spine: book.spines[2] },
+        { id: 'navPoint-12', label: '1.2.', src: 'Text/Section0002.xhtml#1_2', anchor: '1_2', depth: 1, childrenCount: 0, spine: book.spines[2] },
+        { id: 'navPoint-13', label: '1.3.', src: 'Text/Section0002.xhtml#1_3', anchor: '1_3', depth: 1, childrenCount: 1, spine: book.spines[2] },
+        { id: 'navPoint-14', label: '1.3.1.', src: 'Text/Section0002.xhtml#1_3_1', anchor: '1_3_1', depth: 2, childrenCount: 0, spine: book.spines[2] },
+        { id: 'navPoint-15', label: '2.', src: 'Text/Section0002.xhtml', anchor: '2', depth: 0, childrenCount: 0, spine: book.spines[2] },
+        { id: 'navPoint-16', label: 'Copyrights', src: '', anchor: undefined, depth: 0, childrenCount: 0, spine: undefined },
       ];
       book.ncx.navPoints.length.should.equal(expectedList.length);
       book.ncx.navPoints.forEach((navPoint, idx) => {
@@ -198,6 +197,7 @@ describe('Parsing Test', () => {
         navPoint.id.should.equal(expectedNavPoint.id);
         navPoint.label.should.equal(expectedNavPoint.label);
         navPoint.src.should.equal(expectedNavPoint.src);
+        navPoint.anchor.should.equal(expectedNavPoint.anchor);
         navPoint.depth.should.equal(expectedNavPoint.depth);
         navPoint.children.should.lengthOf(expectedNavPoint.childrenCount);
         navPoint.spine.should.deep.equal(expectedNavPoint.spine);
