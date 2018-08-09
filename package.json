@@ -22,7 +22,7 @@
   ],
   "main": "./lib/index.js",
   "scripts": {
-    "clean": "rimraf lib coverage",
+    "clean": "rimraf coverage lib temp",
     "build": "yarn lint && cross-env BABEL_ENV=production babel src --out-dir lib",
     "watch": "yarn build -- --watch",
     "test": "cross-env BABEL_ENV=production yarn cover",

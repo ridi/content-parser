@@ -17,6 +17,8 @@ class EpubParser {
       shouldXmlValidation: false,
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
+      // Path to uncompress. Valid only when input is path.
+      unzipPath: undefined,
     };
   }
 
