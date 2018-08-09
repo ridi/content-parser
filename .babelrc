@@ -7,7 +7,7 @@
       ]
     },
     "production": {
-      "presets": ["env", "minify"],
+      "presets": ["env", ["minify", { "evaluate": false }]],
       "plugins": [
         "add-module-exports"
       ]
