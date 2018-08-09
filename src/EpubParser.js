@@ -33,6 +33,7 @@ class EpubParser {
       .then(context => this._parseOpf(context))
       .then(context => this._parseNcx(context))
       .then(context => this._createBook(context))
+      .then(context => this._unzipIfNeeded(context))
       .then(book => book);
   }
 
@@ -62,6 +63,12 @@ class EpubParser {
   }
 
   _parseNcx(context) {
+    return new Promise((resolve, reject) => {
+      resolve(context);
+    });
+  }
+
+  _unzipIfNeeded(context) {
     return new Promise((resolve, reject) => {
       resolve(context);
     });
