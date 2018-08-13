@@ -35,7 +35,7 @@ describe('Input test', () => {
 
   it('Invalid file path', () => {
     (() => { 
-      new EpubParser('//');
+      new EpubParser('./test/res/test.epub');
     }).should.throw(Errors.INVALID_FILE_PATH);
   });
 
