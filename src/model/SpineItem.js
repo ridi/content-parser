@@ -1,8 +1,6 @@
 import Item from './Item';
 
 class SpineItem extends Item {
-  static UNKNOWN_INDEX = -1
-
   constructor(rawObj) {
     super(rawObj);
     this.spineIndex = rawObj.spineIndex || SpineItem.UNKNOWN_INDEX;
@@ -10,5 +8,7 @@ class SpineItem extends Item {
     Object.freeze(this);
   }
 }
+
+SpineItem.UNKNOWN_INDEX = -1;
 
 export default SpineItem;
