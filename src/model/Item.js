@@ -1,10 +1,12 @@
 class Item {
+  get isFileExists() { return this.compressedSize !== undefined && this.uncompressedSize !== undefined; }
+
   constructor(rawObj) {
     this.id = rawObj.id;
     this.href = rawObj.href;
     this.mediaType = rawObj.mediaType;
-    this.compressedSize = rawObj.compressedSize || 0;
-    this.uncompressedSize = rawObj.uncompressedSize || 0;
+    this.compressedSize = rawObj.compressedSize;
+    this.uncompressedSize = rawObj.uncompressedSize;
     this.compressionMethod = rawObj.compressionMethod;
     this.checkSum = rawObj.checkSum || 0;
     if (this.constructor === Item) {

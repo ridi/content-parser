@@ -17,7 +17,7 @@ class EpubParser {
       shouldXmlValidation: false,
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
-      // Path to uncompress. Valid only when input is path.
+      // Path to uncompress. Valid only when input is epub path.
       unzipPath: undefined,
     };
   }
@@ -29,6 +29,7 @@ class EpubParser {
 
   parse() {
     return this._prepare()
+      .then(context => this._validatePackageIfNeeded(context))
       .then(context => this._parseMetaInf(context))
       .then(context => this._parseOpf(context))
       .then(context => this._parseNcx(context))
@@ -46,8 +47,10 @@ class EpubParser {
     });
   }
 
-  _validatePackage(context, item) {
-    return false;
+  _validatePackageIfNeeded(context) {
+    return new Promise((resolve, reject) => {
+      resolve(context);
+    });
   }
 
   _parseMetaInf(context) {
@@ -76,7 +79,7 @@ class EpubParser {
 
   _createBook(context) {
     return new Promise((resolve, reject) => {
-      resolve(new Book(context));
+      resolve(new Book(context.rawBook)); // eslint-disable-line react/destructuring-assignment
     });
   }
 }

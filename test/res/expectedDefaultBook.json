@@ -1,0 +1,807 @@
+{
+  "titles": [
+    "Default"
+  ],
+  "creators": [
+    {
+      "name": "Davin Ahn",
+      "role": "author"
+    },
+    {
+      "name": "Davin Ahn",
+      "role": "editor"
+    }
+  ],
+  "subjects": [
+    "Subject"
+  ],
+  "description": "Description",
+  "publisher": "Davin",
+  "contributors": [
+    {
+      "name": "Davin Ahn"
+    }
+  ],
+  "dates": [
+    {
+      "value": "2018-08-07",
+      "event": "modification"
+    },
+    {
+      "value": "2018-08-07",
+      "event": "creation"
+    }
+  ],
+  "type": "Type",
+  "format": "Format",
+  "identifiers": [
+    {
+      "value": "0-306-40615-2",
+      "scheme": "isbn"
+    },
+    {
+      "value": "urn:uuid:1379039a-3ea4-4071-9ce8-2b0c29fc0030",
+      "scheme": "uuid"
+    }
+  ],
+  "source": "My brain",
+  "language": "en",
+  "relation": "https://github.com/ridi/epub-parser",
+  "coverage": "Coverage",
+  "rights": "Copyright (c) 2018 Davin",
+  "epubVersion": 2.0,
+  "checkSum": 1,
+  "ncx": {
+    "navPoints": [
+      {
+        "id": "navPoint-1",
+        "label": "Cover",
+        "src": "Text/Cover.xhtml",
+        "depth": 0,
+        "children": [],
+        "spine": {
+          "id": "Cover.xhtml",
+          "href": "Text/Cover.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 0,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-2",
+        "label": "Chapter 1",
+        "src": "Text/Section0001.xhtml",
+        "depth": 0,
+        "children": [
+          {
+            "id": "navPoint-3",
+            "label": "1.",
+            "src": "Text/Section0001.xhtml#1",
+            "anchor": "1",
+            "depth": 1,
+            "children": [
+              {
+                "id": "navPoint-4",
+                "label": "1.1.",
+                "src": "Text/Section0001.xhtml#1_1",
+                "anchor": "1_1",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0001.xhtml",
+                  "href": "Text/Section0001.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "checkSum": 1,
+                  "compressedSize": 1,
+                  "uncompressedSize": 1,
+                  "spineIndex": 1,
+                  "isLinear": false
+                }
+              },
+              {
+                "id": "navPoint-5",
+                "label": "1.2.",
+                "src": "Text/Section0001.xhtml#1_2",
+                "anchor": "1_2",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0001.xhtml",
+                  "href": "Text/Section0001.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "checkSum": 1,
+                  "compressedSize": 1,
+                  "uncompressedSize": 1,
+                  "spineIndex": 1,
+                  "isLinear": false
+                }
+              }
+            ],
+            "spine": {
+              "id": "Section0001.xhtml",
+              "href": "Text/Section0001.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 1,
+              "isLinear": false
+            }
+          },
+          {
+            "id": "navPoint-6",
+            "label": "2.",
+            "src": "Text/Section0001.xhtml#2",
+            "anchor": "2",
+            "depth": 1,
+            "children": [
+              {
+                "id": "navPoint-7",
+                "label": "2.1.",
+                "src": "Text/Section0001.xhtml#2_1",
+                "anchor": "2_1",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0001.xhtml",
+                  "href": "Text/Section0001.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "checkSum": 1,
+                  "compressedSize": 1,
+                  "uncompressedSize": 1,
+                  "spineIndex": 1,
+                  "isLinear": false
+                }
+              },
+              {
+                "id": "navPoint-8",
+                "label": "2.2.",
+                "src": "Text/Section0001.xhtml#2_2",
+                "anchor": "2_2",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0001.xhtml",
+                  "href": "Text/Section0001.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "checkSum": 1,
+                  "compressedSize": 1,
+                  "uncompressedSize": 1,
+                  "spineIndex": 1,
+                  "isLinear": false
+                }
+              }
+            ],
+            "spine": {
+              "id": "Section0001.xhtml",
+              "href": "Text/Section0001.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 1,
+              "isLinear": false
+            }
+          }
+        ],
+        "spine": {
+          "id": "Section0001.xhtml",
+          "href": "Text/Section0001.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 1,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-3",
+        "label": "1.",
+        "src": "Text/Section0001.xhtml#1",
+        "anchor": "1",
+        "depth": 1,
+        "children": [
+          {
+            "id": "navPoint-4",
+            "label": "1.1.",
+            "src": "Text/Section0001.xhtml#1_1",
+            "anchor": "1_1",
+            "depth": 2,
+            "children": [],
+            "spine": {
+              "id": "Section0001.xhtml",
+              "href": "Text/Section0001.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 1,
+              "isLinear": false
+            }
+          },
+          {
+            "id": "navPoint-5",
+            "label": "1.2.",
+            "src": "Text/Section0001.xhtml#1_2",
+            "anchor": "1_2",
+            "depth": 2,
+            "children": [],
+            "spine": {
+              "id": "Section0001.xhtml",
+              "href": "Text/Section0001.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 1,
+              "isLinear": false
+            }
+          }
+        ],
+        "spine": {
+          "id": "Section0001.xhtml",
+          "href": "Text/Section0001.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 1,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-4",
+        "label": "1.1.",
+        "src": "Text/Section0001.xhtml#1_1",
+        "anchor": "1_1",
+        "depth": 2,
+        "children": [],
+        "spine": {
+          "id": "Section0001.xhtml",
+          "href": "Text/Section0001.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 1,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-5",
+        "label": "1.2.",
+        "src": "Text/Section0001.xhtml#1_2",
+        "anchor": "1_2",
+        "depth": 2,
+        "children": [],
+        "spine": {
+          "id": "Section0001.xhtml",
+          "href": "Text/Section0001.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 1,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-6",
+        "label": "2.",
+        "src": "Text/Section0001.xhtml#2",
+        "anchor": "2",
+        "depth": 1,
+        "children": [
+          {
+            "id": "navPoint-7",
+            "label": "2.1.",
+            "src": "Text/Section0001.xhtml#2_1",
+            "anchor": "2_1",
+            "depth": 2,
+            "children": [],
+            "spine": {
+              "id": "Section0001.xhtml",
+              "href": "Text/Section0001.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 1,
+              "isLinear": false
+            }
+          },
+          {
+            "id": "navPoint-8",
+            "label": "2.2.",
+            "src": "Text/Section0001.xhtml#2_2",
+            "anchor": "2_2",
+            "depth": 2,
+            "children": [],
+            "spine": {
+              "id": "Section0001.xhtml",
+              "href": "Text/Section0001.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 1,
+              "isLinear": false
+            }
+          }
+        ],
+        "spine": {
+          "id": "Section0001.xhtml",
+          "href": "Text/Section0001.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 1,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-7",
+        "label": "2.1.",
+        "src": "Text/Section0001.xhtml#2_1",
+        "anchor": "2_1",
+        "depth": 2,
+        "children": [],
+        "spine": {
+          "id": "Section0001.xhtml",
+          "href": "Text/Section0001.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 1,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-8",
+        "label": "2.2.",
+        "src": "Text/Section0001.xhtml#2_2",
+        "anchor": "2_2",
+        "depth": 2,
+        "children": [],
+        "spine": {
+          "id": "Section0001.xhtml",
+          "href": "Text/Section0001.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 1,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-9",
+        "label": "Chapter 2",
+        "src": "Text/Section0002.xhtml",
+        "depth": 0,
+        "children": [
+          {
+            "id": "navPoint-10",
+            "label": "1.",
+            "src": "Text/Section0002.xhtml#1",
+            "anchor": "1",
+            "depth": 1,
+            "children": [
+              {
+                "id": "navPoint-11",
+                "label": "1.1.",
+                "src": "Text/Section0002.xhtml#1_1",
+                "anchor": "1_1",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0002.xhtml",
+                  "href": "Text/Section0002.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "checkSum": 1,
+                  "compressedSize": 1,
+                  "uncompressedSize": 1,
+                  "spineIndex": 2,
+                  "isLinear": false
+                }
+              },
+              {
+                "id": "navPoint-12",
+                "label": "1.2.",
+                "src": "Text/Section0002.xhtml#1_2",
+                "anchor": "1_2",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0002.xhtml",
+                  "href": "Text/Section0002.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "checkSum": 1,
+                  "compressedSize": 1,
+                  "uncompressedSize": 1,
+                  "spineIndex": 2,
+                  "isLinear": false
+                }
+              },
+              {
+                "id": "navPoint-13",
+                "label": "1.3.",
+                "src": "Text/Section0002.xhtml#1_3",
+                "anchor": "1_3",
+                "depth": 2,
+                "children": [
+                  {
+                    "id": "navPoint-14",
+                    "label": "1.3.1.",
+                    "src": "Text/Section0002.xhtml#1_3_1",
+                    "anchor": "1_3_1",
+                    "depth": 3,
+                    "children": [],
+                    "spine": {
+                      "id": "Section0002.xhtml",
+                      "href": "Text/Section0002.xhtml",
+                      "mediaType": "application/xhtml+xml",
+                      "checkSum": 1,
+                      "compressedSize": 1,
+                      "uncompressedSize": 1,
+                      "spineIndex": 2,
+                      "isLinear": false
+                    }
+                  }
+                ],
+                "spine": {
+                  "id": "Section0002.xhtml",
+                  "href": "Text/Section0002.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "checkSum": 1,
+                  "compressedSize": 1,
+                  "uncompressedSize": 1,
+                  "spineIndex": 2,
+                  "isLinear": false
+                }
+              }
+            ],
+            "spine": {
+              "id": "Section0002.xhtml",
+              "href": "Text/Section0002.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 2,
+              "isLinear": false
+            }
+          },
+          {
+            "id": "navPoint-15",
+            "label": "2.",
+            "src": "Text/Section0002.xhtml#2",
+            "anchor": "2",
+            "depth": 1,
+            "children": [],
+            "spine": {
+              "id": "Section0002.xhtml",
+              "href": "Text/Section0002.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 2,
+              "isLinear": false
+            }
+          }
+        ],
+        "spine": {
+          "id": "Section0002.xhtml",
+          "href": "Text/Section0002.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 2,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-10",
+        "label": "1.",
+        "src": "Text/Section0002.xhtml#1",
+        "anchor": "1",
+        "depth": 1,
+        "children": [
+          {
+            "id": "navPoint-11",
+            "label": "1.1.",
+            "src": "Text/Section0002.xhtml#1_1",
+            "anchor": "1_1",
+            "depth": 2,
+            "children": [],
+            "spine": {
+              "id": "Section0002.xhtml",
+              "href": "Text/Section0002.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 2,
+              "isLinear": false
+            }
+          },
+          {
+            "id": "navPoint-12",
+            "label": "1.2.",
+            "src": "Text/Section0002.xhtml#1_2",
+            "anchor": "1_2",
+            "depth": 2,
+            "children": [],
+            "spine": {
+              "id": "Section0002.xhtml",
+              "href": "Text/Section0002.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 2,
+              "isLinear": false
+            }
+          },
+          {
+            "id": "navPoint-13",
+            "label": "1.3.",
+            "src": "Text/Section0002.xhtml#1_3",
+            "anchor": "1_3",
+            "depth": 2,
+            "children": [
+              {
+                "id": "navPoint-14",
+                "label": "1.3.1.",
+                "src": "Text/Section0002.xhtml#1_3_1",
+                "anchor": "1_3_1",
+                "depth": 3,
+                "children": [],
+                "spine": {
+                  "id": "Section0002.xhtml",
+                  "href": "Text/Section0002.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "checkSum": 1,
+                  "compressedSize": 1,
+                  "uncompressedSize": 1,
+                  "spineIndex": 2,
+                  "isLinear": false
+                }
+              }
+            ],
+            "spine": {
+              "id": "Section0002.xhtml",
+              "href": "Text/Section0002.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 2,
+              "isLinear": false
+            }
+          }
+        ],
+        "spine": {
+          "id": "Section0002.xhtml",
+          "href": "Text/Section0002.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 2,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-11",
+        "label": "1.1.",
+        "src": "Text/Section0002.xhtml#1_1",
+        "anchor": "1_1",
+        "depth": 2,
+        "children": [],
+        "spine": {
+          "id": "Section0002.xhtml",
+          "href": "Text/Section0002.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 2,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-12",
+        "label": "1.2.",
+        "src": "Text/Section0002.xhtml#1_2",
+        "anchor": "1_2",
+        "depth": 2,
+        "children": [],
+        "spine": {
+          "id": "Section0002.xhtml",
+          "href": "Text/Section0002.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 2,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-13",
+        "label": "1.3.",
+        "src": "Text/Section0002.xhtml#1_3",
+        "anchor": "1_3",
+        "depth": 2,
+        "children": [
+          {
+            "id": "navPoint-14",
+            "label": "1.3.1.",
+            "src": "Text/Section0002.xhtml#1_3_1",
+            "anchor": "1_3_1",
+            "depth": 3,
+            "children": [],
+            "spine": {
+              "id": "Section0002.xhtml",
+              "href": "Text/Section0002.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "checkSum": 1,
+              "compressedSize": 1,
+              "uncompressedSize": 1,
+              "spineIndex": 2,
+              "isLinear": false
+            }
+          }
+        ],
+        "spine": {
+          "id": "Section0002.xhtml",
+          "href": "Text/Section0002.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 2,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-14",
+        "label": "1.3.1.",
+        "src": "Text/Section0002.xhtml#1_3_1",
+        "anchor": "1_3_1",
+        "depth": 3,
+        "children": [],
+        "spine": {
+          "id": "Section0002.xhtml",
+          "href": "Text/Section0002.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 2,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-15",
+        "label": "2.",
+        "src": "Text/Section0002.xhtml",
+        "depth": 0,
+        "children": [],
+        "spine": {
+          "id": "Section0002.xhtml",
+          "href": "Text/Section0002.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "checkSum": 1,
+          "compressedSize": 1,
+          "uncompressedSize": 1,
+          "spineIndex": 2,
+          "isLinear": false
+        }
+      },
+      {
+        "id": "navPoint-16",
+        "label": "Copyrights",
+        "src": "",
+        "depth": 0,
+        "children": []
+      }
+    ]
+  },
+  "spines": [
+    {
+      "id": "Cover.xhtml",
+      "href": "Text/Cover.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "checkSum": 1,
+      "compressedSize": 1,
+      "uncompressedSize": 1,
+      "spineIndex": 0,
+      "isLinear": false
+    },
+    {
+      "id": "Section0001.xhtml",
+      "href": "Text/Section0001.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "checkSum": 1,
+      "compressedSize": 1,
+      "uncompressedSize": 1,
+      "spineIndex": 1,
+      "isLinear": false
+    },
+    {
+      "id": "Section0002.xhtml",
+      "href": "Text/Section0002.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "checkSum": 1,
+      "compressedSize": 1,
+      "uncompressedSize": 1,
+      "spineIndex": 2,
+      "isLinear": false
+    }
+  ],
+  "fonts": [
+    {
+      "id": "NotoSans-Regular.ttf",
+      "href": "Fonts/NotoSans-Regular.ttf",
+      "mediaType": "application/x-font-ttf",
+      "checkSum": 1,
+      "compressedSize": 1,
+      "uncompressedSize": 1
+    }
+  ],
+  "cover": {
+    "id": "ridibooks_logo.png",
+    "href": "Images/ridibooks_logo.png",
+    "mediaType": "image/png",
+    "checkSum": 1,
+    "compressedSize": 1,
+    "uncompressedSize": 1
+  },
+  "images": [
+    {
+      "id": "ridibooks_logo.png",
+      "href": "Images/ridibooks_logo.png",
+      "mediaType": "image/png",
+      "checkSum": 1,
+      "compressedSize": 1,
+      "uncompressedSize": 1
+    }
+  ],
+  "styles": [
+    {
+      "id": "Style0001.css",
+      "href": "Styles/Style0001.css",
+      "mediaType": "text/css",
+      "checkSum": 1,
+      "compressedSize": 1,
+      "uncompressedSize": 1
+    }
+  ],
+  "guide": [
+    {
+      "title": "Cover",
+      "type": "cover",
+      "href": "Text/Cover.xhtml",
+      "item": {
+        "id": "Cover.xhtml",
+        "href": "Text/Cover.xhtml",
+        "mediaType": "application/xhtml+xml",
+        "checkSum": 1,
+        "compressedSize": 1,
+        "uncompressedSize": 1,
+        "spineIndex": 0,
+        "isLinear": false
+      }
+    }
+  ]
+}

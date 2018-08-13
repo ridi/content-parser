@@ -1,5 +1,6 @@
 export default {
   INVALID_FILE_PATH: 'Invalid file path.',
+  INVALID_FILE_TYPE: 'Invalid file type.',
   INVALID_INPUT: 'Inavlid input.',
   INVALID_OPTIONS: 'Invalid options.',
   INVALID_OPTION_VALUE: 'Invalid option value.',

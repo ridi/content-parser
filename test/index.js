@@ -4,9 +4,11 @@ import fs from 'fs';
 import { EpubParser, Errors } from '../src';
 import Author from '../src/model/Author';
 import Book from '../src/model/Book';
+import Context from '../src/model/Context';
 import DateTime from '../src/model/DateTime';
 import Guide from '../src/model/Guide';
 import Identifier from '../src/model/Identifier';
+import SpineItem from '../src/model/SpineItem';
 
 should(); // Initialize should
 
@@ -17,6 +19,8 @@ const Files = {
   NCX_MISSING: './test/res/ncxMissing.epub',
   META_INF_MISSING: './test/res/metainfMissing.epub',
   OPF_MISSING: './test/res/opfMissing.epub',
+  EXPECTED_DEFAULT_CONTEXT: './test/res/expectedDefaultContext.json',
+  EXPECTED_DEFAULT_BOOK: './test/res/expectedDefaultBook.json'
 };
 
 describe('Input test', () => {
@@ -33,6 +37,12 @@ describe('Input test', () => {
     (() => { 
       new EpubParser('//');
     }).should.throw(Errors.INVALID_FILE_PATH);
+  });
+
+  it('Invalid file type', () => {
+    (() => { 
+      new EpubParser('./test/res/unzippedPath');
+    }).should.throw(Errors.INVALID_FILE_TYPE);
   });
 
   it('Invalid input', () => {
@@ -68,13 +78,6 @@ describe('Options test', () => {
     }).should.throw(Errors.INVALID_XML);
   });
 
-  it('The package and all XML files were verified', () => {
-    const options = { shouldValidatePackage: true, shouldXmlValidation: true };
-    return new EpubParser(Files.DEFAULT, options).parse().then((book) => {
-      book.should.be.an.instanceOf(Book);
-    });
-  });
-
   it('Not allow NCX file missing', () => {
     (() => {
       new EpubParser(Files.NCX_MISSING, { allowNcxFileMissing: false }).parse();
@@ -102,143 +105,211 @@ describe('Parsing Test', () => {
     }).should.throw(Errors.OPF_NOT_FOUND);
   });
 
-  it('Pasred', () => {
-    return new EpubParser(Files.DEFAULT).parse().then((book) => {
-      book.titles.should.have.lengthOf(1);
-      book.titles[0].should.equal('Default');
+  const expectedContext = JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_CONTEXT));
+  let _parser = new EpubParser(Files.DEFAULT);
+  let _context;
+  it('_prepare test', () => {
+    return _parser._prepare().then((context) => {
+      context.options.should.deep.equal(EpubParser.defaultOptions);
+      should.be.exists(context.zip);
+      _context = context;
+    });
+  });
 
-      book.creators.should.have.lengthOf(2);
-      let creator = book.creators[0];
-      creator.name.should.equal('Davin Ahn');
-      creator.role.should.equal(Author.Roles.AUTHOR);
-      creator = book.creators[1];
-      creator.name.should.equal('Davin Ahn');
-      creator.role.should.equal(Author.Roles.EDITOR);
+  it('_validatePackageIfNeeded test', () => {
+    _context.options.shouldValidatePackage = true;
+    return _parser._validatePackageIfNeeded(_context).then((context) => {
+      context.verified.should.equal(expectedContext.verified);
+      _context = context;
+    });
+  });
 
-      book.subjects.should.have.lengthOf(1);
-      book.subjects[0].should.equal('Subject');
+  it('_parseMetaInf test', () => {
+    return _parser._parseMetaInf(_context).then((context) => {
+      context.opfPath.should.equal(expectedContext.opfPath);
+      context.basePath.should.equal(expectedContext.basePath);
+      _context = context;
+    });
+  });
 
-      book.description.should.equal('Description');
-
-      book.publisher.should.equal('Davin');
-
-      book.contributors.should.have.lengthOf(1);
-      book.contributors[0].name.should.equal('Davin Ahn');
-      book.contributors[0].role.should.equal(Author.Roles.UNDEFINED);
-
-      book.dates.should.have.lengthOf(2);
-      let date = book.dates[0];
-      date.value.should.equal('2018-08-07');
-      date.value.should.equal(DateTime.Events.MODIFICATION);
-      date = book.dates[1];
-      date.value.should.equal('2018-08-07');
-      date.value.should.equal(DateTime.Events.CREATION);
-
-      book.type.should.equal('Type');
-
-      book.format.should.equal('Format');
-
-      book.identifiers.should.have.lengthOf(2);
-      let identifier = book.identifiers[0];
-      identifier.value.should.equal('0-306-40615-2');
-      identifier.scheme.should.equal(Identifier.Schemes.ISBN);
-      identifier = book.identifiers[1];
-      identifier.value.should.equal('urn:uuid:1379039a-3ea4-4071-9ce8-2b0c29fc0030');
-      identifier.scheme.should.equal(Identifier.Schemes.UUID);
-
-      book.source.should.equal('My brain');
-      
-      book.language.should.equal('en');
-
-      book.relation.should.equal('https://github.com/ridi/epub-parser');
-
-      book.coverage.should.equal('Coverage');
-
-      book.rights.should.equal('Copyright (c) 2018 Davin');
-
-      book.epubVersion.should.equal(2.0);
-
-      book.checkSum.should.be.above(0);
-
-      let expectedList = [
-        { id: 'ncx', href: 'toc.ncx', mediaType: 'application/x-dtbncx+xml' },
-        { id: 'Cover.xhtml', href: 'Text/Cover.xhtml', mediaType: 'application/xhtml+xml' },
-        { id: 'Section0001.xhtml', href: 'Text/Section0001.xhtml', mediaType: 'application/xhtml+xml' },
-        { id: 'Section0002.xhtml', href: 'Text/Section0002.xhtml', mediaType: 'application/xhtml+xml' },
-        { id: 'Style0001.css', href: 'Styles/Style0001.css', mediaType: 'text/css' },
-        { id: 'NotoSans-Regular.ttf', href: 'Fonts/NotoSans-Regular.ttf', mediaType: 'application/x-font-ttf' },
-        { id: 'ridibooks_logo.png', href: 'Images/ridibooks_logo.png', mediaType: 'image/png' }
-      ];
-      book.items.length.should.equal(expectedList.length);
-      book.items.forEach((item, idx) => {
-        const expectedItem = expectedList[idx];
+  it('_parseOpf test', () => {
+    return _parser._parseOpf(_context).then((context) => {
+      context.titles.should.deep.equal(expectedContext.titles);
+      context.creators.should.deep.equal(expectedContext.creators);
+      context.subjects.should.deep.equal(expectedContext.subjects);
+      context.description.should.equal(expectedContext.description);
+      context.publisher.should.equal(expectedContext.publisher);
+      context.contributors.should.deep.equal(expectedContext.contributors);
+      context.dates.should.deep.equal(expectedContext.dates);
+      context.type.should.equal(expectedContext.type);
+      context.format.should.equal(expectedContext.format);
+      context.identifiers.should.deep.equal(expectedContext.identifiers);
+      context.source.should.equal(expectedContext.source);
+      context.language.should.equal(expectedContext.language);
+      context.relation.should.equal(expectedContext.relation);
+      context.coverage.should.equal(expectedContext.coverage);
+      context.rights.should.equal(expectedContext.rights);
+      context.epubVersion.should.equal(expectedContext.epubVersion);
+      context.checkSum.should.be.above(0);
+      let current = 0;
+      context.items.forEach((item, idx) => {
+        const expectedItem = expectedContext.items[idx];
         item.id.should.equal(expectedItem.id);
         item.href.should.equal(expectedItem.href);
         item.mediaType.should.equal(expectedItem.mediaType);
-        item.compressedSize.should.be.above(0);
-        item.uncompressedSize.should.be.above(0);
         item.checkSum.should.be.above(0);
+        item.isFileExists.should.be.true;
+        if (item.spineIndex > SpineItem.UNKNOWN_INDEX) {
+          item.spineIndex.should.equal(current);
+          current += 1;
+        }
+      });
+      context.guide.should.deep.equal(expectedContext.guide);
+      _context = context;
+    });
+  });
+
+  it('_parseNcx test', () => {
+    return _parser._parseNcx(_context).then((context) => {
+      context.items.forEach((item, idx) => {
+        const expectedItem = expectedContext.items[idx];
+        item.id.should.equal(expectedItem.id);
+        item.itemType.should.equal(expectedItem.itemType);
+        if (item.navPoints) {
+          item.navPoints.should.equal(expectedItem.navPoints);
+        }
+      });
+      _context = context;
+    });
+  });
+
+  it('_unzipIfNeeded test', () => {
+    _context.options.unzipPath = './temp';
+    return _parser._unzipIfNeeded(_context).then((context) => {
+      context.unzipped.should.equal(expectedContext.unzipped);
+      _context = context;
+    });
+  });
+
+  const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK));
+  it('_createBook test', () => {
+    return _parser._createBook(_context).then((book) => {
+      book.titles.should.have.lengthOf(expectedBook.titles.length);
+      book.titles.forEach((title, idx) => {
+        title.should.equal(expectedBook.titles[idx]);
       });
 
-      expectedList = [
-        { id: 'navPoint-1', label: 'Cover', src: 'Text/Cover.xhtml', anchor: undefined, depth: 0, childrenCount: 0, spine: book.spines[0] },
-        { id: 'navPoint-2', label: 'Chapter 1', src: 'Text/Section0001.xhtml', anchor: undefined, depth: 0, childrenCount: 2, spine: book.spines[1] },
-        { id: 'navPoint-3', label: '1.', src: 'Text/Section0001.xhtml#1', anchor: '1', depth: 1, childrenCount: 2, spine: book.spines[1] },
-        { id: 'navPoint-4', label: '1.1.', src: 'Text/Section0001.xhtml#1_1', anchor: '1_1', depth: 2, childrenCount: 0, spine: book.spines[1] },
-        { id: 'navPoint-5', label: '1.2.', src: 'Text/Section0001.xhtml#1_2', anchor: '1_2', depth: 2, childrenCount: 0, spine: book.spines[1] },
-        { id: 'navPoint-6', label: '2.', src: 'Text/Section0001.xhtml#2', anchor: '2', depth: 1, childrenCount: 2, spine: book.spines[1] },
-        { id: 'navPoint-7', label: '2.1.', src: 'Text/Section0001.xhtml#2_1', anchor: '2_1', depth: 2, childrenCount: 0, spine: book.spines[1] },
-        { id: 'navPoint-8', label: '2.2.', src: 'Text/Section0001.xhtml#2_2', anchor: '2_2', depth: 2, childrenCount: 0, spine: book.spines[1] },
-        { id: 'navPoint-9', label: 'Chapter 2', src: 'Text/Section0002.xhtml', anchor: undefined, depth: 0, childrenCount: 2, spine: book.spines[2] },
-        { id: 'navPoint-10', label: '1.', src: 'Text/Section0002.xhtml#1', anchor: '1', depth: 0, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-11', label: '1.1.', src: 'Text/Section0002.xhtml#1_1', anchor: '1_1', depth: 1, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-12', label: '1.2.', src: 'Text/Section0002.xhtml#1_2', anchor: '1_2', depth: 1, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-13', label: '1.3.', src: 'Text/Section0002.xhtml#1_3', anchor: '1_3', depth: 1, childrenCount: 1, spine: book.spines[2] },
-        { id: 'navPoint-14', label: '1.3.1.', src: 'Text/Section0002.xhtml#1_3_1', anchor: '1_3_1', depth: 2, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-15', label: '2.', src: 'Text/Section0002.xhtml', anchor: '2', depth: 0, childrenCount: 0, spine: book.spines[2] },
-        { id: 'navPoint-16', label: 'Copyrights', src: '', anchor: undefined, depth: 0, childrenCount: 0, spine: undefined },
-      ];
-      book.ncx.navPoints.length.should.equal(expectedList.length);
+      book.creators.should.have.lengthOf(expectedBook.creators.length);
+      book.creators.forEach((creator, idx) => {
+        const expectedCreator = expectedBook.creators[idx];
+        creator.name.should.equal(expectedCreator.name);
+        creator.role.should.equal(expectedCreator.role);
+      });
+
+      book.subjects.should.have.lengthOf(expectedBook.subjects.length);
+      book.subjects.forEach((subject, idx) => {
+        subject.should.equal(expectedBook.subjects[idx]);
+      });
+
+      book.description.should.equal(expectedBook.description);
+
+      book.publisher.should.equal(expectedBook.publisher);
+
+      book.contributors.should.have.lengthOf(expectedBook.contributors.length);
+      book.contributors.forEach((contributor, idx) => {
+        const expectedContributor = expectedBook.contributors[idx];
+        contributor.name.should.equal(expectedContributor.name);
+        contributor.role.should.equal(expectedContributor.role);
+      });
+
+      book.dates.should.have.lengthOf(expectedBook.dates.length);
+      book.dates.forEach((date, idx) => {
+        const expectedDate = expectedBook.dates[idx];
+        dates.name.should.equal(expectedDate.name);
+        dates.event.should.equal(expectedDate.role);
+      });
+
+      book.type.should.equal(expectedBook.type);
+
+      book.format.should.equal(expectedBook.format);
+
+      book.identifiers.should.have.lengthOf(expectedBook.identifiers.length);
+      book.identifiers.forEach((identifier, idx) => {
+        const expectedIdentifier = expectedBook.identifiers[idx];
+        identifier.name.should.equal(expectedIdentifier.name);
+        identifier.scheme.should.equal(expectedIdentifier.role);
+      });
+
+      book.source.should.equal(expectedBook.source);
+      
+      book.language.should.equal(expectedBook.language);
+
+      book.relation.should.equal(expectedBook.relation);
+
+      book.coverage.should.equal(expectedBook.coverage);
+
+      book.rights.should.equal(expectedBook.rights);
+
+      book.epubVersion.should.equal(expectedBook.epubVersion);
+
+      book.checkSum.should.be.above(0);
+
+      book.items.should.have.lengthOf(expectedBook.items.length);
+      book.items.forEach((item, idx) => {
+        item.id.should.equal(expectedBook.items[idx].id);
+      });
+
+      book.ncx.navPoints.should.have.lengthOf(expectedBook.ncx.navPoints.length);
       book.ncx.navPoints.forEach((navPoint, idx) => {
-        const expectedNavPoint = expectedList[idx];
+        const expectedNavPoints = expectedBook.ncx.navPoints[idx];
         navPoint.id.should.equal(expectedNavPoint.id);
         navPoint.label.should.equal(expectedNavPoint.label);
         navPoint.src.should.equal(expectedNavPoint.src);
         navPoint.anchor.should.equal(expectedNavPoint.anchor);
         navPoint.depth.should.equal(expectedNavPoint.depth);
-        navPoint.children.should.lengthOf(expectedNavPoint.childrenCount);
-        navPoint.spine.should.deep.equal(expectedNavPoint.spine);
+        navPoint.children.should.have.lengthOf(expectedNavPoint.children.length);
+        navPoint.children.forEach((childNavPoint, idx) => {
+          const expectedChildNavPoint = expectedNavPoint.children[idx];
+          childNavPoint.id.should.equal(expectedChildNavPoint.id);
+          childNavPoint.children.should.have.lengthOf(expectedChildNavPoint.children.length);
+        });
+        if (navPoint.spine) {
+          navPoint.spine.id.should.equal(expectedNavPoint.spine.id);
+        }
       });
 
-      expectedList = [
-        { id: 'Cover.xhtml', spineIndex: 0 },
-        { id: 'Section0001.xhtml', spineIndex: 1 },
-        { id: 'Section0002.xhtml', spineIndex: 2 },
-      ];
-      book.spines.length.should.equal(expectedList.length);
+      book.spines.should.have.lengthOf(expectedBook.spines.length);
       book.spines.forEach((spine, idx) => {
-        const expectedSpine = expectedList[idx];
+        const expectedSpine = expectedBook.spines[idx];
         spine.id.should.equal(expectedSpine.id);
         spine.spineIndex.should.equal(expectedSpine.spineIndex);
-        spine.isLinear.should.be.false;
+        spine.isLinear.should.equal(expectedSpine.isLinear);
       });
 
-      book.fonts.should.have.lengthOf(1);
-      book.fonts[0].id.should.equal('NotoSans-Regular.ttf');
+      book.fonts.should.have.lengthOf(expectedBook.fonts.length);
+      book.fonts.forEach((font, idx) => {
+        font.id.should.equal(expectedBook.fonts[idx].id);
+      });
 
-      book.cover.id.should.equal('ridibooks_logo.png');
+      book.cover.id.should.equal(expectedBook.cover.id);
 
-      book.images.should.have.lengthOf(1);
-      book.images[0].id.should.equal('ridibooks_logo.png');
+      book.images.should.have.lengthOf(expectedBook.images.length);
+      book.images.forEach((image, idx) => {
+        image.id.should.equal(expectedBook.images[idx].id);
+      });
 
-      book.styles.should.have.lengthOf(1);
-      book.styles[0].id.should.equal('Style0001.css');
+      book.styles.should.have.lengthOf(expectedBook.styles.length);
+      book.styles.forEach((style, idx) => {
+        style.id.should.equal(expectedBook.styles[idx].id);
+      });
 
-      book.guide.should.have.lengthOf(1);
-      book.guide[0].title.should.equal('Cover');
-      book.guide[0].type.should.equal(Guide.Types.COVER);
-      book.guide[0].href.should.equal('Text/Cover.xhtml');
-      book.guide[0].item.should.deep.equal(book.items[1]);
+      book.guide.should.have.lengthOf(expectedBook.guide.length);
+      book.guide.forEach((guide, idx) => {
+        const expectedGuide = expectedBook.guide[idx];
+        guide.title.should.equal(expectedGuide.title);
+        guide.type.should.equal(expectedGuide.type);
+        guide.item.id.should.equal(expectedGuide.item.id);
+      });
     });
   });
 });

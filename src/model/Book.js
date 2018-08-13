@@ -1,5 +1,4 @@
 import Author from './Author';
-import CoverImageItem from './CoverImageItem';
 import CssItem from './CssItem';
 import DateTime from './DateTime';
 import FontItem from './FontItem';
@@ -31,7 +30,7 @@ class Book {
     this.ncx = this.items.find(item => item instanceof NcxItem);
     this.spines = this.items.filter(item => item instanceof SpineItem);
     this.fonts = this.items.filter(item => item instanceof FontItem);
-    this.cover = this.items.find(item => item instanceof CoverImageItem);
+    this.cover = this.items.find(item => item.isCover);
     this.images = this.items.filter(item => item instanceof ImageItem);
     this.styles = this.items.filter(item => item instanceof CssItem);
     this.guide = this.items.filter(item => item instanceof CssItem);
