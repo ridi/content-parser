@@ -5,6 +5,7 @@ import Book from './model/Book';
 import Context from './model/Context';
 import Errors from './Errors';
 
+/* eslint-disable no-param-reassign */
 class EpubParser {
   static get defaultOptions() {
     return {
@@ -76,7 +77,7 @@ class EpubParser {
   }
 
   _prepare() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const context = new Context();
       context.options = this._options;
       context.zip = new Zip(this._input);
@@ -85,7 +86,24 @@ class EpubParser {
   }
 
   _validatePackageIfNeeded(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+      if (context.options.shouldValidatePackage) { // eslint-disable-line react/destructuring-assignment
+        const firstEntry = context.zip.getEntries()[0];
+        if (firstEntry.entryName !== 'mimetype') {
+          // The mimetype file must be the first file in the archive.
+          throw Errors.INVALID_PACKAGE;
+        } else if (firstEntry.header.method !== 0/* adm-zip/util/constants.js/STORED */) {
+          // The mimetype file should not compressed.
+          throw Errors.INVALID_PACKAGE;
+        } else if (firstEntry.getData().toString('utf8') !== 'application/epub+zip') {
+          // The mimetype file should only contain the string 'application/epub+zip'.
+          throw Errors.INVALID_PACKAGE;
+        } else if (firstEntry.header.extraLength > 0) {
+          // Should not use extra field feature of the ZIP format for the mimetype file.
+          throw Errors.INVALID_PACKAGE;
+        }
+        context.verified = true;
+      }
       resolve(context);
     });
   }

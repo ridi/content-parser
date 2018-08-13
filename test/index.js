@@ -67,9 +67,9 @@ describe('Options test', () => {
 
   // TODO: Add more cases.
   it('Invalid package', () => {
-    (() => {
-      new EpubParser(Files.INVALID_PACKAGE, { shouldValidatePackage: true }).parse();
-    }).should.throw(Errors.INVALID_PACKAGE);
+    new EpubParser(Files.INVALID_PACKAGE, { shouldValidatePackage: true }).parse().catch((err) => {
+      err.should.equal(Errors.INVALID_PACKAGE);
+    });
   });
 
   it('Invalid XML', () => {
@@ -111,7 +111,7 @@ describe('Parsing Test', () => {
   it('_prepare test', () => {
     return _parser._prepare().then((context) => {
       context.options.should.deep.equal(EpubParser.defaultOptions);
-      should.be.exists(context.zip);
+      context.zip.should.not.null;
       _context = context;
     });
   });

@@ -8,7 +8,7 @@ import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
 
 class Book {
-  constructor(rawBook) {
+  constructor(rawBook = {}) {
     this.titles = rawBook.titles || [];
     this.creators = (rawBook.creators || []).map(rawObj => new Author(rawObj));
     this.subjects = rawBook.subjects || [];
