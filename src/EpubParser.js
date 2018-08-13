@@ -19,6 +19,10 @@ class EpubParser {
       allowNcxFileMissing: true,
       // Path to uncompress. Valid only when input is epub path.
       unzipPath: undefined,
+      // If true, creates intermediate directories for the unzipPath.
+      createIntermediateDirectories: true,
+      // If true, removes a previous file from the unzipPath.
+      removePreviousFile: true,
     };
   }
 
