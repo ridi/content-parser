@@ -1,4 +1,5 @@
 import Book from './Book';
+import { getPropertyKeys } from '../utils';
 
 class Context {
   constructor() {
@@ -9,7 +10,7 @@ class Context {
     this.opfPath = undefined;
     this.basePath = undefined;
     const rawBook = {};
-    Object.getOwnPropertyNames(new Book()).forEach((key) => { rawBook[key] = undefined; });
+    getPropertyKeys(new Book()).forEach((key) => { rawBook[key] = undefined; });
     this.rawBook = rawBook;
   }
 }

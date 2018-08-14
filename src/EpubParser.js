@@ -1,11 +1,25 @@
 import Zip from 'adm-zip';
+import XmlParser from 'fast-xml-parser';
 import fs from 'fs';
+import he from 'he';
+import path from 'path';
 
 import Book from './model/Book';
 import Context from './model/Context';
 import Errors from './Errors';
+import {
+  getPropertyDescriptor,
+  getPropertyKeys,
+  isArray,
+  isBuffer,
+  isExists,
+  objectMerge,
+} from './utils';
 
-/* eslint-disable no-param-reassign */
+const tagValueProcessor = value => he.decode(value);
+const attrValueProcessor = value => he.decode(value, { isAttributeValue: true });
+
+/* eslint-disable no-param-reassign, react/destructuring-assignment */
 class EpubParser {
   static get defaultOptions() {
     return {
@@ -68,28 +82,30 @@ class EpubParser {
   }
 
   constructor(input, options = {}) {
-    if (input && typeof input === 'string') {
+    if (isExists(input) && typeof input === 'string') {
       if (!fs.existsSync(input)) {
         throw Errors.INVALID_FILE_PATH;
       } else if (fs.lstatSync(input).isDirectory() || !input.toLowerCase().endsWith('.epub')) {
         throw Errors.INVALID_FILE_TYPE;
       }
-    } else if (!input || !Buffer.isBuffer(input)) {
+    } else if (!isExists(input) || !isBuffer(input)) {
       throw Errors.INVALID_INPUT;
     }
     this._input = input;
-    Object.getOwnPropertyNames(options).forEach((key) => {
-      if (Object.getOwnPropertyDescriptor(EpubParser.defaultOptions, key) === undefined) {
+    getPropertyKeys(options).forEach((key) => {
+      if (getPropertyDescriptor(EpubParser.defaultOptions, key) === undefined) {
         throw Errors.INVALID_OPTIONS;
       }
-      if (typeof options[key] !== EpubParser.defaultOptionTypes[key]) { // eslint-disable-line valid-typeof
-        throw Errors.INVALID_OPTION_VALUE;
+      if (key !== 'xmlParserOptions') {
+        if (typeof options[key] !== EpubParser.defaultOptionTypes[key]) { // eslint-disable-line valid-typeof
+          throw Errors.INVALID_OPTION_VALUE;
+        }
       }
     });
-    if (Buffer.isBuffer(input) && options.unzipPath) {
+    if (isBuffer(input) && isExists(options.unzipPath)) {
       throw Errors.FILE_PATH_INPUT_REQUIRED;
     }
-    this._options = Object.assign({}, EpubParser.defaultOptions, options);
+    this._options = objectMerge(EpubParser.defaultOptions, options);
   }
 
   parse() {
@@ -114,7 +130,7 @@ class EpubParser {
 
   _validatePackageIfNeeded(context) {
     return new Promise((resolve) => {
-      if (context.options.shouldValidatePackage) { // eslint-disable-line react/destructuring-assignment
+      if (context.options.shouldValidatePackage) {
         const firstEntry = context.zip.getEntries()[0];
         if (firstEntry.entryName !== 'mimetype') {
           // The mimetype file must be the first file in the archive.
@@ -135,8 +151,40 @@ class EpubParser {
     });
   }
 
+  _findEntry(entryName, context) {
+    return context.zip.getEntries().find(entry => entry.entryName === entryName);
+  }
+
+  _parseXml2Json(entry, options) {
+    const { shouldXmlValidation, xmlParserOptions } = options;
+    const xmlData = entry.getData().toString('utf8');
+    if (shouldXmlValidation && !XmlParser.validate(xmlData)) {
+      throw Errors.INVALID_XML;
+    }
+    return XmlParser.parse(xmlData, xmlParserOptions || {});
+  }
+
   _parseMetaInf(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+      const containerEntry = this._findEntry('META-INF/container.xml', context);
+      if (!isExists(containerEntry)) {
+        throw Errors.META_INF_NOT_FOUND;
+      }
+      const result = this._parseXml2Json(containerEntry, context.options);
+      if (!isExists(result.container) || !isExists(result.container.rootfiles)) {
+        throw Errors.META_INF_NOT_FOUND;
+      }
+      const { rootfiles } = result.container;
+      const rootfile = isArray(rootfiles) ? rootfiles[0] : rootfiles.rootfile;
+      if (!isExists(rootfile)) {
+        throw Errors.OPF_NOT_FOUND;
+      }
+      const opfPath = rootfile['@attr_full-path'];
+      if (!isExists(opfPath) || !isExists(this._findEntry(opfPath, context))) {
+        throw Errors.OPF_NOT_FOUND;
+      }
+      context.opfPath = opfPath;
+      context.basePath = path.dirname(opfPath);
       resolve(context);
     });
   }
@@ -161,7 +209,7 @@ class EpubParser {
 
   _createBook(context) {
     return new Promise((resolve, reject) => {
-      resolve(new Book(context.rawBook)); // eslint-disable-line react/destructuring-assignment
+      resolve(new Book(context.rawBook)); 
     });
   }
 }

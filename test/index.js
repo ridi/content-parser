@@ -73,9 +73,9 @@ describe('Options test', () => {
   });
 
   it('Invalid XML', () => {
-    (() => {
-      new EpubParser(Files.INVALID_XML, { shouldXmlValidation: true }).parse();
-    }).should.throw(Errors.INVALID_XML);
+    new EpubParser(Files.INVALID_XML, { shouldXmlValidation: true }).parse().catch((err) => {
+      err.should.equal(Errors.INVALID_XML);
+    });
   });
 
   it('Not allow NCX file missing', () => {
@@ -87,22 +87,22 @@ describe('Options test', () => {
   it('Buffer input and unzip option can not coexist', () => {
     (() => {
       const buffer = fs.readFileSync(Files.DEFAULT);
-      new EpubParser(buffer, { unzipPath: './temp' }).parse();
+      new EpubParser(buffer, { unzipPath: './temp' });
     }).should.throw(Errors.FILE_PATH_INPUT_REQUIRED);
   })
 });
 
 describe('Parsing Test', () => {
   it('META-INF not found', () => {
-    (() => {
-      new EpubParser(Files.META_INF_MISSING).parse();
-    }).should.throw(Errors.META_INF_NOT_FOUND);
+    new EpubParser(Files.META_INF_MISSING).parse().catch((err) => {
+      err.should.equal(Errors.META_INF_NOT_FOUND);
+    });
   });
 
   it('OPF file not found', () => {
-    (() => {
-      new EpubParser(Files.OPF_MISSING).parse();
-    }).should.throw(Errors.OPF_NOT_FOUND);
+    new EpubParser(Files.OPF_MISSING).parse().catch((err) => {
+      err.should.equal(Errors.OPF_NOT_FOUND);
+    });
   });
 
   const expectedContext = JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_CONTEXT));
