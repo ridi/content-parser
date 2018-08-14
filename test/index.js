@@ -67,13 +67,13 @@ describe('Options test', () => {
 
   // TODO: Add more cases.
   it('Invalid package', () => {
-    new EpubParser(Files.INVALID_PACKAGE, { shouldValidatePackage: true }).parse().catch((err) => {
+    return new EpubParser(Files.INVALID_PACKAGE, { shouldValidatePackage: true }).parse().catch((err) => {
       err.should.equal(Errors.INVALID_PACKAGE);
     });
   });
 
   it('Invalid XML', () => {
-    new EpubParser(Files.INVALID_XML, { shouldXmlValidation: true }).parse().catch((err) => {
+    return new EpubParser(Files.INVALID_XML, { shouldXmlValidation: true }).parse().catch((err) => {
       err.should.equal(Errors.INVALID_XML);
     });
   });
@@ -94,13 +94,13 @@ describe('Options test', () => {
 
 describe('Parsing Test', () => {
   it('META-INF not found', () => {
-    new EpubParser(Files.META_INF_MISSING).parse().catch((err) => {
+    return new EpubParser(Files.META_INF_MISSING).parse().catch((err) => {
       err.should.equal(Errors.META_INF_NOT_FOUND);
     });
   });
 
   it('OPF file not found', () => {
-    new EpubParser(Files.OPF_MISSING).parse().catch((err) => {
+    return new EpubParser(Files.OPF_MISSING).parse().catch((err) => {
       err.should.equal(Errors.OPF_NOT_FOUND);
     });
   });
