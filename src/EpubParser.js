@@ -156,7 +156,7 @@ class EpubParser {
     return context.zip.getEntries().find(entry => entry.entryName === entryName);
   }
 
-  _parseXml2Json(entry, options) {
+  _xmlEntry2Json(entry, options) {
     const { shouldXmlValidation, xmlParserOptions } = options;
     const xmlData = entry.getData().toString('utf8');
     if (shouldXmlValidation && !XmlParser.validate(xmlData)) {
@@ -171,7 +171,7 @@ class EpubParser {
       if (!isExists(containerEntry)) {
         throw Errors.META_INF_NOT_FOUND;
       }
-      const result = this._parseXml2Json(containerEntry, context.options);
+      const result = this._xmlEntry2Json(containerEntry, context.options);
       if (!isExists(result.container) || !isExists(result.container.rootfiles)) {
         throw Errors.META_INF_NOT_FOUND;
       }
