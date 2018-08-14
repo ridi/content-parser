@@ -5,11 +5,11 @@
   "creators": [
     {
       "name": "Davin Ahn",
-      "role": "author"
+      "role": "aut"
     },
     {
       "name": "Davin Ahn",
-      "role": "editor"
+      "role": "edt"
     }
   ],
   "subjects": [
@@ -19,12 +19,13 @@
   "publisher": "Davin",
   "contributors": [
     {
-      "name": "Davin Ahn"
+      "name": "Davin Ahn",
+      "role": "undefined"
     }
   ],
   "dates": [
     {
-      "value": "2018-08-07",
+      "value": "2018-08-09",
       "event": "modification"
     },
     {
@@ -49,7 +50,7 @@
   "relation": "https://github.com/ridi/epub-parser",
   "coverage": "Coverage",
   "rights": "Copyright (c) 2018 Davin",
-  "epubVersion": 2.0,
+  "epubVersion": 2,
   "ncx": {
     "navPoints": [
       {
@@ -65,7 +66,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 0,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -95,7 +96,7 @@
                   "compressedSize": 1,
                   "uncompressedSize": 1,
                   "spineIndex": 1,
-                  "isLinear": false
+                  "isLinear": true
                 }
               },
               {
@@ -112,7 +113,7 @@
                   "compressedSize": 1,
                   "uncompressedSize": 1,
                   "spineIndex": 1,
-                  "isLinear": false
+                  "isLinear": true
                 }
               }
             ],
@@ -123,7 +124,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 1,
-              "isLinear": false
+              "isLinear": true
             }
           },
           {
@@ -147,7 +148,7 @@
                   "compressedSize": 1,
                   "uncompressedSize": 1,
                   "spineIndex": 1,
-                  "isLinear": false
+                  "isLinear": true
                 }
               },
               {
@@ -164,7 +165,7 @@
                   "compressedSize": 1,
                   "uncompressedSize": 1,
                   "spineIndex": 1,
-                  "isLinear": false
+                  "isLinear": true
                 }
               }
             ],
@@ -175,7 +176,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 1,
-              "isLinear": false
+              "isLinear": true
             }
           }
         ],
@@ -186,7 +187,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 1,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -210,7 +211,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 1,
-              "isLinear": false
+              "isLinear": true
             }
           },
           {
@@ -227,7 +228,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 1,
-              "isLinear": false
+              "isLinear": true
             }
           }
         ],
@@ -238,7 +239,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 1,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -255,7 +256,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 1,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -272,7 +273,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 1,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -296,7 +297,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 1,
-              "isLinear": false
+              "isLinear": true
             }
           },
           {
@@ -313,7 +314,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 1,
-              "isLinear": false
+              "isLinear": true
             }
           }
         ],
@@ -324,7 +325,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 1,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -341,7 +342,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 1,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -358,7 +359,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 1,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -388,7 +389,7 @@
                   "compressedSize": 1,
                   "uncompressedSize": 1,
                   "spineIndex": 2,
-                  "isLinear": false
+                  "isLinear": true
                 }
               },
               {
@@ -405,7 +406,7 @@
                   "compressedSize": 1,
                   "uncompressedSize": 1,
                   "spineIndex": 2,
-                  "isLinear": false
+                  "isLinear": true
                 }
               },
               {
@@ -429,7 +430,7 @@
                       "compressedSize": 1,
                       "uncompressedSize": 1,
                       "spineIndex": 2,
-                      "isLinear": false
+                      "isLinear": true
                     }
                   }
                 ],
@@ -440,7 +441,7 @@
                   "compressedSize": 1,
                   "uncompressedSize": 1,
                   "spineIndex": 2,
-                  "isLinear": false
+                  "isLinear": true
                 }
               }
             ],
@@ -451,7 +452,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 2,
-              "isLinear": false
+              "isLinear": true
             }
           },
           {
@@ -468,7 +469,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 2,
-              "isLinear": false
+              "isLinear": true
             }
           }
         ],
@@ -479,7 +480,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 2,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -503,7 +504,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 2,
-              "isLinear": false
+              "isLinear": true
             }
           },
           {
@@ -520,7 +521,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 2,
-              "isLinear": false
+              "isLinear": true
             }
           },
           {
@@ -544,7 +545,7 @@
                   "compressedSize": 1,
                   "uncompressedSize": 1,
                   "spineIndex": 2,
-                  "isLinear": false
+                  "isLinear": true
                 }
               }
             ],
@@ -555,7 +556,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 2,
-              "isLinear": false
+              "isLinear": true
             }
           }
         ],
@@ -566,7 +567,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 2,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -583,7 +584,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 2,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -600,7 +601,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 2,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -624,7 +625,7 @@
               "compressedSize": 1,
               "uncompressedSize": 1,
               "spineIndex": 2,
-              "isLinear": false
+              "isLinear": true
             }
           }
         ],
@@ -635,7 +636,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 2,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -652,7 +653,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 2,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -668,7 +669,7 @@
           "compressedSize": 1,
           "uncompressedSize": 1,
           "spineIndex": 2,
-          "isLinear": false
+          "isLinear": true
         }
       },
       {
@@ -688,7 +689,7 @@
       "compressedSize": 1,
       "uncompressedSize": 1,
       "spineIndex": 0,
-      "isLinear": false
+      "isLinear": true
     },
     {
       "id": "Section0001.xhtml",
@@ -697,7 +698,7 @@
       "compressedSize": 1,
       "uncompressedSize": 1,
       "spineIndex": 1,
-      "isLinear": false
+      "isLinear": true
     },
     {
       "id": "Section0002.xhtml",
@@ -706,7 +707,7 @@
       "compressedSize": 1,
       "uncompressedSize": 1,
       "spineIndex": 2,
-      "isLinear": false
+      "isLinear": true
     }
   ],
   "fonts": [
@@ -755,7 +756,7 @@
         "compressedSize": 1,
         "uncompressedSize": 1,
         "spineIndex": 0,
-        "isLinear": false
+        "isLinear": true
       }
     }
   ]

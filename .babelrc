@@ -7,7 +7,18 @@
       ]
     },
     "production": {
-      "presets": ["env", ["minify", { "evaluate": false }]],
+      "presets": [
+        "env",
+        [
+          "minify",
+          {
+            "evaluate": false,
+            "mangle": {
+              "exclude": ["CssItem", "FontItem", "ImageItem", "NcxItem", "SpineItem"]
+            }
+          }
+        ]
+      ],
       "plugins": [
         "add-module-exports"
       ]

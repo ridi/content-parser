@@ -1,7 +1,13 @@
+import { isString } from '../utils';
+
 class Identifier {
   constructor(rawObj) {
-    this.value = rawObj.value;
-    this.scheme = rawObj.scheme || Identifier.Schemes.UNDEFINED;
+    if (isString(rawObj)) {
+      this.value = rawObj;
+    } else {
+      this.value = rawObj.value;
+    }
+    this.scheme = (rawObj.scheme || Identifier.Schemes.UNDEFINED).toLowerCase();
     Object.freeze(this);
   }
 }

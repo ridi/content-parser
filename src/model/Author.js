@@ -1,7 +1,13 @@
+import { isString } from '../utils';
+
 class Author {
   constructor(rawObj) {
-    this.name = rawObj.name;
-    this.role = rawObj.role || Author.Roles.UNDEFINED;
+    if (isString(rawObj)) {
+      this.name = rawObj;
+    } else {
+      this.name = rawObj.name;
+    }
+    this.role = (rawObj.role || Author.Roles.UNDEFINED).toLowerCase();
     Object.freeze(this);
   }
 }

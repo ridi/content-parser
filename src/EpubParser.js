@@ -6,6 +6,12 @@ import path from 'path';
 
 import Book from './model/Book';
 import Context from './model/Context';
+import CssItem from './model/CssItem';
+import FontItem from './model/FontItem';
+import ImageItem from './model/ImageItem';
+import Item from './model/Item';
+import NcxItem from './model/NcxItem';
+import SpineItem from './model/SpineItem';
 import Errors from './Errors';
 import {
   getPropertyDescriptor,
@@ -13,9 +19,13 @@ import {
   isArray,
   isBuffer,
   isExists,
+  isObject,
+  isString,
   objectMerge,
 } from './utils';
 
+const textNodeName = '#text';
+const attributeNamePrefix = '@attr_';
 const tagValueProcessor = value => he.decode(value);
 const attrValueProcessor = value => he.decode(value, { isAttributeValue: true });
 
@@ -33,8 +43,10 @@ class EpubParser {
       shouldXmlValidation: false,
       // fast-xml-parser options.
       xmlParserOptions: {
+        // Text node name for identification.
+        textNodeName,
         // Prepend given string to attribute name for identification.
-        attributeNamePrefix: '@attr_',
+        attributeNamePrefix,
         // (Valid name) Group all the attributes as properties of given name.
         attrNodeName: false,
         // Ignore attributes to be parsed.
@@ -170,27 +182,164 @@ class EpubParser {
       if (!isExists(containerEntry)) {
         throw Errors.META_INF_NOT_FOUND;
       }
-      const result = this._xmlEntry2Json(containerEntry, context.options);
-      if (!isExists(result.container) || !isExists(result.container.rootfiles)) {
+
+      const { container } = this._xmlEntry2Json(containerEntry, context.options);
+      if (!isExists(container) || !isExists(container.rootfiles)) {
         throw Errors.META_INF_NOT_FOUND;
       }
-      const { rootfiles } = result.container;
-      const rootfile = isArray(rootfiles) ? rootfiles[0] : rootfiles.rootfile;
+
+      const { rootfiles } = container;
+      // eslint-disable-next-line arrow-body-style
+      const rootfile = (isArray(rootfiles) ? rootfiles : [rootfiles.rootfile]).find((item) => {
+        return item[`${attributeNamePrefix}media-type`] === 'application/oebps-package+xml';
+      });
       if (!isExists(rootfile)) {
-        throw Errors.OPF_NOT_FOUND;
+        throw Errors.META_INF_NOT_FOUND;
       }
-      const opfPath = rootfile['@attr_full-path'];
-      if (!isExists(opfPath) || !isExists(this._findEntry(opfPath, context))) {
-        throw Errors.OPF_NOT_FOUND;
+
+      const opfPath = rootfile[`${attributeNamePrefix}full-path`];
+      if (!isExists(opfPath)) {
+        throw Errors.META_INF_NOT_FOUND;
       }
+
       context.opfPath = opfPath;
       context.basePath = path.dirname(opfPath);
+
       resolve(context);
     });
   }
 
+  _normalizeKey(obj, valueKey) {
+    if (isString(obj)) {
+      return obj;
+    }
+    const newObj = {};
+    getPropertyKeys(obj).forEach((key) => {
+      let newKey = key;
+      if (isExists(valueKey) && key === textNodeName) {
+        newKey = key.replace(textNodeName, valueKey);
+      } else {
+        newKey = key.replace(attributeNamePrefix, '');
+      }
+      newObj[newKey] = isObject(obj[key]) ? this._normalizeKey(obj[key]) : obj[key];
+    });
+    return newObj;
+  }
+
+  _makeValues(any, valueKey) {
+    return isArray(any) ? any.map(item => this._normalizeKey(item, valueKey)) : [this._normalizeKey(any, valueKey)];
+  }
+
+  _getItemType(mediaType) {
+    const types = {
+      'application/font': FontItem.name,
+      'application/font-otf': FontItem.name,
+      'application/font-sfnt': FontItem.name,
+      'application/font-woff': FontItem.name,
+      'application/vnd.ms-opentype': FontItem.name,
+      'application/x-font-ttf': FontItem.name,
+      'application/x-font-truetype': FontItem.name,
+      'application/x-font-opentype': FontItem.name,
+      'application/x-dtbncx+xml': NcxItem.name,
+      'application/xhtml+xml': SpineItem.name,
+      'font/opentype': FontItem.name,
+      'font/otf': FontItem.name,
+      'font/woff2': FontItem.name,
+      'image/gif': ImageItem.name,
+      'image/jpeg': ImageItem.name,
+      'image/png': ImageItem.name,
+      'image/bmp': ImageItem.name, // Not recommended in EPUB spec.
+      'image/svg+xml': ImageItem.name,
+      'text/css': CssItem.name,
+    };
+    const type = types[mediaType.toLowerCase()];
+    if (!isExists(type)) {
+      return Item.name;
+    }
+    return type;
+  }
+
   _parseOpf(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+      const opfEntry = this._findEntry(context.opfPath, context);
+      if (!isExists(opfEntry)) {
+        throw Errors.OPF_NOT_FOUND;
+      }
+
+      const { package: root } = this._xmlEntry2Json(opfEntry, context.options);
+      if (!isExists(root) || !isExists(root.metadata) || !isExists(root.manifest) || !isExists(root.spine)) {
+        throw Errors.INVALID_OPF;
+      }
+
+      const { rawBook } = context;
+      rawBook.epubVersion = root[`${attributeNamePrefix}version`];
+
+      const {
+        title, creator, subject, description, publisher, contributor, date, type,
+        format, identifier, source, language, relation, coverage, rights,
+      } = root.metadata;
+      rawBook.titles = this._makeValues(title);
+      rawBook.creators = this._makeValues(creator, 'name');
+      rawBook.subjects = this._makeValues(subject);
+      rawBook.description = description;
+      rawBook.publisher = publisher;
+      rawBook.contributors = this._makeValues(contributor, 'name');
+      rawBook.dates = this._makeValues(date, 'value');
+      rawBook.type = type;
+      rawBook.format = format;
+      rawBook.identifiers = this._makeValues(identifier, 'value');
+      rawBook.source = source;
+      rawBook.language = language;
+      rawBook.relation = relation;
+      rawBook.coverage = coverage;
+      rawBook.rights = rights;
+
+      rawBook.items = [];
+      this._makeValues(root.manifest.item).forEach((item) => {
+        const rawItem = {};
+        rawItem.id = item.id;
+        rawItem.href = item.href;
+        rawItem.mediaType = item['media-type'];
+        rawItem.itemType = this._getItemType(rawItem.mediaType);
+
+        const entryName = path.join(context.basePath, rawItem.href);
+        const itemEntry = this._findEntry(entryName, context);
+        if (isExists(itemEntry)) {
+          rawItem.compressedSize = itemEntry.header.compressedSize;
+          rawItem.uncompressedSize = itemEntry.header.size;
+        }
+
+        rawBook.items.push(rawItem);
+      });
+
+      let spineIndex = 0;
+      const itemref = this._makeValues(root.spine.itemref);
+      const tocId = root.spine[`${attributeNamePrefix}toc`];
+      rawBook.items.forEach((item) => {
+        if (item.itemType === NcxItem.name) {
+          if (item.id !== tocId) {
+            item.itemType = Item.name;
+          }
+        } else if (item.itemType === SpineItem.name) {
+          const ref = itemref.find(o => o.idref === item.id);
+          if (isExists(ref)) {
+            item.spineIndex = spineIndex;
+            item.isLinear = ref.linear;
+            if (!isExists(item.isLinear)) {
+              item.isLinear = true;
+            }
+            spineIndex += 1;
+          } else {
+            item.itemType = Item.name;
+          }
+        }
+      });
+
+      rawBook.guide = [];
+      if (isExists(root.guide)) {
+        this._makeValues(root.guide.reference).forEach(reference => rawBook.guide.push(reference));
+      }
+
       resolve(context);
     });
   }

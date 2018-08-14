@@ -5,7 +5,7 @@ class Guide {
 
   constructor(rawObj) {
     this.title = rawObj.title;
-    this.type = rawObj.type || Guide.Types.UNDEFINED;
+    this.type = (rawObj.type || Guide.Types.UNDEFINED).toLowerCase();
     this.href = rawObj.href;
     privateProps.set(this, rawObj.findItem);
     Object.freeze(this);

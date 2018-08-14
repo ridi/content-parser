@@ -134,35 +134,38 @@ describe('Parsing Test', () => {
 
   it('_parseOpf test', () => {
     return _parser._parseOpf(_context).then((context) => {
-      context.titles.should.deep.equal(expectedContext.titles);
-      context.creators.should.deep.equal(expectedContext.creators);
-      context.subjects.should.deep.equal(expectedContext.subjects);
-      context.description.should.equal(expectedContext.description);
-      context.publisher.should.equal(expectedContext.publisher);
-      context.contributors.should.deep.equal(expectedContext.contributors);
-      context.dates.should.deep.equal(expectedContext.dates);
-      context.type.should.equal(expectedContext.type);
-      context.format.should.equal(expectedContext.format);
-      context.identifiers.should.deep.equal(expectedContext.identifiers);
-      context.source.should.equal(expectedContext.source);
-      context.language.should.equal(expectedContext.language);
-      context.relation.should.equal(expectedContext.relation);
-      context.coverage.should.equal(expectedContext.coverage);
-      context.rights.should.equal(expectedContext.rights);
-      context.epubVersion.should.equal(expectedContext.epubVersion);
+      const { rawBook } = context;
+      const { rawBook: expectedRawBook } = expectedContext;
+      rawBook.titles.should.deep.equal(expectedRawBook.titles);
+      rawBook.creators.should.deep.equal(expectedRawBook.creators);
+      rawBook.subjects.should.deep.equal(expectedRawBook.subjects);
+      rawBook.description.should.equal(expectedRawBook.description);
+      rawBook.publisher.should.equal(expectedRawBook.publisher);
+      rawBook.contributors.should.deep.equal(expectedRawBook.contributors);
+      rawBook.dates.should.deep.equal(expectedRawBook.dates);
+      rawBook.type.should.equal(expectedRawBook.type);
+      rawBook.format.should.equal(expectedRawBook.format);
+      rawBook.identifiers.should.deep.equal(expectedRawBook.identifiers);
+      rawBook.source.should.equal(expectedRawBook.source);
+      rawBook.language.should.equal(expectedRawBook.language);
+      rawBook.relation.should.equal(expectedRawBook.relation);
+      rawBook.coverage.should.equal(expectedRawBook.coverage);
+      rawBook.rights.should.equal(expectedRawBook.rights);
+      rawBook.epubVersion.should.equal(expectedRawBook.epubVersion);
       let current = 0;
-      context.items.forEach((item, idx) => {
-        const expectedItem = expectedContext.items[idx];
+      rawBook.items.forEach((item, idx) => {
+        const expectedItem = expectedRawBook.items[idx];
         item.id.should.equal(expectedItem.id);
         item.href.should.equal(expectedItem.href);
         item.mediaType.should.equal(expectedItem.mediaType);
-        item.isFileExists.should.be.true;
+        item.compressedSize.should.not.null;
+        item.uncompressedSize.should.not.null;
         if (item.spineIndex > SpineItem.UNKNOWN_INDEX) {
           item.spineIndex.should.equal(current);
           current += 1;
         }
       });
-      context.guide.should.deep.equal(expectedContext.guide);
+      rawBook.guide.should.deep.equal(expectedRawBook.guide);
       _context = context;
     });
   });

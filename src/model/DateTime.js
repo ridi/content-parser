@@ -1,7 +1,13 @@
+import { isString } from '../utils';
+
 class DateTime {
   constructor(rawObj) {
-    this.value = rawObj.value;
-    this.event = rawObj.event || DateTime.Events.UNDEFINED;
+    if (isString(rawObj)) {
+      this.value = rawObj;
+    } else {
+      this.value = rawObj.value;
+    }
+    this.event = (rawObj.event || DateTime.Events.UNDEFINED).toLowerCase();
     Object.freeze(this);
   }
 }

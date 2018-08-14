@@ -10,11 +10,11 @@
     "creators": [
       {
         "name": "Davin Ahn",
-        "role": "author"
+        "role": "aut"
       },
       {
         "name": "Davin Ahn",
-        "role": "editor"
+        "role": "edt"
       }
     ],
     "subjects": [
@@ -23,13 +23,11 @@
     "description": "Description",
     "publisher": "Davin",
     "contributors": [
-      {
-        "name": "Davin Ahn"
-      }
+      "Davin Ahn"
     ],
     "dates": [
       {
-        "value": "2018-08-07",
+        "value": "2018-08-09",
         "event": "modification"
       },
       {
@@ -42,11 +40,12 @@
     "identifiers": [
       {
         "value": "0-306-40615-2",
-        "scheme": "isbn"
+        "scheme": "ISBN"
       },
       {
+        "id": "BookId",
         "value": "urn:uuid:1379039a-3ea4-4071-9ce8-2b0c29fc0030",
-        "scheme": "uuid"
+        "scheme": "UUID"
       }
     ],
     "source": "My brain",
@@ -54,7 +53,7 @@
     "relation": "https://github.com/ridi/epub-parser",
     "coverage": "Coverage",
     "rights": "Copyright (c) 2018 Davin",
-    "epubVersion": 2.0,
+    "epubVersion": 2,
     "items": [
       {
         "id": "ncx",
@@ -154,7 +153,7 @@
         "uncompressedSize": 1,
         "itemType": "SpineItem",
         "spineIndex": 0,
-        "isLinear": false
+        "isLinear": true
       },
       {
         "id": "Section0001.xhtml",
@@ -164,7 +163,7 @@
         "uncompressedSize": 1,
         "itemType": "SpineItem",
         "spineIndex": 1,
-        "isLinear": false
+        "isLinear": true
       },
       {
         "id": "Section0002.xhtml",
@@ -174,7 +173,7 @@
         "uncompressedSize": 1,
         "itemType": "SpineItem",
         "spineIndex": 2,
-        "isLinear": false
+        "isLinear": true
       },
       {
         "id": "Style0001.css",
