@@ -18,6 +18,33 @@ class EpubParser {
       shouldValidatePackage: false,
       // If true, stop parsing when XML parsing errors occur.
       shouldXmlValidation: false,
+      // fast-xml-parser options.
+      xmlParserOptions: {
+        // Prepend given string to attribute name for identification.
+        attributeNamePrefix: '@attr_',
+        // (Valid name) Group all the attributes as properties of given name.
+        attrNodeName: false,
+        // Ignore attributes to be parsed.
+        ignoreAttributes: false,
+        // Remove namespace string from tag and attribute names.
+        ignoreNameSpace: false,
+        // A tag can have attributes without any value.
+        allowBooleanAttributes: true,
+        // Parse the value of text node to float, integer, or boolean.
+        parseNodeValue: true,
+        // Parse the value of an attribute to float, integer, or boolean.
+        parseAttributeValue: true,
+        // Trim string values of an attribute or node
+        trimValues: true,
+        // If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
+        cdataTagName: false,
+        // If true then values like "+123", or "0123" will not be parsed as number.
+        parseTrueNumberOnly: false,
+        // Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
+        tagValueProcessor,
+        // Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
+        attrValueProcessor,
+      },
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
       // Path to uncompress. Valid only when input is epub path.
