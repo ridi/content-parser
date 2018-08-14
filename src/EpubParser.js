@@ -19,7 +19,6 @@ import {
 const tagValueProcessor = value => he.decode(value);
 const attrValueProcessor = value => he.decode(value, { isAttributeValue: true });
 
-/* eslint-disable no-param-reassign, react/destructuring-assignment */
 class EpubParser {
   static get defaultOptions() {
     return {
@@ -54,9 +53,11 @@ class EpubParser {
         cdataTagName: false,
         // If true then values like "+123", or "0123" will not be parsed as number.
         parseTrueNumberOnly: false,
-        // Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
+        // Process tag value during transformation. Like HTML decoding, word capitalization, etc.
+        // Applicable in case of string only.
         tagValueProcessor,
-        // Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
+        // Process attribute value during transformation. Like HTML decoding, word capitalization, etc.
+        // Applicable in case of string only.
         attrValueProcessor,
       },
       // If false, stop parsing when NCX file not exists.
