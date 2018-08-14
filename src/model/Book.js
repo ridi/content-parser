@@ -29,7 +29,6 @@ class Book {
     this.coverage = rawBook.coverage;
     this.rights = rawBook.rights;
     this.epubVersion = rawBook.epubVersion;
-    this.checkSum = rawBook.checkSum || 0;
     this.items = (rawBook.items || []).map(rawObj => new rawObj.itemType(objectMerge(rawObj, { findItem })));
     this.ncx = this.items.find(item => item instanceof NcxItem);
     this.spines = this.items.filter(item => item instanceof SpineItem);

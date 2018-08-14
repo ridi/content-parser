@@ -8,7 +8,6 @@ class Item {
     this.compressedSize = rawObj.compressedSize;
     this.uncompressedSize = rawObj.uncompressedSize;
     this.compressionMethod = rawObj.compressionMethod;
-    this.checkSum = rawObj.checkSum || 0;
     if (this.constructor === Item) {
       Object.freeze(this);
     }

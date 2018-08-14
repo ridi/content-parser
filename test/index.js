@@ -150,14 +150,12 @@ describe('Parsing Test', () => {
       context.coverage.should.equal(expectedContext.coverage);
       context.rights.should.equal(expectedContext.rights);
       context.epubVersion.should.equal(expectedContext.epubVersion);
-      context.checkSum.should.be.above(0);
       let current = 0;
       context.items.forEach((item, idx) => {
         const expectedItem = expectedContext.items[idx];
         item.id.should.equal(expectedItem.id);
         item.href.should.equal(expectedItem.href);
         item.mediaType.should.equal(expectedItem.mediaType);
-        item.checkSum.should.be.above(0);
         item.isFileExists.should.be.true;
         if (item.spineIndex > SpineItem.UNKNOWN_INDEX) {
           item.spineIndex.should.equal(current);
@@ -251,8 +249,6 @@ describe('Parsing Test', () => {
       book.rights.should.equal(expectedBook.rights);
 
       book.epubVersion.should.equal(expectedBook.epubVersion);
-
-      book.checkSum.should.be.above(0);
 
       book.items.should.have.lengthOf(expectedBook.items.length);
       book.items.forEach((item, idx) => {
