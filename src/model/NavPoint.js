@@ -1,4 +1,8 @@
+const privateProps = new WeakMap();
+
 class NavPoint {
+  get spine() { return privateProps.get(this).findItem(this.src); }
+
   constructor(rawObj) {
     this.id = rawObj.id;
     this.label = rawObj.label;
@@ -6,7 +10,7 @@ class NavPoint {
     this.anchor = ((src = '') => src.split('#')[1])(this.src);
     this.depth = rawObj.depth || 0;
     this.children = rawObj.children || [];
-    this.spine = rawObj.spine;
+    privateProps.set(this, rawObj.findItem);
     Object.freeze(this);
   }
 }

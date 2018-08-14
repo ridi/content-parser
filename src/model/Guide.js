@@ -1,9 +1,13 @@
+const privateProps = new WeakMap();
+
 class Guide {
+  get item() { return privateProps.get(this).findItem(this.href); }
+
   constructor(rawObj) {
     this.title = rawObj.title;
     this.type = rawObj.type || Guide.Types.UNDEFINED;
     this.href = rawObj.href;
-    this.item = rawObj.item;
+    privateProps.set(this, rawObj.findItem);
     Object.freeze(this);
   }
 }
