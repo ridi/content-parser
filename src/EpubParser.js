@@ -40,7 +40,7 @@ class EpubParser {
         // Ignore attributes to be parsed.
         ignoreAttributes: false,
         // Remove namespace string from tag and attribute names.
-        ignoreNameSpace: false,
+        ignoreNameSpace: true,
         // A tag can have attributes without any value.
         allowBooleanAttributes: true,
         // Parse the value of text node to float, integer, or boolean.
