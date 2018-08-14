@@ -170,7 +170,7 @@ class EpubParser {
   _xmlEntry2Json(entry, options) {
     const { shouldXmlValidation, xmlParserOptions } = options;
     const xmlData = entry.getData().toString('utf8');
-    if (shouldXmlValidation && !XmlParser.validate(xmlData)) {
+    if (shouldXmlValidation && isExists(XmlParser.validate(xmlData).err)) {
       throw Errors.INVALID_XML;
     }
     return XmlParser.parse(xmlData, xmlParserOptions || {});
