@@ -75,6 +75,7 @@ class EpubParser {
     return {
       shouldValidatePackage: 'boolean',
       shouldXmlValidation: 'boolean',
+      xmlParserOptions: 'object',
       allowNcxFileMissing: 'boolean',
       unzipPath: 'string',
       createIntermediateDirectories: 'boolean',
@@ -97,10 +98,8 @@ class EpubParser {
       if (getPropertyDescriptor(EpubParser.defaultOptions, key) === undefined) {
         throw Errors.INVALID_OPTIONS;
       }
-      if (key !== 'xmlParserOptions') {
-        if (typeof options[key] !== EpubParser.defaultOptionTypes[key]) { // eslint-disable-line valid-typeof
-          throw Errors.INVALID_OPTION_VALUE;
-        }
+      if (typeof options[key] !== EpubParser.defaultOptionTypes[key]) { // eslint-disable-line valid-typeof
+        throw Errors.INVALID_OPTION_VALUE;
       }
     });
     if (isBuffer(input) && isExists(options.unzipPath)) {
