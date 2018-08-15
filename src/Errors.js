@@ -11,4 +11,5 @@ export default {
   OPF_NOT_FOUND: 'OPF file not found.',
   INVALID_OPF: 'Invalid OPF.',
   NCX_NOT_FOUND: 'NCX file not found.',
+  INVALID_NCX: 'Invalid NCX.',
 };

@@ -227,6 +227,9 @@ class EpubParser {
   }
 
   _makeValues(any, valueKey) {
+    if (!isExists(any)) {
+      return [];
+    }
     return isArray(any) ? any.map(item => this._normalizeKey(item, valueKey)) : [this._normalizeKey(any, valueKey)];
   }
 
@@ -345,7 +348,33 @@ class EpubParser {
   }
 
   _parseNcx(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+      const { allowNcxFileMissing } = context.options;
+      const ncxItem = context.rawBook.items.find(item => item.itemType === NcxItem.name);
+      if (isExists(ncxItem)) {
+        const entryName = path.join(context.basePath, ncxItem.href);
+        const ncxEntry = this._findEntry(entryName, context);
+        if (!allowNcxFileMissing && !isExists(ncxEntry)) {
+          throw Errors.NCX_NOT_FOUND;
+        }
+
+        const { ncx } = this._xmlEntry2Json(ncxEntry, context.options);
+        if (!isExists(ncx) || !isExists(ncx.navMap)) {
+          throw Errors.INVALID_NCX;
+        }
+
+        ncxItem.navPoints = [];
+        this._makeValues(ncx.navMap.navPoint).forEach((navPoint) => {
+          const { id, navLabel, content } = navPoint;
+          ncxItem.navPoints.push({
+            id,
+            label: navLabel.text,
+            src: content.src,
+          });
+        });
+      } else if (!allowNcxFileMissing) {
+        throw Errors.NCX_NOT_FOUND;
+      }
       resolve(context);
     });
   }

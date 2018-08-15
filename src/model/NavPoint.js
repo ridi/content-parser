@@ -1,3 +1,5 @@
+import { objectMerge } from '../utils';
+
 const privateProps = new WeakMap();
 
 class NavPoint {
@@ -9,7 +11,7 @@ class NavPoint {
     this.src = rawObj.src;
     this.anchor = ((src = '') => src.split('#')[1])(this.src);
     this.depth = rawObj.depth || 0;
-    this.children = rawObj.children || [];
+    this.children = (rawObj.children || []).map(o => new NavPoint(objectMerge(o, { depth: this.depth + 1 })));
     privateProps.set(this, rawObj.findItem);
     Object.freeze(this);
   }

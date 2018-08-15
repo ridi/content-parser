@@ -2,12 +2,14 @@ import { should } from 'chai';
 import fs from 'fs';
 
 import { EpubParser, Errors } from '../src';
+import { isExists } from '../src/utils';
 import Author from '../src/model/Author';
 import Book from '../src/model/Book';
 import Context from '../src/model/Context';
 import DateTime from '../src/model/DateTime';
 import Guide from '../src/model/Guide';
 import Identifier from '../src/model/Identifier';
+import NcxItem from '../src/model/NcxItem'
 import SpineItem from '../src/model/SpineItem';
 
 should(); // Initialize should
@@ -79,9 +81,9 @@ describe('Options test', () => {
   });
 
   it('Not allow NCX file missing', () => {
-    (() => {
-      new EpubParser(Files.NCX_MISSING, { allowNcxFileMissing: false }).parse();
-    }).should.throw(Errors.NCX_NOT_FOUND);
+    return new EpubParser(Files.NCX_MISSING, { allowNcxFileMissing: false }).parse().catch((err) => {
+      err.should.equal(Errors.NCX_NOT_FOUND);
+    });
   });
 
   it('Buffer input and unzip option can not coexist', () => {
@@ -172,14 +174,22 @@ describe('Parsing Test', () => {
 
   it('_parseNcx test', () => {
     return _parser._parseNcx(_context).then((context) => {
-      context.items.forEach((item, idx) => {
-        const expectedItem = expectedContext.items[idx];
-        item.id.should.equal(expectedItem.id);
-        item.itemType.should.equal(expectedItem.itemType);
-        if (item.navPoints) {
-          item.navPoints.should.equal(expectedItem.navPoints);
-        }
-      });
+      const { rawBook } = context;
+      const { rawBook: expectedRawBook } = expectedContext;
+      const ncxItem = rawBook.items.find(item => item.itemType === NcxItem.name);
+      const expectedNcxItem = expectedRawBook.items[0];
+      const shouldEqual = (navPoints, expectedNavPoints) => {
+        navPoints.forEach((navPoint, idx) => {
+          const expectedNavPoint = expectedNavPoints[idx];
+          navPoint.id.should.equal(expectedNavPoint.id);
+          navPoint.label.should.equal(expectedNavPoint.label);
+          navPoint.src.should.equal(expectedNavPoint.src);
+          if (isExists(navPoint.children)) {
+            shouldEqual(navPoint.children, expectedNavPoint.children);
+          }
+        });
+      }
+      shouldEqual(ncxItem.navPoints, expectedNcxItem.navPoints);
       _context = context;
     });
   });
