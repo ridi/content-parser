@@ -223,7 +223,7 @@ class EpubParser {
     return newObj;
   }
 
-  _makeValues(any, valueKey) {
+  _makeSafeValues(any, valueKey) {
     if (!isExists(any)) {
       return [];
     }
@@ -278,16 +278,16 @@ class EpubParser {
         title, creator, subject, description, publisher, contributor, date, type,
         format, identifier, source, language, relation, coverage, rights,
       } = root.metadata;
-      rawBook.titles = this._makeValues(title);
-      rawBook.creators = this._makeValues(creator, 'name');
-      rawBook.subjects = this._makeValues(subject);
+      rawBook.titles = this._makeSafeValues(title);
+      rawBook.creators = this._makeSafeValues(creator, 'name');
+      rawBook.subjects = this._makeSafeValues(subject);
       rawBook.description = description;
       rawBook.publisher = publisher;
-      rawBook.contributors = this._makeValues(contributor, 'name');
-      rawBook.dates = this._makeValues(date, 'value');
+      rawBook.contributors = this._makeSafeValues(contributor, 'name');
+      rawBook.dates = this._makeSafeValues(date, 'value');
       rawBook.type = type;
       rawBook.format = format;
-      rawBook.identifiers = this._makeValues(identifier, 'value');
+      rawBook.identifiers = this._makeSafeValues(identifier, 'value');
       rawBook.source = source;
       rawBook.language = language;
       rawBook.relation = relation;
@@ -295,7 +295,7 @@ class EpubParser {
       rawBook.rights = rights;
 
       rawBook.items = [];
-      this._makeValues(root.manifest.item).forEach((item) => {
+      this._makeSafeValues(root.manifest.item).forEach((item) => {
         const rawItem = {};
         rawItem.id = item.id;
         rawItem.href = item.href;
@@ -313,7 +313,7 @@ class EpubParser {
       });
 
       let spineIndex = 0;
-      const itemref = this._makeValues(root.spine.itemref);
+      const itemref = this._makeSafeValues(root.spine.itemref);
       const tocId = root.spine[`${attributeNamePrefix}toc`];
       rawBook.items.forEach((item) => {
         if (item.itemType === NcxItem.name) {
@@ -337,7 +337,7 @@ class EpubParser {
 
       rawBook.guide = [];
       if (isExists(root.guide)) {
-        this._makeValues(root.guide.reference).forEach(reference => rawBook.guide.push(reference));
+        this._makeSafeValues(root.guide.reference).forEach(reference => rawBook.guide.push(reference));
       }
 
       resolve(context);
@@ -361,7 +361,7 @@ class EpubParser {
         }
 
         ncxItem.navPoints = [];
-        this._makeValues(ncx.navMap.navPoint).forEach((navPoint) => {
+        this._makeSafeValues(ncx.navMap.navPoint).forEach((navPoint) => {
           const { id, navLabel, content } = navPoint;
           ncxItem.navPoints.push({
             id,
