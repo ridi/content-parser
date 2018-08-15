@@ -22,6 +22,8 @@ import {
   isObject,
   isString,
   objectMerge,
+  createDirectory,
+  removeDirectory,
 } from './utils';
 
 const textNodeName = '#text';
@@ -377,7 +379,26 @@ class EpubParser {
   }
 
   _unzipIfNeeded(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+      const {
+        unzipPath,
+        removePreviousFile,
+        createIntermediateDirectories,
+      } = context.options;
+      if (isExists(unzipPath)) {
+        if (removePreviousFile) {
+          removeDirectory(unzipPath);
+        }
+        if (createIntermediateDirectories) {
+          createDirectory(unzipPath);
+        }
+        try {
+          context.zip.extractAllTo(unzipPath, false);
+          context.unzipped = true;
+        } catch (err) {
+          throw err;
+        }
+      }
       resolve(context);
     });
   }
