@@ -85,13 +85,6 @@ describe('Options test', () => {
       err.should.equal(Errors.NCX_NOT_FOUND);
     });
   });
-
-  it('Buffer input and unzip option can not coexist', () => {
-    (() => {
-      const buffer = fs.readFileSync(Files.DEFAULT);
-      new EpubParser(buffer, { unzipPath: './temp' });
-    }).should.throw(Errors.FILE_PATH_INPUT_REQUIRED);
-  })
 });
 
 describe('Parsing Test', () => {

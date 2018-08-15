@@ -74,7 +74,7 @@ class EpubParser {
       },
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
-      // Path to uncompress. Valid only when input is epub path.
+      // Path to uncompress.
       unzipPath: undefined,
       // If true, creates intermediate directories for the unzipPath.
       createIntermediateDirectories: true,
@@ -114,9 +114,6 @@ class EpubParser {
         throw Errors.INVALID_OPTION_VALUE;
       }
     });
-    if (isBuffer(input) && isExists(options.unzipPath)) {
-      throw Errors.FILE_PATH_INPUT_REQUIRED;
-    }
     this._options = objectMerge(EpubParser.defaultOptions, options);
   }
 
