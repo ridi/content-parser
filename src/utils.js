@@ -81,3 +81,10 @@ export function removeLastPathComponent(target) {
   components.pop();
   return components.join(path.sep);
 }
+
+export function safePathJoin(...components) {
+  if (components.findIndex(component => !isString(component)) >= 0) {
+    return '';
+  }
+  return path.join(...components);
+}

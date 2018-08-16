@@ -67,7 +67,7 @@
     "items": [
       {
         "id": "ncx",
-        "href": "toc.ncx",
+        "href": "OEBPS/toc.ncx",
         "mediaType": "application/x-dtbncx+xml",
         "compressedSize": 1,
         "uncompressedSize": 1,
@@ -79,7 +79,7 @@
               "text": "Cover"
             },
             "content": {
-              "src": "Text/Cover.xhtml"
+              "src": "OEBPS/Text/Cover.xhtml"
             }
           },
           {
@@ -88,7 +88,7 @@
               "text": "Chapter 1"
             },
             "content": {
-              "src": "Text/Section0001.xhtml"
+              "src": "OEBPS/Text/Section0001.xhtml"
             },
             "children": [
               {
@@ -97,7 +97,7 @@
                   "text": "1."
                 },
                 "content": {
-                  "src": "Text/Section0001.xhtml#1"
+                  "src": "OEBPS/Text/Section0001.xhtml#1"
                 },
                 "children": [
                   {
@@ -106,7 +106,7 @@
                       "text": "1.1."
                     },
                     "content": {
-                      "src": "Text/Section0001.xhtml#1_1"
+                      "src": "OEBPS/Text/Section0001.xhtml#1_1"
                     }
                   },
                   {
@@ -115,7 +115,7 @@
                       "text": "1.2."
                     },
                     "content": {
-                      "src": "Text/Section0001.xhtml#1_2"
+                      "src": "OEBPS/Text/Section0001.xhtml#1_2"
                     }
                   }
                 ]
@@ -126,7 +126,7 @@
                   "text": "2."
                 },
                 "content": {
-                  "src": "Text/Section0001.xhtml#2"
+                  "src": "OEBPS/Text/Section0001.xhtml#2"
                 },
                 "children": [
                   {
@@ -135,7 +135,7 @@
                       "text": "2.1."
                     },
                     "content": {
-                      "src": "Text/Section0001.xhtml#2_1"
+                      "src": "OEBPS/Text/Section0001.xhtml#2_1"
                     }
                   },
                   {
@@ -144,7 +144,7 @@
                       "text": "2.2."
                     },
                     "content": {
-                      "src": "Text/Section0001.xhtml#2_2"
+                      "src": "OEBPS/Text/Section0001.xhtml#2_2"
                     }
                   }
                 ]
@@ -157,7 +157,7 @@
               "text": "Chapter 2"
             },
             "content": {
-              "src": "Text/Section0002.xhtml"
+              "src": "OEBPS/Text/Section0002.xhtml"
             },
             "children": [
               {
@@ -166,7 +166,7 @@
                   "text": "1."
                 },
                 "content": {
-                  "src": "Text/Section0002.xhtml#1"
+                  "src": "OEBPS/Text/Section0002.xhtml#1"
                 },
                 "children": [
                   {
@@ -175,7 +175,7 @@
                       "text": "1.1."
                     },
                     "content": {
-                      "src": "Text/Section0002.xhtml#1_1"
+                      "src": "OEBPS/Text/Section0002.xhtml#1_1"
                     }
                   },
                   {
@@ -184,7 +184,7 @@
                       "text": "1.2."
                     },
                     "content": {
-                      "src": "Text/Section0002.xhtml#1_2"
+                      "src": "OEBPS/Text/Section0002.xhtml#1_2"
                     }
                   },
                   {
@@ -193,7 +193,7 @@
                       "text": "1.3."
                     },
                     "content": {
-                      "src": "Text/Section0002.xhtml#1_3"
+                      "src": "OEBPS/Text/Section0002.xhtml#1_3"
                     },
                     "children": [
                       {
@@ -203,7 +203,7 @@
                           "text": "1.3.1."
                         },
                         "content": {
-                          "src": "Text/Section0002.xhtml#1_3_1"
+                          "src": "OEBPS/Text/Section0002.xhtml#1_3_1"
                         }
                       }
                     ]
@@ -216,7 +216,7 @@
                   "text": "2."
                 },
                 "content": {
-                  "src": "Text/Section0002.xhtml#2"
+                  "src": "OEBPS/Text/Section0002.xhtml#2"
                 }
               }
             ]
@@ -234,7 +234,7 @@
       },
       {
         "id": "Cover.xhtml",
-        "href": "Text/Cover.xhtml",
+        "href": "OEBPS/Text/Cover.xhtml",
         "mediaType": "application/xhtml+xml",
         "compressedSize": 1,
         "uncompressedSize": 1,
@@ -244,7 +244,7 @@
       },
       {
         "id": "Section0001.xhtml",
-        "href": "Text/Section0001.xhtml",
+        "href": "OEBPS/Text/Section0001.xhtml",
         "mediaType": "application/xhtml+xml",
         "compressedSize": 1,
         "uncompressedSize": 1,
@@ -254,7 +254,7 @@
       },
       {
         "id": "Section0002.xhtml",
-        "href": "Text/Section0002.xhtml",
+        "href": "OEBPS/Text/Section0002.xhtml",
         "mediaType": "application/xhtml+xml",
         "compressedSize": 1,
         "uncompressedSize": 1,
@@ -264,7 +264,7 @@
       },
       {
         "id": "Style0001.css",
-        "href": "Styles/Style0001.css",
+        "href": "OEBPS/Styles/Style0001.css",
         "mediaType": "text/css",
         "compressedSize": 1,
         "uncompressedSize": 1,
@@ -272,7 +272,7 @@
       },
       {
         "id": "NotoSans-Regular.ttf",
-        "href": "Fonts/NotoSans-Regular.ttf",
+        "href": "OEBPS/Fonts/NotoSans-Regular.ttf",
         "mediaType": "application/x-font-ttf",
         "compressedSize": 1,
         "uncompressedSize": 1,
@@ -280,7 +280,7 @@
       },
       {
         "id": "ridibooks_logo.png",
-        "href": "Images/ridibooks_logo.png",
+        "href": "OEBPS/Images/ridibooks_logo.png",
         "mediaType": "image/png",
         "compressedSize": 1,
         "uncompressedSize": 1,
@@ -292,7 +292,7 @@
       {
         "title": "Cover",
         "type": "cover",
-        "href": "Text/Cover.xhtml"
+        "href": "OEBPS/Text/Cover.xhtml"
       }
     ]
   }

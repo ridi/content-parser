@@ -15,6 +15,7 @@ import {
   createDirectory,
   removeDirectory,
   removeLastPathComponent,
+  safePathJoin,
 } from '../src/utils';
 import Author from '../src/model/Author';
 import Book from '../src/model/Book';
@@ -148,6 +149,14 @@ describe('Util test', () => {
         current = removeLastPathComponent(current);
       }
     });
+  });
+
+  it('safePathJoin test', () => {
+    const sep = path.sep;
+    safePathJoin('temp', 'a', 'b', 'c').should.equal(`temp${sep}a${sep}b${sep}c`);
+    safePathJoin('temp', undefined).should.equal('');
+    safePathJoin('temp', '..', '..', 'a', 'b').should.equal(`..${sep}a${sep}b`);
+    safePathJoin('..', '..', 'temp').should.equal(`..${sep}..${sep}temp`);
   });
 });
 

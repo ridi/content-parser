@@ -25,6 +25,7 @@ import {
   objectMerge,
   createDirectory,
   removeDirectory,
+  safePathJoin,
 } from './utils';
 
 const textNodeName = '#text';
@@ -324,12 +325,15 @@ class EpubParser {
       this._makeSafeValues(root.manifest.item).forEach((item) => {
         const rawItem = {};
         rawItem.id = item.id;
-        rawItem.href = item.href;
+        if (isExists(item.href) && item.href.length > 0) {
+          rawItem.href = safePathJoin(context.basePath, item.href);
+        } else {
+          rawItem.href = item.href;
+        }
         rawItem.mediaType = item['media-type'];
         rawItem.itemType = this._getItemType(rawItem.mediaType);
 
-        const entryName = path.join(context.basePath, rawItem.href);
-        const itemEntry = this._findEntry(entryName, context);
+        const itemEntry = this._findEntry(rawItem.href, context);
         if (isExists(itemEntry)) {
           rawItem.compressedSize = itemEntry.header.compressedSize;
           rawItem.uncompressedSize = itemEntry.header.size;
@@ -376,7 +380,7 @@ class EpubParser {
           if (!isExists(coverGuide) && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
             coverGuide = reference;
           }
-          rawBook.guide.push(reference);
+          rawBook.guide.push(objectMerge(reference, { href: safePathJoin(context.basePath, reference.href) }));
         });
         if (!foundCover && isExists(coverGuide)) {
           const imageItem = rawBook.items.find(item => item.href === coverGuide.href && item.itemType === ImageItem);
@@ -396,8 +400,7 @@ class EpubParser {
       const { allowNcxFileMissing } = context.options;
       const ncxItem = context.rawBook.items.find(item => item.itemType === NcxItem);
       if (isExists(ncxItem)) {
-        const entryName = path.join(context.basePath, ncxItem.href);
-        const ncxEntry = this._findEntry(entryName, context);
+        const ncxEntry = this._findEntry(ncxItem.href, context);
         if (!allowNcxFileMissing && !isExists(ncxEntry)) {
           throw Errors.NCX_NOT_FOUND;
         }
@@ -409,7 +412,21 @@ class EpubParser {
 
         ncxItem.navPoints = [];
         const mapping = { navPoint: { key: 'children', isArray: true } };
-        this._makeSafeValues(ncx.navMap.navPoint, mapping).forEach(navPoint => ncxItem.navPoints.push(navPoint));
+        const normalizeSrc = (np) => {
+          if (isExists(np.children)) {
+            np.children.forEach((child, idx) => {
+              np.children[idx] = normalizeSrc(child);
+            });
+          }
+          if (isExists(np.content) && isExists(np.content.src) && np.content.src.length > 0) {
+            np.content.src = safePathJoin(context.basePath, np.content.src);
+          }
+          return np;
+        };
+        // eslint-disable-next-line arrow-body-style
+        this._makeSafeValues(ncx.navMap.navPoint, mapping).forEach((navPoint) => {
+          return ncxItem.navPoints.push(normalizeSrc(navPoint));
+        });
       } else if (!allowNcxFileMissing) {
         throw Errors.NCX_NOT_FOUND;
       }
