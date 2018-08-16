@@ -58,9 +58,9 @@ class EpubParser {
         // A tag can have attributes without any value.
         allowBooleanAttributes: true,
         // Parse the value of text node to float, integer, or boolean.
-        parseNodeValue: true,
+        parseNodeValue: false,
         // Parse the value of an attribute to float, integer, or boolean.
-        parseAttributeValue: true,
+        parseAttributeValue: false,
         // Trim string values of an attribute or node
         trimValues: true,
         // If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
@@ -125,8 +125,8 @@ class EpubParser {
       .then(context => this._parseMetaInf(context))
       .then(context => this._parseOpf(context))
       .then(context => this._parseNcx(context))
-      .then(context => this._createBook(context))
       .then(context => this._unzipIfNeeded(context))
+      .then(context => this._createBook(context))
       .then(book => book);
   }
 
@@ -208,28 +208,38 @@ class EpubParser {
     });
   }
 
-  _normalizeKey(obj, valueKey) {
+  _normalizeKey(obj, mapping = {}) {
     if (isString(obj)) {
       return obj;
     }
     const newObj = {};
     getPropertyKeys(obj).forEach((key) => {
-      let newKey = key;
-      if (isExists(valueKey) && key === textNodeName) {
-        newKey = key.replace(textNodeName, valueKey);
-      } else {
-        newKey = key.replace(attributeNamePrefix, '');
+      let shouldMakeArray = false;
+      let newKey = key.replace(attributeNamePrefix, '');
+      if (isExists(mapping[newKey])) {
+        shouldMakeArray = mapping[newKey].isArray || false;
+        newKey = mapping[newKey].key;
       }
-      newObj[newKey] = isObject(obj[key]) ? this._normalizeKey(obj[key]) : obj[key];
+      let value = obj[key];
+      if (isArray(value)) {
+        value = this._makeSafeValues(value, mapping);
+      } else if (isObject(value)) {
+        if (shouldMakeArray) {
+          value = [this._normalizeKey(value, mapping)];
+        } else {
+          value = this._normalizeKey(value, mapping);
+        }
+      }
+      newObj[newKey] = value;
     });
     return newObj;
   }
 
-  _makeSafeValues(any, valueKey) {
+  _makeSafeValues(any, mapping = {}) {
     if (!isExists(any)) {
       return [];
     }
-    return isArray(any) ? any.map(item => this._normalizeKey(item, valueKey)) : [this._normalizeKey(any, valueKey)];
+    return isArray(any) ? any.map(item => this._normalizeKey(item, mapping)) : [this._normalizeKey(any, mapping)];
   }
 
   _getItemType(mediaType) {
@@ -274,22 +284,25 @@ class EpubParser {
       }
 
       const { rawBook } = context;
-      rawBook.epubVersion = root[`${attributeNamePrefix}version`];
+      rawBook.epubVersion = parseFloat(root[`${attributeNamePrefix}version`]);
 
       const {
         title, creator, subject, description, publisher, contributor, date, type,
         format, identifier, source, language, relation, coverage, rights,
       } = root.metadata;
+      const mapping = {};
       rawBook.titles = this._makeSafeValues(title);
-      rawBook.creators = this._makeSafeValues(creator, 'name');
+      mapping[textNodeName] = { key: 'name' };
+      rawBook.creators = this._makeSafeValues(creator, mapping);
       rawBook.subjects = this._makeSafeValues(subject);
       rawBook.description = description;
       rawBook.publisher = publisher;
-      rawBook.contributors = this._makeSafeValues(contributor, 'name');
-      rawBook.dates = this._makeSafeValues(date, 'value');
+      rawBook.contributors = this._makeSafeValues(contributor, mapping);
+      mapping[textNodeName] = { key: 'value' };
+      rawBook.dates = this._makeSafeValues(date, mapping);
       rawBook.type = type;
       rawBook.format = format;
-      rawBook.identifiers = this._makeSafeValues(identifier, 'value');
+      rawBook.identifiers = this._makeSafeValues(identifier, mapping);
       rawBook.source = source;
       rawBook.language = language;
       rawBook.relation = relation;
@@ -363,14 +376,8 @@ class EpubParser {
         }
 
         ncxItem.navPoints = [];
-        this._makeSafeValues(ncx.navMap.navPoint).forEach((navPoint) => {
-          const { id, navLabel, content } = navPoint;
-          ncxItem.navPoints.push({
-            id,
-            label: navLabel.text,
-            src: content.src,
-          });
-        });
+        const mapping = { navPoint: { key: 'children', isArray: true } };
+        this._makeSafeValues(ncx.navMap.navPoint, mapping).forEach(navPoint => ncxItem.navPoints.push(navPoint));
       } else if (!allowNcxFileMissing) {
         throw Errors.NCX_NOT_FOUND;
       }
@@ -404,8 +411,8 @@ class EpubParser {
   }
 
   _createBook(context) {
-    return new Promise((resolve, reject) => {
-      resolve(new Book(context.rawBook)); 
+    return new Promise((resolve) => {
+      resolve(new Book(context.rawBook));
     });
   }
 }

@@ -1,10 +1,11 @@
 import Item from './Item';
+import { isExists } from '../utils';
 
 class SpineItem extends Item {
   constructor(rawObj) {
     super(rawObj);
-    this.spineIndex = rawObj.spineIndex || SpineItem.UNKNOWN_INDEX;
-    this.isLinear = rawObj.isLinear;
+    this.spineIndex = isExists(rawObj.spineIndex) ? rawObj.spineIndex : SpineItem.UNKNOWN_INDEX;
+    this.isLinear = isExists(rawObj.isLinear) ? rawObj.isLinear : true;
     Object.freeze(this);
   }
 }

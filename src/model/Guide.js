@@ -7,7 +7,7 @@ class Guide {
     this.title = rawObj.title;
     this.type = (rawObj.type || Guide.Types.UNDEFINED).toLowerCase();
     this.href = rawObj.href;
-    privateProps.set(this, rawObj.findItem);
+    privateProps.set(this, { findItem: rawObj.findItem });
     Object.freeze(this);
   }
 }

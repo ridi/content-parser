@@ -153,6 +153,7 @@ describe('Parsing Test', () => {
         item.id.should.equal(expectedItem.id);
         item.href.should.equal(expectedItem.href);
         item.mediaType.should.equal(expectedItem.mediaType);
+        item.itemType.name.should.equal(expectedItem.itemType);
         item.compressedSize.should.not.null;
         item.uncompressedSize.should.not.null;
         if (item.spineIndex > SpineItem.UNKNOWN_INDEX) {
@@ -175,13 +176,13 @@ describe('Parsing Test', () => {
         navPoints.forEach((navPoint, idx) => {
           const expectedNavPoint = expectedNavPoints[idx];
           navPoint.id.should.equal(expectedNavPoint.id);
-          navPoint.label.should.equal(expectedNavPoint.label);
-          navPoint.src.should.equal(expectedNavPoint.src);
+          navPoint.navLabel.text.should.equal(expectedNavPoint.navLabel.text);
+          navPoint.content.src.should.equal(expectedNavPoint.content.src);
           if (isExists(navPoint.children)) {
             shouldEqual(navPoint.children, expectedNavPoint.children);
           }
         });
-      }
+      };
       shouldEqual(ncxItem.navPoints, expectedNcxItem.navPoints);
       _context = context;
     });
@@ -229,8 +230,8 @@ describe('Parsing Test', () => {
       book.dates.should.have.lengthOf(expectedBook.dates.length);
       book.dates.forEach((date, idx) => {
         const expectedDate = expectedBook.dates[idx];
-        dates.name.should.equal(expectedDate.name);
-        dates.event.should.equal(expectedDate.role);
+        date.value.should.equal(expectedDate.value);
+        date.event.should.equal(expectedDate.event);
       });
 
       book.type.should.equal(expectedBook.type);
@@ -240,8 +241,8 @@ describe('Parsing Test', () => {
       book.identifiers.should.have.lengthOf(expectedBook.identifiers.length);
       book.identifiers.forEach((identifier, idx) => {
         const expectedIdentifier = expectedBook.identifiers[idx];
-        identifier.name.should.equal(expectedIdentifier.name);
-        identifier.scheme.should.equal(expectedIdentifier.role);
+        identifier.value.should.equal(expectedIdentifier.value);
+        identifier.scheme.should.equal(expectedIdentifier.scheme);
       });
 
       book.source.should.equal(expectedBook.source);
@@ -263,11 +264,13 @@ describe('Parsing Test', () => {
 
       book.ncx.navPoints.should.have.lengthOf(expectedBook.ncx.navPoints.length);
       book.ncx.navPoints.forEach((navPoint, idx) => {
-        const expectedNavPoints = expectedBook.ncx.navPoints[idx];
+        const expectedNavPoint = expectedBook.ncx.navPoints[idx];
         navPoint.id.should.equal(expectedNavPoint.id);
         navPoint.label.should.equal(expectedNavPoint.label);
         navPoint.src.should.equal(expectedNavPoint.src);
-        navPoint.anchor.should.equal(expectedNavPoint.anchor);
+        if (isExists(expectedNavPoint.anchor)) {
+          navPoint.anchor.should.equal(expectedNavPoint.anchor);
+        }
         navPoint.depth.should.equal(expectedNavPoint.depth);
         navPoint.children.should.have.lengthOf(expectedNavPoint.children.length);
         navPoint.children.forEach((childNavPoint, idx) => {
