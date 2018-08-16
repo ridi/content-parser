@@ -28,6 +28,8 @@ import {
   safePathJoin,
 } from './utils';
 
+const privateProps = new WeakMap();
+
 const textNodeName = '#text';
 const attributeNamePrefix = '@attr_';
 const tagValueProcessor = value => he.decode(value);
@@ -99,6 +101,10 @@ class EpubParser {
     };
   }
 
+  get input() { return privateProps.get(this).input; }
+
+  get options() { return privateProps.get(this).options; }
+
   constructor(input, options = {}) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
@@ -109,7 +115,6 @@ class EpubParser {
     } else if (!isExists(input) || !isBuffer(input)) {
       throw Errors.INVALID_INPUT;
     }
-    this._input = input;
     getPropertyKeys(options).forEach((key) => {
       if (!isExists(getPropertyDescriptor(EpubParser.defaultOptions, key))) {
         throw Errors.INVALID_OPTIONS;
@@ -125,7 +130,10 @@ class EpubParser {
         }
       }
     });
-    this._options = objectMerge(EpubParser.defaultOptions, options);
+    privateProps.set(this, {
+      input,
+      options: objectMerge(EpubParser.defaultOptions, options),
+    });
   }
 
   parse() {
