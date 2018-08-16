@@ -14,7 +14,7 @@ class Guide {
 
 Guide.Types = Object.freeze({
   UNDEFINED: 'undefined',
-  COVER: 'title', // The book cover(s, jacket information, etc.
+  COVER: 'cover', // The book cover(s, jacket information, etc.
   TITLE_PAGE: 'title-page', // Page with possibly title, author, publisher, and other metadata.
   TOC: 'toc', // Table Of Contents.
   INDEX: 'index', // Back-of-book style index.

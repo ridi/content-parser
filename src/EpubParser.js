@@ -8,6 +8,7 @@ import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';
 import FontItem from './model/FontItem';
+import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
 import Item from './model/Item';
 import NcxItem from './model/NcxItem';
@@ -311,6 +312,8 @@ class EpubParser {
       rawBook.metas = this._makeSafeValues(meta);
 
       rawBook.items = [];
+      const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
+      let foundCover = false;
       this._makeSafeValues(root.manifest.item).forEach((item) => {
         const rawItem = {};
         rawItem.id = item.id;
@@ -323,6 +326,11 @@ class EpubParser {
         if (isExists(itemEntry)) {
           rawItem.compressedSize = itemEntry.header.compressedSize;
           rawItem.uncompressedSize = itemEntry.header.size;
+        }
+
+        if (!foundCover && isExists(coverMeta) && rawItem.id === coverMeta.content && rawItem.itemType === ImageItem) {
+          rawItem.isCover = true;
+          foundCover = true;
         }
 
         rawBook.items.push(rawItem);
@@ -348,12 +356,28 @@ class EpubParser {
           } else {
             item.itemType = Item;
           }
+        } else if (!foundCover && item.itemType === ImageItem && item.id.toLowerCase() === 'cover') {
+          item.isCover = true;
+          foundCover = true;
         }
       });
 
       rawBook.guide = [];
       if (isExists(root.guide)) {
-        this._makeSafeValues(root.guide.reference).forEach(reference => rawBook.guide.push(reference));
+        let coverGuide;
+        this._makeSafeValues(root.guide.reference).forEach((reference) => {
+          if (!isExists(coverGuide) && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
+            coverGuide = reference;
+          }
+          rawBook.guide.push(reference);
+        });
+        if (!foundCover && isExists(coverGuide)) {
+          const imageItem = rawBook.items.find(item => item.href === coverGuide.href && item.itemType === ImageItem);
+          if (isExists(imageItem)) {
+            imageItem.isCover = true;
+            foundCover = true;
+          }
+        }
       }
 
       resolve(context);
