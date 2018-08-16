@@ -41,14 +41,14 @@ describe('EpubLoader input test', () => {
 describe('EpubLoader option test', () => {
   const buffer = fs.readFileSync(Files.DEFAULT);
   it('Invalid options', () => {
-    (() => { 
-      new EpubLoader(buffer, { i_am_invalid_option: true });
+    (() => {
+      new EpubLoader(buffer).read(new Item({}), { i_am_invalid_option: true });
     }).should.throw(Errors.INVALID_OPTIONS);
   });
 
   it('Invalid option value', () => {
-    (() => { 
-      new EpubParser(buffer, { extractBody: 'true' });
+    (() => {
+      new EpubLoader(buffer).read(new Item({}), { encoding: true });
     }).should.throw(Errors.INVALID_OPTION_VALUE);
   });
 });
@@ -61,13 +61,14 @@ new EpubParser(buffer).parse().then((book) => {
   describe('EpubLoader reading test (buffer)', () => {
     const loader = new EpubLoader(buffer);
     it('Read spines', () => {
-      loader.readText(book.spines[0]).should.equal(expectedSpine);
-      loader.readText(book.ncx.navPoints[0].spine).should.equal(expectedSpine);
-      loader.readText(book.guide[0].item).should.equal(expectedSpine);
+      const options = { encoding: 'utf8' };
+      loader.read(book.spines[0], options).should.equal(expectedSpine);
+      loader.read(book.ncx.navPoints[0].spine, options).should.equal(expectedSpine);
+      loader.read(book.guide[0].item, options).should.equal(expectedSpine);
     });
   
     it('Read resources', () => {
-      loader.readData(book.cover).should.equal(expectedCover);
+      loader.read(book.cover).should.equal(expectedCover);
     });
   });
 });
@@ -77,13 +78,14 @@ new EpubParser(Files.DEFAULT, { unzipPath }).parse().then((book) => {
   describe('EpubLoader reading test (path)', () => {
     const loader = new EpubLoader(unzipPath);
     it('Read spines', () => {
-      loader.readText(book.spines[0]).should.equal(expectedSpine);
-      loader.readText(book.ncx.navPoints[0].spine).should.equal(expectedSpine);
-      loader.readText(book.guide[0].item).should.equal(expectedSpine);
+      const options = { encoding: 'utf8' };
+      loader.read(book.spines[0], options).should.equal(expectedSpine);
+      loader.read(book.ncx.navPoints[0].spine, options).should.equal(expectedSpine);
+      loader.read(book.guide[0].item, options).should.equal(expectedSpine);
     });
   
     it('Read resources', () => {
-      loader.readData(book.cover).should.equal(expectedCover);
+      loader.read(book.cover).should.equal(expectedCover);
     });
   });
 });
