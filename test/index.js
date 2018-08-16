@@ -1,4 +1,4 @@
-import { should } from 'chai';
+import { assert, should } from 'chai';
 import fs from 'fs';
 
 import { EpubParser, Errors } from '../src';
@@ -160,6 +160,8 @@ describe('Parsing Test', () => {
         if (item.spineIndex > SpineItem.UNKNOWN_INDEX) {
           item.spineIndex.should.equal(current);
           current += 1;
+        } else {
+          assert(!isExists(item.spineIndex));
         }
       });
       rawBook.guide.should.deep.equal(expectedRawBook.guide);
@@ -181,6 +183,8 @@ describe('Parsing Test', () => {
           navPoint.content.src.should.equal(expectedNavPoint.content.src);
           if (isExists(navPoint.children)) {
             shouldEqual(navPoint.children, expectedNavPoint.children);
+          } else {
+            assert(!isExists(navPoint.children));
           }
         });
       };
@@ -269,8 +273,10 @@ describe('Parsing Test', () => {
         navPoint.id.should.equal(expectedNavPoint.id);
         navPoint.label.should.equal(expectedNavPoint.label);
         navPoint.src.should.equal(expectedNavPoint.src);
-        if (isExists(expectedNavPoint.anchor)) {
+        if (isExists(navPoint.anchor)) {
           navPoint.anchor.should.equal(expectedNavPoint.anchor);
+        } else {
+          assert(!isExists(navPoint.anchor));
         }
         navPoint.depth.should.equal(expectedNavPoint.depth);
         navPoint.children.should.have.lengthOf(expectedNavPoint.children.length);
@@ -281,6 +287,8 @@ describe('Parsing Test', () => {
         });
         if (navPoint.spine) {
           navPoint.spine.id.should.equal(expectedNavPoint.spine.id);
+        } else {
+          assert(!isExists(navPoint.spine));
         }
       });
 
@@ -315,6 +323,11 @@ describe('Parsing Test', () => {
         guide.title.should.equal(expectedGuide.title);
         guide.type.should.equal(expectedGuide.type);
         guide.item.id.should.equal(expectedGuide.item.id);
+        if (guide.item) {
+          guide.item.id.should.equal(expectedGuide.item.id);
+        } else {
+          assert(!isExists(guide.item));
+        }
       });
     });
   });
