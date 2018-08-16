@@ -150,8 +150,8 @@ class EpubParser {
   _prepare() {
     return new Promise((resolve) => {
       const context = new Context();
-      context.options = this._options;
-      context.zip = new Zip(this._input);
+      context.options = this.options;
+      context.zip = new Zip(this.input);
       resolve(context);
     });
   }
