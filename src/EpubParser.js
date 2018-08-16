@@ -116,6 +116,13 @@ class EpubParser {
       if (typeof options[key] !== EpubParser.defaultOptionTypes[key]) { // eslint-disable-line valid-typeof
         throw Errors.INVALID_OPTION_VALUE;
       }
+      if (key === 'xmlParserOptions') {
+        const xmlParserOptions = options[key];
+        const { textNodeName: op1, attributeNamePrefix: op2 } = xmlParserOptions;
+        if (isExists(op1) || isExists(op2)) {
+          throw Errors.INVALID_OPTIONS;
+        }
+      }
     });
     this._options = objectMerge(EpubParser.defaultOptions, options);
   }

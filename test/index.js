@@ -59,6 +59,9 @@ describe('Options test', () => {
     (() => { 
       new EpubParser(Files.DEFAULT, { i_am_invalid_option: true });
     }).should.throw(Errors.INVALID_OPTIONS);
+    (() => { 
+      new EpubParser(Files.DEFAULT, { xmlParserOptions: { textNodeName: '@text' } });
+    }).should.throw(Errors.INVALID_OPTIONS);
   });
 
   it('Invalid option value', () => {
@@ -329,6 +332,12 @@ describe('Parsing Test', () => {
           assert(!isExists(guide.item));
         }
       });
+    });
+  });
+
+  it('The final return value should be Book type', () => {
+    return new EpubParser(Files.DEFAULT).parse().then((book) => {
+      book.should.be.an.instanceOf(Book);
     });
   });
 });
