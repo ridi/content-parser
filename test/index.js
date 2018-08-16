@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs';
 import path from 'path';
 
-import { EpubParser, Errors } from '../src';
+import { EpubLoader, EpubParser, Errors } from '../src';
 import {
   getPropertyDescriptor,
   getPropertyKeys,
@@ -31,14 +31,16 @@ chai.use(chaiAsPromised);
 should(); // Initialize should
 
 const Files = {
-  DEFAULT: './test/res/default.epub',
-  INVALID_PACKAGE: './test/res/invalidPackage.epub',
-  INVALID_XML: './test/res/invalidXml.epub',
-  NCX_MISSING: './test/res/ncxMissing.epub',
-  META_INF_MISSING: './test/res/metainfMissing.epub',
-  OPF_MISSING: './test/res/opfMissing.epub',
-  EXPECTED_DEFAULT_CONTEXT: './test/res/expectedDefaultContext.json',
-  EXPECTED_DEFAULT_BOOK: './test/res/expectedDefaultBook.json'
+  DEFAULT: path.join('.', 'test', 'res', 'default.epub'),
+  INVALID_PACKAGE: path.join('.', 'test', 'res', 'invalidPackage.epub'),
+  INVALID_XML: path.join('.', 'test', 'res', 'invalidXml.epub'),
+  NCX_MISSING: path.join('.', 'test', 'res', 'ncxMissing.epub'),
+  META_INF_MISSING: path.join('.', 'test', 'res', 'metainfMissing.epub'),
+  OPF_MISSING: path.join('.', 'test', 'res', 'opfMissing.epub'),
+  EXPECTED_DEFAULT_CONTEXT: path.join('.', 'test', 'res', 'expectedDefaultContext.json'),
+  EXPECTED_DEFAULT_BOOK: path.join('.', 'test', 'res', 'expectedDefaultBook.json'),
+  COVER_HTML: path.join('.', 'test', 'res', 'epub', 'Cover.xhtml'),
+  COVER_IMAGE: path.join('.', 'test', 'res', 'epub', 'ridibooks_logo.png'),
 };
 
 describe('Util test', () => {
@@ -173,7 +175,7 @@ describe('Util test', () => {
   });
 });
 
-describe('Input test', () => {
+describe('EpubParser Input test', () => {
   it('Input is string path', () => {
     new EpubParser(Files.DEFAULT).should.be.an.instanceOf(EpubParser);
   });
@@ -202,7 +204,7 @@ describe('Input test', () => {
   });
 });
 
-describe('Option test', () => {
+describe('EpubParser option test', () => {
   it('Invalid options', () => {
     (() => { 
       new EpubParser(Files.DEFAULT, { i_am_invalid_option: true });
@@ -238,7 +240,7 @@ describe('Option test', () => {
   });
 });
 
-describe('Parsing Test', () => {
+describe(' EpubParser parsing test', () => {
   it('META-INF not found', () => {
     return new EpubParser(Files.META_INF_MISSING).parse().catch((err) => {
       err.should.equal(Errors.META_INF_NOT_FOUND);
@@ -342,7 +344,7 @@ describe('Parsing Test', () => {
   });
 
   it('_unzipIfNeeded test', () => {
-    _context.options.unzipPath = './temp';
+    _context.options.unzipPath = path.join('.', 'temp');
     return _parser._unzipIfNeeded(_context).should.be.fulfilled;
   });
 
@@ -480,6 +482,79 @@ describe('Parsing Test', () => {
   it('The final return value should be Book type', () => {
     return new EpubParser(Files.DEFAULT).parse().then((book) => {
       book.should.be.an.instanceOf(Book);
+    });
+  });
+});
+
+describe('EpubLoader input test', () => {
+  it('Input is string path', () => {
+    new EpubLoader().should.be.an.instanceOf(EpubLoader);
+  });
+
+  it('Input is buffer', () => {
+    const buffer = fs.readFileSync(Files.DEFAULT);
+    new EpubLoader(buffer).should.be.an.instanceOf(EpubLoader);
+  });
+
+  it('Invalid path', () => {
+    (() => { 
+      new EpubLoader(Files.DEFAULT);
+    }).should.throw(Errors.INVALID_FILE_PATH);
+  });
+
+  it('Invalid input', () => {
+    (() => { 
+      new EpubLoader([]);
+    }).should.throw(Errors.INVALID_INPUT);
+  });
+});
+
+describe('EpubLoader option test', () => {
+  const buffer = fs.readFileSync(Files.DEFAULT);
+  it('Invalid options', () => {
+    (() => { 
+      new EpubLoader(buffer, { i_am_invalid_option: true });
+    }).should.throw(Errors.INVALID_OPTIONS);
+  });
+
+  it('Invalid option value', () => {
+    (() => { 
+      new EpubParser(buffer, { extractBody: 'true' });
+    }).should.throw(Errors.INVALID_OPTION_VALUE);
+  });
+});
+
+const expectedSpine = fs.readFileSync(Files.COVER_HTML, { encoding: 'utf8' });
+const expectedCover = fs.readFileSync(Files.COVER_IMAGE);
+
+describe('Reading Test (buffer)', () => {
+  const buffer = fs.readFileSync(Files.DEFAULT);
+  new EpubParser(buffer).parse().then((book) => {
+    const loader = new EpubLoader(buffer);
+    it('Read spines', () => {
+      loader.readText(book.spines[0]).should.equal(expectedSpine);
+      loader.readText(book.ncx.navPoints[0].spine).should.equal(expectedSpine);
+      loader.readText(book.guide[0].item).should.equal(expectedSpine);
+    });
+
+    it('Read resources', () => {
+      loader.readData(book.cover).should.equal(expectedCover);
+    });
+  });
+});
+
+describe('EpubLoader reading test (path)', () => {
+  const unzipPath = path.join('.', 'temp');
+  new EpubParser(Files.DEFAULT, { unzipPath }).parse().then((book) => {
+    const loader = new EpubLoader(unzipPath);
+    it('Read spines', () => {
+      loader.readText(book.spines[0]).should.equal(expectedSpine);
+      loader.readText(book.ncx.navPoints[0].spine).should.equal(expectedSpine);
+      loader.readText(book.guide[0].item).should.equal(expectedSpine);
+    });
+
+    it('Read resources', () => {
+      loader.readData(book.cover).should.equal(expectedCover);
     });
   });
 });
