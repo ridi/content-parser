@@ -1,8 +1,21 @@
 import { assert, should } from 'chai';
 import fs from 'fs';
+import path from 'path';
 
 import { EpubParser, Errors } from '../src';
-import { isExists } from '../src/utils';
+import {
+  getPropertyDescriptor,
+  getPropertyKeys,
+  isArray,
+  isBuffer,
+  isExists,
+  isObject,
+  isString,
+  objectMerge,
+  createDirectory,
+  removeDirectory,
+  removeLastPathComponent,
+} from '../src/utils';
 import Author from '../src/model/Author';
 import Book from '../src/model/Book';
 import Context from '../src/model/Context';
@@ -24,6 +37,119 @@ const Files = {
   EXPECTED_DEFAULT_CONTEXT: './test/res/expectedDefaultContext.json',
   EXPECTED_DEFAULT_BOOK: './test/res/expectedDefaultBook.json'
 };
+
+describe('Util test', () => {
+  it('getPropertyDescriptor test', () => {
+    const object = { value: 5 };
+    getPropertyDescriptor(object, 'value').should.deep.equal({
+      value: 5,
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    });
+  });
+
+  it('getPropertyKeys test', () => {
+    const object = { a: true, b: '2', c: 3 };
+    getPropertyKeys(object).should.deep.equal(['a', 'b', 'c']);
+  });
+
+  it('isArray test', () => {
+    isArray(Array()).should.be.true;
+    isArray(new Array()).should.be.true;
+    isArray({}).should.be.false;
+    isArray(new Book()).should.be.false;
+    isArray('string').should.be.false;
+    isArray([]).should.be.true;
+    isArray(5).should.be.false;
+    isArray(false).should.be.false;
+    isArray(null).should.be.false;
+    isArray(undefined).should.be.false;
+
+    const temp = Array.isArray;
+    Array.isArray = undefined;
+    isArray([]).should.be.true;
+    Array.isArray = temp;
+  });
+
+  it('isBuffer test', () => {
+    const buffer = fs.readFileSync(Files.DEFAULT);
+    isBuffer(buffer).should.be.true;
+    isBuffer({}).should.be.false;
+    isBuffer(new Book()).should.be.false;
+    isBuffer('string').should.be.false;
+    isBuffer([]).should.be.false;
+    isBuffer(5).should.be.false;
+    isBuffer(false).should.be.false;
+    isBuffer(null).should.be.false;
+    isBuffer(undefined).should.be.false;
+  });
+
+  it('isExists test', () => {
+    isExists({}).should.be.true;
+    isExists(new Book()).should.be.true;
+    isExists('string').should.be.true;
+    isExists([]).should.be.true;
+    isExists(5).should.be.true;
+    isExists(false).should.be.true;
+    isExists(null).should.be.false;
+    isExists(undefined).should.be.false;
+  });
+
+  it('isObject test', () => {
+    isObject({}).should.be.true;
+    isObject(new Book()).should.be.true;
+    isObject('string').should.be.false;
+    isObject([]).should.be.false;
+    isObject(5).should.be.false;
+    isObject(false).should.be.false;
+    isObject(null).should.be.false;
+    isObject(undefined).should.be.false;
+  });
+
+  it('isString test', () => {
+    isString({}).should.be.false;
+    isString(new Book()).should.be.false;
+    isString('string').should.be.true;
+    isString([]).should.be.false;
+    isString(5).should.be.false;
+    isString(false).should.be.false;
+    isString(null).should.be.false;
+    isString(undefined).should.be.false;
+  });
+
+  const list = [
+    {
+      createPath: path.join('.', 'temp', 'a', 'b', 'c'),
+      removePath: path.join('.', 'temp'),
+    },
+    {
+      createPath: path.join('temp', '..', 'temp', 'a', 'b', 'c'),
+      removePath: path.join('temp'),
+    },
+    {
+      createPath: path.join('~', 'temp', 'a', 'b', 'c'),
+      removePath: path.join('~'),
+    },
+    {
+      createPath: path.join(process.cwd(), 'temp', 'a', 'b', 'c'),
+      removePath: path.join(process.cwd(), 'temp'),
+    },
+  ];
+  it('createDirectory and removeDirectory test', () => {
+    list.forEach((item) => {
+      createDirectory(item.createPath);
+      fs.existsSync(item.createPath).should.be.true;
+      fs.lstatSync(item.createPath).isDirectory().should.be.true;
+      removeDirectory(item.removePath);
+      let current = item.createPath;
+      while (current.length > item.removePath.length) {
+        fs.existsSync(current).should.be.false;
+        current = removeLastPathComponent(current);
+      }
+    });
+  });
+});
 
 describe('Input test', () => {
   it('Input is string path', () => {
@@ -54,7 +180,7 @@ describe('Input test', () => {
   });
 });
 
-describe('Options test', () => {
+describe('Option test', () => {
   it('Invalid options', () => {
     (() => { 
       new EpubParser(Files.DEFAULT, { i_am_invalid_option: true });

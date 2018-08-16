@@ -21,12 +21,12 @@ export function isBuffer(any) {
   return Buffer.isBuffer(any);
 }
 
-export function isObject(any) {
-  return Object.prototype.toString.call(any) === '[object Object]';
-}
-
 export function isExists(any) {
   return any !== undefined && any !== null;
+}
+
+export function isObject(any) {
+  return Object.prototype.toString.call(any) === '[object Object]';
 }
 
 export function isString(any) {
@@ -37,9 +37,19 @@ export function objectMerge(obj1, obj2) {
   return Object.assign({}, obj1, obj2);
 }
 
+const tildeError = '\'~/\' was recognized as a directory name. '
+  + 'If you want the correct behavior, should use \'process.env.HOME\'.';
+
 export function createDirectory(target) {
   const components = target.split(path.sep);
   let current = '';
+  if (target.startsWith(path.sep)) {
+    current = path.sep;
+  }
+  if (target.startsWith('~')) {
+    // eslint-disable-next-line no-console
+    console.error(tildeError);
+  }
   for (let idx = 0; idx < components.length; idx += 1) {
     current = path.join(current, components[idx]);
     if (!fs.existsSync(current)) {
@@ -50,6 +60,10 @@ export function createDirectory(target) {
 
 export function removeDirectory(target) {
   if (fs.existsSync(target) && fs.lstatSync(target).isDirectory()) {
+    if (target.startsWith('~')) {
+      // eslint-disable-next-line no-console
+      console.error(tildeError);
+    }
     fs.readdirSync(target).forEach((subpath) => {
       const current = path.join(target, subpath);
       if (fs.lstatSync(current).isDirectory()) {
@@ -60,4 +74,10 @@ export function removeDirectory(target) {
     });
     fs.rmdirSync(target);
   }
+}
+
+export function removeLastPathComponent(target) {
+  const components = target.split(path.sep);
+  components.pop();
+  return components.join(path.sep);
 }
