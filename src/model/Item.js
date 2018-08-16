@@ -7,7 +7,6 @@ class Item {
     this.mediaType = rawObj.mediaType;
     this.compressedSize = rawObj.compressedSize;
     this.uncompressedSize = rawObj.uncompressedSize;
-    this.compressionMethod = rawObj.compressionMethod;
     if (this.constructor === Item) {
       Object.freeze(this);
     }
