@@ -79,6 +79,9 @@ export function removeDirectory(target) {
 export function removeLastPathComponent(target) {
   const components = target.split(path.sep);
   components.pop();
+  if (target.startsWith(path.sep)) {
+    return `${path.sep}${components.join(path.sep)}`;
+  }
   return components.join(path.sep);
 }
 

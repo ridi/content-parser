@@ -151,6 +151,17 @@ describe('Util test', () => {
     });
   });
 
+  it('removeLastPathComponent test', () => {
+    const sep = path.sep;
+    removeLastPathComponent(`temp${sep}a${sep}b${sep}c`).should.equal(`temp${sep}a${sep}b`);
+    removeLastPathComponent(`temp${sep}a${sep}b`).should.equal(`temp${sep}a`);
+    removeLastPathComponent(`temp${sep}a`).should.equal('temp');
+    removeLastPathComponent('temp').should.equal('');
+    removeLastPathComponent('').should.equal('');
+    removeLastPathComponent('/tmp').should.equal('/');
+    removeLastPathComponent('/').should.equal('/');
+  });
+
   it('safePathJoin test', () => {
     const sep = path.sep;
     safePathJoin('temp', 'a', 'b', 'c').should.equal(`temp${sep}a${sep}b${sep}c`);
