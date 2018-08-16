@@ -100,7 +100,7 @@ class EpubParser {
   }
 
   constructor(input, options = {}) {
-    if (isExists(input) && typeof input === 'string') {
+    if (isString(input)) {
       if (!fs.existsSync(input)) {
         throw Errors.INVALID_FILE_PATH;
       } else if (fs.lstatSync(input).isDirectory() || !input.toLowerCase().endsWith('.epub')) {
@@ -111,7 +111,7 @@ class EpubParser {
     }
     this._input = input;
     getPropertyKeys(options).forEach((key) => {
-      if (getPropertyDescriptor(EpubParser.defaultOptions, key) === undefined) {
+      if (!isExists(getPropertyDescriptor(EpubParser.defaultOptions, key))) {
         throw Errors.INVALID_OPTIONS;
       }
       if (typeof options[key] !== EpubParser.defaultOptionTypes[key]) { // eslint-disable-line valid-typeof
@@ -165,7 +165,6 @@ class EpubParser {
           // Should not use extra field feature of the ZIP format for the mimetype file.
           throw Errors.INVALID_PACKAGE;
         }
-        context.verified = true;
       }
       resolve(context);
     });
@@ -356,7 +355,7 @@ class EpubParser {
             item.itemType = Item;
           }
         } else if (item.itemType === SpineItem) {
-          const ref = itemref.find(o => o.idref === item.id);
+          const ref = itemref.find(ir => ir.idref === item.id);
           if (isExists(ref)) {
             item.spineIndex = spineIndex;
             item.isLinear = ref.linear;
@@ -448,12 +447,7 @@ class EpubParser {
         if (createIntermediateDirectories) {
           createDirectory(unzipPath);
         }
-        try {
-          context.zip.extractAllTo(unzipPath, false);
-          context.unzipped = true;
-        } catch (err) {
-          throw err;
-        }
+        context.zip.extractAllTo(unzipPath, false);
       }
       resolve(context);
     });

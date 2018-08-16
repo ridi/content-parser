@@ -1,8 +1,6 @@
 {
   "opfPath": "OEBPS/content.opf",
   "basePath": "OEBPS",
-  "verified": true,
-  "unzipped": true,
   "rawBook": {
     "titles": [
       "Default"

@@ -1,4 +1,5 @@
-import { assert, should } from 'chai';
+import chai, { assert, should } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs';
 import path from 'path';
 
@@ -26,6 +27,7 @@ import Identifier from '../src/model/Identifier';
 import NcxItem from '../src/model/NcxItem'
 import SpineItem from '../src/model/SpineItem';
 
+chai.use(chaiAsPromised);
 should(); // Initialize should
 
 const Files = {
@@ -262,10 +264,7 @@ describe('Parsing Test', () => {
 
   it('_validatePackageIfNeeded test', () => {
     _context.options.shouldValidatePackage = true;
-    return _parser._validatePackageIfNeeded(_context).then((context) => {
-      context.verified.should.equal(expectedContext.verified);
-      _context = context;
-    });
+    return _parser._validatePackageIfNeeded(_context).should.be.fulfilled;
   });
 
   it('_parseMetaInf test', () => {
@@ -344,10 +343,7 @@ describe('Parsing Test', () => {
 
   it('_unzipIfNeeded test', () => {
     _context.options.unzipPath = './temp';
-    return _parser._unzipIfNeeded(_context).then((context) => {
-      context.unzipped.should.equal(expectedContext.unzipped);
-      _context = context;
-    });
+    return _parser._unzipIfNeeded(_context).should.be.fulfilled;
   });
 
   const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK));
