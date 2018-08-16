@@ -169,7 +169,7 @@ describe('Parsing Test', () => {
     return _parser._parseNcx(_context).then((context) => {
       const { rawBook } = context;
       const { rawBook: expectedRawBook } = expectedContext;
-      const ncxItem = rawBook.items.find(item => item.itemType === NcxItem.name);
+      const ncxItem = rawBook.items.find(item => item.itemType === NcxItem);
       const expectedNcxItem = expectedRawBook.items[0];
       const shouldEqual = (navPoints, expectedNavPoints) => {
         navPoints.forEach((navPoint, idx) => {

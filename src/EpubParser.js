@@ -234,29 +234,29 @@ class EpubParser {
 
   _getItemType(mediaType) {
     const types = {
-      'application/font': FontItem.name,
-      'application/font-otf': FontItem.name,
-      'application/font-sfnt': FontItem.name,
-      'application/font-woff': FontItem.name,
-      'application/vnd.ms-opentype': FontItem.name,
-      'application/x-font-ttf': FontItem.name,
-      'application/x-font-truetype': FontItem.name,
-      'application/x-font-opentype': FontItem.name,
-      'application/x-dtbncx+xml': NcxItem.name,
-      'application/xhtml+xml': SpineItem.name,
-      'font/opentype': FontItem.name,
-      'font/otf': FontItem.name,
-      'font/woff2': FontItem.name,
-      'image/gif': ImageItem.name,
-      'image/jpeg': ImageItem.name,
-      'image/png': ImageItem.name,
-      'image/bmp': ImageItem.name, // Not recommended in EPUB spec.
-      'image/svg+xml': ImageItem.name,
-      'text/css': CssItem.name,
+      'application/font': FontItem,
+      'application/font-otf': FontItem,
+      'application/font-sfnt': FontItem,
+      'application/font-woff': FontItem,
+      'application/vnd.ms-opentype': FontItem,
+      'application/x-font-ttf': FontItem,
+      'application/x-font-truetype': FontItem,
+      'application/x-font-opentype': FontItem,
+      'application/x-dtbncx+xml': NcxItem,
+      'application/xhtml+xml': SpineItem,
+      'font/opentype': FontItem,
+      'font/otf': FontItem,
+      'font/woff2': FontItem,
+      'image/gif': ImageItem,
+      'image/jpeg': ImageItem,
+      'image/png': ImageItem,
+      'image/bmp': ImageItem, // Not recommended in EPUB spec.
+      'image/svg+xml': ImageItem,
+      'text/css': CssItem,
     };
     const type = types[mediaType.toLowerCase()];
     if (!isExists(type)) {
-      return Item.name;
+      return Item;
     }
     return type;
   }
@@ -318,11 +318,11 @@ class EpubParser {
       const itemref = this._makeSafeValues(root.spine.itemref);
       const tocId = root.spine[`${attributeNamePrefix}toc`];
       rawBook.items.forEach((item) => {
-        if (item.itemType === NcxItem.name) {
+        if (item.itemType === NcxItem) {
           if (item.id !== tocId) {
-            item.itemType = Item.name;
+            item.itemType = Item;
           }
-        } else if (item.itemType === SpineItem.name) {
+        } else if (item.itemType === SpineItem) {
           const ref = itemref.find(o => o.idref === item.id);
           if (isExists(ref)) {
             item.spineIndex = spineIndex;
@@ -332,7 +332,7 @@ class EpubParser {
             }
             spineIndex += 1;
           } else {
-            item.itemType = Item.name;
+            item.itemType = Item;
           }
         }
       });
@@ -349,7 +349,7 @@ class EpubParser {
   _parseNcx(context) {
     return new Promise((resolve) => {
       const { allowNcxFileMissing } = context.options;
-      const ncxItem = context.rawBook.items.find(item => item.itemType === NcxItem.name);
+      const ncxItem = context.rawBook.items.find(item => item.itemType === NcxItem);
       if (isExists(ncxItem)) {
         const entryName = path.join(context.basePath, ncxItem.href);
         const ncxEntry = this._findEntry(entryName, context);
