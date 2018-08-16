@@ -147,6 +147,7 @@ describe('Parsing Test', () => {
       rawBook.coverage.should.equal(expectedRawBook.coverage);
       rawBook.rights.should.equal(expectedRawBook.rights);
       rawBook.epubVersion.should.equal(expectedRawBook.epubVersion);
+      rawBook.metas.should.deep.equal(expectedRawBook.metas);
       let current = 0;
       rawBook.items.forEach((item, idx) => {
         const expectedItem = expectedRawBook.items[idx];

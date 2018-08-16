@@ -5,6 +5,7 @@ import FontItem from './FontItem';
 import Guide from './Guide';
 import Identifier from './Identifier';
 import ImageItem from './ImageItem';
+import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
 import { objectMerge } from '../utils';
@@ -29,6 +30,7 @@ class Book {
     this.coverage = rawBook.coverage;
     this.rights = rawBook.rights;
     this.epubVersion = rawBook.epubVersion;
+    this.metas = (rawBook.metas || []).map(rawObj => new Meta(rawObj));
     this.items = (rawBook.items || []).map(rawObj => new rawObj.itemType(objectMerge(rawObj, { findItem })));
     this.ncx = this.items.find(item => item instanceof NcxItem);
     this.spines = this.items.filter(item => item instanceof SpineItem);

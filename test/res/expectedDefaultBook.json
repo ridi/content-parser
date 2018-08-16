@@ -51,6 +51,16 @@
   "coverage": "Coverage",
   "rights": "Copyright (c) 2018 Davin",
   "epubVersion": 2,
+  "metas": [
+    {
+      "name": "Sigil version",
+      "content": "0.9.9"
+    },
+    {
+      "name": "cover",
+      "content": "ridibooks_logo.png"
+    }
+  ],
   "items": [
     {
       "id": "ncx"

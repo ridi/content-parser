@@ -288,7 +288,7 @@ class EpubParser {
 
       const {
         title, creator, subject, description, publisher, contributor, date, type,
-        format, identifier, source, language, relation, coverage, rights,
+        format, identifier, source, language, relation, coverage, rights, meta,
       } = root.metadata;
       const mapping = {};
       rawBook.titles = this._makeSafeValues(title);
@@ -308,6 +308,7 @@ class EpubParser {
       rawBook.relation = relation;
       rawBook.coverage = coverage;
       rawBook.rights = rights;
+      rawBook.metas = this._makeSafeValues(meta);
 
       rawBook.items = [];
       this._makeSafeValues(root.manifest.item).forEach((item) => {
