@@ -108,9 +108,9 @@ class EpubParser {
   constructor(input, options = {}) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
-        throw Errors.INVALID_FILE_PATH;
+        throw Errors.PATH_NOT_FOUND;
       } else if (fs.lstatSync(input).isDirectory() || !input.toLowerCase().endsWith('.epub')) {
-        throw Errors.INVALID_FILE_TYPE;
+        throw Errors.EPUB_PATH_INPUT_REQUIRED;
       }
     } else if (!isExists(input) || !isBuffer(input)) {
       throw Errors.INVALID_INPUT;

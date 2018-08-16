@@ -4,28 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { EpubLoader, EpubParser, Errors } from '../src';
-import {
-  getPropertyDescriptor,
-  getPropertyKeys,
-  isArray,
-  isBuffer,
-  isExists,
-  isObject,
-  isString,
-  objectMerge,
-  createDirectory,
-  removeDirectory,
-  removeLastPathComponent,
-  safePathJoin,
-} from '../src/utils';
-import Author from '../src/model/Author';
-import Book from '../src/model/Book';
-import Context from '../src/model/Context';
-import DateTime from '../src/model/DateTime';
-import Guide from '../src/model/Guide';
-import Identifier from '../src/model/Identifier';
-import NcxItem from '../src/model/NcxItem'
-import SpineItem from '../src/model/SpineItem';
+import Item from '../src/model/Item'
 
 chai.use(chaiAsPromised);
 should(); // Initialize should
@@ -47,13 +26,13 @@ describe('EpubLoader input test', () => {
   });
 
   it('Invalid path', () => {
-    (() => { 
+    (() => {
       new EpubLoader(Files.DEFAULT);
-    }).should.throw(Errors.INVALID_FILE_PATH);
+    }).should.throw(Errors.DIRECTROY_INPUT_REQUIRED);
   });
 
   it('Invalid input', () => {
-    (() => { 
+    (() => {
       new EpubLoader([]);
     }).should.throw(Errors.INVALID_INPUT);
   });

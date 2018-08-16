@@ -39,19 +39,19 @@ describe('EpubParser Input test', () => {
   });
 
   it('Invalid file path', () => {
-    (() => { 
+    (() => {
       new EpubParser('./test/res/test.epub');
-    }).should.throw(Errors.INVALID_FILE_PATH);
+    }).should.throw(Errors.PATH_NOT_FOUND);
   });
 
   it('Invalid file type', () => {
-    (() => { 
+    (() => {
       new EpubParser('./test/res/unzippedPath');
-    }).should.throw(Errors.INVALID_FILE_TYPE);
+    }).should.throw(Errors.EPUB_PATH_INPUT_REQUIRED);
   });
 
   it('Invalid input', () => {
-    (() => { 
+    (() => {
       new EpubParser([]);
     }).should.throw(Errors.INVALID_INPUT);
   });
@@ -59,16 +59,16 @@ describe('EpubParser Input test', () => {
 
 describe('EpubParser option test', () => {
   it('Invalid options', () => {
-    (() => { 
+    (() => {
       new EpubParser(Files.DEFAULT, { i_am_invalid_option: true });
     }).should.throw(Errors.INVALID_OPTIONS);
-    (() => { 
+    (() => {
       new EpubParser(Files.DEFAULT, { xmlParserOptions: { textNodeName: '@text' } });
     }).should.throw(Errors.INVALID_OPTIONS);
   });
 
   it('Invalid option value', () => {
-    (() => { 
+    (() => {
       new EpubParser(Files.DEFAULT, { shouldValidatePackage: 'true' });
     }).should.throw(Errors.INVALID_OPTION_VALUE);
   });
