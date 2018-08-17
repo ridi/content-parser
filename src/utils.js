@@ -91,3 +91,11 @@ export function safePathJoin(...components) {
   }
   return path.join(...components);
 }
+
+export function getSubpathes(target) {
+  return fs.readdirSync(target).reduce((subpathes, subpath) => {
+    const fullPath = path.join(target, subpath);
+    const isDirectory = fs.statSync(fullPath).isDirectory();
+    return subpathes.concat(isDirectory ? getSubpathes(fullPath) : [fullPath]);
+  }, []);
+}

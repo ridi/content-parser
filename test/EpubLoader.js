@@ -11,8 +11,8 @@ should(); // Initialize should
 
 const Files = {
   DEFAULT: path.join('.', 'test', 'res', 'default.epub'),
-  COVER_HTML: path.join('.', 'test', 'res', 'epub', 'Cover.xhtml'),
-  COVER_IMAGE: path.join('.', 'test', 'res', 'epub', 'ridibooks_logo.png'),
+  COVER_HTML: path.join('.', 'test', 'res', 'default', 'OEBPS', 'Text', 'Cover.xhtml'),
+  COVER_IMAGE: path.join('.', 'test', 'res', 'default', 'OEBPS', 'Images', 'ridibooks_logo.png'),
 };
 
 describe('EpubLoader input test', () => {

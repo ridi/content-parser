@@ -15,11 +15,13 @@ import {
   removeDirectory,
   removeLastPathComponent,
   safePathJoin,
+  getSubpathes,
 } from '../src/utils';
 import Book from '../src/model/Book';
 
 const Files = {
-  DEFAULT: path.join('.', 'test', 'res', 'default.epub'),
+  DEFAULT: path.join('.', 'test', 'res', 'default'),
+  SELF: path.join('.', 'test', 'utils.js'),
 };
 
 should(); // Initialize should
@@ -59,7 +61,7 @@ describe('Util test', () => {
   });
 
   it('isBuffer test', () => {
-    const buffer = fs.readFileSync(Files.DEFAULT);
+    const buffer = fs.readFileSync(Files.SELF);
     isBuffer(buffer).should.be.true;
     isBuffer({}).should.be.false;
     isBuffer(new Book()).should.be.false;
@@ -153,5 +155,23 @@ describe('Util test', () => {
     safePathJoin('temp', undefined).should.equal('');
     safePathJoin('temp', '..', '..', 'a', 'b').should.equal(`..${sep}a${sep}b`);
     safePathJoin('..', '..', 'temp').should.equal(`..${sep}..${sep}temp`);
+  });
+
+  it('getSubpathes test', () => {
+    const expectedPath = [
+      path.join('META-INF', 'container.xml'),
+      path.join('OEBPS', 'Fonts', 'NotoSans-Regular.ttf'),
+      path.join('OEBPS', 'Images', 'ridibooks_logo.png'),
+      path.join('OEBPS', 'Styles', 'Style0001.css'),
+      path.join('OEBPS', 'Text', 'Cover.xhtml'),
+      path.join('OEBPS', 'Text', 'Section0001.xhtml'),
+      path.join('OEBPS', 'Text', 'Section0002.xhtml'),
+      path.join('OEBPS', 'content.opf'),
+      path.join('OEBPS', 'toc.ncx'),
+      path.join('mimetype'),
+    ];
+    const offset = Files.DEFAULT.length + path.sep.length;
+    const subpathes = getSubpathes(Files.DEFAULT).map(subpath => subpath.substring(offset));
+    subpathes.should.deep.equal(expectedPath);
   });
 });
