@@ -26,6 +26,7 @@ import {
   createDirectory,
   removeDirectory,
   safePathJoin,
+  getSubpathes,
 } from './utils';
 
 const privateProps = new WeakMap();
@@ -34,6 +35,42 @@ const textNodeName = '#text';
 const attributeNamePrefix = '@attr_';
 const tagValueProcessor = value => he.decode(value);
 const attrValueProcessor = value => he.decode(value, { isAttributeValue: true });
+
+const findEntry = (entryName, entries) => entries.find(entry => entry.entryName === entryName);
+
+const normalizeKey = (obj, mapping = {}) => {
+  if (isString(obj)) {
+    return obj;
+  }
+  const newObj = {};
+  getPropertyKeys(obj).forEach((key) => {
+    let shouldMakeArray = false;
+    let newKey = key.replace(attributeNamePrefix, '');
+    if (isExists(mapping[newKey])) {
+      shouldMakeArray = mapping[newKey].isArray || false;
+      newKey = mapping[newKey].key;
+    }
+    let value = obj[key];
+    if (isArray(value)) {
+      value = makeSafeValues(value, mapping); // eslint-disable-line no-use-before-define
+    } else if (isObject(value)) {
+      if (shouldMakeArray) {
+        value = [normalizeKey(value, mapping)];
+      } else {
+        value = normalizeKey(value, mapping);
+      }
+    }
+    newObj[newKey] = value;
+  });
+  return newObj;
+};
+
+const makeSafeValues = (any, mapping = {}) => {
+  if (!isExists(any)) {
+    return [];
+  }
+  return isArray(any) ? any.map(item => normalizeKey(item, mapping)) : [normalizeKey(any, mapping)];
+};
 
 class EpubParser {
   static get defaultOptions() {
@@ -109,8 +146,6 @@ class EpubParser {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
         throw Errors.PATH_NOT_FOUND;
-      } else if (fs.lstatSync(input).isDirectory() || !input.toLowerCase().endsWith('.epub')) {
-        throw Errors.EPUB_PATH_INPUT_REQUIRED;
       }
     } else if (!isExists(input) || !isBuffer(input)) {
       throw Errors.INVALID_INPUT;
@@ -147,29 +182,69 @@ class EpubParser {
       .then(book => book);
   }
 
+  _getEntries(input) {
+    if (!isString(input)) {
+      return input.getEntries().reduce((entries, entry) => { // eslint-disable-line arrow-body-style
+        return entries.concat([{
+          entryName: entry.entryName,
+          getFile: (encoding) => { // eslint-disable-line arrow-body-style
+            return isExists(encoding) ? entry.getData().toString(encoding) : entry.getData();
+          },
+          getSize: () => entry.header.size,
+          method: entry.header.method,
+          extraLength: entry.header.extraLength,
+        }]);
+      }, []);
+    }
+
+    return getSubpathes(input).reduce((entries, subpath) => { // eslint-disable-line arrow-body-style
+      return entries.concat([{
+        entryName: subpath.substring(input.length + path.sep.length),
+        getFile: encoding => fs.readFileSync(subpath, encoding),
+        getSize: () => fs.lstatSync(subpath).size,
+      }]);
+    }, []);
+  }
+
+  _xmlEntry2Json(entry, options) {
+    const { shouldXmlValidation, xmlParserOptions } = options;
+    const xmlData = entry.getFile('utf8');
+    if (shouldXmlValidation && isExists(XmlParser.validate(xmlData).err)) {
+      throw Errors.INVALID_XML;
+    }
+    return XmlParser.parse(xmlData, xmlParserOptions || {});
+  }
+
   _prepare() {
     return new Promise((resolve) => {
+      const { input, options } = this;
       const context = new Context();
-      context.options = this.options;
-      context.zip = new Zip(this.input);
+      if (isBuffer(input) || fs.lstatSync(input).isFile()) {
+        const zip = new Zip(input);
+        context.entries = this._getEntries(zip);
+        context.zip = zip;
+      } else {
+        context.entries = this._getEntries(input);
+      }
+      context.options = options;
       resolve(context);
     });
   }
 
   _validatePackageIfNeeded(context) {
     return new Promise((resolve) => {
-      if (context.options.shouldValidatePackage) {
-        const firstEntry = context.zip.getEntries()[0];
+      if (isExists(context.zip) && context.options.shouldValidatePackage) {
+        const firstEntry = context.entries[0];
         if (firstEntry.entryName !== 'mimetype') {
           // The mimetype file must be the first file in the archive.
           throw Errors.INVALID_PACKAGE;
-        } else if (firstEntry.header.method !== 0/* adm-zip/util/constants.js/STORED */) {
+        } else if (firstEntry.method !== 0/* adm-zip/util/constants.js/STORED */) {
           // The mimetype file should not compressed.
           throw Errors.INVALID_PACKAGE;
-        } else if (firstEntry.getData().toString('utf8') !== 'application/epub+zip') {
+        } else if (firstEntry.getFile('utf8') !== 'application/epub+zip') {
           // The mimetype file should only contain the string 'application/epub+zip'.
           throw Errors.INVALID_PACKAGE;
-        } else if (firstEntry.header.extraLength > 0) {
+        } else if (firstEntry.extraLength > 0) {
           // Should not use extra field feature of the ZIP format for the mimetype file.
           throw Errors.INVALID_PACKAGE;
         }
@@ -178,22 +253,9 @@ class EpubParser {
     });
   }
 
-  _findEntry(entryName, context) {
-    return context.zip.getEntries().find(entry => entry.entryName === entryName);
-  }
-
-  _xmlEntry2Json(entry, options) {
-    const { shouldXmlValidation, xmlParserOptions } = options;
-    const xmlData = entry.getData().toString('utf8');
-    if (shouldXmlValidation && isExists(XmlParser.validate(xmlData).err)) {
-      throw Errors.INVALID_XML;
-    }
-    return XmlParser.parse(xmlData, xmlParserOptions || {});
-  }
-
   _parseMetaInf(context) {
     return new Promise((resolve) => {
-      const containerEntry = this._findEntry('META-INF/container.xml', context);
+      const containerEntry = findEntry('META-INF/container.xml', context.entries);
       if (!isExists(containerEntry)) {
         throw Errors.META_INF_NOT_FOUND;
       }
@@ -222,40 +284,6 @@ class EpubParser {
 
       resolve(context);
     });
-  }
-
-  _normalizeKey(obj, mapping = {}) {
-    if (isString(obj)) {
-      return obj;
-    }
-    const newObj = {};
-    getPropertyKeys(obj).forEach((key) => {
-      let shouldMakeArray = false;
-      let newKey = key.replace(attributeNamePrefix, '');
-      if (isExists(mapping[newKey])) {
-        shouldMakeArray = mapping[newKey].isArray || false;
-        newKey = mapping[newKey].key;
-      }
-      let value = obj[key];
-      if (isArray(value)) {
-        value = this._makeSafeValues(value, mapping);
-      } else if (isObject(value)) {
-        if (shouldMakeArray) {
-          value = [this._normalizeKey(value, mapping)];
-        } else {
-          value = this._normalizeKey(value, mapping);
-        }
-      }
-      newObj[newKey] = value;
-    });
-    return newObj;
-  }
-
-  _makeSafeValues(any, mapping = {}) {
-    if (!isExists(any)) {
-      return [];
-    }
-    return isArray(any) ? any.map(item => this._normalizeKey(item, mapping)) : [this._normalizeKey(any, mapping)];
   }
 
   _getItemType(mediaType) {
@@ -289,7 +317,7 @@ class EpubParser {
 
   _parseOpf(context) {
     return new Promise((resolve) => {
-      const opfEntry = this._findEntry(context.opfPath, context);
+      const opfEntry = findEntry(context.opfPath, context.entries);
       if (!isExists(opfEntry)) {
         throw Errors.OPF_NOT_FOUND;
       }
@@ -307,29 +335,29 @@ class EpubParser {
         format, identifier, source, language, relation, coverage, rights, meta,
       } = root.metadata;
       const mapping = {};
-      rawBook.titles = this._makeSafeValues(title);
+      rawBook.titles = makeSafeValues(title);
       mapping[textNodeName] = { key: 'name' };
-      rawBook.creators = this._makeSafeValues(creator, mapping);
-      rawBook.subjects = this._makeSafeValues(subject);
+      rawBook.creators = makeSafeValues(creator, mapping);
+      rawBook.subjects = makeSafeValues(subject);
       rawBook.description = description;
       rawBook.publisher = publisher;
-      rawBook.contributors = this._makeSafeValues(contributor, mapping);
+      rawBook.contributors = makeSafeValues(contributor, mapping);
       mapping[textNodeName] = { key: 'value' };
-      rawBook.dates = this._makeSafeValues(date, mapping);
+      rawBook.dates = makeSafeValues(date, mapping);
       rawBook.type = type;
       rawBook.format = format;
-      rawBook.identifiers = this._makeSafeValues(identifier, mapping);
+      rawBook.identifiers = makeSafeValues(identifier, mapping);
       rawBook.source = source;
       rawBook.language = language;
       rawBook.relation = relation;
       rawBook.coverage = coverage;
       rawBook.rights = rights;
-      rawBook.metas = this._makeSafeValues(meta);
+      rawBook.metas = makeSafeValues(meta);
 
       rawBook.items = [];
       const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
       let foundCover = false;
-      this._makeSafeValues(root.manifest.item).forEach((item) => {
+      makeSafeValues(root.manifest.item).forEach((item) => {
         const rawItem = {};
         rawItem.id = item.id;
         if (isExists(item.href) && item.href.length > 0) {
@@ -340,10 +368,9 @@ class EpubParser {
         rawItem.mediaType = item['media-type'];
         rawItem.itemType = this._getItemType(rawItem.mediaType);
 
-        const itemEntry = this._findEntry(rawItem.href, context);
+        const itemEntry = findEntry(rawItem.href, context.entries);
         if (isExists(itemEntry)) {
-          rawItem.compressedSize = itemEntry.header.compressedSize;
-          rawItem.uncompressedSize = itemEntry.header.size;
+          rawItem.size = itemEntry.getSize();
         }
 
         if (!foundCover && isExists(coverMeta) && rawItem.id === coverMeta.content && rawItem.itemType === ImageItem) {
@@ -355,7 +382,7 @@ class EpubParser {
       });
 
       let spineIndex = 0;
-      const itemref = this._makeSafeValues(root.spine.itemref);
+      const itemref = makeSafeValues(root.spine.itemref);
       const tocId = root.spine[`${attributeNamePrefix}toc`];
       rawBook.items.forEach((item) => {
         if (item.itemType === NcxItem) {
@@ -383,7 +410,7 @@ class EpubParser {
       rawBook.guide = [];
       if (isExists(root.guide)) {
         let coverGuide;
-        this._makeSafeValues(root.guide.reference).forEach((reference) => {
+        makeSafeValues(root.guide.reference).forEach((reference) => {
           if (!isExists(coverGuide) && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
             coverGuide = reference;
           }
@@ -407,7 +434,7 @@ class EpubParser {
       const { allowNcxFileMissing } = context.options;
       const ncxItem = context.rawBook.items.find(item => item.itemType === NcxItem);
       if (isExists(ncxItem)) {
-        const ncxEntry = this._findEntry(ncxItem.href, context);
+        const ncxEntry = findEntry(ncxItem.href, context.entries);
         if (!allowNcxFileMissing && !isExists(ncxEntry)) {
           throw Errors.NCX_NOT_FOUND;
         }
@@ -430,8 +457,7 @@ class EpubParser {
           }
           return np;
         };
-        // eslint-disable-next-line arrow-body-style
-        this._makeSafeValues(ncx.navMap.navPoint, mapping).forEach((navPoint) => {
+        makeSafeValues(ncx.navMap.navPoint, mapping).forEach((navPoint) => { // eslint-disable-line arrow-body-style
           return ncxItem.navPoints.push(normalizeSrc(navPoint));
         });
       } else if (!allowNcxFileMissing) {
@@ -443,19 +469,16 @@ class EpubParser {
 
   _unzipIfNeeded(context) {
     return new Promise((resolve) => {
-      const {
-        unzipPath,
-        removePreviousFile,
-        createIntermediateDirectories,
-      } = context.options;
-      if (isExists(unzipPath)) {
+      const { options, zip } = context;
+      const { unzipPath, removePreviousFile, createIntermediateDirectories } = options;
+      if (isExists(zip) && isExists(unzipPath)) {
         if (removePreviousFile) {
           removeDirectory(unzipPath);
         }
         if (createIntermediateDirectories) {
           createDirectory(unzipPath);
         }
-        context.zip.extractAllTo(unzipPath, false);
+        zip.extractAllTo(unzipPath, false);
       }
       resolve(context);
     });

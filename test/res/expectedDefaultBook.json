@@ -63,25 +63,46 @@
   ],
   "items": [
     {
-      "id": "ncx"
+      "id": "ncx",
+      "href": "OEBPS/toc.ncx",
+      "mediaType": "application/x-dtbncx+xml",
+      "size": 1
     },
     {
-      "id": "Cover.xhtml"
+      "id": "Cover.xhtml",
+      "href": "OEBPS/Text/Cover.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1
     },
     {
-      "id": "Section0001.xhtml"
+      "id": "Section0001.xhtml",
+      "href": "OEBPS/Text/Section0001.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1
     },
     {
-      "id": "Section0002.xhtml"
+      "id": "Section0002.xhtml",
+      "href": "OEBPS/Text/Section0002.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1
     },
     {
-      "id": "Style0001.css"
+      "id": "Style0001.css",
+      "href": "OEBPS/Styles/Style0001.css",
+      "mediaType": "text/css",
+      "size": 1
     },
     {
-      "id": "NotoSans-Regular.ttf"
+      "id": "NotoSans-Regular.ttf",
+      "href": "OEBPS/Fonts/NotoSans-Regular.ttf",
+      "mediaType": "application/x-font-ttf",
+      "size": 1
     },
     {
-      "id": "ridibooks_logo.png"
+      "id": "ridibooks_logo.png",
+      "href": "OEBPS/Images/ridibooks_logo.png",
+      "mediaType": "image/png",
+      "size": 1
     }
   ],
   "ncx": {
@@ -96,8 +117,7 @@
           "id": "Cover.xhtml",
           "href": "OEBPS/Text/Cover.xhtml",
           "mediaType": "application/xhtml+xml",
-          "compressedSize": 1,
-          "uncompressedSize": 1,
+          "size": 1,
           "spineIndex": 0,
           "isLinear": true
         }
@@ -126,8 +146,7 @@
                   "id": "Section0001.xhtml",
                   "href": "OEBPS/Text/Section0001.xhtml",
                   "mediaType": "application/xhtml+xml",
-                  "compressedSize": 1,
-                  "uncompressedSize": 1,
+                  "size": 1,
                   "spineIndex": 1,
                   "isLinear": true
                 }
@@ -143,8 +162,7 @@
                   "id": "Section0001.xhtml",
                   "href": "OEBPS/Text/Section0001.xhtml",
                   "mediaType": "application/xhtml+xml",
-                  "compressedSize": 1,
-                  "uncompressedSize": 1,
+                  "size": 1,
                   "spineIndex": 1,
                   "isLinear": true
                 }
@@ -154,8 +172,7 @@
               "id": "Section0001.xhtml",
               "href": "OEBPS/Text/Section0001.xhtml",
               "mediaType": "application/xhtml+xml",
-              "compressedSize": 1,
-              "uncompressedSize": 1,
+              "size": 1,
               "spineIndex": 1,
               "isLinear": true
             }
@@ -178,8 +195,7 @@
                   "id": "Section0001.xhtml",
                   "href": "OEBPS/Text/Section0001.xhtml",
                   "mediaType": "application/xhtml+xml",
-                  "compressedSize": 1,
-                  "uncompressedSize": 1,
+                  "size": 1,
                   "spineIndex": 1,
                   "isLinear": true
                 }
@@ -195,8 +211,7 @@
                   "id": "Section0001.xhtml",
                   "href": "OEBPS/Text/Section0001.xhtml",
                   "mediaType": "application/xhtml+xml",
-                  "compressedSize": 1,
-                  "uncompressedSize": 1,
+                  "size": 1,
                   "spineIndex": 1,
                   "isLinear": true
                 }
@@ -206,8 +221,7 @@
               "id": "Section0001.xhtml",
               "href": "OEBPS/Text/Section0001.xhtml",
               "mediaType": "application/xhtml+xml",
-              "compressedSize": 1,
-              "uncompressedSize": 1,
+              "size": 1,
               "spineIndex": 1,
               "isLinear": true
             }
@@ -217,8 +231,7 @@
           "id": "Section0001.xhtml",
           "href": "OEBPS/Text/Section0001.xhtml",
           "mediaType": "application/xhtml+xml",
-          "compressedSize": 1,
-          "uncompressedSize": 1,
+          "size": 1,
           "spineIndex": 1,
           "isLinear": true
         }
@@ -247,8 +260,7 @@
                   "id": "Section0002.xhtml",
                   "href": "OEBPS/Text/Section0002.xhtml",
                   "mediaType": "application/xhtml+xml",
-                  "compressedSize": 1,
-                  "uncompressedSize": 1,
+                  "size": 1,
                   "spineIndex": 2,
                   "isLinear": true
                 }
@@ -264,8 +276,7 @@
                   "id": "Section0002.xhtml",
                   "href": "OEBPS/Text/Section0002.xhtml",
                   "mediaType": "application/xhtml+xml",
-                  "compressedSize": 1,
-                  "uncompressedSize": 1,
+                  "size": 1,
                   "spineIndex": 2,
                   "isLinear": true
                 }
@@ -288,8 +299,7 @@
                       "id": "Section0002.xhtml",
                       "href": "OEBPS/Text/Section0002.xhtml",
                       "mediaType": "application/xhtml+xml",
-                      "compressedSize": 1,
-                      "uncompressedSize": 1,
+                      "size": 1,
                       "spineIndex": 2,
                       "isLinear": true
                     }
@@ -299,8 +309,7 @@
                   "id": "Section0002.xhtml",
                   "href": "OEBPS/Text/Section0002.xhtml",
                   "mediaType": "application/xhtml+xml",
-                  "compressedSize": 1,
-                  "uncompressedSize": 1,
+                  "size": 1,
                   "spineIndex": 2,
                   "isLinear": true
                 }
@@ -310,8 +319,7 @@
               "id": "Section0002.xhtml",
               "href": "OEBPS/Text/Section0002.xhtml",
               "mediaType": "application/xhtml+xml",
-              "compressedSize": 1,
-              "uncompressedSize": 1,
+              "size": 1,
               "spineIndex": 2,
               "isLinear": true
             }
@@ -327,8 +335,7 @@
               "id": "Section0002.xhtml",
               "href": "OEBPS/Text/Section0002.xhtml",
               "mediaType": "application/xhtml+xml",
-              "compressedSize": 1,
-              "uncompressedSize": 1,
+              "size": 1,
               "spineIndex": 2,
               "isLinear": true
             }
@@ -338,8 +345,7 @@
           "id": "Section0002.xhtml",
           "href": "OEBPS/Text/Section0002.xhtml",
           "mediaType": "application/xhtml+xml",
-          "compressedSize": 1,
-          "uncompressedSize": 1,
+          "size": 1,
           "spineIndex": 2,
           "isLinear": true
         }
@@ -358,8 +364,7 @@
       "id": "Cover.xhtml",
       "href": "OEBPS/Text/Cover.xhtml",
       "mediaType": "application/xhtml+xml",
-      "compressedSize": 1,
-      "uncompressedSize": 1,
+      "size": 1,
       "spineIndex": 0,
       "isLinear": true
     },
@@ -367,8 +372,7 @@
       "id": "Section0001.xhtml",
       "href": "OEBPS/Text/Section0001.xhtml",
       "mediaType": "application/xhtml+xml",
-      "compressedSize": 1,
-      "uncompressedSize": 1,
+      "size": 1,
       "spineIndex": 1,
       "isLinear": true
     },
@@ -376,8 +380,7 @@
       "id": "Section0002.xhtml",
       "href": "OEBPS/Text/Section0002.xhtml",
       "mediaType": "application/xhtml+xml",
-      "compressedSize": 1,
-      "uncompressedSize": 1,
+      "size": 1,
       "spineIndex": 2,
       "isLinear": true
     }
@@ -387,24 +390,21 @@
       "id": "NotoSans-Regular.ttf",
       "href": "OEBPS/Fonts/NotoSans-Regular.ttf",
       "mediaType": "application/x-font-ttf",
-      "compressedSize": 1,
-      "uncompressedSize": 1
+      "size": 1
     }
   ],
   "cover": {
     "id": "ridibooks_logo.png",
     "href": "OEBPS/Images/ridibooks_logo.png",
     "mediaType": "image/png",
-    "compressedSize": 1,
-    "uncompressedSize": 1
+    "size": 1
   },
   "images": [
     {
       "id": "ridibooks_logo.png",
       "href": "OEBPS/Images/ridibooks_logo.png",
       "mediaType": "image/png",
-      "compressedSize": 1,
-      "uncompressedSize": 1
+      "size": 1
     }
   ],
   "styles": [
@@ -412,8 +412,7 @@
       "id": "Style0001.css",
       "href": "OEBPS/Styles/Style0001.css",
       "mediaType": "text/css",
-      "compressedSize": 1,
-      "uncompressedSize": 1
+      "size": 1
     }
   ],
   "guide": [
@@ -425,8 +424,7 @@
         "id": "Cover.xhtml",
         "href": "OEBPS/Text/Cover.xhtml",
         "mediaType": "application/xhtml+xml",
-        "compressedSize": 1,
-        "uncompressedSize": 1,
+        "size": 1,
         "spineIndex": 0,
         "isLinear": true
       }

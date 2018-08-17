@@ -67,8 +67,7 @@
         "id": "ncx",
         "href": "OEBPS/toc.ncx",
         "mediaType": "application/x-dtbncx+xml",
-        "compressedSize": 1,
-        "uncompressedSize": 1,
+        "size": 1,
         "itemType": "NcxItem",
         "navPoints": [
           {
@@ -234,8 +233,7 @@
         "id": "Cover.xhtml",
         "href": "OEBPS/Text/Cover.xhtml",
         "mediaType": "application/xhtml+xml",
-        "compressedSize": 1,
-        "uncompressedSize": 1,
+        "size": 1,
         "itemType": "SpineItem",
         "spineIndex": 0,
         "isLinear": true
@@ -244,8 +242,7 @@
         "id": "Section0001.xhtml",
         "href": "OEBPS/Text/Section0001.xhtml",
         "mediaType": "application/xhtml+xml",
-        "compressedSize": 1,
-        "uncompressedSize": 1,
+        "size": 1,
         "itemType": "SpineItem",
         "spineIndex": 1,
         "isLinear": true
@@ -254,8 +251,7 @@
         "id": "Section0002.xhtml",
         "href": "OEBPS/Text/Section0002.xhtml",
         "mediaType": "application/xhtml+xml",
-        "compressedSize": 1,
-        "uncompressedSize": 1,
+        "size": 1,
         "itemType": "SpineItem",
         "spineIndex": 2,
         "isLinear": true
@@ -264,24 +260,21 @@
         "id": "Style0001.css",
         "href": "OEBPS/Styles/Style0001.css",
         "mediaType": "text/css",
-        "compressedSize": 1,
-        "uncompressedSize": 1,
+        "size": 1,
         "itemType": "CssItem"
       },
       {
         "id": "NotoSans-Regular.ttf",
         "href": "OEBPS/Fonts/NotoSans-Regular.ttf",
         "mediaType": "application/x-font-ttf",
-        "compressedSize": 1,
-        "uncompressedSize": 1,
+        "size": 1,
         "itemType": "FontItem"
       },
       {
         "id": "ridibooks_logo.png",
         "href": "OEBPS/Images/ridibooks_logo.png",
         "mediaType": "image/png",
-        "compressedSize": 1,
-        "uncompressedSize": 1,
+        "size": 1,
         "itemType": "ImageItem",
         "isCover": true
       }

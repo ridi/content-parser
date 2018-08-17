@@ -1,12 +1,11 @@
 class Item {
-  get isFileExists() { return this.compressedSize !== undefined && this.uncompressedSize !== undefined; }
+  get isFileExists() { return this.size !== undefined; }
 
   constructor(rawObj) {
     this.id = rawObj.id;
     this.href = rawObj.href;
     this.mediaType = rawObj.mediaType;
-    this.compressedSize = rawObj.compressedSize;
-    this.uncompressedSize = rawObj.uncompressedSize;
+    this.size = rawObj.size;
     if (this.constructor === Item) {
       Object.freeze(this);
     }
