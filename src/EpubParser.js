@@ -81,7 +81,7 @@ class EpubParser {
       // - The mimetype file should not compressed.
       // - The mimetype file should only contain the string 'application/epub+zip'.
       // - Should not use extra field feature of the ZIP format for the mimetype file.
-      shouldValidatePackage: false,
+      validatePackage: false,
       // If true, stop parsing when XML parsing errors occur.
       validateXml: false,
       // fast-xml-parser options.
@@ -128,7 +128,7 @@ class EpubParser {
 
   static get defaultOptionTypes() {
     return {
-      shouldValidatePackage: 'boolean',
+      validatePackage: 'boolean',
       validateXml: 'boolean',
       xmlParserOptions: 'object',
       allowNcxFileMissing: 'boolean',
@@ -232,7 +232,7 @@ class EpubParser {
 
   _validatePackageIfNeeded(context) {
     return new Promise((resolve) => {
-      if (isExists(context.zip) && context.options.shouldValidatePackage) {
+      if (isExists(context.zip) && context.options.validatePackage) {
         const firstEntry = context.entries[0];
         if (firstEntry.entryName !== 'mimetype') {
           // The mimetype file must be the first file in the archive.

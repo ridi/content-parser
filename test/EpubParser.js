@@ -71,13 +71,13 @@ describe('EpubParser option test', () => {
 
   it('Invalid option value', () => {
     (() => {
-      new EpubParser(Files.DEFAULT, { shouldValidatePackage: 'true' });
+      new EpubParser(Files.DEFAULT, { validatePackage: 'true' });
     }).should.throw(Errors.INVALID_OPTION_VALUE);
   });
 
   // TODO: Add more cases.
   it('Invalid package', () => {
-    return new EpubParser(Files.INVALID_PACKAGE, { shouldValidatePackage: true }).parse().catch((err) => {
+    return new EpubParser(Files.INVALID_PACKAGE, { validatePackage: true }).parse().catch((err) => {
       err.should.equal(Errors.INVALID_PACKAGE);
     });
   });
@@ -254,7 +254,7 @@ describe('EpubParser method test', () => {
   });
 
   it('_validatePackageIfNeeded test', () => {
-    _context.options.shouldValidatePackage = true;
+    _context.options.validatePackage = true;
     return _parser._validatePackageIfNeeded(_context).should.be.fulfilled;
   });
 
