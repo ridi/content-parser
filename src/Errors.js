@@ -1,6 +1,5 @@
 export default {
   PATH_NOT_FOUND: 'Path not found.',
-  DIRECTROY_INPUT_REQUIRED: 'Directory input required.',
   INVALID_FILE_TYPE: 'Invalid file type.',
   INVALID_INPUT: 'Inavlid input.',
   INVALID_OPTIONS: 'Invalid options.',
