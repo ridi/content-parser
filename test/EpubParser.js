@@ -83,7 +83,7 @@ describe('EpubParser option test', () => {
   });
 
   it('Invalid XML', () => {
-    return new EpubParser(Files.INVALID_XML, { shouldXmlValidation: true }).parse().catch((err) => {
+    return new EpubParser(Files.INVALID_XML, { validateXml: true }).parse().catch((err) => {
       err.should.equal(Errors.INVALID_XML);
     });
   });

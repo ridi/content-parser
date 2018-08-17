@@ -83,7 +83,7 @@ class EpubParser {
       // - Should not use extra field feature of the ZIP format for the mimetype file.
       shouldValidatePackage: false,
       // If true, stop parsing when XML parsing errors occur.
-      shouldXmlValidation: false,
+      validateXml: false,
       // fast-xml-parser options.
       xmlParserOptions: {
         // Text node name for identification.
@@ -129,7 +129,7 @@ class EpubParser {
   static get defaultOptionTypes() {
     return {
       shouldValidatePackage: 'boolean',
-      shouldXmlValidation: 'boolean',
+      validateXml: 'boolean',
       xmlParserOptions: 'object',
       allowNcxFileMissing: 'boolean',
       unzipPath: 'string',
@@ -206,9 +206,9 @@ class EpubParser {
   }
 
   _xmlEntry2Json(entry, options) {
-    const { shouldXmlValidation, xmlParserOptions } = options;
+    const { validateXml, xmlParserOptions } = options;
     const xmlData = entry.getFile('utf8');
-    if (shouldXmlValidation && isExists(XmlParser.validate(xmlData).err)) {
+    if (validateXml && isExists(XmlParser.validate(xmlData).err)) {
       throw Errors.INVALID_XML;
     }
     return XmlParser.parse(xmlData, xmlParserOptions || {});
