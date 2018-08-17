@@ -196,7 +196,6 @@ class EpubParser {
         }]);
       }, []);
     }
-
     return getSubpathes(input).reduce((entries, subpath) => { // eslint-disable-line arrow-body-style
       return entries.concat([{
         entryName: subpath.substring(input.length + path.sep.length),
