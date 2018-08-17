@@ -15,7 +15,7 @@ import {
   removeDirectory,
   removeLastPathComponent,
   safePathJoin,
-  getSubpathes,
+  getPathes,
 } from '../src/utils';
 import Book from '../src/model/Book';
 
@@ -157,8 +157,8 @@ describe('Util test', () => {
     safePathJoin('..', '..', 'temp').should.equal(`..${sep}..${sep}temp`);
   });
 
-  it('getSubpathes test', () => {
-    const expectedPath = [
+  it('getPathes test', () => {
+    const expectedPathes = [
       path.join('META-INF', 'container.xml'),
       path.join('OEBPS', 'Fonts', 'NotoSans-Regular.ttf'),
       path.join('OEBPS', 'Images', 'ridibooks_logo.png'),
@@ -171,7 +171,7 @@ describe('Util test', () => {
       path.join('mimetype'),
     ];
     const offset = Files.DEFAULT.length + path.sep.length;
-    const subpathes = getSubpathes(Files.DEFAULT).map(subpath => subpath.substring(offset));
-    subpathes.should.deep.equal(expectedPath);
+    const pathes = getPathes(Files.DEFAULT).map(subpath => subpath.substring(offset));
+    pathes.should.deep.equal(expectedPathes);
   });
 });

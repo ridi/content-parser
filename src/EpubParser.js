@@ -26,7 +26,7 @@ import {
   createDirectory,
   removeDirectory,
   safePathJoin,
-  getSubpathes,
+  getPathes,
 } from './utils';
 
 const privateProps = new WeakMap();
@@ -196,11 +196,11 @@ class EpubParser {
         }]);
       }, []);
     }
-    return getSubpathes(input).reduce((entries, subpath) => { // eslint-disable-line arrow-body-style
+    return getPathes(input).reduce((entries, fullPath) => { // eslint-disable-line arrow-body-style
       return entries.concat([{
-        entryName: subpath.substring(input.length + path.sep.length),
-        getFile: encoding => fs.readFileSync(subpath, encoding),
-        getSize: () => fs.lstatSync(subpath).size,
+        entryName: fullPath.substring(input.length + path.sep.length),
+        getFile: encoding => fs.readFileSync(fullPath, encoding),
+        getSize: () => fs.lstatSync(fullPath).size,
       }]);
     }, []);
   }
