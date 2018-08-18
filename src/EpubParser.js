@@ -117,12 +117,25 @@ class EpubParser {
       },
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
-      // Path to uncompress.
+      // If specified, uncompress to that path. (Only if input is buffer or epub file path.)
       unzipPath: undefined,
       // If true, creates intermediate directories for the unzipPath.
       createIntermediateDirectories: true,
       // If true, removes a previous file from the unzipPath.
       removePreviousFile: true,
+      // If true, extract the styles used by spine.
+      // One namespace is given per CSS file, and the namespace usde for spine is described.
+      // CssItem.namespace, SpineItem.styles is undefined if false.
+      extractStyle: false,
+      // Style extract options.
+      styleExtractOptions: {
+        // Remove the selector that point to html tag.
+        removeHtml: true,
+        // Remove the selector that point to body tag.
+        removeBody: true,
+        // Whether to minify when reading file from CssItem.
+        minify: true,
+      },
     };
   }
 
@@ -135,6 +148,12 @@ class EpubParser {
       unzipPath: 'string',
       createIntermediateDirectories: 'boolean',
       removePreviousFile: 'boolean',
+      extractStyle: 'boolean',
+      styleExtractOptions: {
+        removeHtml: 'boolean',
+        removeBody: 'boolean',
+        minify: 'boolean',
+      },
     };
   }
 
