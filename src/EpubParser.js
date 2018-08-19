@@ -78,7 +78,7 @@ const makeSafeValues = (any, mapping = {}) => {
 };
 
 class EpubParser {
-  static get defaultOptions() {
+  static get parseDefaultOptions() {
     return {
       // If true, validation the package specifications in the IDPF listed below.
       // - The Zip header should not corrupt.
@@ -135,26 +135,16 @@ class EpubParser {
       //   { spineIndex: -1, isLinear: false, ... },      { spineIndex: 2, isLinear: false, ... },
       //   { spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
       ignoreLinear: false,
-      // If true, extract the styles used by spine.
-      // One namespace is given per CSS file or inline style, and the namespace usde for spine is described.
-      // CssItem.namespace, SpineItem.styles is undefined if false.
+      // If true, One namespace is given per CSS file or inline style, and styles used for spine is described.
+      // Otherwise it CssItem.namespace, SpineItem.styles is undefined.
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
-      extractStyle: false,
-      // Style extract options.
-      styleExtractOptions: {
-        // Prepend given string to namespace for identification.
-        namespacePrefix: '#ridi_c',
-        // Remove the selector that point to html tag.
-        removeHtml: true,
-        // Remove the selector that point to body tag.
-        removeBody: true,
-        // Whether to minify when reading file from CssItem.
-        minify: true,
-      },
+      useStyleNamespace: false,
+      // Prepend given string to namespace for identification.
+      styleNamespacePrefix: '#ridi_c',
     };
   }
 
-  static get defaultOptionTypes() {
+  static get parseOptionTypes() {
     return {
       validatePackage: 'boolean',
       validateXml: 'boolean',
@@ -164,9 +154,45 @@ class EpubParser {
       createIntermediateDirectories: 'boolean',
       removePreviousFile: 'boolean',
       ignoreLinear: 'boolean',
-      extractStyle: 'boolean',
-      styleExtractOptions: {
-        namespacePrefix: 'string',
+      useStyleNamespace: 'boolean',
+      styleNamespacePrefix: 'string',
+    };
+  }
+
+  static get readDefaultOptions() {
+    return {
+      // If specified then returns a string. Otherwise it returns a buffer.
+      encoding: undefined,
+      // If false, throw Errors.ITEM_NOT_FOUND.
+      ignoreEntryNotFoundError: true,
+      // SpineItem.
+      spine: {
+        // If true, extract body. Otherwise it returns a full string.
+        // e.g. { body: '...', attrs: { name: 'style', value: 'background-color: #000000' } }
+        extractBody: false,
+      },
+      // CssItem or InlineCssItem.
+      css: {
+        // Remove at-rules.
+        removeAtRule: false,
+        // Remove the selector that point to html tag.
+        removeHtml: false,
+        // Remove the selector that point to body tag.
+        removeBody: false,
+        // Whether to minify when reading file.
+        minify: false,
+      },
+    };
+  }
+
+  static get readOptionTypes() {
+    return {
+      encoding: 'string',
+      spine: {
+        extractBody: 'boolean',
+      },
+      css: {
+        removeAtRule: 'boolean',
         removeHtml: 'boolean',
         removeBody: 'boolean',
         minify: 'boolean',
@@ -186,11 +212,72 @@ class EpubParser {
     } else if (!isExists(input) || !isBuffer(input)) {
       throw Errors.INVALID_INPUT;
     }
-    this._validateOptions(EpubParser.defaultOptions, EpubParser.defaultOptionTypes, options);
+    this._validateOptions(EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes, options);
     privateProps.set(this, {
       input,
-      options: objectMerge(EpubParser.defaultOptions, options),
+      options: objectMerge(EpubParser.parseDefaultOptions, options),
     });
+  }
+
+  parse() {
+    return this._prepareParse()
+      .then(context => this._validatePackageIfNeeded(context))
+      .then(context => this._parseMetaInf(context))
+      .then(context => this._parseOpf(context))
+      .then(context => this._parseNcx(context))
+      .then(context => this._unzipIfNeeded(context))
+      .then(context => this._createBook(context))
+      .then(book => book);
+  }
+
+  read(target, options = {}) {
+    const items = isArray(target) ? target : [target];
+    if (items.find(item => !(item instanceof Item))) {
+      throw Errors.INVALID_ITEM;
+    }
+    this._validateOptions(EpubParser.readDefaultOptions, EpubParser.readOptionTypes, options);
+    const readOptions = objectMerge(EpubParser.readDefaultOptions, options);
+
+    const { input } = this;
+    let entries;
+    if (isBuffer(input) || fs.lstatSync(input).isFile()) {
+      const zip = new Zip(input);
+      entries = this._getEntries(zip);
+    } else {
+      entries = this._getEntries(input);
+    }
+
+    const results = items.map((item) => {
+      if (item instanceof InlineCssItem) {
+        return item.text;
+      }
+
+      const entry = findEntry(item.href, entries);
+      if (!isExists(entry)) {
+        if (options.ignoreEntryNotFoundError) {
+          return undefined;
+        }
+        throw Errors.ITEM_NOT_FOUND;
+      }
+
+      const file = entry.getFile(readOptions.encoding);
+      if (item instanceof SpineItem && readOptions.spine.extractBody) {
+        const document = parse5.parse(file);
+        const html = document.childNodes.find(child => child.tagName === 'html');
+        const body = html.childNodes.find(child => child.tagName === 'body');
+        return {
+          body: parse5.serialize(body),
+          attrs: body.attrs,
+        };
+      }
+
+      return file;
+    });
+
+    if (isArray(target)) {
+      return results;
+    }
+    return results[0];
   }
 
   _validateOptions(defaultValues, types, options) {
@@ -213,17 +300,6 @@ class EpubParser {
         this._validateOptions(defaultValues[key], types[key], options[key]);
       }
     });
-  }
-
-  parse() {
-    return this._prepare()
-      .then(context => this._validatePackageIfNeeded(context))
-      .then(context => this._parseMetaInf(context))
-      .then(context => this._parseOpf(context))
-      .then(context => this._parseNcx(context))
-      .then(context => this._unzipIfNeeded(context))
-      .then(context => this._createBook(context))
-      .then(book => book);
   }
 
   _getEntries(input) {
@@ -258,7 +334,7 @@ class EpubParser {
     return XmlParser.parse(xmlData, xmlParserOptions || {});
   }
 
-  _prepare() {
+  _prepareParse() {
     return new Promise((resolve) => {
       const { input, options } = this;
       const context = new Context();
@@ -435,18 +511,16 @@ class EpubParser {
               rawItem.itemType = DeadItem;
             }
           }
-          if (options.extractStyle) {
+          if (options.useStyleNamespace) {
             if (rawItem.itemType === CssItem) {
-              rawItem.namespace = `${options.styleExtractOptions.namespacePrefix}${cssIdx}`;
+              rawItem.namespace = `${options.styleNamespacePrefix}${cssIdx}`;
               cssIdx += 1;
             } else if (rawItem.itemType === SpineItem) {
               const document = parse5.parse(itemEntry.getFile('utf8'));
               const html = document.childNodes.find(child => child.tagName === 'html');
               const head = html.childNodes.find(child => child.tagName === 'head');
-              const linkList = head.childNodes.filter(child => child.tagName === 'link');
-              const styleList = head.childNodes.filter(child => child.tagName === 'style');
               rawItem.styles = [];
-              linkList.forEach((link) => {
+              head.childNodes.filter(child => child.tagName === 'link').forEach((link) => {
                 const { attrs } = link;
                 if (isExists(attrs)) {
                   const rel = attrs.find(property => property.name === 'rel');
@@ -460,10 +534,10 @@ class EpubParser {
                   }
                 }
               });
-              styleList.forEach((style) => {
+              head.childNodes.filter(child => child.tagName === 'style').forEach((style) => {
                 const firstNode = style.childNodes[0];
                 if (isExists(firstNode)) {
-                  const namespace = `${options.styleExtractOptions.namespacePrefix}${cssIdx}`;
+                  const namespace = `${options.styleNamespacePrefix}${cssIdx}`;
                   const href = `${rawItem.href}_${namespace}`;
                   const value = firstNode.value || '';
                   rawItem.styles.push(href);

@@ -1,0 +1,10 @@
+@namespace url(http://www.w3.org/1999/xhtml);
+
+@font-face {
+  font-family: NotoSansRegular;
+  src: url("../Fonts/NotoSans-Regular.ttf");
+}
+
+* {
+  font-family: NotoSansRegular;
+}

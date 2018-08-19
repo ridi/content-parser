@@ -1,0 +1,9 @@
+@import 'Style0001.css';
+
+@media screen {
+  body { line-height: 1.2 }
+}
+
+p {
+  text-align: left;
+}

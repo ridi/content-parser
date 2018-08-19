@@ -1,0 +1,9 @@
+{
+  "body": "\n  <p>Extract style</p>\n\n",
+  "attrs": [
+    {
+      "name": "style",
+      "value": "background-color: #000000;"
+    }
+  ]
+}
