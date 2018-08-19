@@ -14,7 +14,7 @@
           {
             "evaluate": false,
             "mangle": {
-              "exclude": ["CssItem", "FontItem", "ImageItem", "InlineCssItem", "NcxItem", "SpineItem"]
+              "exclude": ["CssItem", "DeadItem", "FontItem", "ImageItem", "InlineCssItem", "NcxItem", "SpineItem"]
             }
           }
         ]
