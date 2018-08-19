@@ -12,6 +12,7 @@ import DateTime from '../src/model/DateTime';
 import Guide from '../src/model/Guide';
 import Identifier from '../src/model/Identifier';
 import InlineCssItem from '../src/model/InlineCssItem';
+import Item from '../src/model/Item';
 import NcxItem from '../src/model/NcxItem'
 import SpineItem from '../src/model/SpineItem';
 
@@ -424,6 +425,18 @@ parser.parse().then((book) => {
     Style0003: path.join(basePath, 'OEBPS', 'Styles', 'Style0003.css'),
   };
   describe('Reading test', () => {
+    it('Invalid item', () => {
+      (() => {
+        parser.read({ href: _Files.Section0001 }, { encoding: 'utf8' });
+      }).should.throw(Errors.INVALID_ITEM);
+    });
+
+    it('Item not found', () => {
+      (() => {
+        parser.read(new Item({}), { encoding: 'utf8', ignoreEntryNotFoundError: false });
+      }).should.throw(Errors.ITEM_NOT_FOUND);
+    });
+
     it('Read single item', () => {
       const expected = fs.readFileSync(_Files.Section0001, 'utf8');
       parser.read(book.spines[0], { encoding: 'utf8' }).should.equal(expected);
