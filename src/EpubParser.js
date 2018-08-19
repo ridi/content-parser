@@ -123,6 +123,13 @@ class EpubParser {
       createIntermediateDirectories: true,
       // If true, removes a previous file from the unzipPath.
       removePreviousFile: true,
+      // If true, ignore the spineIndex difference caused by the isLinear property of the SpineItem.
+      // e.g. If left is false, right is true.
+      //  [{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
+      //   { spineIndex: 1, isLinear: true, ... },        { spineIndex: 1, isLinear: true, ... },
+      //   { spineIndex: -1, isLinear: false, ... },      { spineIndex: 2, isLinear: false, ... },
+      //   { spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
+      ignoreLinear: false,
       // If true, extract the styles used by spine.
       // One namespace is given per CSS file, and the namespace usde for spine is described.
       // CssItem.namespace, SpineItem.styles is undefined if false.
@@ -148,6 +155,7 @@ class EpubParser {
       unzipPath: 'string',
       createIntermediateDirectories: 'boolean',
       removePreviousFile: 'boolean',
+      ignoreLinear: 'boolean',
       extractStyle: 'boolean',
       styleExtractOptions: {
         removeHtml: 'boolean',
@@ -335,12 +343,13 @@ class EpubParser {
 
   _parseOpf(context) {
     return new Promise((resolve) => {
-      const opfEntry = findEntry(context.opfPath, context.entries);
+      const { entries, options } = context;
+      const opfEntry = findEntry(context.opfPath, entries);
       if (!isExists(opfEntry)) {
         throw Errors.OPF_NOT_FOUND;
       }
 
-      const { package: root } = this._xmlEntry2Json(opfEntry, context.options);
+      const { package: root } = this._xmlEntry2Json(opfEntry, options);
       if (!isExists(root) || !isExists(root.metadata) || !isExists(root.manifest) || !isExists(root.spine)) {
         throw Errors.INVALID_OPF;
       }
@@ -410,12 +419,14 @@ class EpubParser {
         } else if (item.itemType === SpineItem) {
           const ref = itemref.find(ir => ir.idref === item.id);
           if (isExists(ref)) {
-            item.spineIndex = spineIndex;
             item.isLinear = ref.linear;
             if (!isExists(item.isLinear)) {
               item.isLinear = true;
             }
-            spineIndex += 1;
+            if (options.ignoreLinear || item.isLinear) {
+              item.spineIndex = spineIndex;
+              spineIndex += 1;
+            }
           } else {
             item.itemType = Item;
           }
