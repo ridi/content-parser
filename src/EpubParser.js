@@ -135,7 +135,7 @@ class EpubParser {
       //   { spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
       ignoreLinear: false,
       // If true, extract the styles used by spine.
-      // One namespace is given per CSS file, and the namespace usde for spine is described.
+      // One namespace is given per CSS file or inline style, and the namespace usde for spine is described.
       // CssItem.namespace, SpineItem.styles is undefined if false.
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
       extractStyle: false,
