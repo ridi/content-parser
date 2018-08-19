@@ -28,6 +28,7 @@ import {
   objectMerge,
   createDirectory,
   removeDirectory,
+  removeLastPathComponent,
   safePathJoin,
   getPathes,
 } from './utils';
@@ -136,6 +137,7 @@ class EpubParser {
       // If true, extract the styles used by spine.
       // One namespace is given per CSS file, and the namespace usde for spine is described.
       // CssItem.namespace, SpineItem.styles is undefined if false.
+      // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
       extractStyle: false,
       // Style extract options.
       styleExtractOptions: {
@@ -443,7 +445,8 @@ class EpubParser {
                   if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
                     const href = attrs.find(property => property.name === 'href');
                     if (isExists(href) && isExists(href.value)) {
-                      rawItem.styles.push(safePathJoin(context.basePath, href.value));
+                      const basePath = removeLastPathComponent(rawItem.href);
+                      rawItem.styles.push(safePathJoin(basePath, href.value));
                     }
                   }
                 }
