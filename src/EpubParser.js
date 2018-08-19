@@ -2,6 +2,7 @@ import Zip from 'adm-zip';
 import XmlParser from 'fast-xml-parser';
 import fs from 'fs';
 import he from 'he';
+import parse5 from 'parse5';
 import path from 'path';
 
 import Book from './model/Book';
@@ -10,6 +11,7 @@ import CssItem from './model/CssItem';
 import FontItem from './model/FontItem';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
+import InlineCssItem from './model/InlineCssItem';
 import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
@@ -136,6 +138,8 @@ class EpubParser {
       extractStyle: false,
       // Style extract options.
       styleExtractOptions: {
+        // Prepend given string to namespace for identification.
+        namespacePrefix: '#ridi_c',
         // Remove the selector that point to html tag.
         removeHtml: true,
         // Remove the selector that point to body tag.
@@ -158,6 +162,7 @@ class EpubParser {
       ignoreLinear: 'boolean',
       extractStyle: 'boolean',
       styleExtractOptions: {
+        namespacePrefix: 'string',
         removeHtml: 'boolean',
         removeBody: 'boolean',
         minify: 'boolean',
@@ -382,8 +387,13 @@ class EpubParser {
       rawBook.metas = makeSafeValues(meta);
 
       rawBook.items = [];
+      const tocId = root.spine[`${attributeNamePrefix}toc`];
+      const itemrefs = makeSafeValues(root.spine.itemref);
+      const inlineStyleItems = [];
       const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
       let foundCover = false;
+      let spineIndex = 0;
+      let cssIdx = 0;
       makeSafeValues(root.manifest.item).forEach((item) => {
         const rawItem = {};
         rawItem.id = item.id;
@@ -398,60 +408,100 @@ class EpubParser {
         const itemEntry = findEntry(rawItem.href, context.entries);
         if (isExists(itemEntry)) {
           rawItem.size = itemEntry.getSize();
-        }
-
-        if (!foundCover && isExists(coverMeta) && rawItem.id === coverMeta.content && rawItem.itemType === ImageItem) {
-          rawItem.isCover = true;
-          foundCover = true;
+          if (rawItem.itemType === SpineItem) {
+            const ref = itemrefs.find(itemref => itemref.idref === rawItem.id);
+            if (isExists(ref)) {
+              rawItem.isLinear = ref.linear;
+              if (!isExists(rawItem.isLinear)) {
+                rawItem.isLinear = true;
+              }
+              if (options.ignoreLinear || rawItem.isLinear) {
+                rawItem.spineIndex = spineIndex;
+                spineIndex += 1;
+              }
+            } else {
+              rawItem.itemType = Item;
+            }
+          }
+          if (options.extractStyle) {
+            if (rawItem.itemType === CssItem) {
+              rawItem.namespace = `${options.styleExtractOptions.namespacePrefix}${cssIdx}`;
+              cssIdx += 1;
+            } else if (rawItem.itemType === SpineItem) {
+              const document = parse5.parse(itemEntry.getFile('utf8'));
+              const html = document.childNodes.find(child => child.tagName === 'html');
+              const head = html.childNodes.find(child => child.tagName === 'head');
+              const linkList = head.childNodes.filter(child => child.tagName === 'link');
+              const styleList = head.childNodes.filter(child => child.tagName === 'style');
+              rawItem.styles = [];
+              linkList.forEach((link) => {
+                const { attrs } = link;
+                if (isExists(attrs)) {
+                  const rel = attrs.find(property => property.name === 'rel');
+                  const type = attrs.find(property => property.name === 'type'); // eslint-disable-line no-shadow
+                  if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
+                    const href = attrs.find(property => property.name === 'href');
+                    if (isExists(href) && isExists(href.value)) {
+                      rawItem.styles.push(safePathJoin(context.basePath, href.value));
+                    }
+                  }
+                }
+              });
+              styleList.forEach((style) => {
+                const firstNode = style.childNodes[0];
+                if (isExists(firstNode)) {
+                  const namespace = `${options.styleExtractOptions.namespacePrefix}${cssIdx}`;
+                  const href = `${rawItem.href}_${namespace}`;
+                  const value = firstNode.value || '';
+                  rawItem.styles.push(href);
+                  inlineStyleItems.push({
+                    id: `${rawItem.id}_${namespace}`,
+                    href,
+                    mediaType: 'text/css',
+                    size: value.length,
+                    itemType: InlineCssItem,
+                    namespace,
+                    text: value,
+                  });
+                  cssIdx += 1;
+                }
+              });
+            }
+          } else if (rawItem.itemType === ImageItem) {
+            if (!foundCover) {
+              if (isExists(coverMeta) && rawItem.id === coverMeta.content) {
+                rawItem.isCover = true;
+                foundCover = true;
+              } else if (rawItem.id.toLowerCase() === 'cover') {
+                rawItem.isCover = true;
+                foundCover = true;
+              }
+            }
+          }
+        } else if (rawItem.itemType === NcxItem) {
+          if (rawItem.id !== tocId) {
+            rawItem.itemType = Item;
+          }
+        } else {
+          rawItem.itemType = Item;
         }
 
         rawBook.items.push(rawItem);
       });
-
-      let spineIndex = 0;
-      const itemref = makeSafeValues(root.spine.itemref);
-      const tocId = root.spine[`${attributeNamePrefix}toc`];
-      rawBook.items.forEach((item) => {
-        if (item.itemType === NcxItem) {
-          if (item.id !== tocId) {
-            item.itemType = Item;
-          }
-        } else if (item.itemType === SpineItem) {
-          const ref = itemref.find(ir => ir.idref === item.id);
-          if (isExists(ref)) {
-            item.isLinear = ref.linear;
-            if (!isExists(item.isLinear)) {
-              item.isLinear = true;
-            }
-            if (options.ignoreLinear || item.isLinear) {
-              item.spineIndex = spineIndex;
-              spineIndex += 1;
-            }
-          } else {
-            item.itemType = Item;
-          }
-        } else if (!foundCover && item.itemType === ImageItem && item.id.toLowerCase() === 'cover') {
-          item.isCover = true;
-          foundCover = true;
-        }
-      });
+      inlineStyleItems.forEach(inlineStyleItem => rawBook.items.push(inlineStyleItem));
 
       rawBook.guide = [];
       if (isExists(root.guide)) {
-        let coverGuide;
         makeSafeValues(root.guide.reference).forEach((reference) => {
-          if (!isExists(coverGuide) && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
-            coverGuide = reference;
+          if (!foundCover && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
+            const imageItem = rawBook.items.find(item => item.href === reference.href && item.itemType === ImageItem);
+            if (isExists(imageItem)) {
+              imageItem.isCover = true;
+              foundCover = true;
+            }
           }
           rawBook.guide.push(objectMerge(reference, { href: safePathJoin(context.basePath, reference.href) }));
         });
-        if (!foundCover && isExists(coverGuide)) {
-          const imageItem = rawBook.items.find(item => item.href === coverGuide.href && item.itemType === ImageItem);
-          if (isExists(imageItem)) {
-            imageItem.isCover = true;
-            foundCover = true;
-          }
-        }
       }
 
       resolve(context);

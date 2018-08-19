@@ -7,7 +7,9 @@ class CssItem extends Item {
     if (isExists(rawObj.namespace)) {
       this.namespace = rawObj.namespace;
     }
-    Object.freeze(this);
+    if (this.constructor === CssItem) {
+      Object.freeze(this);
+    }
   }
 }
 

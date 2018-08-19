@@ -32,7 +32,8 @@
   "dependencies": {
     "adm-zip": "^0.4.11",
     "fast-xml-parser": "^3.11.2",
-    "he": "^1.1.1"
+    "he": "^1.1.1",
+    "parse5": "^5.1.0"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",

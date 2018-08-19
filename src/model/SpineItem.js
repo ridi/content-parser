@@ -5,8 +5,12 @@ const privateProps = new WeakMap();
 
 class SpineItem extends Item {
   get styles() {
-    const { findItem, styles } = privateProps.get(this);
-    if (!isExists(styles)) {
+    const props = privateProps.get(this);
+    if (!isExists(props)) {
+      return undefined;
+    }
+    const { findItem, styles } = props;
+    if (!isExists(findItem) || !isExists(styles)) {
       return undefined;
     }
     return styles.map(style => findItem(style));
