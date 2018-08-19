@@ -70,11 +70,17 @@ describe('EpubParser option test', () => {
     (() => {
       new EpubParser(Files.DEFAULT, { xmlParserOptions: { attributeNamePrefix: '@attr_' } });
     }).should.throw(Errors.INVALID_OPTIONS);
+    (() => {
+      new EpubParser(Files.DEFAULT, { styleExtractOptions: { i_am_invalid_option: true } });
+    }).should.throw(Errors.INVALID_OPTIONS);
   });
 
   it('Invalid option value', () => {
     (() => {
       new EpubParser(Files.DEFAULT, { validatePackage: 'true' });
+    }).should.throw(Errors.INVALID_OPTION_VALUE);
+    (() => {
+      new EpubParser(Files.DEFAULT, { styleExtractOptions: { namespacePrefix: true } });
     }).should.throw(Errors.INVALID_OPTION_VALUE);
   });
 

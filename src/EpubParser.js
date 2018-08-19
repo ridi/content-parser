@@ -185,12 +185,17 @@ class EpubParser {
     } else if (!isExists(input) || !isBuffer(input)) {
       throw Errors.INVALID_INPUT;
     }
+    this._validateOptions(EpubParser.defaultOptions, EpubParser.defaultOptionTypes, options);
+    privateProps.set(this, {
+      input,
+      options: objectMerge(EpubParser.defaultOptions, options),
+    });
+  }
+
+  _validateOptions(defaultValues, types, options) {
     getPropertyKeys(options).forEach((key) => {
-      if (!isExists(getPropertyDescriptor(EpubParser.defaultOptions, key))) {
+      if (!isExists(getPropertyDescriptor(defaultValues, key))) {
         throw Errors.INVALID_OPTIONS;
-      }
-      if (typeof options[key] !== EpubParser.defaultOptionTypes[key]) { // eslint-disable-line valid-typeof
-        throw Errors.INVALID_OPTION_VALUE;
       }
       if (key === 'xmlParserOptions') {
         const xmlParserOptions = options[key];
@@ -199,10 +204,13 @@ class EpubParser {
           throw Errors.INVALID_OPTIONS;
         }
       }
-    });
-    privateProps.set(this, {
-      input,
-      options: objectMerge(EpubParser.defaultOptions, options),
+      if (isString(types[key])) {
+        if (typeof options[key] !== types[key]) { // eslint-disable-line valid-typeof
+          throw Errors.INVALID_OPTION_VALUE;
+        }
+      } else {
+        this._validateOptions(defaultValues[key], types[key], options[key]);
+      }
     });
   }
 
