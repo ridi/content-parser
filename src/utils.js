@@ -33,6 +33,10 @@ export function isString(any) {
   return typeof any === 'string';
 }
 
+export function isUrl(string) {
+  return isString(string) && isExists(string.match(/(http|https):\/\//i));
+}
+
 export function objectMerge(obj1, obj2) {
   return Object.assign({}, obj1, obj2);
 }

@@ -25,6 +25,7 @@ import {
   isExists,
   isObject,
   isString,
+  isUrl,
   objectMerge,
   createDirectory,
   removeDirectory,
@@ -452,7 +453,7 @@ class EpubParser {
                   const type = attrs.find(property => property.name === 'type'); // eslint-disable-line no-shadow
                   if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
                     const href = attrs.find(property => property.name === 'href');
-                    if (isExists(href) && isExists(href.value)) {
+                    if (isExists(href) && isExists(href.value) && !isUrl(href.value)) {
                       const basePath = removeLastPathComponent(rawItem.href);
                       rawItem.styles.push(safePathJoin(basePath, href.value));
                     }
