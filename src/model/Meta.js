@@ -4,6 +4,13 @@ class Meta {
     this.content = rawObj.content;
     Object.freeze(this);
   }
+
+  toRaw() {
+    return {
+      name: this.name,
+      content: this.content,
+    };
+  }
 }
 
 export default Meta;

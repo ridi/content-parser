@@ -10,6 +10,13 @@ class Author {
     this.role = (rawObj.role || Author.Roles.UNDEFINED).toLowerCase();
     Object.freeze(this);
   }
+
+  toRaw() {
+    return {
+      name: this.name,
+      role: this.role,
+    };
+  }
 }
 
 // See http://www.idpf.org/epub/20/spec/OPF_2.0.1_draft.htm#Section2.2.6 for a discussion of role.

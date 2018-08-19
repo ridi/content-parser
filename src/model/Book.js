@@ -1,14 +1,17 @@
 import Author from './Author';
 import CssItem from './CssItem';
 import DateTime from './DateTime';
+import DeadItem from './DeadItem';
 import FontItem from './FontItem';
 import Guide from './Guide';
 import Identifier from './Identifier';
 import ImageItem from './ImageItem';
+import InlineCssItem from './InlineCssItem';
+import Item from './Item';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
-import { objectMerge } from '../utils';
+import { isString, objectMerge } from '../utils';
 
 /* eslint-disable new-cap */
 class Book {
@@ -31,7 +34,29 @@ class Book {
     this.rights = rawBook.rights;
     this.epubVersion = rawBook.epubVersion;
     this.metas = (rawBook.metas || []).map(rawObj => new Meta(rawObj));
-    this.items = (rawBook.items || []).map(rawObj => new rawObj.itemType(objectMerge(rawObj, { findItem })));
+    this.items = (rawBook.items || []).map((rawObj) => {
+      let { itemType } = rawObj;
+      if (isString(itemType)) {
+        if (itemType === Item.name) {
+          itemType = Item;
+        } else if (itemType === NcxItem.name) {
+          itemType = NcxItem;
+        } else if (itemType === SpineItem.name) {
+          itemType = SpineItem;
+        } else if (itemType === FontItem.name) {
+          itemType = FontItem;
+        } else if (itemType === ImageItem.name) {
+          itemType = ImageItem;
+        } else if (itemType === CssItem.name) {
+          itemType = CssItem;
+        } else if (itemType === InlineCssItem.name) {
+          itemType = InlineCssItem;
+        } else {
+          itemType = DeadItem;
+        }
+      }
+      return new itemType(objectMerge(rawObj, { findItem }));
+    });
     this.ncx = this.items.find(item => item instanceof NcxItem);
     this.spines = this.items.filter(item => item instanceof SpineItem);
     this.fonts = this.items.filter(item => item instanceof FontItem);
@@ -40,6 +65,30 @@ class Book {
     this.styles = this.items.filter(item => item instanceof CssItem);
     this.guide = (rawBook.guide || []).map(rawObj => new Guide(objectMerge(rawObj, { findItem })));
     Object.freeze(this);
+  }
+
+  toRaw() {
+    return {
+      titles: this.titles,
+      creators: this.creators.map(creator => creator.toRaw()),
+      subjects: this.subjects,
+      description: this.description,
+      publisher: this.publisher,
+      contributors: this.contributors.map(contributor => contributor.toRaw()),
+      dates: this.dates.map(date => date.toRaw()),
+      type: this.type,
+      format: this.format,
+      identifiers: this.identifiers.map(identifier => identifier.toRaw()),
+      source: this.source,
+      language: this.language,
+      relation: this.relation,
+      coverage: this.coverage,
+      rights: this.rights,
+      epubVersion: this.epubVersion,
+      metas: this.metas.map(meta => meta.toRaw()),
+      items: this.items.map(item => item.toRaw()),
+      guide: this.guide.map(guide => guide.toRaw()),
+    };
   }
 }
 

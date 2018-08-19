@@ -10,6 +10,13 @@ class Identifier {
     this.scheme = (rawObj.scheme || Identifier.Schemes.UNDEFINED).toLowerCase();
     Object.freeze(this);
   }
+
+  toRaw() {
+    return {
+      value: this.value,
+      scheme: this.scheme,
+    };
+  }
 }
 
 Identifier.Schemes = Object.freeze({

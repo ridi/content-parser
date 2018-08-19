@@ -10,6 +10,16 @@ class Item {
       Object.freeze(this);
     }
   }
+
+  toRaw() {
+    return {
+      id: this.id,
+      href: this.href,
+      mediaType: this.mediaType,
+      size: this.size,
+      itemType: Item.name,
+    };
+  }
 }
 
 export default Item;

@@ -407,3 +407,14 @@ describe('EpubParser parsing test', () => {
     });
   });
 });
+
+describe('EpubParser book serialization test', () => {
+  it('Book -> RawBook -> Book', () => {
+    return new EpubParser(Files.DEFAULT).parse().then((book) => {
+      book.should.be.an.instanceOf(Book);
+      const rawBook = book.toRaw();
+      const newBook = new Book(rawBook);
+      validationDefalutBook(newBook);
+    });
+  });
+});

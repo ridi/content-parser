@@ -10,6 +10,13 @@ class DateTime {
     this.event = (rawObj.event || DateTime.Events.UNDEFINED).toLowerCase();
     Object.freeze(this);
   }
+
+  toRaw() {
+    return {
+      value: this.value,
+      event: this.event,
+    };
+  }
 }
 
 DateTime.Events = Object.freeze({

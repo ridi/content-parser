@@ -15,6 +15,20 @@ class NavPoint {
     privateProps.set(this, { findItem: rawObj.findItem });
     Object.freeze(this);
   }
+
+  toRaw() {
+    return {
+      id: this.id,
+      navLabel: {
+        text: this.label,
+      },
+      content: {
+        src: this.src,
+      },
+      depth: this.depth,
+      children: this.children.map(child => child.toRaw()),
+    };
+  }
 }
 
 export default NavPoint;

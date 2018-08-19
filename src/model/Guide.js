@@ -10,6 +10,14 @@ class Guide {
     privateProps.set(this, { findItem: rawObj.findItem });
     Object.freeze(this);
   }
+
+  toRaw() {
+    return {
+      title: this.title,
+      type: this.type,
+      href: this.href,
+    };
+  }
 }
 
 Guide.Types = Object.freeze({

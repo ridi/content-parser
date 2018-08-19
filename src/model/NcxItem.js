@@ -10,6 +10,13 @@ class NcxItem extends Item {
     });
     Object.freeze(this);
   }
+
+  toRaw() {
+    return objectMerge(super.toRaw(), {
+      navPoints: this.navPoints.map(navPoint => navPoint.toRaw()),
+      itemType: NcxItem.name,
+    });
+  }
 }
 
 export default NcxItem;

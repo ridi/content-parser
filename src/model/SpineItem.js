@@ -1,5 +1,5 @@
 import Item from './Item';
-import { isExists } from '../utils';
+import { isExists, objectMerge } from '../utils';
 
 const privateProps = new WeakMap();
 
@@ -24,6 +24,20 @@ class SpineItem extends Item {
       privateProps.set(this, { findItem: rawObj.findItem, styles: rawObj.styles });
     }
     Object.freeze(this);
+  }
+
+  toRaw() {
+    const props = privateProps.get(this);
+    let styles;
+    if (isExists(props)) {
+      styles = props.styles; // eslint-disable-line prefer-destructuring
+    }
+    return objectMerge(super.toRaw(), {
+      spineIndex: this.spineIndex,
+      isLinear: this.isLinear,
+      styles,
+      itemType: SpineItem.name,
+    });
   }
 }
 
