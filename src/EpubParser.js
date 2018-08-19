@@ -8,6 +8,7 @@ import path from 'path';
 import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';
+import DeadItem from './model/DeadItem';
 import FontItem from './model/FontItem';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
@@ -420,7 +421,7 @@ class EpubParser {
                 spineIndex += 1;
               }
             } else {
-              rawItem.itemType = Item;
+              rawItem.itemType = DeadItem;
             }
           }
           if (options.extractStyle) {
@@ -480,10 +481,10 @@ class EpubParser {
           }
         } else if (rawItem.itemType === NcxItem) {
           if (rawItem.id !== tocId) {
-            rawItem.itemType = Item;
+            rawItem.itemType = DeadItem;
           }
         } else {
-          rawItem.itemType = Item;
+          rawItem.itemType = DeadItem;
         }
 
         rawBook.items.push(rawItem);
