@@ -20,8 +20,8 @@
         "OEBPS/Styles/Style0001.css",
         "OEBPS/Styles/Style0002.css",
         "OEBPS/Styles/Style0003.css",
-        "OEBPS/Text/Section0001.xhtml_#ridi_c0",
-        "OEBPS/Text/Section0001.xhtml_#ridi_c1"
+        "OEBPS/Text/Section0001.xhtml_ridi_c0",
+        "OEBPS/Text/Section0001.xhtml_ridi_c1"
       ]
     },
     {
@@ -30,7 +30,7 @@
       "mediaType": "text/css",
       "size": 1,
       "itemType": "CssItem",
-      "namespace": "#ridi_c2"
+      "namespace": "ridi_c2"
     },
     {
       "id": "Style0002.css",
@@ -38,7 +38,7 @@
       "mediaType": "text/css",
       "size": 1,
       "itemType": "CssItem",
-      "namespace": "#ridi_c3"
+      "namespace": "ridi_c3"
     },
     {
       "id": "Style0003.css",
@@ -46,24 +46,24 @@
       "mediaType": "text/css",
       "size": 1,
       "itemType": "CssItem",
-      "namespace": "#ridi_c4"
+      "namespace": "ridi_c4"
     },
     {
-      "id": "Section0001.xhtml_#ridi_c0",
-      "href": "OEBPS/Text/Section0001.xhtml_#ridi_c0",
+      "id": "Section0001.xhtml_ridi_c0",
+      "href": "OEBPS/Text/Section0001.xhtml_ridi_c0",
       "mediaType": "text/css",
       "size": 1,
       "itemType": "InlineCssItem",
-      "namespace": "#ridi_c0",
+      "namespace": "ridi_c0",
       "text": "\n/*<![CDATA[*/\n\n  p {\n  font-size: 17px;\n  text-align: center;\n  }\n  /*]]>*/\n  "
     },
     {
-      "id": "Section0001.xhtml_#ridi_c1",
-      "href": "OEBPS/Text/Section0001.xhtml_#ridi_c1",
+      "id": "Section0001.xhtml_ridi_c1",
+      "href": "OEBPS/Text/Section0001.xhtml_ridi_c1",
       "mediaType": "text/css",
       "size": 1,
       "itemType": "InlineCssItem",
-      "namespace": "#ridi_c1",
+      "namespace": "ridi_c1",
       "text": "\n  body {\n  color: #ffffff;\n  }\n  "
     }
   ]
