@@ -34,6 +34,7 @@ const Files = {
   EXPECTED_EXTRACT_STYLE_CONTEXT: path.join('.', 'test', 'res', 'expectedExtractStyleContext.json'),
   EXPECTED_EXTRACT_STYLE_BOOK: path.join('.', 'test', 'res', 'expectedExtractStyleBook.json'),
   EXPECTED_EXTRACT_BODY: path.join('.', 'test', 'res', 'expectedExtractBody.json'),
+  EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR: path.join('.', 'test', 'res', 'expectedExtractBodyWithNoAdaptor.json'),
 };
 
 describe('Input test', () => {
@@ -453,9 +454,13 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       parser.read(book.styles, { encoding: 'utf8' }).should.deep.equal(expectedList);
     });
 
-    it('Extract body in SpineItem', () => {
-      const expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY, 'utf8'));
-      const options = { encoding: 'utf8', spine: { extractBody: true } };
+    it('Extract body from SpineItem', () => {
+      let expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY, 'utf8'));
+      let options = { encoding: 'utf8', spine: { extractBody: true } };
+      parser.read(book.spines[0], options).should.deep.equal(expected);
+
+      expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR, 'utf8'));
+      options = { encoding: 'utf8', spine: { extractBody: true, extractAdapter: undefined } };
       parser.read(book.spines[0], options).should.deep.equal(expected);
     });
   });

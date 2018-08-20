@@ -77,6 +77,16 @@ const makeSafeValues = (any, mapping = {}) => {
   return isArray(any) ? any.map(item => normalizeKey(item, mapping)) : [normalizeKey(any, mapping)];
 };
 
+const defaultExtractAdapter = (result) => {
+  let string = '';
+  result.attrs.forEach((attr) => {
+    string += ` ${attr.name}=\"${attr.value}\"`; // eslint-disable-line no-useless-escape
+  });
+  return {
+    content: `<article${string}>${result.body}</article>`,
+  };
+};
+
 class EpubParser {
   static get parseDefaultOptions() {
     return {
@@ -150,7 +160,7 @@ class EpubParser {
       validateXml: 'boolean',
       xmlParserOptions: 'object',
       allowNcxFileMissing: 'boolean',
-      unzipPath: 'string',
+      unzipPath: 'string|undefined',
       createIntermediateDirectories: 'boolean',
       removePreviousFile: 'boolean',
       ignoreLinear: 'boolean',
@@ -168,8 +178,10 @@ class EpubParser {
       // SpineItem.
       spine: {
         // If true, extract body. Otherwise it returns a full string.
-        // e.g. { body: '...', attrs: { name: 'style', value: 'background-color: #000000' } }
+        // e.g. { body: '...', attrs: [{ name: 'style', value: 'background-color: #000000' }, ...] }
         extractBody: false,
+        // If specified, transforms output of extractBody.
+        extractAdapter: defaultExtractAdapter,
       },
       // CssItem or InlineCssItem.
       css: {
@@ -187,9 +199,11 @@ class EpubParser {
 
   static get readOptionTypes() {
     return {
-      encoding: 'string',
+      encoding: 'string|undefined',
+      ignoreEntryNotFoundError: 'boolean',
       spine: {
         extractBody: 'boolean',
+        extractAdapter: 'function|undefined',
       },
       css: {
         removeAtRule: 'boolean',
@@ -254,15 +268,23 @@ class EpubParser {
         throw Errors.ITEM_NOT_FOUND;
       }
 
-      const file = entry.getFile(readOptions.encoding);
-      if (item instanceof SpineItem && readOptions.spine.extractBody) {
+      const { encoding, spine: spineOptioms } = readOptions;
+      const file = entry.getFile(encoding);
+      if (item instanceof SpineItem && spineOptioms.extractBody) {
         const document = parse5.parse(file);
         const html = document.childNodes.find(child => child.tagName === 'html');
         const body = html.childNodes.find(child => child.tagName === 'body');
-        return {
+        const result = {
           body: parse5.serialize(body),
-          attrs: body.attrs,
+          attrs: body.attrs.concat([{
+            name: 'class',
+            value: item.styles.map(style => ` .${style.namespace}`).join(',').trim(),
+          }]),
         };
+        if (isExists(spineOptioms.extractAdapter)) {
+          return spineOptioms.extractAdapter(result);
+        }
+        return result;
       }
 
       return file;
@@ -287,7 +309,8 @@ class EpubParser {
         }
       }
       if (isString(types[key])) {
-        if (typeof options[key] !== types[key]) { // eslint-disable-line valid-typeof
+        // eslint-disable-next-line valid-typeof
+        if (!isExists(types[key].split('|').find(type => type === typeof options[key]))) {
           throw Errors.INVALID_OPTION_VALUE;
         }
       } else {
@@ -653,3 +676,5 @@ class EpubParser {
 }
 
 export default EpubParser;
+
+export { defaultExtractAdapter };

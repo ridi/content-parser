@@ -38,7 +38,16 @@ export function isUrl(string) {
 }
 
 export function objectMerge(obj1, obj2) {
-  return Object.assign({}, obj1, obj2);
+  return [obj1, obj2].reduce((merged, obj) => {
+    getPropertyKeys(obj).forEach((key) => {
+      if (isObject(merged[key]) && isExists(obj[key])) {
+        merged[key] = objectMerge(merged[key], obj[key]);
+      } else {
+        merged[key] = obj[key];
+      }
+    });
+    return merged;
+  }, {});
 }
 
 const tildeError = '\'~/\' was recognized as a directory name. '

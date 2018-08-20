@@ -1,9 +1,3 @@
 {
-  "body": "\n  <p>Extract style</p>\n\n",
-  "attrs": [
-    {
-      "name": "style",
-      "value": "background-color: #000000;"
-    }
-  ]
+  "content": "<article style=\"background-color: #000000;\" class=\".ridi_c2, .ridi_c3, .ridi_c4, .ridi_c0, .ridi_c1\">\n  <p>Extract style</p>\n\n</article>"
 }

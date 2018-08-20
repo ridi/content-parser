@@ -1,0 +1,13 @@
+{
+  "body": "\n  <p>Extract style</p>\n\n",
+  "attrs": [
+    {
+      "name": "style",
+      "value": "background-color: #000000;"
+    },
+    {
+      "name": "class",
+      "value": ".ridi_c2, .ridi_c3, .ridi_c4, .ridi_c0, .ridi_c1"
+    }
+  ]
+}
