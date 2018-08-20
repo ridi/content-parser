@@ -1,5 +1,5 @@
 import CssItem from './CssItem';
-import { objectMerge } from '../utils';
+import { mergeObjects } from '../utils';
 
 class InlineCssItem extends CssItem {
   constructor(rawObj) {
@@ -9,7 +9,7 @@ class InlineCssItem extends CssItem {
   }
 
   toRaw() {
-    return objectMerge(super.toRaw(), {
+    return mergeObjects(super.toRaw(), {
       text: this.text,
       itemType: InlineCssItem.name,
     });

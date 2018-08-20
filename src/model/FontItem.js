@@ -1,5 +1,5 @@
 import Item from './Item';
-import { objectMerge } from '../utils';
+import { mergeObjects } from '../utils';
 
 class FontItem extends Item {
   constructor(rawObj) {
@@ -8,7 +8,7 @@ class FontItem extends Item {
   }
 
   toRaw() {
-    return objectMerge(super.toRaw(), {
+    return mergeObjects(super.toRaw(), {
       itemType: FontItem.name,
     });
   }

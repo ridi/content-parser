@@ -31,11 +31,11 @@ export function isUrl(string) {
   return isString(string) && isExists(string.match(/(http|https):\/\//i));
 }
 
-export function objectMerge(obj1, obj2) {
+export function mergeObjects(obj1, obj2) {
   return [obj1, obj2].reduce((merged, obj) => {
     Object.keys(obj).forEach((key) => {
       if (isObject(merged[key]) && isExists(obj[key])) {
-        merged[key] = objectMerge(merged[key], obj[key]);
+        merged[key] = mergeObjects(merged[key], obj[key]);
       } else {
         merged[key] = obj[key];
       }

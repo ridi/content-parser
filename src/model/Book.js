@@ -11,7 +11,7 @@ import Item from './Item';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
-import { isString, objectMerge } from '../utils';
+import { isString, mergeObjects } from '../utils';
 
 /* eslint-disable new-cap */
 class Book {
@@ -55,7 +55,7 @@ class Book {
           itemType = DeadItem;
         }
       }
-      return new itemType(objectMerge(rawObj, { findItem }));
+      return new itemType(mergeObjects(rawObj, { findItem }));
     });
     this.ncx = this.items.find(item => item instanceof NcxItem);
     this.spines = this.items.filter(item => item instanceof SpineItem);
@@ -63,7 +63,7 @@ class Book {
     this.cover = this.items.find(item => item.isCover);
     this.images = this.items.filter(item => item instanceof ImageItem);
     this.styles = this.items.filter(item => item instanceof CssItem);
-    this.guide = (rawBook.guide || []).map(rawObj => new Guide(objectMerge(rawObj, { findItem })));
+    this.guide = (rawBook.guide || []).map(rawObj => new Guide(mergeObjects(rawObj, { findItem })));
     Object.freeze(this);
   }
 

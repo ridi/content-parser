@@ -1,5 +1,5 @@
 import Item from './Item';
-import { isExists, objectMerge } from '../utils';
+import { isExists, mergeObjects } from '../utils';
 
 class DeadItem extends Item {
   constructor(rawObj) {
@@ -18,7 +18,7 @@ class DeadItem extends Item {
   }
 
   toRaw() {
-    return objectMerge(super.toRaw(), {
+    return mergeObjects(super.toRaw(), {
       raw: this.raw,
       itemType: DeadItem.name,
     });

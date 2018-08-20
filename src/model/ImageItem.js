@@ -1,5 +1,5 @@
 import Item from './Item';
-import { objectMerge } from '../utils';
+import { mergeObjects } from '../utils';
 
 class ImageItem extends Item {
   constructor(rawObj) {
@@ -9,7 +9,7 @@ class ImageItem extends Item {
   }
 
   toRaw() {
-    return objectMerge(super.toRaw(), {
+    return mergeObjects(super.toRaw(), {
       isCover: this.isCover,
       itemType: ImageItem.name,
     });

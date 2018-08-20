@@ -8,7 +8,7 @@ import {
   isExists,
   isObject,
   isString,
-  objectMerge,
+  mergeObjects,
   createDirectory,
   removeDirectory,
   removeLastPathComponent,

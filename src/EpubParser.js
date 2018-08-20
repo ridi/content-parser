@@ -1,10 +1,9 @@
 import Zip from 'adm-zip';
-import XmlParser from 'fast-xml-parser';
 import fs from 'fs';
-import he from 'he';
 import parse5 from 'parse5';
 import path from 'path';
 
+import Errors from './Errors';
 import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';
@@ -16,15 +15,15 @@ import InlineCssItem from './model/InlineCssItem';
 import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
-import Errors from './Errors';
+import spineLoader from './loader/spineLoader';
+import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
 import {
   isArray,
   isBuffer,
   isExists,
-  isObject,
   isString,
   isUrl,
-  objectMerge,
+  mergeObjects,
   validateOptions,
   createDirectory,
   removeDirectory,
@@ -35,44 +34,7 @@ import {
 
 const privateProps = new WeakMap();
 
-const textNodeName = '#text';
-const attributeNamePrefix = '@attr_';
-
 const findEntry = (entryName, entries) => entries.find(entry => entry.entryName === entryName);
-
-const normalizeKey = (obj, mapping = {}) => {
-  if (isString(obj)) {
-    return obj;
-  }
-  const newObj = {};
-  Object.keys(obj).forEach((key) => {
-    let shouldMakeArray = false;
-    let newKey = key.replace(attributeNamePrefix, '');
-    if (isExists(mapping[newKey])) {
-      shouldMakeArray = mapping[newKey].isArray || false;
-      newKey = mapping[newKey].key;
-    }
-    let value = obj[key];
-    if (isArray(value)) {
-      value = makeSafeValues(value, mapping); // eslint-disable-line no-use-before-define
-    } else if (isObject(value)) {
-      if (shouldMakeArray) {
-        value = [normalizeKey(value, mapping)];
-      } else {
-        value = normalizeKey(value, mapping);
-      }
-    }
-    newObj[newKey] = value;
-  });
-  return newObj;
-};
-
-const makeSafeValues = (any, mapping = {}) => {
-  if (!isExists(any)) {
-    return [];
-  }
-  return isArray(any) ? any.map(item => normalizeKey(item, mapping)) : [normalizeKey(any, mapping)];
-};
 
 const defaultExtractAdapter = (result) => {
   let string = '';
@@ -214,13 +176,11 @@ class EpubParser {
       throw error;
     }
 
-    const readOptions = objectMerge(EpubParser.readDefaultOptions, options);
-
+    const readOptions = mergeObjects(EpubParser.readDefaultOptions, options);
     const { input } = this;
     let entries;
     if (isBuffer(input) || fs.lstatSync(input).isFile()) {
-      const zip = new Zip(input);
-      entries = this._getEntries(zip);
+      entries = this._getEntries(new Zip(input));
     } else {
       entries = this._getEntries(input);
     }
@@ -238,25 +198,10 @@ class EpubParser {
         throw Errors.ITEM_NOT_FOUND;
       }
 
-      const { encoding, spine: spineOptioms } = readOptions;
-      const file = entry.getFile(encoding);
-      if (item instanceof SpineItem && spineOptioms.extractBody) {
-        const document = parse5.parse(file);
-        const html = document.childNodes.find(child => child.tagName === 'html');
-        const body = html.childNodes.find(child => child.tagName === 'body');
-        const result = {
-          body: parse5.serialize(body),
-          attrs: body.attrs.concat([{
-            name: 'class',
-            value: item.styles.map(style => ` .${style.namespace}`).join(',').trim(),
-          }]),
-        };
-        if (isExists(spineOptioms.extractAdapter)) {
-          return spineOptioms.extractAdapter(result);
-        }
-        return result;
+      const file = entry.getFile(readOptions.encoding);
+      if (item instanceof SpineItem) {
+        return spineLoader(item, file, readOptions.spine);
       }
-
       return file;
     });
 
@@ -289,59 +234,21 @@ class EpubParser {
     }, []);
   }
 
-  _xmlEntry2Object(entry, options) {
-    const xmlData = entry.getFile('utf8');
-    if (options.validateXml && isExists(XmlParser.validate(xmlData).err)) {
-      throw Errors.INVALID_XML;
-    }
-    return XmlParser.parse(xmlData, {
-      // Text node name for identification.
-      textNodeName,
-      // Prepend given string to attribute name for identification.
-      attributeNamePrefix,
-      // (Valid name) Group all the attributes as properties of given name.
-      attrNodeName: false,
-      // Ignore attributes to be parsed.
-      ignoreAttributes: false,
-      // Remove namespace string from tag and attribute names.
-      ignoreNameSpace: true,
-      // A tag can have attributes without any value.
-      allowBooleanAttributes: true,
-      // Parse the value of text node to float, integer, or boolean.
-      parseNodeValue: false,
-      // Parse the value of an attribute to float, integer, or boolean.
-      parseAttributeValue: false,
-      // Trim string values of an attribute or node
-      trimValues: true,
-      // If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
-      cdataTagName: false,
-      // If true then values like "+123", or "0123" will not be parsed as number.
-      parseTrueNumberOnly: false,
-      // Process tag value during transformation. Like HTML decoding, word capitalization, etc.
-      // Applicable in case of string only.
-      tagValueProcessor: value => he.decode(value),
-      // Process attribute value during transformation. Like HTML decoding, word capitalization, etc.
-      // Applicable in case of string only.
-      attrValueProcessor: value => he.decode(value, { isAttributeValue: true }),
-    });
-  }
-
   _prepareParse(options = {}) {
     return new Promise((resolve) => {
+      const { input } = this;
+      const context = new Context();
       const error = validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
       if (isExists(error)) {
         throw error;
-      }
-      const { input } = this;
-      const context = new Context();
-      if (isBuffer(input) || fs.lstatSync(input).isFile()) {
+      } else if (isBuffer(input) || fs.lstatSync(input).isFile()) {
         const zip = new Zip(input);
         context.entries = this._getEntries(zip);
         context.zip = zip;
       } else {
         context.entries = this._getEntries(input);
       }
-      context.options = objectMerge(EpubParser.parseDefaultOptions, options);
+      context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
       resolve(context);
     });
   }
@@ -375,7 +282,7 @@ class EpubParser {
         throw Errors.META_INF_NOT_FOUND;
       }
 
-      const { container } = this._xmlEntry2Object(containerEntry, context.options);
+      const { container } = xmlLoader(containerEntry.getFile('utf8'), context.options);
       if (!isExists(container) || !isExists(container.rootfiles)) {
         throw Errors.META_INF_NOT_FOUND;
       }
@@ -383,13 +290,13 @@ class EpubParser {
       const { rootfiles } = container;
       // eslint-disable-next-line arrow-body-style
       const rootfile = (isArray(rootfiles) ? rootfiles : [rootfiles.rootfile]).find((item) => {
-        return item[`${attributeNamePrefix}media-type`] === 'application/oebps-package+xml';
+        return item['media-type'] === 'application/oebps-package+xml';
       });
       if (!isExists(rootfile)) {
         throw Errors.META_INF_NOT_FOUND;
       }
 
-      const opfPath = rootfile[`${attributeNamePrefix}full-path`];
+      const opfPath = rootfile['full-path'];
       if (!isExists(opfPath)) {
         throw Errors.META_INF_NOT_FOUND;
       }
@@ -430,6 +337,31 @@ class EpubParser {
     return type;
   }
 
+  _parseStyle(spineEntry, foundStyle) {
+    const document = parse5.parse(spineEntry.getFile('utf8'));
+    const html = document.childNodes.find(child => child.tagName === 'html');
+    const head = html.childNodes.find(child => child.tagName === 'head');
+    head.childNodes.filter(child => child.tagName === 'link').forEach((link) => {
+      const { attrs } = link;
+      if (isExists(attrs)) {
+        const rel = attrs.find(property => property.name === 'rel');
+        const type = attrs.find(property => property.name === 'type');
+        if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
+          const href = attrs.find(property => property.name === 'href');
+          if (isExists(href) && isExists(href.value) && !isUrl(href.value)) {
+            foundStyle({ href: href.value });
+          }
+        }
+      }
+    });
+    head.childNodes.filter(child => child.tagName === 'style').forEach((style) => {
+      const firstNode = style.childNodes[0];
+      if (isExists(firstNode)) {
+        foundStyle({ text: firstNode.value || '' });
+      }
+    });
+  }
+
   _parseOpf(context) {
     return new Promise((resolve) => {
       const { entries, options } = context;
@@ -438,47 +370,44 @@ class EpubParser {
         throw Errors.OPF_NOT_FOUND;
       }
 
-      const { package: root } = this._xmlEntry2Object(opfEntry, options);
+      const { package: root } = xmlLoader(opfEntry.getFile('utf8'), options);
       if (!isExists(root) || !isExists(root.metadata) || !isExists(root.manifest) || !isExists(root.spine)) {
         throw Errors.INVALID_OPF;
       }
 
       const { rawBook } = context;
-      rawBook.epubVersion = parseFloat(root[`${attributeNamePrefix}version`]);
+      rawBook.epubVersion = parseFloat(root.version);
 
       const {
         title, creator, subject, description, publisher, contributor, date, type,
         format, identifier, source, language, relation, coverage, rights, meta,
       } = root.metadata;
-      const mapping = {};
-      rawBook.titles = makeSafeValues(title);
-      mapping[textNodeName] = { key: 'name' };
-      rawBook.creators = makeSafeValues(creator, mapping);
-      rawBook.subjects = makeSafeValues(subject);
+      rawBook.titles = getValues(title);
+      rawBook.creators = getValues(creator, key => (key === textNodeName ? 'name' : key));
+      rawBook.subjects = getValues(subject);
       rawBook.description = description;
       rawBook.publisher = publisher;
-      rawBook.contributors = makeSafeValues(contributor, mapping);
-      mapping[textNodeName] = { key: 'value' };
-      rawBook.dates = makeSafeValues(date, mapping);
+      rawBook.contributors = getValues(contributor, key => (key === textNodeName ? 'name' : key));
+      rawBook.dates = getValues(date, key => (key === textNodeName ? 'value' : key));
       rawBook.type = type;
       rawBook.format = format;
-      rawBook.identifiers = makeSafeValues(identifier, mapping);
+      rawBook.identifiers = getValues(identifier, key => (key === textNodeName ? 'value' : key));
       rawBook.source = source;
       rawBook.language = language;
       rawBook.relation = relation;
       rawBook.coverage = coverage;
       rawBook.rights = rights;
-      rawBook.metas = makeSafeValues(meta);
+      rawBook.metas = getValues(meta);
 
       rawBook.items = [];
-      const tocId = root.spine[`${attributeNamePrefix}toc`];
-      const itemrefs = makeSafeValues(root.spine.itemref);
+      const { toc: tocId } = root.spine;
+      const itemrefs = getValues(root.spine.itemref);
       const inlineStyleItems = [];
       const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
       let foundCover = false;
       let spineIndex = 0;
       let cssIdx = 0;
-      makeSafeValues(root.manifest.item).forEach((item) => {
+      getValues(root.manifest.item).forEach((item) => {
         const rawItem = {};
         rawItem.id = item.id;
         if (isExists(item.href) && item.href.length > 0) {
@@ -495,10 +424,7 @@ class EpubParser {
           if (rawItem.itemType === SpineItem) {
             const ref = itemrefs.find(itemref => itemref.idref === rawItem.id);
             if (isExists(ref)) {
-              rawItem.isLinear = ref.linear;
-              if (!isExists(rawItem.isLinear)) {
-                rawItem.isLinear = true;
-              }
+              rawItem.isLinear = isExists(ref.linear) ? ref.linear : true;
               if (options.ignoreLinear || rawItem.isLinear) {
                 rawItem.spineIndex = spineIndex;
                 spineIndex += 1;
@@ -512,39 +438,23 @@ class EpubParser {
               rawItem.namespace = `${options.styleNamespacePrefix}${cssIdx}`;
               cssIdx += 1;
             } else if (rawItem.itemType === SpineItem) {
-              const document = parse5.parse(itemEntry.getFile('utf8'));
-              const html = document.childNodes.find(child => child.tagName === 'html');
-              const head = html.childNodes.find(child => child.tagName === 'head');
               rawItem.styles = [];
-              head.childNodes.filter(child => child.tagName === 'link').forEach((link) => {
-                const { attrs } = link;
-                if (isExists(attrs)) {
-                  const rel = attrs.find(property => property.name === 'rel');
-                  const type = attrs.find(property => property.name === 'type'); // eslint-disable-line no-shadow
-                  if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
-                    const href = attrs.find(property => property.name === 'href');
-                    if (isExists(href) && isExists(href.value) && !isUrl(href.value)) {
-                      const basePath = removeLastPathComponent(rawItem.href);
-                      rawItem.styles.push(safePathJoin(basePath, href.value));
-                    }
-                  }
-                }
-              });
-              head.childNodes.filter(child => child.tagName === 'style').forEach((style) => {
-                const firstNode = style.childNodes[0];
-                if (isExists(firstNode)) {
+              this._parseStyle(itemEntry, (style) => {
+                if (isExists(style.href)) {
+                  const basePath = removeLastPathComponent(rawItem.href);
+                  rawItem.styles.push(safePathJoin(basePath, style.href));
+                } else {
                   const namespace = `${options.styleNamespacePrefix}${cssIdx}`;
                   const href = `${rawItem.href}_${namespace}`;
-                  const value = firstNode.value || '';
                   rawItem.styles.push(href);
                   inlineStyleItems.push({
                     id: `${rawItem.id}_${namespace}`,
                     href,
                     mediaType: 'text/css',
-                    size: value.length,
+                    size: style.text.length,
                     itemType: InlineCssItem,
                     namespace,
-                    text: value,
+                    text: style.text,
                   });
                   cssIdx += 1;
                 }
@@ -560,10 +470,10 @@ class EpubParser {
                 foundCover = true;
               }
             }
-          }
-        } else if (rawItem.itemType === NcxItem) {
-          if (rawItem.id !== tocId) {
-            rawItem.itemType = DeadItem;
+          } else if (rawItem.itemType === NcxItem) {
+            if (rawItem.id !== tocId) {
+              rawItem.itemType = DeadItem;
+            }
           }
         } else {
           rawItem.itemType = DeadItem;
@@ -575,7 +485,7 @@ class EpubParser {
 
       rawBook.guide = [];
       if (isExists(root.guide)) {
-        makeSafeValues(root.guide.reference).forEach((reference) => {
+        getValues(root.guide.reference).forEach((reference) => {
           if (!foundCover && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
             const imageItem = rawBook.items.find(item => item.href === reference.href && item.itemType === ImageItem);
             if (isExists(imageItem)) {
@@ -583,7 +493,7 @@ class EpubParser {
               foundCover = true;
             }
           }
-          rawBook.guide.push(objectMerge(reference, { href: safePathJoin(context.basePath, reference.href) }));
+          rawBook.guide.push(mergeObjects(reference, { href: safePathJoin(context.basePath, reference.href) }));
         });
       }
 
@@ -601,13 +511,12 @@ class EpubParser {
           throw Errors.NCX_NOT_FOUND;
         }
 
-        const { ncx } = this._xmlEntry2Object(ncxEntry, context.options);
+        const { ncx } = xmlLoader(ncxEntry.getFile('utf8'), context.options);
         if (!isExists(ncx) || !isExists(ncx.navMap)) {
           throw Errors.INVALID_NCX;
         }
 
         ncxItem.navPoints = [];
-        const mapping = { navPoint: { key: 'children', isArray: true } };
         const normalizeSrc = (np) => {
           if (isExists(np.children)) {
             np.children.forEach((child, idx) => {
@@ -619,7 +528,8 @@ class EpubParser {
           }
           return np;
         };
-        makeSafeValues(ncx.navMap.navPoint, mapping).forEach((navPoint) => { // eslint-disable-line arrow-body-style
+        const keyTranslator = key => (key === 'navPoint' ? 'children' : key);
+        getValues(ncx.navMap.navPoint, keyTranslator).forEach((navPoint) => { // eslint-disable-line arrow-body-style
           return ncxItem.navPoints.push(normalizeSrc(navPoint));
         });
       } else if (!allowNcxFileMissing) {

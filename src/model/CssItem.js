@@ -1,5 +1,5 @@
 import Item from './Item';
-import { isExists, objectMerge } from '../utils';
+import { isExists, mergeObjects } from '../utils';
 
 class CssItem extends Item {
   constructor(rawObj) {
@@ -13,7 +13,7 @@ class CssItem extends Item {
   }
 
   toRaw() {
-    return objectMerge(super.toRaw(), {
+    return mergeObjects(super.toRaw(), {
       namespace: this.namespace,
       itemType: CssItem.name,
     });
