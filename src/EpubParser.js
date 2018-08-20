@@ -18,8 +18,6 @@ import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
 import Errors from './Errors';
 import {
-  getPropertyDescriptor,
-  getPropertyKeys,
   isArray,
   isBuffer,
   isExists,
@@ -27,6 +25,7 @@ import {
   isString,
   isUrl,
   objectMerge,
+  validateOptions,
   createDirectory,
   removeDirectory,
   removeLastPathComponent,
@@ -38,8 +37,6 @@ const privateProps = new WeakMap();
 
 const textNodeName = '#text';
 const attributeNamePrefix = '@attr_';
-const tagValueProcessor = value => he.decode(value);
-const attrValueProcessor = value => he.decode(value, { isAttributeValue: true });
 
 const findEntry = (entryName, entries) => entries.find(entry => entry.entryName === entryName);
 
@@ -48,7 +45,7 @@ const normalizeKey = (obj, mapping = {}) => {
     return obj;
   }
   const newObj = {};
-  getPropertyKeys(obj).forEach((key) => {
+  Object.keys(obj).forEach((key) => {
     let shouldMakeArray = false;
     let newKey = key.replace(attributeNamePrefix, '');
     if (isExists(mapping[newKey])) {
@@ -99,37 +96,6 @@ class EpubParser {
       validatePackage: false,
       // If true, stop parsing when XML parsing errors occur.
       validateXml: false,
-      // fast-xml-parser options.
-      xmlParserOptions: {
-        // Text node name for identification.
-        textNodeName,
-        // Prepend given string to attribute name for identification.
-        attributeNamePrefix,
-        // (Valid name) Group all the attributes as properties of given name.
-        attrNodeName: false,
-        // Ignore attributes to be parsed.
-        ignoreAttributes: false,
-        // Remove namespace string from tag and attribute names.
-        ignoreNameSpace: true,
-        // A tag can have attributes without any value.
-        allowBooleanAttributes: true,
-        // Parse the value of text node to float, integer, or boolean.
-        parseNodeValue: false,
-        // Parse the value of an attribute to float, integer, or boolean.
-        parseAttributeValue: false,
-        // Trim string values of an attribute or node
-        trimValues: true,
-        // If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
-        cdataTagName: false,
-        // If true then values like "+123", or "0123" will not be parsed as number.
-        parseTrueNumberOnly: false,
-        // Process tag value during transformation. Like HTML decoding, word capitalization, etc.
-        // Applicable in case of string only.
-        tagValueProcessor,
-        // Process attribute value during transformation. Like HTML decoding, word capitalization, etc.
-        // Applicable in case of string only.
-        attrValueProcessor,
-      },
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
       // If specified, uncompress to that path. (Only if input is buffer or epub file path.)
@@ -158,7 +124,6 @@ class EpubParser {
     return {
       validatePackage: 'boolean',
       validateXml: 'boolean',
-      xmlParserOptions: 'object',
       allowNcxFileMissing: 'boolean',
       unzipPath: 'string|undefined',
       createIntermediateDirectories: 'boolean',
@@ -243,7 +208,12 @@ class EpubParser {
     if (items.find(item => !(item instanceof Item))) {
       throw Errors.INVALID_ITEM;
     }
-    this._validateOptions(EpubParser.readDefaultOptions, EpubParser.readOptionTypes, options);
+
+    const error = validateOptions(options, EpubParser.readDefaultOptions, EpubParser.readOptionTypes);
+    if (isExists(error)) {
+      throw error;
+    }
+
     const readOptions = objectMerge(EpubParser.readDefaultOptions, options);
 
     const { input } = this;
@@ -296,29 +266,6 @@ class EpubParser {
     return results[0];
   }
 
-  _validateOptions(defaultValues, types, options) {
-    getPropertyKeys(options).forEach((key) => {
-      if (!isExists(getPropertyDescriptor(defaultValues, key))) {
-        throw Errors.INVALID_OPTIONS;
-      }
-      if (key === 'xmlParserOptions') {
-        const xmlParserOptions = options[key];
-        const { textNodeName: op1, attributeNamePrefix: op2 } = xmlParserOptions;
-        if (isExists(op1) || isExists(op2)) {
-          throw Errors.INVALID_OPTIONS;
-        }
-      }
-      if (isString(types[key])) {
-        // eslint-disable-next-line valid-typeof
-        if (!isExists(types[key].split('|').find(type => type === typeof options[key]))) {
-          throw Errors.INVALID_OPTION_VALUE;
-        }
-      } else {
-        this._validateOptions(defaultValues[key], types[key], options[key]);
-      }
-    });
-  }
-
   _getEntries(input) {
     if (!isString(input)) {
       return input.getEntries().reduce((entries, entry) => { // eslint-disable-line arrow-body-style
@@ -342,18 +289,49 @@ class EpubParser {
     }, []);
   }
 
-  _xmlEntry2Json(entry, options) {
-    const { validateXml, xmlParserOptions } = options;
+  _xmlEntry2Object(entry, options) {
     const xmlData = entry.getFile('utf8');
-    if (validateXml && isExists(XmlParser.validate(xmlData).err)) {
+    if (options.validateXml && isExists(XmlParser.validate(xmlData).err)) {
       throw Errors.INVALID_XML;
     }
-    return XmlParser.parse(xmlData, xmlParserOptions || {});
+    return XmlParser.parse(xmlData, {
+      // Text node name for identification.
+      textNodeName,
+      // Prepend given string to attribute name for identification.
+      attributeNamePrefix,
+      // (Valid name) Group all the attributes as properties of given name.
+      attrNodeName: false,
+      // Ignore attributes to be parsed.
+      ignoreAttributes: false,
+      // Remove namespace string from tag and attribute names.
+      ignoreNameSpace: true,
+      // A tag can have attributes without any value.
+      allowBooleanAttributes: true,
+      // Parse the value of text node to float, integer, or boolean.
+      parseNodeValue: false,
+      // Parse the value of an attribute to float, integer, or boolean.
+      parseAttributeValue: false,
+      // Trim string values of an attribute or node
+      trimValues: true,
+      // If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
+      cdataTagName: false,
+      // If true then values like "+123", or "0123" will not be parsed as number.
+      parseTrueNumberOnly: false,
+      // Process tag value during transformation. Like HTML decoding, word capitalization, etc.
+      // Applicable in case of string only.
+      tagValueProcessor: value => he.decode(value),
+      // Process attribute value during transformation. Like HTML decoding, word capitalization, etc.
+      // Applicable in case of string only.
+      attrValueProcessor: value => he.decode(value, { isAttributeValue: true }),
+    });
   }
 
   _prepareParse(options = {}) {
     return new Promise((resolve) => {
-      this._validateOptions(EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes, options);
+      const error = validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
+      if (isExists(error)) {
+        throw error;
+      }
       const { input } = this;
       const context = new Context();
       if (isBuffer(input) || fs.lstatSync(input).isFile()) {
@@ -397,7 +375,7 @@ class EpubParser {
         throw Errors.META_INF_NOT_FOUND;
       }
 
-      const { container } = this._xmlEntry2Json(containerEntry, context.options);
+      const { container } = this._xmlEntry2Object(containerEntry, context.options);
       if (!isExists(container) || !isExists(container.rootfiles)) {
         throw Errors.META_INF_NOT_FOUND;
       }
@@ -460,7 +438,7 @@ class EpubParser {
         throw Errors.OPF_NOT_FOUND;
       }
 
-      const { package: root } = this._xmlEntry2Json(opfEntry, options);
+      const { package: root } = this._xmlEntry2Object(opfEntry, options);
       if (!isExists(root) || !isExists(root.metadata) || !isExists(root.manifest) || !isExists(root.spine)) {
         throw Errors.INVALID_OPF;
       }
@@ -623,7 +601,7 @@ class EpubParser {
           throw Errors.NCX_NOT_FOUND;
         }
 
-        const { ncx } = this._xmlEntry2Json(ncxEntry, context.options);
+        const { ncx } = this._xmlEntry2Object(ncxEntry, context.options);
         if (!isExists(ncx) || !isExists(ncx.navMap)) {
           throw Errors.INVALID_NCX;
         }

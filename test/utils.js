@@ -3,8 +3,6 @@ import fs from 'fs';
 import path from 'path';
 
 import {
-  getPropertyDescriptor,
-  getPropertyKeys,
   isArray,
   isBuffer,
   isExists,
@@ -27,21 +25,6 @@ const Files = {
 should(); // Initialize should
 
 describe('Util test', () => {
-  it('getPropertyDescriptor test', () => {
-    const object = { value: 5 };
-    getPropertyDescriptor(object, 'value').should.deep.equal({
-      value: 5,
-      writable: true,
-      enumerable: true,
-      configurable: true,
-    });
-  });
-
-  it('getPropertyKeys test', () => {
-    const object = { a: true, b: '2', c: 3 };
-    getPropertyKeys(object).should.deep.equal(['a', 'b', 'c']);
-  });
-
   it('isArray test', () => {
     isArray(Array()).should.be.true;
     isArray(new Array()).should.be.true;

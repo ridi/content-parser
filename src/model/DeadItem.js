@@ -1,5 +1,5 @@
 import Item from './Item';
-import { getPropertyKeys, isExists, objectMerge } from '../utils';
+import { isExists, objectMerge } from '../utils';
 
 class DeadItem extends Item {
   constructor(rawObj) {
@@ -8,7 +8,7 @@ class DeadItem extends Item {
       this.raw = rawObj.raw;
     } else {
       this.raw = {};
-      getPropertyKeys(rawObj).forEach((key) => {
+      Object.keys(rawObj).forEach((key) => {
         if (!isExists(this[key])) {
           this.raw[key] = rawObj[key];
         }

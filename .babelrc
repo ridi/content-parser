@@ -1,7 +1,7 @@
 {
   "env": {
     "development": {
-      "presets": ["env"],
+      "presets": ["env", "es2015"],
       "plugins": [
         "add-module-exports"
       ]
@@ -9,6 +9,7 @@
     "production": {
       "presets": [
         "env",
+        "es2015",
         [
           "minify",
           {

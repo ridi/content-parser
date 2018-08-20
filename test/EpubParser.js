@@ -71,12 +71,6 @@ describe('Options test', () => {
     });
   });
 
-  it('Invalid options (Fixed option)', () => {
-    return new EpubParser(Files.DEFAULT).parse({ xmlParserOptions: { textNodeName: '#text' } }).catch((err) => {
-      err.should.equal(Errors.INVALID_OPTIONS);
-    });
-  });
-
   it('Invalid option value (Type mismatch)', () => {
     return new EpubParser(Files.DEFAULT).parse({ validatePackage: 'true' }).catch((err) => {
       err.should.equal(Errors.INVALID_OPTION_VALUE);

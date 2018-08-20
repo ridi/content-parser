@@ -2,13 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export function getPropertyDescriptor(any, key) {
-  return Object.getOwnPropertyDescriptor(any, key);
-}
-
-export function getPropertyKeys(any) {
-  return Object.getOwnPropertyNames(any);
-}
+import Errors from './Errors';
 
 export function isArray(any) {
   if (Array.isArray) {
@@ -39,7 +33,7 @@ export function isUrl(string) {
 
 export function objectMerge(obj1, obj2) {
   return [obj1, obj2].reduce((merged, obj) => {
-    getPropertyKeys(obj).forEach((key) => {
+    Object.keys(obj).forEach((key) => {
       if (isObject(merged[key]) && isExists(obj[key])) {
         merged[key] = objectMerge(merged[key], obj[key]);
       } else {
@@ -48,6 +42,24 @@ export function objectMerge(obj1, obj2) {
     });
     return merged;
   }, {});
+}
+
+export function validateOptions(options, defaultValues, types) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const key of Object.keys(options)) {
+    if (!isExists(Object.getOwnPropertyDescriptor(defaultValues, key))) {
+      return Errors.INVALID_OPTIONS;
+    }
+    if (isString(types[key])) {
+      // eslint-disable-next-line valid-typeof
+      if (!isExists(types[key].split('|').find(type => type === typeof options[key]))) {
+        return Errors.INVALID_OPTION_VALUE;
+      }
+    } else {
+      return validateOptions(options[key], defaultValues[key], types[key]);
+    }
+  }
+  return undefined;
 }
 
 const tildeError = '\'~/\' was recognized as a directory name. '
