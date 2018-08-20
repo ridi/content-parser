@@ -202,9 +202,7 @@ class EpubParser {
 
   get input() { return privateProps.get(this).input; }
 
-  get options() { return privateProps.get(this).options; }
-
-  constructor(input, options = {}) {
+  constructor(input) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
         throw Errors.PATH_NOT_FOUND;
@@ -212,15 +210,11 @@ class EpubParser {
     } else if (!isExists(input) || !isBuffer(input)) {
       throw Errors.INVALID_INPUT;
     }
-    this._validateOptions(EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes, options);
-    privateProps.set(this, {
-      input,
-      options: objectMerge(EpubParser.parseDefaultOptions, options),
-    });
+    privateProps.set(this, { input });
   }
 
-  parse() {
-    return this._prepareParse()
+  parse(options = {}) {
+    return this._prepareParse(options)
       .then(context => this._validatePackageIfNeeded(context))
       .then(context => this._parseMetaInf(context))
       .then(context => this._parseOpf(context))
@@ -334,9 +328,10 @@ class EpubParser {
     return XmlParser.parse(xmlData, xmlParserOptions || {});
   }
 
-  _prepareParse() {
+  _prepareParse(options = {}) {
     return new Promise((resolve) => {
-      const { input, options } = this;
+      this._validateOptions(EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes, options);
+      const { input } = this;
       const context = new Context();
       if (isBuffer(input) || fs.lstatSync(input).isFile()) {
         const zip = new Zip(input);
@@ -345,7 +340,7 @@ class EpubParser {
       } else {
         context.entries = this._getEntries(input);
       }
-      context.options = options;
+      context.options = objectMerge(EpubParser.parseDefaultOptions, options);
       resolve(context);
     });
   }

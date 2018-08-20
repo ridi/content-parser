@@ -64,46 +64,45 @@ describe('Input test', () => {
 });
 
 describe('Options test', () => {
-  it('Invalid options', () => {
-    (() => {
-      new EpubParser(Files.DEFAULT, { i_am_invalid_option: true });
-    }).should.throw(Errors.INVALID_OPTIONS);
-    (() => {
-      new EpubParser(Files.DEFAULT, { xmlParserOptions: { textNodeName: '#text' } });
-    }).should.throw(Errors.INVALID_OPTIONS);
-    (() => {
-      new EpubParser(Files.DEFAULT, { xmlParserOptions: { attributeNamePrefix: '@attr_' } });
-    }).should.throw(Errors.INVALID_OPTIONS);
+  it('Invalid options (Unknown option)', () => {
+    return new EpubParser(Files.DEFAULT).parse({ i_am_invalid_option: true }).catch((err) => {
+      err.should.equal(Errors.INVALID_OPTIONS);
+    });
   });
 
-  it('Invalid option value', () => {
-    (() => {
-      new EpubParser(Files.DEFAULT, { validatePackage: 'true' });
-    }).should.throw(Errors.INVALID_OPTION_VALUE);
+  it('Invalid options (Fixed option)', () => {
+    return new EpubParser(Files.DEFAULT).parse({ xmlParserOptions: { textNodeName: '#text' } }).catch((err) => {
+      err.should.equal(Errors.INVALID_OPTIONS);
+    });
+  });
+
+  it('Invalid option value (Type mismatch)', () => {
+    return new EpubParser(Files.DEFAULT).parse({ validatePackage: 'true' }).catch((err) => {
+      err.should.equal(Errors.INVALID_OPTION_VALUE);
+    });
   });
 
   // TODO: Add more cases.
   it('Invalid package', () => {
-    return new EpubParser(Files.INVALID_PACKAGE, { validatePackage: true }).parse().catch((err) => {
+    return new EpubParser(Files.INVALID_PACKAGE).parse({ validatePackage: true }).catch((err) => {
       err.should.equal(Errors.INVALID_PACKAGE);
     });
   });
 
   it('Invalid XML', () => {
-    return new EpubParser(Files.INVALID_XML, { validateXml: true }).parse().catch((err) => {
+    return new EpubParser(Files.INVALID_XML).parse({ validateXml: true }).catch((err) => {
       err.should.equal(Errors.INVALID_XML);
     });
   });
 
   it('Not allow NCX file missing', () => {
-    return new EpubParser(Files.NCX_MISSING, { allowNcxFileMissing: false }).parse().catch((err) => {
+    return new EpubParser(Files.NCX_MISSING).parse({ allowNcxFileMissing: false }).catch((err) => {
       err.should.equal(Errors.NCX_NOT_FOUND);
     });
   });
 
   it('Use style namespace', () => {
-    const options = { useStyleNamespace: true };
-    return new EpubParser(Files.EXTRACT_STYLE, options).parse().then((book) => {
+    return new EpubParser(Files.EXTRACT_STYLE).parse({ useStyleNamespace: true }).then((book) => {
       const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLE_BOOK));
       book.styles.forEach((style, idx) => {
         const expectedStyle = expectedBook.styles[idx];
@@ -380,7 +379,7 @@ describe('Parsing method test', () => {
   });
 });
 
-describe('Parsing test', () => {
+describe('Parsing test by input', () => {
   it('Input is epub path', () => {
     return new EpubParser(Files.DEFAULT).parse().then((book) => {
       book.should.be.an.instanceOf(Book);
@@ -416,8 +415,8 @@ describe('Book serialization test', () => {
 });
 
 const basePath = Files.UNZIPPED_EXTRACT_STYLE
-const parser = new EpubParser(basePath, { useStyleNamespace: true });
-parser.parse().then((book) => {
+const parser = new EpubParser(basePath);
+parser.parse({ useStyleNamespace: true }).then((book) => {
   const _Files = {
     Section0001: path.join(basePath, 'OEBPS', 'Text', 'Section0001.xhtml'),
     Style0001: path.join(basePath, 'OEBPS', 'Styles', 'Style0001.css'),
