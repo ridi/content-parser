@@ -1,4 +1,4 @@
-import csstree, { List } from 'css-tree';
+import csstree from 'css-tree';
 
 import { isExists } from '../utils';
 
