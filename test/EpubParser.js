@@ -33,6 +33,7 @@ const Files = {
   UNZIPPED_EXTRACT_STYLE: path.join('.', 'test', 'res', 'extractStyle'),
   EXPECTED_EXTRACT_STYLE_CONTEXT: path.join('.', 'test', 'res', 'expectedExtractStyleContext.json'),
   EXPECTED_EXTRACT_STYLE_BOOK: path.join('.', 'test', 'res', 'expectedExtractStyleBook.json'),
+  EXPECTED_EXTRACT_STYLES: path.join('.', 'test', 'res', 'expectedExtractStyles.json'),
   EXPECTED_EXTRACT_BODY: path.join('.', 'test', 'res', 'expectedExtractBody.json'),
   EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR: path.join('.', 'test', 'res', 'expectedExtractBodyWithNoAdaptor.json'),
 };
@@ -64,7 +65,7 @@ describe('Input test', () => {
   });
 });
 
-describe('Options test', () => {
+describe('Options validation test', () => {
   it('Invalid options (Unknown option)', () => {
     return new EpubParser(Files.DEFAULT).parse({ i_am_invalid_option: true }).catch((err) => {
       err.should.equal(Errors.INVALID_OPTIONS);
@@ -74,49 +75,6 @@ describe('Options test', () => {
   it('Invalid option value (Type mismatch)', () => {
     return new EpubParser(Files.DEFAULT).parse({ validatePackage: 'true' }).catch((err) => {
       err.should.equal(Errors.INVALID_OPTION_VALUE);
-    });
-  });
-
-  // TODO: Add more cases.
-  it('Invalid package', () => {
-    return new EpubParser(Files.INVALID_PACKAGE).parse({ validatePackage: true }).catch((err) => {
-      err.should.equal(Errors.INVALID_PACKAGE);
-    });
-  });
-
-  it('Invalid XML', () => {
-    return new EpubParser(Files.INVALID_XML).parse({ validateXml: true }).catch((err) => {
-      err.should.equal(Errors.INVALID_XML);
-    });
-  });
-
-  it('Not allow NCX file missing', () => {
-    return new EpubParser(Files.NCX_MISSING).parse({ allowNcxFileMissing: false }).catch((err) => {
-      err.should.equal(Errors.NCX_NOT_FOUND);
-    });
-  });
-
-  it('Use style namespace', () => {
-    return new EpubParser(Files.EXTRACT_STYLE).parse({ useStyleNamespace: true }).then((book) => {
-      const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLE_BOOK));
-      book.styles.forEach((style, idx) => {
-        const expectedStyle = expectedBook.styles[idx];
-        style.id.should.equal(expectedStyle.id);
-        style.href.should.equal(expectedStyle.href);
-        style.namespace.should.equal(expectedStyle.namespace);
-        style.mediaType.should.equal(expectedStyle.mediaType);
-        style.size.should.not.null;
-        if (isExists(style.text)) {
-          style.text.should.equal(expectedStyle.text);
-        }
-      });
-
-      book.spines.forEach((spine, spineIdx) => {
-        spine.styles.forEach((style, styleIdx) => {
-          const expectedStyle = expectedBook.spines[spineIdx].styles[styleIdx];
-          style.id.should.equal(expectedStyle.id);
-        });
-      });
     });
   });
 });
@@ -270,6 +228,49 @@ describe('Parsing method test', () => {
     });
   });
 
+  // TODO: Add more cases.
+  it('Invalid package', () => {
+    return new EpubParser(Files.INVALID_PACKAGE).parse({ validatePackage: true }).catch((err) => {
+      err.should.equal(Errors.INVALID_PACKAGE);
+    });
+  });
+
+  it('Invalid XML', () => {
+    return new EpubParser(Files.INVALID_XML).parse({ validateXml: true }).catch((err) => {
+      err.should.equal(Errors.INVALID_XML);
+    });
+  });
+
+  it('Not allow NCX file missing', () => {
+    return new EpubParser(Files.NCX_MISSING).parse({ allowNcxFileMissing: false }).catch((err) => {
+      err.should.equal(Errors.NCX_NOT_FOUND);
+    });
+  });
+
+  it('Use style namespace', () => {
+    return new EpubParser(Files.EXTRACT_STYLE).parse({ useStyleNamespace: true }).then((book) => {
+      const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLE_BOOK));
+      book.styles.forEach((style, idx) => {
+        const expectedStyle = expectedBook.styles[idx];
+        style.id.should.equal(expectedStyle.id);
+        style.href.should.equal(expectedStyle.href);
+        style.namespace.should.equal(expectedStyle.namespace);
+        style.mediaType.should.equal(expectedStyle.mediaType);
+        style.size.should.not.null;
+        if (isExists(style.text)) {
+          style.text.should.equal(expectedStyle.text);
+        }
+      });
+
+      book.spines.forEach((spine, spineIdx) => {
+        spine.styles.forEach((style, styleIdx) => {
+          const expectedStyle = expectedBook.spines[spineIdx].styles[styleIdx];
+          style.id.should.equal(expectedStyle.id);
+        });
+      });
+    });
+  });
+
   const expectedContext = JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_CONTEXT));
   let _parser = new EpubParser(Files.DEFAULT);
   let _context;
@@ -412,16 +413,11 @@ describe('Book serialization test', () => {
 const basePath = Files.UNZIPPED_EXTRACT_STYLE
 const parser = new EpubParser(basePath);
 parser.parse({ useStyleNamespace: true }).then((book) => {
-  const _Files = {
-    Section0001: path.join(basePath, 'OEBPS', 'Text', 'Section0001.xhtml'),
-    Style0001: path.join(basePath, 'OEBPS', 'Styles', 'Style0001.css'),
-    Style0002: path.join(basePath, 'OEBPS', 'Styles', 'Style0002.css'),
-    Style0003: path.join(basePath, 'OEBPS', 'Styles', 'Style0003.css'),
-  };
+  const spineFile = path.join(basePath, 'OEBPS', 'Text', 'Section0001.xhtml');
   describe('Reading test', () => {
     it('Invalid item', () => {
       (() => {
-        parser.read({ href: _Files.Section0001 }, { encoding: 'utf8' });
+        parser.read({ href: spineFile }, { encoding: 'utf8' });
       }).should.throw(Errors.INVALID_ITEM);
     });
 
@@ -432,20 +428,14 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
     });
 
     it('Read single item', () => {
-      const expected = fs.readFileSync(_Files.Section0001, 'utf8');
+      const expected = fs.readFileSync(spineFile, 'utf8');
       parser.read(book.spines[0], { encoding: 'utf8' }).should.equal(expected);
     });
 
     it('Read multiple item', () => {
-      const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLE_BOOK));
-      const expectedList = [
-        fs.readFileSync(_Files.Style0001, 'utf8'),
-        fs.readFileSync(_Files.Style0002, 'utf8'),
-        fs.readFileSync(_Files.Style0003, 'utf8'),
-        expectedBook.styles[3].text,
-        expectedBook.styles[4].text,
-      ];
-      parser.read(book.styles, { encoding: 'utf8' }).should.deep.equal(expectedList);
+      const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES));
+      const options = { encoding: 'utf8', css: { removeTags: ['html', 'body'] } };
+      parser.read(book.styles, options).should.deep.equal(expectedList);
     });
 
     it('Extract body from SpineItem', () => {

@@ -15,7 +15,7 @@ export default function spineLoader(spineItem, file, options) {
       }]),
     };
     if (isExists(options.extractAdapter)) {
-      return options.extractAdapter(result);
+      return options.extractAdapter(result.body, result.attrs);
     }
     return result;
   }

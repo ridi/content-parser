@@ -1,20 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
-  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
-    <dc:identifier id="BookId" opf:scheme="UUID">urn:uuid:58b6b37f-9a21-46cd-b1b6-c9c9cf4a91a3</dc:identifier>
-    <dc:date opf:event="modification">2018-08-20</dc:date>
-    <meta content="0.8.7" name="Sigil version" />
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:identifier opf:scheme="UUID" id="BookId">urn:uuid:58b6b37f-9a21-46cd-b1b6-c9c9cf4a91a3</dc:identifier>
+    <dc:date opf:event="modification">2018-08-21</dc:date>
+    <meta name="Sigil version" content="0.9.9" />
   </metadata>
   <manifest>
-    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml" />
-    <item href="Text/Section0001.xhtml" id="Section0001.xhtml" media-type="application/xhtml+xml" />
-    <item href="Styles/Style0001.css" id="Style0001.css" media-type="text/css" />
-    <item href="Styles/Style0002.css" id="Style0002.css" media-type="text/css" />
-    <item href="Styles/Style0003.css" id="Style0003.css" media-type="text/css" />
-    <item href="Fonts/NotoSans-Regular.ttf" id="NotoSans-Regular.ttf" media-type="application/x-font-ttf" />
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="Section0001.xhtml" href="Text/Section0001.xhtml" media-type="application/xhtml+xml"/>
+    <item id="Style0001.css" href="Styles/Style0001.css" media-type="text/css"/>
+    <item id="Style0002.css" href="Styles/Style0002.css" media-type="text/css"/>
+    <item id="Style0003.css" href="Styles/Style0003.css" media-type="text/css"/>
+    <item id="NotoSans-Regular.ttf" href="Fonts/NotoSans-Regular.ttf" media-type="application/x-font-ttf"/>
   </manifest>
   <spine toc="ncx">
-    <itemref idref="Section0001.xhtml" />
+    <itemref idref="Section0001.xhtml"/>
   </spine>
-  <guide />
+  <guide>
+  </guide>
 </package>

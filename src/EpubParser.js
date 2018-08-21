@@ -15,6 +15,7 @@ import InlineCssItem from './model/InlineCssItem';
 import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
+import cssLoader from './loader/cssLoader';
 import spineLoader from './loader/spineLoader';
 import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
 import {
@@ -36,13 +37,13 @@ const privateProps = new WeakMap();
 
 const findEntry = (entryName, entries) => entries.find(entry => entry.entryName === entryName);
 
-const defaultExtractAdapter = (result) => {
+const defaultExtractAdapter = (body, attrs) => {
   let string = '';
-  result.attrs.forEach((attr) => {
+  attrs.forEach((attr) => {
     string += ` ${attr.name}=\"${attr.value}\"`; // eslint-disable-line no-useless-escape
   });
   return {
-    content: `<article${string}>${result.body}</article>`,
+    content: `<article${string}>${body}</article>`,
   };
 };
 
@@ -84,15 +85,15 @@ class EpubParser {
 
   static get parseOptionTypes() {
     return {
-      validatePackage: 'boolean',
-      validateXml: 'boolean',
-      allowNcxFileMissing: 'boolean',
-      unzipPath: 'string|undefined',
-      createIntermediateDirectories: 'boolean',
-      removePreviousFile: 'boolean',
-      ignoreLinear: 'boolean',
-      useStyleNamespace: 'boolean',
-      styleNamespacePrefix: 'string',
+      validatePackage: 'Boolean',
+      validateXml: 'Boolean',
+      allowNcxFileMissing: 'Boolean',
+      unzipPath: 'String|Undefined',
+      createIntermediateDirectories: 'Boolean',
+      removePreviousFile: 'Boolean',
+      ignoreLinear: 'Boolean',
+      useStyleNamespace: 'Boolean',
+      styleNamespacePrefix: 'String',
     };
   }
 
@@ -113,30 +114,30 @@ class EpubParser {
       // CssItem or InlineCssItem.
       css: {
         // Remove at-rules.
-        removeAtRule: false,
-        // Remove the selector that point to html tag.
-        removeHtml: false,
-        // Remove the selector that point to body tag.
-        removeBody: false,
-        // Whether to minify when reading file.
-        minify: false,
+        removeAtrules: ['charset', 'import', 'keyframes', 'media', 'namespace', 'supports'],
+        // Remove the selector that point to specified tags.
+        removeTags: [],
+        // Remove the selector that point to specified ids.
+        removeIds: [],
+        // Remove the selector that point to specified classes.
+        removeClasses: [],
       },
     };
   }
 
   static get readOptionTypes() {
     return {
-      encoding: 'string|undefined',
-      ignoreEntryNotFoundError: 'boolean',
+      encoding: 'String|Undefined',
+      ignoreEntryNotFoundError: 'Boolean',
       spine: {
-        extractBody: 'boolean',
-        extractAdapter: 'function|undefined',
+        extractBody: 'Boolean',
+        extractAdapter: 'Function|Undefined',
       },
       css: {
-        removeAtRule: 'boolean',
-        removeHtml: 'boolean',
-        removeBody: 'boolean',
-        minify: 'boolean',
+        removeAtrules: 'Array',
+        removeTags: 'Array',
+        removeIds: 'Array',
+        removeClasses: 'Array',
       },
     };
   }
@@ -187,7 +188,7 @@ class EpubParser {
 
     const results = items.map((item) => {
       if (item instanceof InlineCssItem) {
-        return item.text;
+        return cssLoader(item, item.text, readOptions.css);
       }
 
       const entry = findEntry(item.href, entries);
@@ -201,6 +202,9 @@ class EpubParser {
       const file = entry.getFile(readOptions.encoding);
       if (item instanceof SpineItem) {
         return spineLoader(item, file, readOptions.spine);
+      }
+      if (item instanceof CssItem) {
+        return cssLoader(item, file, readOptions.css);
       }
       return file;
     });

@@ -1,22 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
- "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
-<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
-<head>
-   <meta content="urn:uuid:58b6b37f-9a21-46cd-b1b6-c9c9cf4a91a3" name="dtb:uid"/>
-   <meta content="0" name="dtb:depth"/>
-   <meta content="0" name="dtb:totalPageCount"/>
-   <meta content="0" name="dtb:maxPageNumber"/>
-</head>
-<docTitle>
-   <text>Unknown</text>
-</docTitle>
-<navMap>
-<navPoint id="navPoint-1" playOrder="1">
-  <navLabel>
-    <text>Start</text>
-  </navLabel>
-  <content src="Text/Section0001.xhtml"/>
-</navPoint>
-</navMap>
+ "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd"><ncx version="2005-1" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+  <head>
+    <meta content="urn:uuid:58b6b37f-9a21-46cd-b1b6-c9c9cf4a91a3" name="dtb:uid"/>
+    <meta content="0" name="dtb:depth"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text>Unknown</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="navPoint-1" playOrder="1">
+      <navLabel>
+        <text>Start</text>
+      </navLabel>
+      <content src="Text/Section0001.xhtml"/>
+    </navPoint>
+  </navMap>
 </ncx>

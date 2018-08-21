@@ -4,6 +4,11 @@ import path from 'path';
 
 import Errors from './Errors';
 
+export function getType(any) {
+  const string = Object.prototype.toString.call(any).split(' ')[1];
+  return string.substr(0, string.length - 1);
+}
+
 export function isArray(any) {
   if (Array.isArray) {
     return Array.isArray(any);
@@ -52,7 +57,7 @@ export function validateOptions(options, defaultValues, types) {
     }
     if (isString(types[key])) {
       // eslint-disable-next-line valid-typeof
-      if (!isExists(types[key].split('|').find(type => type === typeof options[key]))) {
+      if (!isExists(types[key].split('|').find(type => type === getType(options[key])))) {
         return Errors.INVALID_OPTION_VALUE;
       }
     } else {

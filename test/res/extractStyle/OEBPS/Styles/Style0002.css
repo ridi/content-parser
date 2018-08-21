@@ -1,4 +1,4 @@
-@import 'Style0001.css';
+@import '../Styles/Style0001.css';
 
 @media screen {
   body { line-height: 1.2 }
@@ -6,4 +6,12 @@
 
 p {
   text-align: left;
+}
+
+p .text {
+  text-size: 1.1em;
+}
+
+p .text > span {
+  text-size: 0.9em;
 }
