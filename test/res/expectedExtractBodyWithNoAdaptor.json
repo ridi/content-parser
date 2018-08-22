@@ -1,5 +1,5 @@
 {
-  "body": "\n  <p>Extract style</p>\n\n",
+  "body": "\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\">\n\n",
   "attrs": [
     {
       "name": "style",

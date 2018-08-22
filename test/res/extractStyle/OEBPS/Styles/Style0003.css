@@ -8,3 +8,7 @@
 * {
   font-family: NotoSansRegular;
 }
+
+.box {
+  background-image: url("../Images/box.jpg");
+}

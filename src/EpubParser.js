@@ -103,6 +103,9 @@ class EpubParser {
       encoding: undefined,
       // If false, throw Errors.ITEM_NOT_FOUND.
       ignoreEntryNotFoundError: true,
+      // If specified, change base path of paths used by spine and css.
+      // e.g. '../Images/cover.jpg' -> '{basePath}/OEBPS/Images/cover.jpg'
+      basePath: undefined,
       // SpineItem.
       spine: {
         // If true, extract body. Otherwise it returns a full string.
@@ -129,6 +132,7 @@ class EpubParser {
     return {
       encoding: 'String|Undefined',
       ignoreEntryNotFoundError: 'Boolean',
+      basePath: 'String|Undefined',
       spine: {
         extractBody: 'Boolean',
         extractAdapter: 'Function|Undefined',
@@ -188,7 +192,7 @@ class EpubParser {
 
     const results = items.map((item) => {
       if (item instanceof InlineCssItem) {
-        return cssLoader(item, item.text, readOptions.css);
+        return cssLoader(item, item.text, readOptions);
       }
 
       const entry = findEntry(item.href, entries);
@@ -201,10 +205,10 @@ class EpubParser {
 
       const file = entry.getFile(readOptions.encoding);
       if (item instanceof SpineItem) {
-        return spineLoader(item, file, readOptions.spine);
+        return spineLoader(item, file, readOptions);
       }
       if (item instanceof CssItem) {
-        return cssLoader(item, file, readOptions.css);
+        return cssLoader(item, file, readOptions);
       }
       return file;
     });

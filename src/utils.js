@@ -36,6 +36,11 @@ export function isUrl(string) {
   return isString(string) && isExists(string.match(/(http|https):\/\//i));
 }
 
+export function containString(string, array) {
+  const lString = string.toLowerCase();
+  return isExists(array.map(item => item.toLowerCase()).find(item => item === lString));
+}
+
 export function mergeObjects(obj1, obj2) {
   return [obj1, obj2].reduce((merged, obj) => {
     Object.keys(obj).forEach((key) => {

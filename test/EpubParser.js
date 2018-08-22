@@ -34,8 +34,10 @@ const Files = {
   EXPECTED_EXTRACT_STYLE_CONTEXT: path.join('.', 'test', 'res', 'expectedExtractStyleContext.json'),
   EXPECTED_EXTRACT_STYLE_BOOK: path.join('.', 'test', 'res', 'expectedExtractStyleBook.json'),
   EXPECTED_EXTRACT_STYLES: path.join('.', 'test', 'res', 'expectedExtractStyles.json'),
+  EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH: path.join('.', 'test', 'res', 'expectedExtractStylesWithBasePath.json'),
   EXPECTED_EXTRACT_BODY: path.join('.', 'test', 'res', 'expectedExtractBody.json'),
   EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR: path.join('.', 'test', 'res', 'expectedExtractBodyWithNoAdaptor.json'),
+  EXPECTED_READ_SPINE_WITH_BASE_PATH: path.join('.', 'test', 'res', 'expectedReadSpineWithBasePath.xhtml'),
 };
 
 describe('Input test', () => {
@@ -410,14 +412,12 @@ describe('Book serialization test', () => {
   });
 });
 
-const basePath = Files.UNZIPPED_EXTRACT_STYLE
-const parser = new EpubParser(basePath);
+const parser = new EpubParser(Files.UNZIPPED_EXTRACT_STYLE);
 parser.parse({ useStyleNamespace: true }).then((book) => {
-  const spineFile = path.join(basePath, 'OEBPS', 'Text', 'Section0001.xhtml');
   describe('Reading test', () => {
     it('Invalid item', () => {
       (() => {
-        parser.read({ href: spineFile }, { encoding: 'utf8' });
+        parser.read({ href: Files.EXPECTED_READ_SPINE_WITH_BASE_PATH }, { encoding: 'utf8' });
       }).should.throw(Errors.INVALID_ITEM);
     });
 
@@ -428,8 +428,9 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
     });
 
     it('Read single item', () => {
-      const expected = fs.readFileSync(spineFile, 'utf8');
-      parser.read(book.spines[0], { encoding: 'utf8' }).should.equal(expected);
+      const expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
+      const options = { encoding: 'utf8', basePath: './a/b/c' };
+      parser.read(book.spines[0], options).should.equal(expected);
     });
 
     it('Read multiple item', () => {
@@ -446,6 +447,12 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR, 'utf8'));
       options = { encoding: 'utf8', spine: { extractBody: true, extractAdapter: undefined } };
       parser.read(book.spines[0], options).should.deep.equal(expected);
+    });
+
+    it('Extract styles from CssItems', () => {
+      const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH));
+      const options = { encoding: 'utf8', basePath: './a/b/c', css: { removeTags: ['html', 'body'] } };
+      parser.read(book.styles, options).should.deep.equal(expectedList);
     });
   });
 });
