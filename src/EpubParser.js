@@ -79,7 +79,7 @@ class EpubParser {
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
       useStyleNamespace: false,
       // Prepend given string to namespace for identification.
-      styleNamespacePrefix: 'ridi_c',
+      styleNamespacePrefix: 'ridi_style',
     };
   }
 

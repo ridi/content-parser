@@ -1,7 +1,7 @@
 [
   "",
-  ".ridi_c3 p{text-align:left}.ridi_c3 p .text{text-size:1.1em}.ridi_c3 p .text>span{text-size:0.9em}",
-  "@font-face{font-family:NotoSansRegular;src:url(\"../Fonts/NotoSans-Regular.ttf\")}.ridi_c4 *{font-family:NotoSansRegular}",
-  ".ridi_c0 p{font-size:17px;text-align:center}",
+  ".ridi_style3 p{text-align:left}.ridi_style3 p .text{text-size:1.1em}.ridi_style3 p .text>span{text-size:0.9em}",
+  "@font-face{font-family:NotoSansRegular;src:url(\"../Fonts/NotoSans-Regular.ttf\")}.ridi_style4 *{font-family:NotoSansRegular}",
+  ".ridi_style0 p{font-size:17px;text-align:center}",
   ""
 ]
