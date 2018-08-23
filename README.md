@@ -101,9 +101,9 @@ Or throw exception.
 
 If true, validation package specifications in IDPF listed below.
 - Zip header should not corrupt.
-- mimetype file must be first file in archive.
-- mimetype file should not compressed.
-- mimetype file should only contain string 'application/epub+zip'.
+- `mimetype` file must be first file in archive.
+- `mimetype` file should not compressed.
+- `mimetype` file should only contain string `application/epub+zip`.
 - Should not use extra field feature of ZIP format for mimetype file.
 
 **Default:** `false`
@@ -169,10 +169,10 @@ If true, ignore `spineIndex` difference caused by `isLinear` property of `SpineI
 
 ```js
 // e.g. If left is false, right is true.
-  [{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
-   { spineIndex: 1, isLinear: true, ... },        { spineIndex: 1, isLinear: true, ... },
-   { spineIndex: -1, isLinear: false, ... },      { spineIndex: 2, isLinear: false, ... },
-   { spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
+[{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
+{ spineIndex: 1, isLinear: true, ... },        { spineIndex: 1, isLinear: true, ... },
+{ spineIndex: -1, isLinear: false, ... },      { spineIndex: 2, isLinear: false, ... },
+{ spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
 ```
 
 **Default:** `true`
