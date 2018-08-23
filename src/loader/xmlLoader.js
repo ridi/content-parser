@@ -1,7 +1,7 @@
 import XmlParser from 'fast-xml-parser';
 import he from 'he';
 
-import Errors from '../Errors';
+import Errors from '../errors';
 import {
   isArray,
   isExists,
