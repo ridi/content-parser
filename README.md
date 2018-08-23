@@ -54,7 +54,7 @@ parser.parse().then((book) => {
 
 Returns `Promise<Book>` with:
 
-- [Book](./src/model/Book.js): Instance with metadata, spine list, table of contents, etc.
+- [Book](#book): Instance with metadata, spine list, table of contents, etc.
 
 Or throw exception.
 
@@ -75,9 +75,117 @@ Returns `string` or `Object` or `string[]` or `Object[]` with:
 
 Or throw exception.
 
-#### target(s): `Item`, `Item[]`
+#### target(s): `Item`, `Item[]` (see: [Item Types](#itemTypes))
 
 #### [readOptions](#readOptions): `Object`
+
+## Model
+
+<a id="book"></a>
+
+### [Book](./src/model/Book.js)
+
+- titles: *string[]*
+- creators: *[Author](#author)[]*
+- subjects: *string[]*
+- description: *string?*
+- publisher: *string?*
+- contributors: *[Author](#author)[]*
+- dates: *[DateTime](#dateTime)[]*
+- type: *string?*
+- format: *string?*
+- identifiers: *[Identifier](#identifier)[]*
+- source: *string?*
+- language: *string?*
+- relation: *string?*
+- rights: *string?*
+- epubVersion: *number?*
+- metas: *[Meta](meta)[]*
+- items: *[Item](#itemTypes)[]*
+- ncx: *[NcxItem](#itemTypes)?*
+- spines: *[SpintItem](#itemTypes)[]*
+- fonts: *[FontItem](#itemTypes)[]*
+- cover: *[ImageItem](#itemTypes)?*
+- images: *[ImageItem](#itemTypes)[]*
+- styles: *[CssItem](#itemTypes)[]*
+- guide: *[Guide](#Guide)[]*
+- deadItems: *[DeadItem](#itemTypes)[]*
+
+<a id="author"></a>
+
+### [Author](./src/model/Author.js)
+
+- name: *string?*
+- role: *string* (**Default: Author.Roles.UNDEFINED**)
+
+<a id="dateTime"></a>
+
+### [DateTime](./src/model/DateTime.js)
+
+- value: *strung?*
+- event: *string* (**Default: DateTime.Events.UNDEFINED**)
+
+<a id="identifier"></a>
+
+### [Identifier](./src/model/Identifier.js)
+
+- value: *string?*
+- scheme: *string?* (**Default: Identifier.Schemes.UNDEFINED**)
+
+<a id="meta"></a>
+
+### [Meta](./src/model/Meta.js)
+
+- name: *string?*
+- content: *string?*
+
+<a id="guide"></a>
+
+### [Guide](./src/model/Guide.js)
+
+- title: *string?*
+- type: *string* (**Default: Guide.Types.UNDEFINED**)
+- href: *string?*
+- item: *Item?*
+
+<a id="itemTypes"></a>
+
+### Item Types
+
+- [Item](./src/model/Item.js)
+  - id: *id?*
+  - href: *href?*
+  - mediaType: *string?*
+  - size: *number?*
+  - isFileExists: *boolean* (**size !== undefined**)
+  - defaultEncoding: *string?*
+- [NcxItem](./src/model/NcxItem.js) (extend Item)
+  - navPoints: *[NavPoint](#navPoint)[]*
+- [SpineItem](./src/model/SpineItem.js) (extend Item)
+  - spineIndex: *number* (**Default: -1**)
+  - isLinear: *boolean* (**Default: true**)
+  - styles: *CssItem[]?*
+- [CssItem](./src/model/CssItem.js) (extend Item)
+  - namespace: *string?*
+- [InlineCssItem](./src/model/InlineCssItem.js) (extend CssItem)
+  - text: *string?*
+- [ImageItem](./src/model/ImageItem.js) (extend Item)
+  - isCover: *boolean* (**Default: false**)
+- [FontItem](./src/model/FontItem.js) (extend Item)
+- [DeadItem](./src/model/DeadItem.js) (extend Item)
+  - raw: *Object*
+
+<a id="navPoint"></a>
+
+### [NavPoint](./src/model/NavPoint.js)
+
+- id: *string?*
+- label: *string?*
+- src: *string?*
+- anchor: *string?*
+- depth: *number* (**Default: 0**)
+- children: *NavPoint[]*
+- spine: *SpineItem?*
 
 <a id="parseOptions"></a>
 
@@ -235,7 +343,7 @@ InlineCssItem.defaultEncoding // 'utf8'
 ImageItem.defaultEncoding // undefined (=buffer)
 ```
 
-**Default:** `undefined`
+**Default:** `'default'`
 
 ---
 
