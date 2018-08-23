@@ -401,6 +401,8 @@ Remove selector that point to specified classes.
 - [ ] Add `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength` options.
 - [ ] Add `readOptions.spine.minify` and `readOptions.css.minify` options.
 - [ ] Support for EPUB3.
+- [ ] Support for Windows environment.
+- [ ] Support for CLI.
 
 ## License
 
