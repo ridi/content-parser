@@ -64,6 +64,7 @@ class Book {
     this.images = this.items.filter(item => item instanceof ImageItem);
     this.styles = this.items.filter(item => item instanceof CssItem);
     this.guide = (rawBook.guide || []).map(rawObj => new Guide(mergeObjects(rawObj, { findItem })));
+    this.deadItems = this.items.filter(item => item instanceof DeadItem);
     Object.freeze(this);
   }
 
