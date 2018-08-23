@@ -23,7 +23,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "clean": "rimraf coverage lib temp",
-    "build": "yarn lint && cross-env BABEL_ENV=production babel src --out-dir lib",
+    "build": "yarn lint && yarn clean && mkdir lib && cross-env BABEL_ENV=production babel src --out-file lib/index.js",
     "watch": "yarn build -- --watch",
     "test": "cross-env BABEL_ENV=production yarn cover",
     "cover": "istanbul cover _mocha -- --require babel-core/register --require babel-polyfill --recursive",
