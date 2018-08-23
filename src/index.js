@@ -1,5 +1,5 @@
 import EpubParser from './EpubParser';
-import Errors from './Errors';
+import Errors from './errors';
 
 export {
   EpubParser,

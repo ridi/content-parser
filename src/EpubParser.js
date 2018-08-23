@@ -3,7 +3,7 @@ import fs from 'fs';
 import { parse as parseHtml } from 'himalaya';
 import path from 'path';
 
-import Errors from './Errors';
+import Errors from './errors';
 import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';

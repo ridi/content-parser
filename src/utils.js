@@ -2,7 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import Errors from './Errors';
+import Errors from './errors';
 
 export function getType(any) {
   const string = Object.prototype.toString.call(any).split(' ')[1];
