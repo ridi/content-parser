@@ -61,7 +61,7 @@ class EpubParser {
       validateXml: false,
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
-      // If specified, uncompress to that path. (Only if input is buffer or epub file path.)
+      // If specified, uncompress to that path. (Only if input is buffer or file path of EPUB file.)
       unzipPath: undefined,
       // If true, creates intermediate directories for unzipPath.
       createIntermediateDirectories: true,
@@ -100,6 +100,8 @@ class EpubParser {
   static get readDefaultOptions() {
     return {
       // If specified then returns a string. Otherwise it returns a buffer.
+      // If specify 'default', use Item.defaultEncoding.
+      // e.g. Item => undefined, SpineItem => 'utf8'
       encoding: undefined,
       // If false, throw Errors.ITEM_NOT_FOUND.
       ignoreEntryNotFoundError: true,
@@ -203,7 +205,8 @@ class EpubParser {
         throw Errors.ITEM_NOT_FOUND;
       }
 
-      const file = entry.getFile(readOptions.encoding);
+      const encoding = readOptions.encoding !== 'default' ? readOptions.encoding : item.defaultEncoding;
+      const file = entry.getFile(encoding);
       if (item instanceof SpineItem) {
         return spineLoader(item, file, readOptions);
       }

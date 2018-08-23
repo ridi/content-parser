@@ -4,6 +4,8 @@ import { isExists, mergeObjects } from '../utils';
 const privateProps = new WeakMap();
 
 class SpineItem extends Item {
+  get defaultEncoding() { return 'utf8'; }
+
   get styles() {
     const props = privateProps.get(this);
     if (!isExists(props)) {
