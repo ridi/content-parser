@@ -1,6 +1,6 @@
 import Zip from 'adm-zip';
 import fs from 'fs';
-import parse5 from 'parse5';
+import { parse as parseHtml } from 'himalaya';
 import path from 'path';
 
 import Errors from './Errors';
@@ -40,7 +40,7 @@ const findEntry = (entryName, entries) => entries.find(entry => entry.entryName 
 const defaultExtractAdapter = (body, attrs) => {
   let string = '';
   attrs.forEach((attr) => {
-    string += ` ${attr.name}=\"${attr.value}\"`; // eslint-disable-line no-useless-escape
+    string += ` ${attr.key}=\"${attr.value}\"`; // eslint-disable-line no-useless-escape
   });
   return {
     content: `<article${string}>${body}</article>`,
@@ -50,12 +50,12 @@ const defaultExtractAdapter = (body, attrs) => {
 class EpubParser {
   static get parseDefaultOptions() {
     return {
-      // If true, validation the package specifications in the IDPF listed below.
-      // - The Zip header should not corrupt.
-      // - The mimetype file must be the first file in the archive.
-      // - The mimetype file should not compressed.
-      // - The mimetype file should only contain the string 'application/epub+zip'.
-      // - Should not use extra field feature of the ZIP format for the mimetype file.
+      // If true, validation package specifications in IDPF listed below.
+      // - Zip header should not corrupt.
+      // - mimetype file must be first file in archive.
+      // - mimetype file should not compressed.
+      // - mimetype file should only contain string 'application/epub+zip'.
+      // - Should not use extra field feature of ZIP format for mimetype file.
       validatePackage: false,
       // If true, stop parsing when XML parsing errors occur.
       validateXml: false,
@@ -63,11 +63,11 @@ class EpubParser {
       allowNcxFileMissing: true,
       // If specified, uncompress to that path. (Only if input is buffer or epub file path.)
       unzipPath: undefined,
-      // If true, creates intermediate directories for the unzipPath.
+      // If true, creates intermediate directories for unzipPath.
       createIntermediateDirectories: true,
-      // If true, removes a previous file from the unzipPath.
+      // If true, removes a previous file from unzipPath.
       removePreviousFile: true,
-      // If true, ignore the spineIndex difference caused by the isLinear property of the SpineItem.
+      // If true, ignore spineIndex difference caused by isLinear property of SpineItem.
       // e.g. If left is false, right is true.
       //  [{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
       //   { spineIndex: 1, isLinear: true, ... },        { spineIndex: 1, isLinear: true, ... },
@@ -118,11 +118,11 @@ class EpubParser {
       css: {
         // Remove at-rules.
         removeAtrules: ['charset', 'import', 'keyframes', 'media', 'namespace', 'supports'],
-        // Remove the selector that point to specified tags.
+        // Remove selector that point to specified tags.
         removeTags: [],
-        // Remove the selector that point to specified ids.
+        // Remove selector that point to specified ids.
         removeIds: [],
-        // Remove the selector that point to specified classes.
+        // Remove selector that point to specified classes.
         removeClasses: [],
       },
     };
@@ -266,16 +266,16 @@ class EpubParser {
       if (isExists(context.zip) && context.options.validatePackage) {
         const firstEntry = context.entries[0];
         if (firstEntry.entryName !== 'mimetype') {
-          // The mimetype file must be the first file in the archive.
+          // mimetype file must be first file in archive.
           throw Errors.INVALID_PACKAGE;
         } else if (firstEntry.method !== 0/* adm-zip/util/constants.js/STORED */) {
-          // The mimetype file should not compressed.
+          // mimetype file should not compressed.
           throw Errors.INVALID_PACKAGE;
         } else if (firstEntry.getFile('utf8') !== 'application/epub+zip') {
-          // The mimetype file should only contain the string 'application/epub+zip'.
+          // mimetype file should only contain string 'application/epub+zip'.
           throw Errors.INVALID_PACKAGE;
         } else if (firstEntry.extraLength > 0) {
-          // Should not use extra field feature of the ZIP format for the mimetype file.
+          // Should not use extra field feature of ZIP format for mimetype file.
           throw Errors.INVALID_PACKAGE;
         }
       }
@@ -346,26 +346,26 @@ class EpubParser {
   }
 
   _parseStyle(spineEntry, foundStyle) {
-    const document = parse5.parse(spineEntry.getFile('utf8'));
-    const html = document.childNodes.find(child => child.tagName === 'html');
-    const head = html.childNodes.find(child => child.tagName === 'head');
-    head.childNodes.filter(child => child.tagName === 'link').forEach((link) => {
-      const { attrs } = link;
+    const document = parseHtml(spineEntry.getFile('utf8'));
+    const html = document.find(child => child.tagName === 'html');
+    const head = html.children.find(child => child.tagName === 'head');
+    head.children.filter(child => child.tagName === 'link').forEach((link) => {
+      const { attributes: attrs } = link;
       if (isExists(attrs)) {
-        const rel = attrs.find(property => property.name === 'rel');
-        const type = attrs.find(property => property.name === 'type');
+        const rel = attrs.find(property => property.key === 'rel');
+        const type = attrs.find(property => property.key === 'type');
         if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
-          const href = attrs.find(property => property.name === 'href');
+          const href = attrs.find(property => property.key === 'href');
           if (isExists(href) && isExists(href.value) && !isUrl(href.value)) {
             foundStyle({ href: href.value });
           }
         }
       }
     });
-    head.childNodes.filter(child => child.tagName === 'style').forEach((style) => {
-      const firstNode = style.childNodes[0];
+    head.children.filter(child => child.tagName === 'style').forEach((style) => {
+      const firstNode = style.children[0];
       if (isExists(firstNode)) {
-        foundStyle({ text: firstNode.value || '' });
+        foundStyle({ text: firstNode.content || '' });
       }
     });
   }

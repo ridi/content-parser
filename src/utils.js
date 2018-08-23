@@ -36,7 +36,7 @@ export function isUrl(string) {
   return isString(string) && isExists(string.match(/(http|https):\/\//i));
 }
 
-export function containString(string, array) {
+export function stringContains(array, string) {
   const lString = string.toLowerCase();
   return isExists(array.map(item => item.toLowerCase()).find(item => item === lString));
 }

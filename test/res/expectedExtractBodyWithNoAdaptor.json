@@ -1,12 +1,12 @@
 {
-  "body": "\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\">\n\n",
+  "body": "\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n",
   "attrs": [
     {
-      "name": "style",
+      "key": "style",
       "value": "background-color: #000000;"
     },
     {
-      "name": "class",
+      "key": "class",
       "value": ".ridi_style2, .ridi_style3, .ridi_style4, .ridi_style0, .ridi_style1"
     }
   ]

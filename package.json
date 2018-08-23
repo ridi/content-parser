@@ -34,7 +34,7 @@
     "css-tree": "^1.0.0-alpha.29",
     "fast-xml-parser": "^3.11.2",
     "he": "^1.1.1",
-    "parse5": "^5.1.0"
+    "himalaya": "^1.1.0"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",

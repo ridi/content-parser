@@ -1,50 +1,70 @@
-import parse5 from 'parse5';
-import treeAdapter from 'parse5/lib/tree-adapters/default';
+import { parse, parseDefaults } from 'himalaya';
+import { arrayIncludes } from 'himalaya/lib/compat';
 
 import {
   isExists,
   isUrl,
-  containString,
+  stringContains,
+  mergeObjects,
   removeLastPathComponent,
   safePathJoin,
 } from '../utils';
 
-function getAttrList(element) {
-  return this.handleAttrs(element.attrs);
+function formatAttributes(attributes, options) {
+  return attributes.reduce((attrs, attribute) => {
+    const { key, value } = attribute;
+    if (value === null) {
+      return `${attrs} ${key}`;
+    }
+    if (isExists(options.basePath) && stringContains(['href', 'src'], key) && !isUrl(value)) {
+      return `${attrs} ${key}="${safePathJoin(options.basePath, value)}"`;
+    }
+    return `${attrs} ${key}="${value}"`;
+  }, '');
 }
-treeAdapter.getAttrList = getAttrList;
+
+function stringify(tree, options) {
+  return tree.map((node) => {
+    if (node.type === 'text') {
+      return node.content;
+    }
+    if (node.type === 'comment') {
+      return `<!--${node.content}-->`;
+    }
+    const { tagName, attributes, children } = node;
+    const isSelfClosing = arrayIncludes(options.voidTags, tagName);
+    return isSelfClosing
+      ? `<${tagName}${formatAttributes(attributes, options)}${tagName !== '!doctype' ? '/' : ''}>`
+      : `<${tagName}${formatAttributes(attributes, options)}>${stringify(children, options)}</${tagName}>`;
+  }).join('');
+}
 
 export default function spineLoader(spineItem, file, options) {
-  const document = isExists(options.basePath) || options.spine.extractBody ? parse5.parse(file) : undefined;
-  if (isExists(document)) {
-    if (isExists(options.basePath)) {
-      treeAdapter.handleAttrs = (attrs) => { // eslint-disable-line arrow-body-style
-        return attrs.map((attr) => {
-          if (containString(attr.name, ['href', 'src']) && !isUrl(attr.value)) {
-            attr.value = safePathJoin(options.basePath, removeLastPathComponent(spineItem.href), attr.value);
-          }
-          return attr;
-        });
-      };
-    } else {
-      treeAdapter.handleAttrs = attrs => attrs;
-    }
-    if (options.spine.extractBody) {
-      const html = document.childNodes.find(child => child.tagName === 'html');
-      const body = html.childNodes.find(child => child.tagName === 'body');
-      const result = {
-        body: parse5.serialize(body, { treeAdapter }),
-        attrs: body.attrs.concat([{
-          name: 'class',
-          value: spineItem.styles.map(style => ` .${style.namespace}`).join(',').trim(),
-        }]),
-      };
-      if (isExists(options.spine.extractAdapter)) {
-        return options.spine.extractAdapter(result.body, result.attrs);
-      }
-      return result;
-    }
-    return parse5.serialize(document, { treeAdapter });
+  if (!isExists(options.basePath) && !options.spine.extractBody) {
+    return file;
   }
-  return file;
+
+  const document = parse(file);
+  const stringifyOptions = mergeObjects(parseDefaults, {
+    basePath: isExists(options.basePath)
+      ? safePathJoin(options.basePath, removeLastPathComponent(spineItem.href)) : undefined,
+  });
+
+  if (options.spine.extractBody) {
+    const html = document.find(child => child.tagName === 'html');
+    const body = html.children.find(child => child.tagName === 'body');
+    const result = {
+      body: stringify(body.children, stringifyOptions),
+      attrs: body.attributes.concat([{
+        key: 'class',
+        value: spineItem.styles.map(style => ` .${style.namespace}`).join(',').trim(),
+      }]),
+    };
+    if (isExists(options.spine.extractAdapter)) {
+      return options.spine.extractAdapter(result.body, result.attrs);
+    }
+    return result;
+  }
+
+  return stringify(document, stringifyOptions);
 }

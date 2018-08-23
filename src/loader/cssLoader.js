@@ -3,7 +3,7 @@ import csstree, { List } from 'css-tree';
 import {
   isExists,
   isUrl,
-  containString,
+  stringContains,
   removeLastPathComponent,
   safePathJoin,
 } from '../utils';
@@ -24,15 +24,15 @@ function handleRulePrelude(selectorList, options, cssItem) {
             }
           }
         } else if (type === 'TypeSelector') {
-          if (containString(name, options.css.removeTags)) {
+          if (stringContains(options.css.removeTags, name)) {
             shouldRemove = true;
           }
         } else if (type === 'IdSelector') {
-          if (containString(name, options.css.removeIds)) {
+          if (stringContains(options.css.removeIds, name)) {
             shouldRemove = true;
           }
         } else if (type === 'ClassSelector') {
-          if (containString(name, options.css.removeClasses)) {
+          if (stringContains(options.css.removeClasses, name)) {
             shouldRemove = true;
           }
         }
@@ -89,10 +89,9 @@ function handleAtrule(node, item, list, options, cssItem) {
       return;
     }
   }
-  const lName = node.name.toLowerCase();
-  if (containString(lName, options.css.removeAtrules)) {
+  if (stringContains(options.css.removeAtrules, node.name)) {
     list.remove(item);
-  } else if (lName === 'font-face') {
+  } else if (node.name.toLowerCase() === 'font-face') {
     handleRuleBlock(node.block, options, cssItem);
   }
 }
