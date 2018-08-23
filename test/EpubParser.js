@@ -429,7 +429,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
 
     it('Read single item', () => {
       const expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
-      const options = { encoding: 'utf8', basePath: './a/b/c' };
+      const options = { basePath: './a/b/c' };
       parser.read(book.spines[0], options).should.equal(expected);
     });
 

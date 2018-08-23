@@ -102,7 +102,7 @@ class EpubParser {
       // If specified then returns a string. Otherwise it returns a buffer.
       // If specify 'default', use Item.defaultEncoding.
       // e.g. Item => undefined, SpineItem => 'utf8'
-      encoding: undefined,
+      encoding: 'default',
       // If false, throw Errors.ITEM_NOT_FOUND.
       ignoreEntryNotFoundError: true,
       // If specified, change base path of paths used by spine and css.
