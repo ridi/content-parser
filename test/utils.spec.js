@@ -19,7 +19,7 @@ import Book from '../src/model/Book';
 
 const Files = {
   DEFAULT: path.join('.', 'test', 'res', 'default'),
-  SELF: path.join('.', 'test', 'utils.js'),
+  SELF: path.join('.', 'test', 'utils.spec.js'),
 };
 
 should(); // Initialize should
