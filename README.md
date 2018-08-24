@@ -2,6 +2,22 @@
 
 > Common EPUB2 data parser for Ridibooks services written in ES6
 
+## Features
+
+- Detailed parsing for EPUB2
+- Supports package validation, decompression and style extraction with various parsing options
+- Extract files within EPUB with various reading options
+
+## TODO
+
+- [ ] Add encryption and decryption function
+- [ ] Add `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength` options
+- [ ] Add `readOptions.spine.minify` and `readOptions.css.minify` options
+- [ ] Support for EPUB3
+- [ ] Support for Windows environment
+- [ ] Support for CLI
+- [ ] Support for other [OCF](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) spec (manifest.xml, metadata.xml, signatures.xml, encryption.xml, etc)
+
 ## Install
 
 ```bash
@@ -65,13 +81,13 @@ Or throw exception.
 
 Returns `string` or `Object` or `string[]` or `Object[]` with:
 
-- `string` (`readOptions.spine.extractBody` is `false`)
+- `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
 
-- `Object` (`readOptions.spine.extractAdapter` is `undefined`):
+- `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
   - `body`: Same reuslt as `document.body.innerHTML`
   - `attrs`: Attributes in body tag.
 
-- `Object` (`readOptions.spine.extractAdapter` is `defaultExtractAdapter`):
+- `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
   - `content`: `extractBody` output transformed by adapter.
 
 Or throw exception.
@@ -234,7 +250,7 @@ Or throw exception.
 
 ### validatePackage: *`boolean`*
 
-If true, validation package specifications in IDPF listed below.
+If true, validation package specifications in [IDPF listed](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) below.
 - Zip header should not corrupt.
 - `mimetype` file must be first file in archive.
 - `mimetype` file should not compressed.
@@ -464,6 +480,8 @@ false:
 
 If specified, transforms output of extractBody.
 
+<a id="defaultExtractAdapter"></a>
+
 Define adapter:
 
 ```js
@@ -529,16 +547,3 @@ Remove selector that point to specified classes.
 **Default:** `[]`
 
 ---
-
-## TODO
-
-- [ ] Add encryption and decryption function.
-- [ ] Add `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength` options.
-- [ ] Add `readOptions.spine.minify` and `readOptions.css.minify` options.
-- [ ] Support for EPUB3.
-- [ ] Support for Windows environment.
-- [ ] Support for CLI.
-
-## License
-
-MIT
