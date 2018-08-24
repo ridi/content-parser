@@ -2,6 +2,8 @@
 
 > Common EPUB2 data parser for Ridibooks services written in ES6
 
+[![Build Status](https://travis-ci.org/ridi/epub-parser.svg?branch=master)](https://travis-ci.org/ridi/epub-parser)
+
 ## Features
 
 - Detailed parsing for EPUB2
@@ -33,7 +35,7 @@ import EpubParser from '@ridi/epub-parser';
 
 const parser = new EpubParser('./foo/bar.epub');
 parser.parse().then((book) => {
-  const results = parser.read(book.spines, { encoding: 'utf8' });
+  const results = parser.read(book.spines);
   ...
 });
 ```
