@@ -1,5 +1,5 @@
-import { parse, parseDefaults } from 'himalaya';
 import { arrayIncludes } from 'himalaya/lib/compat';
+import { parse, parseDefaults } from 'himalaya';
 
 import {
   isExists,

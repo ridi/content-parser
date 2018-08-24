@@ -1,5 +1,5 @@
-import Item from './Item';
 import { mergeObjects } from '../utils';
+import Item from './Item';
 
 class ImageItem extends Item {
   constructor(rawObj) {

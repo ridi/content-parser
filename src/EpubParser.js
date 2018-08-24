@@ -1,13 +1,14 @@
-import Zip from 'adm-zip';
-import fs from 'fs';
 import { parse as parseHtml } from 'himalaya';
+import fs from 'fs';
 import path from 'path';
+import Zip from 'adm-zip';
 
-import Errors from './errors';
 import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';
+import cssLoader from './loader/cssLoader';
 import DeadItem from './model/DeadItem';
+import Errors from './errors';
 import FontItem from './model/FontItem';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
@@ -15,9 +16,9 @@ import InlineCssItem from './model/InlineCssItem';
 import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
-import cssLoader from './loader/cssLoader';
 import spineLoader from './loader/spineLoader';
 import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
+
 import {
   isArray,
   isBuffer,

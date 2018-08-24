@@ -1,5 +1,5 @@
-import Item from './Item';
 import { isExists, mergeObjects } from '../utils';
+import Item from './Item';
 
 class CssItem extends Item {
   get defaultEncoding() { return 'utf8'; }

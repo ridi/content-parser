@@ -1,3 +1,4 @@
+import { isString, mergeObjects } from '../utils';
 import Author from './Author';
 import CssItem from './CssItem';
 import DateTime from './DateTime';
@@ -11,7 +12,6 @@ import Item from './Item';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
-import { isString, mergeObjects } from '../utils';
 
 /* eslint-disable new-cap */
 class Book {

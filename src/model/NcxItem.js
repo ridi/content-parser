@@ -1,6 +1,6 @@
+import { mergeObjects } from '../utils';
 import Item from './Item';
 import NavPoint from './NavPoint';
-import { mergeObjects } from '../utils';
 
 class NcxItem extends Item {
   get defaultEncoding() { return 'utf8'; }
