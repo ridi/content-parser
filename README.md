@@ -30,6 +30,7 @@ import EpubParser from '@ridi/epub-parser';
 
 // Unzipped path of EPUB file.
 new EpubParser('./foo/bar');
+
 // EPUB file buffer.
 const buffer = fs.readFileSync('./foo/bar.epub');
 new EpubParser(buffer);
@@ -101,15 +102,15 @@ Or throw exception.
 - rights: *string?*
 - epubVersion: *number?*
 - metas: *[Meta](meta)[]*
-- items: *[Item](#itemTypes)[]*
-- ncx: *[NcxItem](#itemTypes)?*
-- spines: *[SpintItem](#itemTypes)[]*
-- fonts: *[FontItem](#itemTypes)[]*
-- cover: *[ImageItem](#itemTypes)?*
-- images: *[ImageItem](#itemTypes)[]*
-- styles: *[CssItem](#itemTypes)[]*
+- items: *[Item](#item)[]*
+- ncx: *[NcxItem](#ncxItem)?*
+- spines: *[SpintItem](#spineItem)[]*
+- fonts: *[FontItem](#fontItem)[]*
+- cover: *[ImageItem](#imageItem)?*
+- images: *[ImageItem](#imageItem)[]*
+- styles: *[CssItem](#cssItem)[]*
 - guide: *[Guide](#Guide)[]*
-- deadItems: *[DeadItem](#itemTypes)[]*
+- deadItems: *[DeadItem](#deadItem)[]*
 
 <a id="author"></a>
 
@@ -146,34 +147,60 @@ Or throw exception.
 - title: *string?*
 - type: *string* (**Default: Guide.Types.UNDEFINED**)
 - href: *string?*
-- item: *Item?*
+- item: *[Item](#item)?*
 
 <a id="itemTypes"></a>
 
 ### Item Types
 
-- [Item](./src/model/Item.js)
-  - id: *id?*
-  - href: *href?*
-  - mediaType: *string?*
-  - size: *number?*
-  - isFileExists: *boolean* (**size !== undefined**)
-  - defaultEncoding: *string?*
-- [NcxItem](./src/model/NcxItem.js) (extend Item)
-  - navPoints: *[NavPoint](#navPoint)[]*
-- [SpineItem](./src/model/SpineItem.js) (extend Item)
-  - spineIndex: *number* (**Default: -1**)
-  - isLinear: *boolean* (**Default: true**)
-  - styles: *CssItem[]?*
-- [CssItem](./src/model/CssItem.js) (extend Item)
-  - namespace: *string?*
-- [InlineCssItem](./src/model/InlineCssItem.js) (extend CssItem)
-  - text: *string?*
-- [ImageItem](./src/model/ImageItem.js) (extend Item)
-  - isCover: *boolean* (**Default: false**)
-- [FontItem](./src/model/FontItem.js) (extend Item)
-- [DeadItem](./src/model/DeadItem.js) (extend Item)
-  - raw: *Object*
+<a id="item"></a>
+
+#### [Item](./src/model/Item.js)
+
+- id: *id?*
+- href: *string?*
+- mediaType: *string?*
+- size: *number?*
+- isFileExists: *boolean* (**size !== undefined**)
+- defaultEncoding: *string?*
+
+<a id="ncxItem"></a>
+
+#### [NcxItem](./src/model/NcxItem.js) (extend [Item](#item))
+
+- navPoints: *[NavPoint](#navPoint)[]*
+
+<a id="spineItem"></a>
+
+#### [SpineItem](./src/model/SpineItem.js) (extend [Item](#item))
+
+- spineIndex: *number* (**Default: -1**)
+- isLinear: *boolean* (**Default: true**)
+- styles: *[CssItem](#cssItem)[]?*
+
+<a id="cssItem"></a>
+
+#### [CssItem](./src/model/CssItem.js) (extend [Item](#item))
+- namespace: *string?*
+
+<a id="inlineCssItem"></a>
+
+#### [InlineCssItem](./src/model/InlineCssItem.js) (extend [CssItem](#cssItem))
+- text: *string?*
+
+<a id="imageItem"></a>
+
+#### [ImageItem](./src/model/ImageItem.js) (extend [Item](#item))
+- isCover: *boolean* (**Default: false**)
+
+<a id="fontItem"></a>
+
+#### [FontItem](./src/model/FontItem.js) (extend [Item](#item))
+
+<a id="deadItem"></a>
+
+#### [DeadItem](./src/model/DeadItem.js) (extend [Item](#item))
+- raw: *Object*
 
 <a id="navPoint"></a>
 
@@ -185,7 +212,7 @@ Or throw exception.
 - anchor: *string?*
 - depth: *number* (**Default: 0**)
 - children: *NavPoint[]*
-- spine: *SpineItem?*
+- spine: *[SpineItem](#spineItem)?*
 
 <a id="parseOptions"></a>
 
@@ -273,7 +300,7 @@ If true, removes a previous file from unzipPath.
 
 ### ignoreLinear: *`boolean`*
 
-If true, ignore `spineIndex` difference caused by `isLinear` property of `SpineItem`.
+If true, ignore `spineIndex` difference caused by `isLinear` property of [SpineItem](#spineItem).
 
 ```js
 // e.g. If left is false, right is true.
@@ -293,9 +320,9 @@ If true, ignore `spineIndex` difference caused by `isLinear` property of `SpineI
 
 If true, One namespace is given per CSS file or inline style, and styles used for spine is described.
 
-Otherwise it `CssItem.namespace`, `SpineItem.styles` is `undefined`.
+Otherwise it [CssItem](#cssItem)`.namespace`, [SpineItem](#spineItem)`.styles` is `undefined`.
 
-In any list, `InlineCssItem` is always positioned after `CssItem`. (`Book.styles`, `Book.items`, `SpineItem.styles`, ...)
+In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem](#CssItem). ([Book](#book)`.styles`, [Book](#book)`.items`, [SpineItem](#spineItem)`.styles`, ...)
 
 **Default:** `false`
 
@@ -333,7 +360,7 @@ Prepend given string to namespace for identification.
 
 If specified then returns a string. Otherwise it returns a buffer.
 
-If specify `default`, use `Item.defaultEncoding`.
+If specify `default`, use [Item](#item)`.defaultEncoding`.
 
 ```js
 Item.defaultEncoding // undefined (=buffer)
@@ -363,7 +390,7 @@ If false, throw Errors.ITEM_NOT_FOUND.
 
 If specified, change base path of paths used by spine and css.
 
-HTML: `SpineItem`
+HTML: [SpineItem](#spineItem)
 
 ```html
 ...
@@ -378,7 +405,7 @@ HTML: `SpineItem`
 ...
 ```
 
-CSS: `CssItem`, `InlineCssItem`
+CSS: [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
 
 ```css
 /* Before */
