@@ -360,7 +360,6 @@ Prepend given string to namespace for identification.
 ## Read Options
 
 * [encoding](#encoding)
-* [ignoreEntryNotFoundError](#ignoreEntryNotFoundError)
 * [basePath](#basePath)
 * [spine.extractBody](#spine_extractBody)
 * [spine.extractAdapter](#spine_extractAdapter)
@@ -388,16 +387,6 @@ ImageItem.defaultEncoding // undefined (=buffer)
 ```
 
 **Default:** `'default'`
-
----
-
-<a id="encodignoreEntryNotFoundErroring"></a>
-
-### ignoreEntryNotFoundError: *`boolean`*
-
-If false, throw Errors.ITEM_NOT_FOUND.
-
-**Default:** `true`
 
 ---
 

@@ -274,12 +274,6 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       }).should.throw(Errors.INVALID_ITEM);
     });
 
-    it('Item not found', () => {
-      (() => {
-        parser.read(new Item({}), { encoding: 'utf8', ignoreEntryNotFoundError: false });
-      }).should.throw(Errors.ITEM_NOT_FOUND);
-    });
-
     it('Read single item', () => {
       let expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
       let options = { encoding: 'utf8', basePath: './a/b/c' };

@@ -106,8 +106,6 @@ class EpubParser {
       // If specify 'default', use Item.defaultEncoding.
       // e.g. Item => undefined, SpineItem => 'utf8'
       encoding: 'default',
-      // If false, throw Errors.ITEM_NOT_FOUND.
-      ignoreEntryNotFoundError: true,
       // If specified, change base path of paths used by spine and css.
       // e.g. '../Images/cover.jpg' -> '{basePath}/OEBPS/Images/cover.jpg'
       basePath: undefined,
@@ -136,7 +134,6 @@ class EpubParser {
   static get readOptionTypes() {
     return {
       encoding: 'String|Undefined',
-      ignoreEntryNotFoundError: 'Boolean',
       basePath: 'String|Undefined',
       spine: {
         extractBody: 'Boolean',
@@ -202,10 +199,7 @@ class EpubParser {
 
       const entry = findEntry(item.href, entries);
       if (!isExists(entry)) {
-        if (options.ignoreEntryNotFoundError) {
-          return undefined;
-        }
-        throw Errors.ITEM_NOT_FOUND;
+        return undefined;
       }
 
       const encoding = readOptions.encoding !== 'default' ? readOptions.encoding : item.defaultEncoding;
