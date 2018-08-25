@@ -179,7 +179,7 @@ Or throw exception.
 - mediaType: *string?*
 - size: *number?*
 - isFileExists: *boolean* (**size !== undefined**)
-- defaultEncoding: *string?*
+- defaultEncoding: *string?* (**Default: undefined**)
 
 <a id="ncxItem"></a>
 
@@ -217,7 +217,7 @@ Or throw exception.
 <a id="deadItem"></a>
 
 #### [DeadItem](./src/model/DeadItem.js) (extend [Item](#item))
-- raw: *Object*
+- reason: *string* (**Default: DeadItem.Reason.UNDEFINED**)
 
 <a id="navPoint"></a>
 
