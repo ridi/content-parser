@@ -6,7 +6,7 @@ import {
   isUrl,
   stringContains,
   mergeObjects,
-  removeLastPathComponent,
+  safeDirname,
   safePathJoin,
 } from '../utils';
 
@@ -47,7 +47,7 @@ export default function spineLoader(spineItem, file, options) {
   const document = parse(file);
   const stringifyOptions = mergeObjects(parseDefaults, {
     basePath: isExists(options.basePath)
-      ? safePathJoin(options.basePath, removeLastPathComponent(spineItem.href)) : undefined,
+      ? safePathJoin(options.basePath, safeDirname(spineItem.href)) : undefined,
   });
 
   if (options.spine.extractBody) {

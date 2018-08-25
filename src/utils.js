@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import fs from 'fs';
+import { orderBy } from 'natural-orderby';
 import path from 'path';
 
 import Errors from './errors';
@@ -76,16 +77,17 @@ const tildeError = '\'~/\' was recognized as a directory name. '
   + 'If you want the correct behavior, should use \'process.env.HOME\'.';
 
 export function createDirectory(target) {
+  const result = path.parse(target);
   const components = target.split(path.sep);
   let current = '';
-  if (target.startsWith(path.sep)) {
-    current = path.sep;
+  if (isExists(result.root) && result.root.length > 0) {
+    current = result.root;
   }
   if (target.startsWith('~')) {
     // eslint-disable-next-line no-console
     console.error(tildeError);
   }
-  for (let idx = 0; idx < components.length; idx += 1) {
+  for (let idx = current.length > 0 ? 1 : 0; idx < components.length; idx += 1) {
     current = path.join(current, components[idx]);
     if (!fs.existsSync(current)) {
       fs.mkdirSync(current);
@@ -111,26 +113,30 @@ export function removeDirectory(target) {
   }
 }
 
-export function removeLastPathComponent(target) {
-  const components = target.split(path.sep);
-  components.pop();
-  if (target.startsWith(path.sep)) {
-    return `${path.sep}${components.join(path.sep)}`;
-  }
-  return components.join(path.sep);
+export function safePath(target) {
+  const sep = process.platform === 'win32' ? `${path.sep}${path.sep}` : path.sep;
+  return target.replace(new RegExp(sep, 'g'), '/');
+}
+
+export function safePathNormalize(target) {
+  return path.normalize(target);
+}
+
+export function safeDirname(target) {
+  return safePath(path.dirname(target));
 }
 
 export function safePathJoin(...components) {
   if (components.findIndex(component => !isString(component)) >= 0) {
     return '';
   }
-  return path.join(...components);
+  return safePath(path.join(...components));
 }
 
 export function getPathes(target) {
-  return fs.readdirSync(target).reduce((subpathes, subpath) => {
+  return orderBy(fs.readdirSync(target).reduce((subpathes, subpath) => {
     const fullPath = path.join(target, subpath);
     const isDirectory = fs.statSync(fullPath).isDirectory();
     return subpathes.concat(isDirectory ? getPathes(fullPath) : [fullPath]);
-  }, []);
+  }, []));
 }

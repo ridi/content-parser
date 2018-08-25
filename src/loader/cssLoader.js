@@ -4,7 +4,7 @@ import {
   isExists,
   isUrl,
   stringContains,
-  removeLastPathComponent,
+  safeDirname,
   safePathJoin,
 } from '../utils';
 
@@ -57,7 +57,7 @@ function handleRuleBlock(declarationList, options, cssItem) {
       if (type === 'Url' && value.type === 'String') {
         let url = value.value.replace(/['"]/g, '');
         if (isExists(options.basePath) && !isUrl(url)) {
-          url = safePathJoin(options.basePath, removeLastPathComponent(cssItem.href), url);
+          url = safePathJoin(options.basePath, safeDirname(cssItem.href), url);
         }
         oldItem = item;
         newItem = List.createItem({ type: 'Url', value: { type: 'String', value: `"${url}"` } });

@@ -26,7 +26,7 @@
     "build": "yarn lint && yarn clean && mkdir lib && cross-env BABEL_ENV=production babel src --out-file lib/index.js",
     "watch": "yarn build -- --watch",
     "test": "cross-env BABEL_ENV=production && yarn lint && yarn cover",
-    "cover": "istanbul cover _mocha -- --require babel-core/register --require babel-polyfill --recursive",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --require babel-polyfill --recursive",
     "lint": "eslint src"
   },
   "dependencies": {
@@ -34,7 +34,8 @@
     "css-tree": "^1.0.0-alpha.29",
     "fast-xml-parser": "^3.11.2",
     "he": "^1.1.1",
-    "himalaya": "^1.1.0"
+    "himalaya": "^1.1.0",
+    "natural-orderby": "^1.0.2"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",

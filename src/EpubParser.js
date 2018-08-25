@@ -29,7 +29,9 @@ import {
   validateOptions,
   createDirectory,
   removeDirectory,
-  removeLastPathComponent,
+  safePath,
+  safePathNormalize,
+  safeDirname,
   safePathJoin,
   getPathes,
 } from './utils';
@@ -239,7 +241,7 @@ class EpubParser {
     }
     return getPathes(input).reduce((entries, fullPath) => { // eslint-disable-line arrow-body-style
       return entries.concat([{
-        entryName: fullPath.substring(input.length + path.sep.length),
+        entryName: safePath(fullPath).substring(safePathNormalize(input).length + path.sep.length),
         getFile: encoding => fs.readFileSync(fullPath, encoding),
         getSize: () => fs.lstatSync(fullPath).size,
       }]);
@@ -313,8 +315,8 @@ class EpubParser {
         throw Errors.META_INF_NOT_FOUND;
       }
 
-      context.opfPath = opfPath;
-      context.basePath = path.dirname(opfPath);
+      context.opfPath = safePath(opfPath);
+      context.basePath = safeDirname(opfPath);
 
       resolve(context);
     });
@@ -425,7 +427,7 @@ class EpubParser {
         if (isExists(item.href) && item.href.length > 0) {
           rawItem.href = safePathJoin(context.basePath, item.href);
         } else {
-          rawItem.href = item.href;
+          rawItem.href = safePath(item.href);
         }
         rawItem.mediaType = item['media-type'];
         rawItem.itemType = this._getItemType(rawItem.mediaType);
@@ -453,8 +455,7 @@ class EpubParser {
               rawItem.styles = [];
               this._parseStyle(itemEntry, (style) => {
                 if (isExists(style.href)) {
-                  const basePath = removeLastPathComponent(rawItem.href);
-                  rawItem.styles.push(safePathJoin(basePath, style.href));
+                  rawItem.styles.push(safePathJoin(safeDirname(rawItem.href), style.href));
                 } else {
                   const namespace = `${options.styleNamespacePrefix}${cssIdx}`;
                   const href = `${rawItem.href}_${namespace}`;

@@ -11,15 +11,15 @@ import {
   mergeObjects,
   createDirectory,
   removeDirectory,
-  removeLastPathComponent,
+  safeDirname,
   safePathJoin,
   getPathes,
 } from '../src/utils';
 import Book from '../src/model/Book';
 
 const Files = {
-  DEFAULT: path.join('.', 'test', 'res', 'default'),
-  SELF: path.join('.', 'test', 'utils.spec.js'),
+  DEFAULT: './test/res/default',
+  SELF: './test/utils.spec.js',
 };
 
 should(); // Initialize should
@@ -116,28 +116,16 @@ describe('Util test', () => {
       let current = item.createPath;
       while (current.length > item.removePath.length) {
         fs.existsSync(current).should.be.false;
-        current = removeLastPathComponent(current);
+        current = safeDirname(current);
       }
     });
   });
 
-  it('removeLastPathComponent test', () => {
-    const sep = path.sep;
-    removeLastPathComponent(`temp${sep}a${sep}b${sep}c`).should.equal(`temp${sep}a${sep}b`);
-    removeLastPathComponent(`temp${sep}a${sep}b`).should.equal(`temp${sep}a`);
-    removeLastPathComponent(`temp${sep}a`).should.equal('temp');
-    removeLastPathComponent('temp').should.equal('');
-    removeLastPathComponent('').should.equal('');
-    removeLastPathComponent('/tmp').should.equal('/');
-    removeLastPathComponent('/').should.equal('/');
-  });
-
   it('safePathJoin test', () => {
-    const sep = path.sep;
-    safePathJoin('temp', 'a', 'b', 'c').should.equal(`temp${sep}a${sep}b${sep}c`);
+    safePathJoin('temp', 'a', 'b', 'c').should.equal(`temp/a/b/c`);
     safePathJoin('temp', undefined).should.equal('');
-    safePathJoin('temp', '..', '..', 'a', 'b').should.equal(`..${sep}a${sep}b`);
-    safePathJoin('..', '..', 'temp').should.equal(`..${sep}..${sep}temp`);
+    safePathJoin('temp', '..', '..', 'a', 'b').should.equal(`../a/b`);
+    safePathJoin('..', '..', 'temp').should.equal(`../../temp`);
   });
 
   it('getPathes test', () => {
@@ -153,7 +141,7 @@ describe('Util test', () => {
       path.join('OEBPS', 'toc.ncx'),
       path.join('mimetype'),
     ];
-    const offset = Files.DEFAULT.length + path.sep.length;
+    const offset = path.normalize(Files.DEFAULT).length + path.sep.length;
     const pathes = getPathes(Files.DEFAULT).map(subpath => subpath.substring(offset));
     pathes.should.deep.equal(expectedPathes);
   });
