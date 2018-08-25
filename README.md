@@ -15,6 +15,7 @@
 - [ ] Add encryption and decryption function
 - [ ] Add `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength` options
 - [ ] Add `readOptions.spine.minify` and `readOptions.css.minify` options
+- [ ] Add `readOptions.removeExternalRefs` options
 - [ ] Support for EPUB3
 - [ ] Support for CLI
 - [ ] Support for other [OCF](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) spec (manifest.xml, metadata.xml, signatures.xml, encryption.xml, etc)
