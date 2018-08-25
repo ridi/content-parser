@@ -16,6 +16,7 @@ const Files = {
   EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH: './test/res/expectedExtractStylesWithBasePath.json',
   EXPECTED_EXTRACT_BODY: './test/res/expectedExtractBody.json',
   EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR: './test/res/expectedExtractBodyWithNoAdaptor.json',
+  EXPECTED_READ_SPIN: './test/res/expectedReadSpine.xhtml',
   EXPECTED_READ_SPINE_WITH_BASE_PATH: './test/res/expectedReadSpineWithBasePath.xhtml',
 };
 

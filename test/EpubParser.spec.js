@@ -281,24 +281,27 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
     });
 
     it('Read single item', () => {
-      const expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
-      const options = { basePath: './a/b/c' };
+      let expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
+      let options = { encoding: 'utf8', basePath: './a/b/c' };
       parser.read(book.spines[0], options).should.equal(expected);
+
+      expected = fs.readFileSync(Files.EXPECTED_READ_SPIN, 'utf8');
+      parser.read(book.spines[0]).should.equal(expected);
     });
 
     it('Read multiple item', () => {
       const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES));
-      const options = { encoding: 'utf8', css: { removeTags: ['html', 'body'] } };
+      const options = { css: { removeTags: ['html', 'body'] } };
       parser.read(book.styles, options).should.deep.equal(expectedList);
     });
 
     it('Extract body from SpineItem', () => {
       let expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY, 'utf8'));
-      let options = { encoding: 'utf8', spine: { extractBody: true } };
+      let options = { spine: { extractBody: true } };
       parser.read(book.spines[0], options).should.deep.equal(expected);
 
       expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR, 'utf8'));
-      options = { encoding: 'utf8', spine: { extractBody: true, extractAdapter: undefined } };
+      options = { spine: { extractBody: true, extractAdapter: undefined } };
       parser.read(book.spines[0], options).should.deep.equal(expected);
     });
 
