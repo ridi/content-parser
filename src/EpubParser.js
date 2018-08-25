@@ -17,6 +17,7 @@ import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
 import spineLoader from './loader/spineLoader';
+import SvgItem from './model/SvgItem';
 import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
 
 import {
@@ -317,6 +318,7 @@ class EpubParser {
   }
 
   _getItemType(mediaType) {
+    // See: http://www.idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7
     const types = {
       'application/font': FontItem,
       'application/font-otf': FontItem,
@@ -335,7 +337,7 @@ class EpubParser {
       'image/jpeg': ImageItem,
       'image/png': ImageItem,
       'image/bmp': ImageItem, // Not recommended in EPUB spec.
-      'image/svg+xml': ImageItem,
+      'image/svg+xml': SvgItem,
       'text/css': CssItem,
     };
     const type = types[mediaType.toLowerCase()];

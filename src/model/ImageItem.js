@@ -5,7 +5,9 @@ class ImageItem extends Item {
   constructor(rawObj) {
     super(rawObj);
     this.isCover = rawObj.isCover || false;
-    Object.freeze(this);
+    if (this.constructor === ImageItem) {
+      Object.freeze(this);
+    }
   }
 
   toRaw() {

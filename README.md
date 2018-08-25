@@ -211,6 +211,10 @@ Or throw exception.
 #### [ImageItem](./src/model/ImageItem.js) (extend [Item](#item))
 - isCover: *boolean* (**Default: false**)
 
+<a id="svgItem"></a>
+
+#### [SvgItem](./src/model/SvgItem.js) (extend [ImageItem](#imageItem))
+
 <a id="fontItem"></a>
 
 #### [FontItem](./src/model/FontItem.js) (extend [Item](#item))
