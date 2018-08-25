@@ -9,36 +9,17 @@ import Author from '../src/model/Author';
 import Book from '../src/model/Book';
 import Context from '../src/model/Context';
 import DateTime from '../src/model/DateTime';
+import Files from './files';
 import Guide from '../src/model/Guide';
 import Identifier from '../src/model/Identifier';
 import InlineCssItem from '../src/model/InlineCssItem';
 import Item from '../src/model/Item';
 import NcxItem from '../src/model/NcxItem'
 import SpineItem from '../src/model/SpineItem';
+import validationBook from './validationBook';
 
 chai.use(chaiAsPromised);
 should(); // Initialize should
-
-const Files = {
-  DEFAULT: './test/res/default.epub',
-  UNZIPPED_DEFAULT: './test/res/default',
-  EXPECTED_DEFAULT_CONTEXT: './test/res/expectedDefaultContext.json',
-  EXPECTED_DEFAULT_BOOK: './test/res/expectedDefaultBook.json',
-  INVALID_PACKAGE: './test/res/invalidPackage.epub',
-  INVALID_XML: './test/res/invalidXml.epub',
-  NCX_MISSING: './test/res/ncxMissing.epub',
-  META_INF_MISSING: './test/res/metainfMissing.epub',
-  OPF_MISSING: './test/res/opfMissing.epub',
-  EXTRACT_STYLE: './test/res/extractStyle.epub',
-  UNZIPPED_EXTRACT_STYLE: './test/res/extractStyle',
-  EXPECTED_EXTRACT_STYLE_CONTEXT: './test/res/expectedExtractStyleContext.json',
-  EXPECTED_EXTRACT_STYLE_BOOK: './test/res/expectedExtractStyleBook.json',
-  EXPECTED_EXTRACT_STYLES: './test/res/expectedExtractStyles.json',
-  EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH: './test/res/expectedExtractStylesWithBasePath.json',
-  EXPECTED_EXTRACT_BODY: './test/res/expectedExtractBody.json',
-  EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR: './test/res/expectedExtractBodyWithNoAdaptor.json',
-  EXPECTED_READ_SPINE_WITH_BASE_PATH: './test/res/expectedReadSpineWithBasePath.xhtml',
-};
 
 describe('Input test', () => {
   it('Input is epub path', () => {
@@ -80,142 +61,6 @@ describe('Options validation test', () => {
     });
   });
 });
-
-const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK));
-const validationDefalutBook = (book) => {
-  book.titles.should.have.lengthOf(expectedBook.titles.length);
-  book.titles.forEach((title, idx) => {
-    title.should.equal(expectedBook.titles[idx]);
-  });
-
-  book.creators.should.have.lengthOf(expectedBook.creators.length);
-  book.creators.forEach((creator, idx) => {
-    const expectedCreator = expectedBook.creators[idx];
-    creator.name.should.equal(expectedCreator.name);
-    creator.role.should.equal(expectedCreator.role);
-  });
-
-  book.subjects.should.have.lengthOf(expectedBook.subjects.length);
-  book.subjects.forEach((subject, idx) => {
-    subject.should.equal(expectedBook.subjects[idx]);
-  });
-
-  book.description.should.equal(expectedBook.description);
-
-  book.publisher.should.equal(expectedBook.publisher);
-
-  book.contributors.should.have.lengthOf(expectedBook.contributors.length);
-  book.contributors.forEach((contributor, idx) => {
-    const expectedContributor = expectedBook.contributors[idx];
-    contributor.name.should.equal(expectedContributor.name);
-    contributor.role.should.equal(expectedContributor.role);
-  });
-
-  book.dates.should.have.lengthOf(expectedBook.dates.length);
-  book.dates.forEach((date, idx) => {
-    const expectedDate = expectedBook.dates[idx];
-    date.value.should.equal(expectedDate.value);
-    date.event.should.equal(expectedDate.event);
-  });
-
-  book.type.should.equal(expectedBook.type);
-
-  book.format.should.equal(expectedBook.format);
-
-  book.identifiers.should.have.lengthOf(expectedBook.identifiers.length);
-  book.identifiers.forEach((identifier, idx) => {
-    const expectedIdentifier = expectedBook.identifiers[idx];
-    identifier.value.should.equal(expectedIdentifier.value);
-    identifier.scheme.should.equal(expectedIdentifier.scheme);
-  });
-
-  book.source.should.equal(expectedBook.source);
-  
-  book.language.should.equal(expectedBook.language);
-
-  book.relation.should.equal(expectedBook.relation);
-
-  book.coverage.should.equal(expectedBook.coverage);
-
-  book.rights.should.equal(expectedBook.rights);
-
-  book.epubVersion.should.equal(expectedBook.epubVersion);
-
-  book.items.should.have.lengthOf(expectedBook.items.length);
-  book.items.forEach((item, idx) => {
-    const expectedItem = expectedBook.items[idx];
-    item.id.should.equal(expectedItem.id);
-    item.href.should.equal(expectedItem.href);
-    item.mediaType.should.equal(expectedItem.mediaType);
-    item.size.should.not.null;
-  });
-
-  book.ncx.navPoints.should.have.lengthOf(expectedBook.ncx.navPoints.length);
-  book.ncx.navPoints.forEach((navPoint, idx) => {
-    const expectedNavPoint = expectedBook.ncx.navPoints[idx];
-    navPoint.id.should.equal(expectedNavPoint.id);
-    navPoint.label.should.equal(expectedNavPoint.label);
-    navPoint.src.should.equal(expectedNavPoint.src);
-    if (isExists(navPoint.anchor)) {
-      navPoint.anchor.should.equal(expectedNavPoint.anchor);
-    } else {
-      assert(!isExists(navPoint.anchor));
-    }
-    navPoint.depth.should.equal(expectedNavPoint.depth);
-    navPoint.children.should.have.lengthOf(expectedNavPoint.children.length);
-    navPoint.children.forEach((childNavPoint, idx) => {
-      const expectedChildNavPoint = expectedNavPoint.children[idx];
-      childNavPoint.id.should.equal(expectedChildNavPoint.id);
-      childNavPoint.children.should.have.lengthOf(expectedChildNavPoint.children.length);
-    });
-    if (navPoint.spine) {
-      navPoint.spine.id.should.equal(expectedNavPoint.spine.id);
-    } else {
-      assert(!isExists(navPoint.spine));
-    }
-  });
-
-  book.spines.should.have.lengthOf(expectedBook.spines.length);
-  book.spines.forEach((spine, idx) => {
-    const expectedSpine = expectedBook.spines[idx];
-    spine.id.should.equal(expectedSpine.id);
-    spine.spineIndex.should.equal(expectedSpine.spineIndex);
-    spine.isLinear.should.equal(expectedSpine.isLinear);
-    assert(!isExists(spine.styles));
-  });
-
-  book.fonts.should.have.lengthOf(expectedBook.fonts.length);
-  book.fonts.forEach((font, idx) => {
-    font.id.should.equal(expectedBook.fonts[idx].id);
-  });
-
-  book.cover.id.should.equal(expectedBook.cover.id);
-
-  book.images.should.have.lengthOf(expectedBook.images.length);
-  book.images.forEach((image, idx) => {
-    image.id.should.equal(expectedBook.images[idx].id);
-  });
-
-  book.styles.should.have.lengthOf(expectedBook.styles.length);
-  book.styles.forEach((style, idx) => {
-    const expectedStyle = expectedBook.styles[idx];
-    style.id.should.equal(expectedStyle.id);
-    assert(!isExists(style.namespace));
-  });
-
-  book.guide.should.have.lengthOf(expectedBook.guide.length);
-  book.guide.forEach((guide, idx) => {
-    const expectedGuide = expectedBook.guide[idx];
-    guide.title.should.equal(expectedGuide.title);
-    guide.type.should.equal(expectedGuide.type);
-    guide.item.id.should.equal(expectedGuide.item.id);
-    if (guide.item) {
-      guide.item.id.should.equal(expectedGuide.item.id);
-    } else {
-      assert(!isExists(guide.item));
-    }
-  });
-};
 
 describe('Parsing method test', () => {
   it('META-INF not found', () => {
@@ -372,7 +217,7 @@ describe('Parsing method test', () => {
 
   it('_createBook test', () => {
     return _parser._createBook(_context).then((book) => {
-      validationDefalutBook(book);
+      validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
     });
   });
 });
@@ -381,7 +226,7 @@ describe('Parsing test by input', () => {
   it('Input is epub path', () => {
     return new EpubParser(Files.DEFAULT).parse().then((book) => {
       book.should.be.an.instanceOf(Book);
-      validationDefalutBook(book);
+      validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
     });
   });
 
@@ -389,14 +234,14 @@ describe('Parsing test by input', () => {
     const buffer = fs.readFileSync(Files.DEFAULT);
     return new EpubParser(buffer).parse().then((book) => {
       book.should.be.an.instanceOf(Book);
-      validationDefalutBook(book);
+      validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
     });
   });
 
   it('Input is unzipped epub path', () => {
     return new EpubParser(Files.UNZIPPED_DEFAULT).parse().then((book) => {
       book.should.be.an.instanceOf(Book);
-      validationDefalutBook(book);
+      validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
     });
   });
 });
@@ -407,7 +252,7 @@ describe('Book serialization test', () => {
       book.should.be.an.instanceOf(Book);
       const rawBook = book.toRaw();
       const newBook = new Book(rawBook);
-      validationDefalutBook(newBook);
+      validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
     });
   });
 });

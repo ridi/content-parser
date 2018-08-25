@@ -16,11 +16,7 @@ import {
   getPathes,
 } from '../src/utils';
 import Book from '../src/model/Book';
-
-const Files = {
-  DEFAULT: './test/res/default',
-  SELF: './test/utils.spec.js',
-};
+import Files from './files';
 
 should(); // Initialize should
 
@@ -44,7 +40,7 @@ describe('Util test', () => {
   });
 
   it('isBuffer test', () => {
-    const buffer = fs.readFileSync(Files.SELF);
+    const buffer = fs.readFileSync(Files.DEFAULT);
     isBuffer(buffer).should.be.true;
     isBuffer({}).should.be.false;
     isBuffer(new Book()).should.be.false;
@@ -89,26 +85,25 @@ describe('Util test', () => {
     isString(undefined).should.be.false;
   });
 
-  const list = [
-    {
-      createPath: path.join('.', 'temp', 'a', 'b', 'c'),
-      removePath: path.join('.', 'temp'),
-    },
-    {
-      createPath: path.join('temp', '..', 'temp', 'a', 'b', 'c'),
-      removePath: path.join('temp'),
-    },
-    {
-      createPath: path.join('~', 'temp', 'a', 'b', 'c'),
-      removePath: path.join('~'),
-    },
-    {
-      createPath: path.join(process.cwd(), 'temp', 'a', 'b', 'c'),
-      removePath: path.join(process.cwd(), 'temp'),
-    },
-  ];
   it('createDirectory and removeDirectory test', () => {
-    list.forEach((item) => {
+    [
+      {
+        createPath: path.join('.', 'temp', 'a', 'b', 'c'),
+        removePath: path.join('.', 'temp'),
+      },
+      {
+        createPath: path.join('temp', '..', 'temp', 'a', 'b', 'c'),
+        removePath: path.join('temp'),
+      },
+      {
+        createPath: path.join('~', 'temp', 'a', 'b', 'c'),
+        removePath: path.join('~'),
+      },
+      {
+        createPath: path.join(process.cwd(), 'temp', 'a', 'b', 'c'),
+        removePath: path.join(process.cwd(), 'temp'),
+      },
+    ].forEach((item) => {
       createDirectory(item.createPath);
       fs.existsSync(item.createPath).should.be.true;
       fs.lstatSync(item.createPath).isDirectory().should.be.true;
@@ -141,8 +136,8 @@ describe('Util test', () => {
       path.join('OEBPS', 'toc.ncx'),
       path.join('mimetype'),
     ];
-    const offset = path.normalize(Files.DEFAULT).length + path.sep.length;
-    const pathes = getPathes(Files.DEFAULT).map(subpath => subpath.substring(offset));
+    const offset = path.normalize(Files.UNZIPPED_DEFAULT).length + path.sep.length;
+    const pathes = getPathes(Files.UNZIPPED_DEFAULT).map(subpath => subpath.substring(offset));
     pathes.should.deep.equal(expectedPathes);
   });
 });
