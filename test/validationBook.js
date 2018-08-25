@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { isExists } from '../src/utils';
 
-export default function validationBook(book, expectedBook) {
+export default function validationBook(book, expectedBook, options = {}) {
   book.titles.should.have.lengthOf(expectedBook.titles.length);
   book.titles.forEach((title, idx) => {
     title.should.equal(expectedBook.titles[idx]);
@@ -67,7 +67,11 @@ export default function validationBook(book, expectedBook) {
     item.id.should.equal(expectedItem.id);
     item.href.should.equal(expectedItem.href);
     item.mediaType.should.equal(expectedItem.mediaType);
-    item.size.should.not.null;
+    if (isExists(item.size)) {
+      item.isFileExists.should.true;
+    } else {
+      item.isFileExists.should.false;
+    }
   });
 
   book.ncx.navPoints.should.have.lengthOf(expectedBook.ncx.navPoints.length);
@@ -101,7 +105,14 @@ export default function validationBook(book, expectedBook) {
     spine.id.should.equal(expectedSpine.id);
     spine.spineIndex.should.equal(expectedSpine.spineIndex);
     spine.isLinear.should.equal(expectedSpine.isLinear);
-    assert(!isExists(spine.styles));
+    if (options.useStyleNamespace) {
+      spine.styles.forEach((style, idx) => {
+        const expectedStyle = expectedSpine.styles[idx];
+        style.namespace.should.equal(expectedStyle.namespace);
+      });
+    } else {
+      assert(!isExists(spine.styles));
+    }
   });
 
   book.fonts.should.have.lengthOf(expectedBook.fonts.length);
@@ -120,7 +131,11 @@ export default function validationBook(book, expectedBook) {
   book.styles.forEach((style, idx) => {
     const expectedStyle = expectedBook.styles[idx];
     style.id.should.equal(expectedStyle.id);
-    assert(!isExists(style.namespace));
+    if (options.useStyleNamespace) {
+      style.namespace.should.equal(expectedStyle.namespace);
+    } else {
+      assert(!isExists(style.namespace));
+    }
   });
 
   book.guide.should.have.lengthOf(expectedBook.guide.length);

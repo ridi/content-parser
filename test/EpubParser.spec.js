@@ -9,6 +9,7 @@ import Author from '../src/model/Author';
 import Book from '../src/model/Book';
 import Context from '../src/model/Context';
 import DateTime from '../src/model/DateTime';
+import DeadItem from '../src/model/DeadItem';
 import Files from './files';
 import Guide from '../src/model/Guide';
 import Identifier from '../src/model/Identifier';
@@ -172,7 +173,14 @@ describe('Parsing method test', () => {
         item.href.should.equal(expectedItem.href);
         item.mediaType.should.equal(expectedItem.mediaType);
         item.itemType.name.should.equal(expectedItem.itemType);
-        item.size.should.not.null;
+        if (item.itemType === DeadItem) {
+          item.reason.should.equal(expectedItem.reason);
+          if (item.reason === DeadItem.Reason.NOT_EXISTS) {
+            assert(!isExists(item.size));
+          }
+        } else {
+          item.size.should.not.null;
+        }
         if (item.spineIndex > SpineItem.UNKNOWN_INDEX) {
           item.spineIndex.should.equal(current);
           current += 1;

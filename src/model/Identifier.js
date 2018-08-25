@@ -23,6 +23,8 @@ Identifier.Schemes = Object.freeze({
   UNDEFINED: 'undefined',
   DOI: 'doi',
   ISBN: 'isbn',
+  ISBN13: 'isbn13',
+  ISBN10: 'isbn10',
   ISSN: 'issn',
   UUID: 'uuid',
   URI: 'uri',

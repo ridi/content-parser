@@ -346,7 +346,7 @@ class EpubParser {
     };
     const type = types[mediaType.toLowerCase()];
     if (!isExists(type)) {
-      return Item;
+      return DeadItem;
     }
     return type;
   }
@@ -431,6 +431,9 @@ class EpubParser {
         }
         rawItem.mediaType = item['media-type'];
         rawItem.itemType = this._getItemType(rawItem.mediaType);
+        if (rawItem.itemType === DeadItem) {
+          rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
+        }
 
         const itemEntry = findEntry(rawItem.href, context.entries);
         if (isExists(itemEntry)) {
@@ -438,13 +441,14 @@ class EpubParser {
           if (rawItem.itemType === SpineItem) {
             const ref = itemrefs.find(itemref => itemref.idref === rawItem.id);
             if (isExists(ref)) {
-              rawItem.isLinear = isExists(ref.linear) ? ref.linear : true;
+              rawItem.isLinear = isExists(ref.linear) ? JSON.parse(ref.linear) : true;
               if (options.ignoreLinear || rawItem.isLinear) {
                 rawItem.spineIndex = spineIndex;
                 spineIndex += 1;
               }
             } else {
               rawItem.itemType = DeadItem;
+              rawItem.reason = DeadItem.Reason.NOT_SPINE;
             }
           }
           if (options.useStyleNamespace) {
@@ -486,10 +490,12 @@ class EpubParser {
           } else if (rawItem.itemType === NcxItem) {
             if (rawItem.id !== tocId) {
               rawItem.itemType = DeadItem;
+              rawItem.reason = DeadItem.Reason.NOT_NCX;
             }
           }
         } else {
           rawItem.itemType = DeadItem;
+          rawItem.reason = DeadItem.Reason.NOT_EXISTS;
         }
 
         rawBook.items.push(rawItem);

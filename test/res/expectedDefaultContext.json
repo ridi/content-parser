@@ -25,13 +25,14 @@
     ],
     "dates": [
       {
-        "value": "2018-08-09",
+        "value": "2018-08-25",
         "event": "modification"
       },
       {
         "value": "2018-08-07",
         "event": "creation"
-      }
+      },
+      "2018-08-07"
     ],
     "type": "Type",
     "format": "Format",
@@ -40,6 +41,7 @@
         "value": "0-306-40615-2",
         "scheme": "ISBN"
       },
+      "256266",
       {
         "id": "BookId",
         "value": "urn:uuid:1379039a-3ea4-4071-9ce8-2b0c29fc0030",
@@ -55,7 +57,7 @@
     "metas": [
       {
         "name": "Sigil version",
-        "content": "0.9.9"
+        "content": "0.9.10"
       },
       {
         "name": "cover",
@@ -257,6 +259,13 @@
         "isLinear": true
       },
       {
+        "id": "Section0003.xhtml",
+        "href": "OEBPS/Text/Section0003.xhtml",
+        "mediaType": "application/xhtml+xml",
+        "itemType": "DeadItem",
+        "reason": "not_exists"
+      },
+      {
         "id": "Style0001.css",
         "href": "OEBPS/Styles/Style0001.css",
         "mediaType": "text/css",
@@ -277,6 +286,47 @@
         "size": 1,
         "itemType": "ImageItem",
         "isCover": true
+      },
+      {
+        "id": "ridibooks.png",
+        "href": "OEBPS/Images/ridibooks.png",
+        "mediaType": "image/png",
+        "size": 1,
+        "itemType": "ImageItem"
+      },
+      {
+        "id": "Section0004.xhtml",
+        "href": "OEBPS/Text/Section0004.xhtml",
+        "mediaType": "application/xhtml+xml",
+        "size": 1,
+        "itemType": "SpineItem",
+        "spineIndex": 3,
+        "isLinear": false
+      },
+      {
+        "id": "Section0005.xhtml",
+        "href": "OEBPS/Text/Section0005.xhtml",
+        "mediaType": "application/xhtml+xml",
+        "size": 1,
+        "itemType": "SpineItem",
+        "spineIndex": 4,
+        "isLinear": true
+      },
+      {
+        "id": "Section0006.xhtml",
+        "href": "OEBPS/Text/Section0006.xhtml",
+        "mediaType": "application/xhtml+xml",
+        "size": 1,
+        "itemType": "DeadItem",
+        "reason": "not_spine"
+      },
+      {
+        "id": "empty.mp4",
+        "href": "OEBPS/Video/empty.mp4",
+        "mediaType": "video/mp4",
+        "size": 1,
+        "itemType": "DeadItem",
+        "reason": "not_support_type"
       }
     ],
     "guide": [
