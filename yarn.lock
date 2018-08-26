@@ -109,10 +109,6 @@ acorn@^5.5.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.1.tgz#f095829297706a7c9776958c0afc8930a9b9d9d8"
 
-adm-zip@^0.4.11:
-  version "0.4.11"
-  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.11.tgz#2aa54c84c4b01a9d0fb89bb11982a51f13e3d62a"
-
 ajv-keywords@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"
@@ -2297,6 +2293,10 @@ node-pre-gyp@^0.10.0:
     rimraf "^2.6.1"
     semver "^5.3.0"
     tar "^4"
+
+node-stream-zip@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/node-stream-zip/-/node-stream-zip-1.7.0.tgz#26f766f6b34be00ba5bbe5d32a810feddb24f779"
 
 nopt@3.x:
   version "3.0.6"

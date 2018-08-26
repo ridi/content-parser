@@ -1,7 +1,6 @@
 import { parse as parseHtml } from 'himalaya';
 import fs from 'fs';
 import path from 'path';
-import Zip from 'adm-zip';
 
 import Book from './model/Book';
 import Context from './model/Context';
@@ -22,7 +21,6 @@ import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
 
 import {
   isArray,
-  isBuffer,
   isExists,
   isString,
   isUrl,
@@ -35,6 +33,7 @@ import {
   safeDirname,
   safePathJoin,
   getPathes,
+  openZip,
 } from './utils';
 
 const privateProps = new WeakMap();
@@ -65,7 +64,7 @@ class EpubParser {
       validateXml: false,
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
-      // If specified, uncompress to that path. (Only if input is buffer or file path of EPUB file.)
+      // If specified, uncompress to that path. (Only if input is EPUB file.)
       unzipPath: undefined,
       // If true, creates intermediate directories for unzipPath.
       createIntermediateDirectories: true,
@@ -156,7 +155,7 @@ class EpubParser {
       if (!fs.existsSync(input)) {
         throw Errors.PATH_NOT_FOUND;
       }
-    } else if (!isExists(input) || !isBuffer(input)) {
+    } else {
       throw Errors.INVALID_INPUT;
     }
     privateProps.set(this, { input });
@@ -174,69 +173,69 @@ class EpubParser {
   }
 
   read(target, options = {}) {
-    const items = isArray(target) ? target : [target];
-    if (items.find(item => !(item instanceof Item))) {
-      throw Errors.INVALID_ITEM;
-    }
+    return this._prepareRead(target, options)
+      .then((context) => { // eslint-disable-line arrow-body-style
+        return new Promise((resolve) => {
+          const {
+            targets, readOptions, entries, zip,
+          } = context;
+          const results = targets.map((item) => {
+            if (item instanceof InlineCssItem) {
+              return cssLoader(item, item.text, readOptions);
+            }
 
-    const error = validateOptions(options, EpubParser.readDefaultOptions, EpubParser.readOptionTypes);
-    if (isExists(error)) {
-      throw error;
-    }
+            const entry = findEntry(item.href, entries);
+            if (!isExists(entry)) {
+              return undefined;
+            }
 
-    const readOptions = mergeObjects(EpubParser.readDefaultOptions, options);
-    const { input } = this;
-    let entries;
-    if (isBuffer(input) || fs.lstatSync(input).isFile()) {
-      entries = this._getEntries(new Zip(input));
-    } else {
-      entries = this._getEntries(input);
-    }
+            const encoding = readOptions.encoding !== 'default' ? readOptions.encoding : item.defaultEncoding;
+            const file = entry.getFile(encoding);
+            if (item instanceof SpineItem) {
+              return spineLoader(item, file, readOptions);
+            }
+            if (item instanceof CssItem) {
+              return cssLoader(item, file, readOptions);
+            }
+            return file;
+          });
 
-    const results = items.map((item) => {
-      if (item instanceof InlineCssItem) {
-        return cssLoader(item, item.text, readOptions);
-      }
+          if (isExists(zip)) {
+            zip.close();
+          }
 
-      const entry = findEntry(item.href, entries);
-      if (!isExists(entry)) {
-        return undefined;
-      }
-
-      const encoding = readOptions.encoding !== 'default' ? readOptions.encoding : item.defaultEncoding;
-      const file = entry.getFile(encoding);
-      if (item instanceof SpineItem) {
-        return spineLoader(item, file, readOptions);
-      }
-      if (item instanceof CssItem) {
-        return cssLoader(item, file, readOptions);
-      }
-      return file;
-    });
-
-    if (isArray(target)) {
-      return results;
-    }
-    return results[0];
+          if (isArray(target)) {
+            resolve(results);
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }).catch((err) => {
+        throw err;
+      });
   }
 
   _getEntries(input) {
     if (!isString(input)) {
-      return input.getEntries().reduce((entries, entry) => { // eslint-disable-line arrow-body-style
+      return Object.values(input.entries()).reduce((entries, entry) => { // eslint-disable-line arrow-body-style
         return entries.concat([{
-          entryName: entry.entryName,
-          getFile: (encoding) => { // eslint-disable-line arrow-body-style
-            return isExists(encoding) ? entry.getData().toString(encoding) : entry.getData();
+          entryName: entry.name,
+          getFile: (encoding) => {
+            if (isExists(encoding)) {
+              return input.entryDataSync(entry).toString(encoding);
+            }
+            return input.entryDataSync(entry);
           },
-          getSize: () => entry.header.size,
-          method: entry.header.method,
-          extraLength: entry.header.extraLength,
+          getSize: () => entry.size,
+          method: entry.method,
+          extraLength: entry.extraLen,
         }]);
       }, []);
     }
-    return getPathes(input).reduce((entries, fullPath) => { // eslint-disable-line arrow-body-style
+    return getPathes(input).reduce((entries, fullPath) => {
+      const subPathOffset = safePathNormalize(input).length + path.sep.length;
       return entries.concat([{
-        entryName: safePath(fullPath).substring(safePathNormalize(input).length + path.sep.length),
+        entryName: safePath(fullPath).substring(subPathOffset),
         getFile: encoding => fs.readFileSync(fullPath, encoding),
         getSize: () => fs.lstatSync(fullPath).size,
       }]);
@@ -247,18 +246,57 @@ class EpubParser {
     return new Promise((resolve) => {
       const { input } = this;
       const context = new Context();
+
       const error = validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
       if (isExists(error)) {
         throw error;
-      } else if (isBuffer(input) || fs.lstatSync(input).isFile()) {
-        const zip = new Zip(input);
-        context.entries = this._getEntries(zip);
-        context.zip = zip;
-      } else {
-        context.entries = this._getEntries(input);
       }
       context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
-      resolve(context);
+
+      if (fs.lstatSync(input).isFile()) {
+        openZip(input).then((zip) => {
+          context.entries = this._getEntries(zip);
+          context.zip = zip;
+          resolve(context);
+        }).catch((err) => {
+          throw err;
+        });
+      } else {
+        context.entries = this._getEntries(input);
+        resolve(context);
+      }
+    });
+  }
+
+  _prepareRead(target, options = {}) {
+    return new Promise((resolve) => {
+      const targets = isArray(target) ? target : [target];
+      if (targets.find(item => !(item instanceof Item))) {
+        throw Errors.INVALID_ITEM;
+      }
+
+      const error = validateOptions(options, EpubParser.readDefaultOptions, EpubParser.readOptionTypes);
+      if (isExists(error)) {
+        throw error;
+      }
+
+      const readOptions = mergeObjects(EpubParser.readDefaultOptions, options);
+      const { input } = this;
+      if (fs.lstatSync(input).isFile()) {
+        openZip(input).then((zip) => {
+          const entries = this._getEntries(zip);
+          resolve({
+            targets, readOptions, entries, zip,
+          });
+        }).catch((err) => {
+          throw err;
+        });
+      } else {
+        const entries = this._getEntries(input);
+        resolve({
+          targets, readOptions, entries,
+        });
+      }
     });
   }
 
@@ -558,16 +596,28 @@ class EpubParser {
     return new Promise((resolve) => {
       const { options, zip } = context;
       const { unzipPath, removePreviousFile, createIntermediateDirectories } = options;
-      if (isExists(zip) && isExists(unzipPath)) {
-        if (removePreviousFile) {
-          removeDirectory(unzipPath);
+      if (isExists(zip)) {
+        if (isExists(unzipPath)) {
+          if (removePreviousFile) {
+            removeDirectory(unzipPath);
+          }
+          if (createIntermediateDirectories) {
+            createDirectory(unzipPath);
+          }
+          zip.extract(null, unzipPath, (err) => {
+            zip.close();
+            if (isExists(err)) {
+              throw err;
+            }
+            resolve(context);
+          });
+        } else {
+          zip.close();
+          resolve(context);
         }
-        if (createIntermediateDirectories) {
-          createDirectory(unzipPath);
-        }
-        zip.extractAllTo(unzipPath, false);
+      } else {
+        resolve(context);
       }
-      resolve(context);
     });
   }
 

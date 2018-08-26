@@ -1,4 +1,4 @@
-# epub-parser
+# @ridi/epub-parser
 
 > Common EPUB2 data parser for Ridibooks services written in ES6
 
@@ -28,41 +28,14 @@ npm install @ridi/epub-parser
 
 ## Usage
 
-Basic:
-
 ```js
 import EpubParser from '@ridi/epub-parser';
 
-const parser = new EpubParser('./foo/bar.epub');
+const parser = new EpubParser('./foo/bar.epub' or './unzippedPath');
 parser.parse().then((book) => {
-  const results = parser.read(book.spines);
-  ...
-});
-```
-
-Various inputs:
-
-```js
-import fs from 'fs';
-import EpubParser from '@ridi/epub-parser';
-
-// Unzipped path of EPUB file.
-new EpubParser('./foo/bar');
-
-// EPUB file buffer.
-const buffer = fs.readFileSync('./foo/bar.epub');
-new EpubParser(buffer);
-```
-
-Book to Object, Object to Book:
-
-```js
-import EpubParser from '@ridi/epub-parser';
-
-const parser = new EpubParser('./foo/bar.epub');
-parser.parse().then((book) => {
-  const rawBook = book.toRaw();
-  const newBook = new Book(rawBook);
+  parser.read(book.spines).then((results) => {
+    ...
+  });
   ...
 });
 ```
@@ -81,7 +54,7 @@ Or throw exception.
 
 ### read(target(s), readOptions)
 
-Returns `string` or `Object` or `string[]` or `Object[]` with:
+Returns `string` or `Object` or `string[]` or `Object[]` in `Promise` with:
 
 - `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
 
@@ -292,7 +265,7 @@ If false, stop parsing when NCX file not exists.
 ### unzipPath: *`string?`*
 
 If specified, uncompress to that path.
-> Only if input is buffer or file path of EPUB file.
+> Only if input is EPUB file.
 
 **Default:** `undefined`
 

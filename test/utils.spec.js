@@ -4,7 +4,6 @@ import path from 'path';
 
 import {
   isArray,
-  isBuffer,
   isExists,
   isObject,
   isString,
@@ -37,19 +36,6 @@ describe('Util test', () => {
     Array.isArray = undefined;
     isArray([]).should.be.true;
     Array.isArray = temp;
-  });
-
-  it('isBuffer test', () => {
-    const buffer = fs.readFileSync(Files.DEFAULT);
-    isBuffer(buffer).should.be.true;
-    isBuffer({}).should.be.false;
-    isBuffer(new Book()).should.be.false;
-    isBuffer('string').should.be.false;
-    isBuffer([]).should.be.false;
-    isBuffer(5).should.be.false;
-    isBuffer(false).should.be.false;
-    isBuffer(null).should.be.false;
-    isBuffer(undefined).should.be.false;
   });
 
   it('isExists test', () => {

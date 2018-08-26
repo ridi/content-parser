@@ -1,7 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import fs from 'fs';
 import { orderBy } from 'natural-orderby';
+import fs from 'fs';
 import path from 'path';
+import StreamZip from 'node-stream-zip';
 
 import Errors from './errors';
 
@@ -15,10 +16,6 @@ export function isArray(any) {
     return Array.isArray(any);
   }
   return Object.prototype.toString.call(any) === '[object Array]';
-}
-
-export function isBuffer(any) {
-  return Buffer.isBuffer(any);
 }
 
 export function isExists(any) {
@@ -139,4 +136,18 @@ export function getPathes(target) {
     const isDirectory = fs.statSync(fullPath).isDirectory();
     return subpathes.concat(isDirectory ? getPathes(fullPath) : [fullPath]);
   }, []));
+}
+
+export function openZip(target) {
+  return new Promise((resolve) => {
+    const zip = new StreamZip({ file: target });
+    zip.on('ready', () => {
+      resolve(zip);
+    });
+    zip.on('error', (err) => {
+      throw err;
+    });
+  }).catch((err) => {
+    throw err;
+  });
 }
