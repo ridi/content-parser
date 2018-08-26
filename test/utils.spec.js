@@ -13,6 +13,8 @@ import {
   safeDirname,
   safePathJoin,
   getPathes,
+  stringContains,
+  openZip,
 } from '../src/utils';
 import Book from '../src/model/Book';
 import Files from './files';
@@ -20,115 +22,185 @@ import Files from './files';
 should(); // Initialize should
 
 describe('Util test', () => {
-  it('isArray test', () => {
-    isArray(Array()).should.be.true;
-    isArray(new Array()).should.be.true;
-    isArray({}).should.be.false;
-    isArray(new Book()).should.be.false;
-    isArray('string').should.be.false;
-    isArray([]).should.be.true;
-    isArray(5).should.be.false;
-    isArray(false).should.be.false;
-    isArray(null).should.be.false;
-    isArray(undefined).should.be.false;
-
-    const temp = Array.isArray;
-    Array.isArray = undefined;
-    isArray([]).should.be.true;
-    Array.isArray = temp;
-  });
-
-  it('isExists test', () => {
-    isExists({}).should.be.true;
-    isExists(new Book()).should.be.true;
-    isExists('string').should.be.true;
-    isExists([]).should.be.true;
-    isExists(5).should.be.true;
-    isExists(false).should.be.true;
-    isExists(null).should.be.false;
-    isExists(undefined).should.be.false;
-  });
-
-  it('isObject test', () => {
-    isObject({}).should.be.true;
-    isObject(new Book()).should.be.true;
-    isObject('string').should.be.false;
-    isObject([]).should.be.false;
-    isObject(5).should.be.false;
-    isObject(false).should.be.false;
-    isObject(null).should.be.false;
-    isObject(undefined).should.be.false;
-  });
-
-  it('isString test', () => {
-    isString({}).should.be.false;
-    isString(new Book()).should.be.false;
-    isString('string').should.be.true;
-    isString([]).should.be.false;
-    isString(5).should.be.false;
-    isString(false).should.be.false;
-    isString(null).should.be.false;
-    isString(undefined).should.be.false;
-  });
-
-  it('createDirectory and removeDirectory test', () => {
-    [
-      {
-        createPath: path.join('.', 'temp', 'a', 'b', 'c'),
-        removePath: path.join('.', 'temp'),
-      },
-      {
-        createPath: path.join('temp', '..', 'temp', 'a', 'b', 'c'),
-        removePath: path.join('temp'),
-      },
-      {
-        createPath: path.join('~', 'temp', 'a', 'b', 'c'),
-        removePath: path.join('~'),
-      },
-      {
-        createPath: path.join(process.cwd(), 'temp', 'a', 'b', 'c'),
-        removePath: path.join(process.cwd(), 'temp'),
-      },
-    ].forEach((item) => {
-      createDirectory(item.createPath);
-      fs.existsSync(item.createPath).should.be.true;
-      fs.lstatSync(item.createPath).isDirectory().should.be.true;
-      removeDirectory(item.removePath);
-      let current = item.createPath;
-      while (current.length > item.removePath.length) {
-        fs.existsSync(current).should.be.false;
-        current = safeDirname(current);
-      }
+  describe('Type check', () => {
+    it('isArray', () => {
+      isArray(Array()).should.be.true;
+      isArray(new Array()).should.be.true;
+      isArray({}).should.be.false;
+      isArray(new Book()).should.be.false;
+      isArray('string').should.be.false;
+      isArray([]).should.be.true;
+      isArray(5).should.be.false;
+      isArray(false).should.be.false;
+      isArray(null).should.be.false;
+      isArray(undefined).should.be.false;
+  
+      const temp = Array.isArray;
+      Array.isArray = undefined;
+      isArray([]).should.be.true;
+      Array.isArray = temp;
+    });
+  
+    it('isExists', () => {
+      isExists({}).should.be.true;
+      isExists(new Book()).should.be.true;
+      isExists('string').should.be.true;
+      isExists([]).should.be.true;
+      isExists(5).should.be.true;
+      isExists(false).should.be.true;
+      isExists(null).should.be.false;
+      isExists(undefined).should.be.false;
+    });
+  
+    it('isObject', () => {
+      isObject({}).should.be.true;
+      isObject(new Book()).should.be.true;
+      isObject('string').should.be.false;
+      isObject([]).should.be.false;
+      isObject(5).should.be.false;
+      isObject(false).should.be.false;
+      isObject(null).should.be.false;
+      isObject(undefined).should.be.false;
+    });
+  
+    it('isString', () => {
+      isString({}).should.be.false;
+      isString(new Book()).should.be.false;
+      isString('string').should.be.true;
+      isString([]).should.be.false;
+      isString(5).should.be.false;
+      isString(false).should.be.false;
+      isString(null).should.be.false;
+      isString(undefined).should.be.false;
     });
   });
 
-  it('safePathJoin test', () => {
-    safePathJoin('temp', 'a', 'b', 'c').should.equal(`temp/a/b/c`);
-    safePathJoin('temp', undefined).should.equal('');
-    safePathJoin('temp', '..', '..', 'a', 'b').should.equal(`../a/b`);
-    safePathJoin('..', '..', 'temp').should.equal(`../../temp`);
+  describe('Directory manage', () => {
+    it('createDirectory and removeDirectory test', () => {
+      [
+        {
+          createPath: path.join('.', 'temp', 'a', 'b', 'c'),
+          removePath: path.join('.', 'temp'),
+        },
+        {
+          createPath: path.join('temp', '..', 'temp', 'a', 'b', 'c'),
+          removePath: path.join('temp'),
+        },
+        {
+          createPath: path.join('~', 'temp', 'a', 'b', 'c'),
+          removePath: path.join('~'),
+        },
+        {
+          createPath: path.join(process.cwd(), 'temp', 'a', 'b', 'c'),
+          removePath: path.join(process.cwd(), 'temp'),
+        },
+      ].forEach((item) => {
+        createDirectory(item.createPath);
+        fs.existsSync(item.createPath).should.be.true;
+        fs.lstatSync(item.createPath).isDirectory().should.be.true;
+        removeDirectory(item.removePath);
+        let current = item.createPath;
+        while (current.length > item.removePath.length) {
+          fs.existsSync(current).should.be.false;
+          current = safeDirname(current);
+        }
+      });
+    });
   });
 
-  it('getPathes test', () => {
-    const expectedPathes = [
-      path.join('META-INF', 'container.xml'),
-      path.join('OEBPS', 'Fonts', 'NotoSans-Regular.ttf'),
-      path.join('OEBPS', 'Images', 'ridibooks.png'),
-      path.join('OEBPS', 'Images', 'ridibooks_logo.png'),
-      path.join('OEBPS', 'Styles', 'Style0001.css'),
-      path.join('OEBPS', 'Text', 'Cover.xhtml'),
-      path.join('OEBPS', 'Text', 'Section0001.xhtml'),
-      path.join('OEBPS', 'Text', 'Section0002.xhtml'),
-      path.join('OEBPS', 'Text', 'Section0004.xhtml'),
-      path.join('OEBPS', 'Text', 'Section0005.xhtml'),
-      path.join('OEBPS', 'Text', 'Section0006.xhtml'),
-      path.join('OEBPS', 'Video', 'empty.mp4'),
-      path.join('OEBPS', 'content.opf'),
-      path.join('OEBPS', 'toc.ncx'),
-      path.join('mimetype'),
-    ];
-    const offset = path.normalize(Files.UNZIPPED_DEFAULT).length + path.sep.length;
-    const pathes = getPathes(Files.UNZIPPED_DEFAULT).map(subpath => subpath.substring(offset));
-    pathes.should.deep.equal(expectedPathes);
+  describe('Path utils', () => {
+    it('safeDirname test', () => {
+      safeDirname('temp\\a\\b\\c\\foo.epub').should.equal('temp/a/b/c');
+    });
+
+    it('safePathJoin test', () => {
+      safePathJoin('temp', 'a', 'b', 'c').should.equal('temp/a/b/c');
+      safePathJoin('temp', undefined).should.equal('');
+      safePathJoin('temp', '..', '..', 'a', 'b').should.equal('../a/b');
+      safePathJoin('..', '..', 'temp').should.equal('../../temp');
+    });
+  
+    it('getPathes test', () => {
+      const expectedPathes = [
+        path.join('META-INF', 'container.xml'),
+        path.join('OEBPS', 'Fonts', 'NotoSans-Regular.ttf'),
+        path.join('OEBPS', 'Images', 'ridibooks.png'),
+        path.join('OEBPS', 'Images', 'ridibooks_logo.png'),
+        path.join('OEBPS', 'Styles', 'Style0001.css'),
+        path.join('OEBPS', 'Text', 'Cover.xhtml'),
+        path.join('OEBPS', 'Text', 'Section0001.xhtml'),
+        path.join('OEBPS', 'Text', 'Section0002.xhtml'),
+        path.join('OEBPS', 'Text', 'Section0004.xhtml'),
+        path.join('OEBPS', 'Text', 'Section0005.xhtml'),
+        path.join('OEBPS', 'Text', 'Section0006.xhtml'),
+        path.join('OEBPS', 'Video', 'empty.mp4'),
+        path.join('OEBPS', 'content.opf'),
+        path.join('OEBPS', 'toc.ncx'),
+        path.join('mimetype'),
+      ];
+      const offset = path.normalize(Files.UNZIPPED_DEFAULT).length + path.sep.length;
+      const pathes = getPathes(Files.UNZIPPED_DEFAULT).map(subpath => subpath.substring(offset));
+      pathes.should.deep.equal(expectedPathes);
+    });
+  });
+
+  describe('Zip manage', () => {
+    it('Valid zip', () => {
+      return openZip(Files.DEFAULT).then((zip) => {
+        zip.should.not.null;
+        zip.close();
+      });
+    });
+
+    it('Invalid zip', () => {
+      return openZip('?!').catch((err) => {
+        err.startsWith('ENOENT').should.true;
+      });
+    });
+  });
+
+  describe('etc', () => {
+    it('stringContains', () => {
+      const list = ['A', 'b', 'c'];
+      stringContains(list, 'a').should.true;
+      stringContains(list, 'b').should.true;
+      stringContains(list, 'C').should.true;
+    });
+
+    it('mergeObjects', () => {
+      const expect = {
+        a: true,
+        b: true,
+        c: {
+          d: 'd',
+          e: undefined,
+          f: {
+            g: 8,
+          },
+          h: '',
+        },
+      };
+      mergeObjects(
+        {
+          a: 'a',
+          b: true,
+          c: {
+            d: 5,
+            e: undefined,
+            f: {},
+          },
+        },
+        {
+          a: true,
+          c: {
+            d: 'd',
+            f: {
+              g: 8,
+            },
+            h: '',
+          },
+        },
+      ).should.deep.equal(expect);
+    });
   });
 });
