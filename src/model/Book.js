@@ -1,4 +1,4 @@
-import { isString, mergeObjects } from '../utils';
+import { isString, mergeObjects } from '../util';
 import Author from './Author';
 import CssItem from './CssItem';
 import DateTime from './DateTime';

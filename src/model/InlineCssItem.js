@@ -1,4 +1,4 @@
-import { mergeObjects } from '../utils';
+import { mergeObjects } from '../util';
 import CssItem from './CssItem';
 
 class InlineCssItem extends CssItem {

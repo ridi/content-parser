@@ -1,6 +1,4 @@
-import { assert } from 'chai';
-
-import { isExists } from '../src/utils';
+import { isExists } from '../src/util';
 
 export default function validationBook(book, expectedBook, options = {}) {
   book.titles.should.have.lengthOf(expectedBook.titles.length);
@@ -68,9 +66,9 @@ export default function validationBook(book, expectedBook, options = {}) {
     item.href.should.equal(expectedItem.href);
     item.mediaType.should.equal(expectedItem.mediaType);
     if (isExists(item.size)) {
-      item.isFileExists.should.true;
+      item.isFileExists.should.be.true;
     } else {
-      item.isFileExists.should.false;
+      item.isFileExists.should.be.false;
     }
   });
 
@@ -83,7 +81,7 @@ export default function validationBook(book, expectedBook, options = {}) {
     if (isExists(navPoint.anchor)) {
       navPoint.anchor.should.equal(expectedNavPoint.anchor);
     } else {
-      assert(!isExists(navPoint.anchor));
+      isExists(navPoint.anchor).should.be.false;
     }
     navPoint.depth.should.equal(expectedNavPoint.depth);
     navPoint.children.should.have.lengthOf(expectedNavPoint.children.length);
@@ -95,7 +93,7 @@ export default function validationBook(book, expectedBook, options = {}) {
     if (navPoint.spine) {
       navPoint.spine.id.should.equal(expectedNavPoint.spine.id);
     } else {
-      assert(!isExists(navPoint.spine));
+      isExists(navPoint.spine).should.be.false;
     }
   });
 
@@ -111,7 +109,7 @@ export default function validationBook(book, expectedBook, options = {}) {
         style.namespace.should.equal(expectedStyle.namespace);
       });
     } else {
-      assert(!isExists(spine.styles));
+      isExists(spine.styles).should.be.false;
     }
   });
 
@@ -134,7 +132,7 @@ export default function validationBook(book, expectedBook, options = {}) {
     if (options.useStyleNamespace) {
       style.namespace.should.equal(expectedStyle.namespace);
     } else {
-      assert(!isExists(style.namespace));
+      isExists(style.namespace).should.be.false;
     }
   });
 
@@ -147,7 +145,7 @@ export default function validationBook(book, expectedBook, options = {}) {
     if (guide.item) {
       guide.item.id.should.equal(expectedGuide.item.id);
     } else {
-      assert(!isExists(guide.item));
+      isExists(guide.item).should.be.false;
     }
   });
 }

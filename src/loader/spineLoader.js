@@ -8,7 +8,7 @@ import {
   mergeObjects,
   safeDirname,
   safePathJoin,
-} from '../utils';
+} from '../util';
 
 function formatAttributes(attributes, options) {
   return attributes.reduce((attrs, attribute) => {

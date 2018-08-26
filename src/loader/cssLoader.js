@@ -6,7 +6,7 @@ import {
   stringContains,
   safeDirname,
   safePathJoin,
-} from '../utils';
+} from '../util';
 
 function handleRulePrelude(selectorList, options, cssItem) {
   selectorList.children.each(function(selector, item, list) { // eslint-disable-line

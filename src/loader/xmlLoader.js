@@ -8,7 +8,7 @@ import {
   isExists,
   isObject,
   isString,
-} from '../utils';
+} from '../util';
 
 const normalizeKey = (obj, keyTranslator) => {
   if (isString(obj)) {

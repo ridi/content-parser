@@ -1,4 +1,4 @@
-import { isExists, mergeObjects } from '../utils';
+import { isExists, mergeObjects } from '../util';
 import Item from './Item';
 
 class CssItem extends Item {

@@ -1,4 +1,4 @@
-import { mergeObjects } from '../utils';
+import { mergeObjects } from '../util';
 import Item from './Item';
 
 class ImageItem extends Item {

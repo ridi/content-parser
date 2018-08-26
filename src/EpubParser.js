@@ -34,7 +34,7 @@ import {
   safePathJoin,
   getPathes,
   openZip,
-} from './utils';
+} from './util';
 
 const privateProps = new WeakMap();
 

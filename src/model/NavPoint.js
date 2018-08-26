@@ -1,4 +1,4 @@
-import { mergeObjects } from '../utils';
+import { mergeObjects } from '../util';
 
 const privateProps = new WeakMap();
 

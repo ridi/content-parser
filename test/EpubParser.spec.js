@@ -1,10 +1,10 @@
-import chai, { assert, should } from 'chai';
+import chai, { should } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs';
 import path from 'path';
 
 import { EpubParser, Errors } from '../src';
-import { isExists } from '../src/utils';
+import { isExists } from '../src/util';
 import Author from '../src/model/Author';
 import Book from '../src/model/Book';
 import Context from '../src/model/Context';
@@ -152,7 +152,7 @@ describe('Parsing test', () => {
           if (item.itemType === DeadItem) {
             item.reason.should.equal(expectedItem.reason);
             if (item.reason === DeadItem.Reason.NOT_EXISTS) {
-              assert(!isExists(item.size));
+              isExists(item.size).should.be.false;
             }
           } else {
             item.size.should.not.null;
@@ -161,7 +161,7 @@ describe('Parsing test', () => {
             item.spineIndex.should.equal(current);
             current += 1;
           } else {
-            assert(!isExists(item.spineIndex));
+            isExists(item.spineIndex).should.be.false;
           }
         });
         rawBook.guide.should.deep.equal(expectedRawBook.guide);
@@ -185,7 +185,7 @@ describe('Parsing test', () => {
             if (isExists(navPoint.children)) {
               shouldEqual(navPoint.children, expectedNavPoint.children);
             } else {
-              assert(!isExists(navPoint.children));
+              isExists(navPoint.children).should.be.false;
             }
           });
         };
