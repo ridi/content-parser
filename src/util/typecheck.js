@@ -7,7 +7,7 @@ export function isArray(any) {
   if (Array.isArray) {
     return Array.isArray(any);
   }
-  return Object.prototype.toString.call(any) === '[object Array]';
+  return getType(any) === 'Array';
 }
 
 export function isExists(any) {
@@ -15,7 +15,7 @@ export function isExists(any) {
 }
 
 export function isObject(any) {
-  return Object.prototype.toString.call(any) === '[object Object]';
+  return getType(any) === 'Object';
 }
 
 export function isString(any) {

@@ -56,7 +56,7 @@ Or throw exception.
 
 Returns `string` or `Object` or `Buffer` or `string[]` or `Object[]` or `Buffer[]` in `Promise` with:
 
-- SpineItem:
+- [SpineItem](#spineItem):
 
   - `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
 
@@ -67,15 +67,13 @@ Returns `string` or `Object` or `Buffer` or `string[]` or `Object[]` or `Buffer[
   - `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
     - `content`: `extractBody` output transformed by adapter.
 
-- CssItem, InlineCssItem:
+- [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
 
   - `string`
 
 - Other items:
 
   - `Buffer`
-
-> Depending on [readOptions.encoding](#encoding) option, it can be returned as a different type.
 
 Or throw exception.
 
@@ -165,7 +163,6 @@ Or throw exception.
 - mediaType: *string?*
 - size: *number?*
 - isFileExists: *boolean* (**size !== undefined**)
-- defaultEncoding: *string?* (**Default: undefined**)
 
 <a id="ncxItem"></a>
 
@@ -349,7 +346,6 @@ Prepend given string to namespace for identification.
 
 ## Read Options
 
-* [encoding](#encoding)
 * [basePath](#basePath)
 * [spine.extractBody](#spine_extractBody)
 * [spine.extractAdapter](#spine_extractAdapter)
@@ -357,26 +353,6 @@ Prepend given string to namespace for identification.
 * [css.removeTags](#css_removeTags)
 * [css.removeIds](#css_removeIds)
 * [css.removeClasses](#css_removeClasses)
-
----
-
-<a id="encoding"></a>
-
-### encoding: *`string?`*
-
-If specified then returns a string. Otherwise it returns a buffer.
-
-If specify `default`, use [Item](#item)`.defaultEncoding`.
-
-```js
-Item.defaultEncoding // undefined (=buffer)
-SpineItem.defaultEncoding // 'utf8'
-CssItem.defaultEncoding // 'utf8'
-InlineCssItem.defaultEncoding // 'utf8'
-ImageItem.defaultEncoding // undefined (=buffer)
-```
-
-**Default:** `'default'`
 
 ---
 

@@ -101,10 +101,6 @@ class EpubParser {
 
   static get readDefaultOptions() {
     return {
-      // If specified then returns a string. Otherwise it returns a buffer.
-      // If specify 'default', use Item.defaultEncoding.
-      // e.g. Item => undefined, SpineItem => 'utf8'
-      encoding: 'default',
       // If specified, change base path of paths used by spine and css.
       // e.g. '../Images/cover.jpg' -> '{basePath}/OEBPS/Images/cover.jpg'
       basePath: undefined,
@@ -132,7 +128,6 @@ class EpubParser {
 
   static get readOptionTypes() {
     return {
-      encoding: 'String|Undefined',
       basePath: 'String|Undefined',
       spine: {
         extractBody: 'Boolean',
@@ -188,8 +183,7 @@ class EpubParser {
               throw createError(Errors.ENOFILE, item.href);
             }
 
-            const encoding = readOptions.encoding !== 'default' ? readOptions.encoding : item.defaultEncoding;
-            const file = entry.getFile(encoding);
+            const file = entry.getFile(this._getEncoding(item));
             if (item instanceof SpineItem) {
               return spineLoader(item, file, readOptions);
             }
@@ -239,6 +233,19 @@ class EpubParser {
         getSize: () => fs.lstatSync(fullPath).size,
       }]);
     }, []);
+  }
+
+  _getEncoding(item) {
+    switch (item.constructor.name) {
+      case CssItem.name:
+      case InlineCssItem.name:
+      case NcxItem.name:
+      case SpineItem.name:
+      case SvgItem.name:
+        return 'utf8';
+      default:
+        return undefined; // Buffer
+    }
   }
 
   _prepareParse(options = {}) {

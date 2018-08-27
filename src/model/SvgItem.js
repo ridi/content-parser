@@ -2,8 +2,6 @@ import { mergeObjects } from '../util';
 import ImageItem from './ImageItem';
 
 class SvgItem extends ImageItem {
-  get defaultEncoding() { return 'utf8'; }
-
   constructor(rawObj) {
     super(rawObj);
     Object.freeze(this);

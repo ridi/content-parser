@@ -2,8 +2,6 @@ import { isExists, mergeObjects } from '../util';
 import Item from './Item';
 
 class CssItem extends Item {
-  get defaultEncoding() { return 'utf8'; }
-
   constructor(rawObj) {
     super(rawObj);
     if (isExists(rawObj.namespace)) {

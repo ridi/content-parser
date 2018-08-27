@@ -276,7 +276,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       });
     
       it('Invalid option value (Type mismatch)', () => {
-        return parser.read(book.spines[0], { encoding: true }).catch((err) => {
+        return parser.read(book.spines[0], { basePath: true }).catch((err) => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
@@ -298,9 +298,9 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
         });
       });
   
-      it('Read single item (use encoding and basePath options)', () => {
+      it('Read single item (use basePath option)', () => {
         const expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
-        const options = { encoding: 'utf8', basePath: './a/b/c' };
+        const options = { basePath: './a/b/c' };
         return parser.read(book.spines[0], options).then((result) => {
           result.should.equal(expected);
         });
@@ -340,7 +340,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
   
       it('Extract styles from CssItems', () => {
         const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH));
-        const options = { encoding: 'utf8', basePath: './a/b/c', css: { removeTags: ['html', 'body'] } };
+        const options = { basePath: './a/b/c', css: { removeTags: ['html', 'body'] } };
         return parser.read(book.styles, options).then((results) => {
           results.should.deep.equal(expectedList);
         });
