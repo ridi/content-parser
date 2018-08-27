@@ -320,8 +320,14 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       });
   
       it('Extract body from SpineItem (custom extractAdapter)', () => {
-        const expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY_WITH_NO_ADAPTOR, 'utf8'));
-        const options = { spine: { extractBody: true, extractAdapter: undefined } };
+        const customAdapter = (body, attrs) => {
+          const style = attrs.find((attr) => attr.key === 'style') || { key: 'style', value: '' };
+          return {
+            content: `<article ${style.key}=\"${style.value}\">${body}</article>`,
+          };
+        };
+        const expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY_WITH_CUSTOM_ADAPTOR, 'utf8'));
+        const options = { spine: { extractBody: true, extractAdapter: customAdapter } };
         return parser.read(book.spines[0], options).then((result) => {
           result.should.deep.equal(expected);
         });

@@ -54,16 +54,28 @@ Or throw exception.
 
 ### read(target(s), readOptions)
 
-Returns `string` or `Object` or `string[]` or `Object[]` in `Promise` with:
+Returns `string` or `Object` or `Buffer` or `string[]` or `Object[]` or `Buffer[]` in `Promise` with:
 
-- `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
+- SpineItem:
 
-- `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
-  - `body`: Same reuslt as `document.body.innerHTML`
-  - `attrs`: Attributes in body tag.
+  - `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
 
-- `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
-  - `content`: `extractBody` output transformed by adapter.
+  - `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
+    - `body`: Same reuslt as `document.body.innerHTML`
+    - `attrs`: Attributes in body tag.
+
+  - `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
+    - `content`: `extractBody` output transformed by adapter.
+
+- CssItem, InlineCssItem:
+
+  - `string`
+
+- Other items:
+
+  - `Buffer`
+
+> Depending on [readOptions.encoding](#encoding) option, it can be returned as a different type.
 
 Or throw exception.
 

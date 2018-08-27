@@ -171,14 +171,14 @@ class EpubParser {
       .then(book => book);
   }
 
-  read(target, options = {}) {
-    return this._prepareRead(target, options)
+  read(targetItem, options = {}) {
+    return this._prepareRead(targetItem, options)
       .then((context) => { // eslint-disable-line arrow-body-style
         return new Promise((resolve) => {
           const {
-            targets, readOptions, entries, zip,
+            targetItems, readOptions, entries, zip,
           } = context;
-          const results = targets.map((item) => {
+          const results = targetItems.map((item) => {
             if (item instanceof InlineCssItem) {
               return cssLoader(item, item.text, readOptions);
             }
@@ -203,7 +203,7 @@ class EpubParser {
             zip.close();
           }
 
-          if (isArray(target)) {
+          if (isArray(targetItem)) {
             resolve(results);
           } else {
             resolve(results[0]);
@@ -267,10 +267,10 @@ class EpubParser {
     });
   }
 
-  _prepareRead(target, options = {}) {
+  _prepareRead(targetItem, options = {}) {
     return new Promise((resolve) => {
-      const targets = isArray(target) ? target : [target];
-      if (targets.find(item => !(item instanceof Item))) {
+      const targetItems = isArray(targetItem) ? targetItem : [targetItem];
+      if (targetItems.find(item => !(item instanceof Item))) {
         throw Errors.INVALID_ITEM;
       }
 
@@ -285,7 +285,7 @@ class EpubParser {
         openZip(input).then((zip) => {
           const entries = this._getEntries(zip);
           resolve({
-            targets, readOptions, entries, zip,
+            targetItems, readOptions, entries, zip,
           });
         }).catch((err) => {
           throw err;
@@ -293,7 +293,7 @@ class EpubParser {
       } else {
         const entries = this._getEntries(input);
         resolve({
-          targets, readOptions, entries,
+          targetItems, readOptions, entries,
         });
       }
     });
