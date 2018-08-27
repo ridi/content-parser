@@ -5,16 +5,11 @@ import path from 'path';
 import { isString } from './typecheck';
 
 export function safePath(target) {
-  const sep = process.platform === 'win32' ? `${path.sep}${path.sep}` : path.sep;
-  return target.replace(new RegExp(sep, 'g'), '/');
-}
-
-export function safePathNormalize(target) {
-  return path.normalize(target);
+  return target.replace(/\\/g, '/');
 }
 
 export function safeDirname(target) {
-  return safePath(path.dirname(target));
+  return path.dirname(safePath(target));
 }
 
 export function safePathJoin(...components) {

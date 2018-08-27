@@ -8,7 +8,6 @@ import {
   safeDirname,
   safePath,
   safePathJoin,
-  safePathNormalize,
   getPathes,
 } from './pathUtil';
 
@@ -30,7 +29,6 @@ export {
   safeDirname,
   safePath,
   safePathJoin,
-  safePathNormalize,
   getPathes,
 
   stringContains,

@@ -15,7 +15,7 @@ describe('Util - Zip', () => {
 
   it('Invalid zip', () => {
     return openZip('?!').catch((err) => {
-      err.startsWith('ENOENT').should.be.true;
+      err.code.should.equal('ENOENT');
     });
   });
 });

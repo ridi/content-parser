@@ -29,7 +29,6 @@ import {
   createDirectory,
   removeDirectory,
   safePath,
-  safePathNormalize,
   safeDirname,
   safePathJoin,
   getPathes,
@@ -233,7 +232,7 @@ class EpubParser {
       }, []);
     }
     return getPathes(input).reduce((entries, fullPath) => {
-      const subPathOffset = safePathNormalize(input).length + path.sep.length;
+      const subPathOffset = path.normalize(input).length + path.sep.length;
       return entries.concat([{
         entryName: safePath(fullPath).substring(subPathOffset),
         getFile: encoding => fs.readFileSync(fullPath, encoding),

@@ -5,7 +5,6 @@ import {
   safeDirname,
   safePath,
   safePathJoin,
-  safePathNormalize,
   getPathes,
 } from '../../src/util/pathUtil';
 import Files from '../files';
