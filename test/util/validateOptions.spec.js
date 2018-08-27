@@ -1,7 +1,6 @@
 import { should } from 'chai';
 
-import Errors from '../../src/errors';
-import { isExists } from '../../src/util/typecheck';
+import Errors from '../../src/constant/errors';
 import validateOptions from '../../src/util/validateOptions';
 
 should(); // Initialize should
@@ -28,10 +27,30 @@ const OptionTypes = {
 
 describe('Util - Option util', () => {
   it('validateOptions test', () => {
-    validateOptions({ f: 'f' }, DefaultOptions, OptionTypes).should.equal(Errors.INVALID_OPTIONS);
-    validateOptions({ e: { g: 3 } }, DefaultOptions, OptionTypes).should.equal(Errors.INVALID_OPTIONS);
-    validateOptions({ c: true }, DefaultOptions, OptionTypes).should.equal(Errors.INVALID_OPTION_VALUE);
-    validateOptions({ e: { f: undefined } }, DefaultOptions, OptionTypes).should.equal(Errors.INVALID_OPTION_VALUE);
-    isExists(validateOptions({ a: true, e: { f: 'f' } }, DefaultOptions, OptionTypes)).should.be.false;
+    try {
+      validateOptions({ f: 'f' }, DefaultOptions, OptionTypes);
+    } catch (err) {
+      err.code.should.equal(Errors.EINVAL.code);
+    }
+    try {
+      validateOptions({ e: { g: 3 } }, DefaultOptions, OptionTypes);
+    } catch (err) {
+      err.code.should.equal(Errors.EINVAL.code);
+    }
+    try {
+      validateOptions({ c: true }, DefaultOptions, OptionTypes);
+    } catch (err) {
+      err.code.should.equal(Errors.EINVAL.code);
+    }
+    try {
+      validateOptions({ e: { f: undefined } }, DefaultOptions, OptionTypes);
+    } catch (err) {
+      err.code.should.equal(Errors.EINVAL.code);
+    }
+    try {
+      validateOptions({ a: true, e: { f: 'f' } }, DefaultOptions, OptionTypes);
+    } catch (err) {
+      err.code.should.equal(Errors.EINVAL.code);
+    }
   });
 });

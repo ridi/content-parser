@@ -3,7 +3,8 @@ import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs';
 import path from 'path';
 
-import { EpubParser, Errors } from '../src';
+import EpubParser from '../src/EpubParser';
+import Errors from '../src/constant/errors';
 import { isExists } from '../src/util';
 import Author from '../src/model/Author';
 import Book from '../src/model/Book';
@@ -33,15 +34,19 @@ describe('Input test', () => {
 
   describe('Error Situation', () => {
     it('Invalid file path', () => {
-      (() => {
+      try {
         new EpubParser('./test/res/test.epub');
-      }).should.throw(Errors.PATH_NOT_FOUND);
+      } catch (err) {
+        err.code.should.equal(Errors.ENOENT.code);
+      }
     });
   
     it('Invalid input', () => {
-      (() => {
+      try {
         new EpubParser([]);
-      }).should.throw(Errors.INVALID_INPUT);
+      } catch (err) {
+        err.code.should.equal(Errors.EINVAL.code);
+      }
     });
   });
 });
@@ -50,13 +55,13 @@ describe('Parsing test', () => {
   describe('Options validation', () => {
     it('Invalid options (Unknown option)', () => {
       return new EpubParser(Files.DEFAULT).parse({ i_am_invalid_option: true }).catch((err) => {
-        err.should.equal(Errors.INVALID_OPTIONS);
+        err.code.should.equal(Errors.EINVAL.code);
       });
     });
   
     it('Invalid option value (Type mismatch)', () => {
       return new EpubParser(Files.DEFAULT).parse({ validatePackage: 'true' }).catch((err) => {
-        err.should.equal(Errors.INVALID_OPTION_VALUE);
+        err.code.should.equal(Errors.EINVAL.code);
       });
     });
   });
@@ -64,32 +69,32 @@ describe('Parsing test', () => {
   describe('Error Situation', () => {
     it('META-INF not found', () => {
       return new EpubParser(Files.META_INF_MISSING).parse().catch((err) => {
-        err.should.equal(Errors.META_INF_NOT_FOUND);
+        err.code.should.equal(Errors.ENOFILE.code);
       });
     });
-  
+
     it('OPF file not found', () => {
       return new EpubParser(Files.OPF_MISSING).parse().catch((err) => {
-        err.should.equal(Errors.OPF_NOT_FOUND);
+        err.code.should.equal(Errors.ENOFILE.code);
       });
     });
 
     it('NCX not found', () => {
       return new EpubParser(Files.NCX_MISSING).parse({ allowNcxFileMissing: false }).catch((err) => {
-        err.should.equal(Errors.NCX_NOT_FOUND);
+        err.code.should.equal(Errors.ENOFILE.code);
       });
     });
-  
+
     // TODO: Add more cases.
     it('Invalid package', () => {
       return new EpubParser(Files.INVALID_PACKAGE).parse({ validatePackage: true }).catch((err) => {
-        err.should.equal(Errors.INVALID_PACKAGE);
+        err.code.should.equal(Errors.EINVAL.code);
       });
     });
-  
+
     it('Invalid XML', () => {
       return new EpubParser(Files.INVALID_XML).parse({ validateXml: true }).catch((err) => {
-        err.should.equal(Errors.INVALID_XML);
+        err.code.should.equal(Errors.EINVAL.code);
       });
     });
   });
@@ -266,13 +271,13 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
     describe('Options validation', () => {
       it('Invalid options (Unknown option)', () => {
         return parser.read(book.spines[0], { i_am_invalid_option: true }).catch((err) => {
-          err.should.equal(Errors.INVALID_OPTIONS);
+          err.code.should.equal(Errors.EINVAL.code);
         });
       });
     
       it('Invalid option value (Type mismatch)', () => {
         return parser.read(book.spines[0], { encoding: true }).catch((err) => {
-          err.should.equal(Errors.INVALID_OPTION_VALUE);
+          err.code.should.equal(Errors.EINVAL.code);
         });
       });
     });
@@ -280,7 +285,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
     describe('Error Situation', () => {
       it('Invalid item', () => {
         return parser.read({ href: Files.EXPECTED_READ_SPINE_WITH_BASE_PATH }).catch((err) => {
-          err.should.equal(Errors.INVALID_ITEM);
+          err.code.should.equal(Errors.EINVAL.code);
         });
       });
     });

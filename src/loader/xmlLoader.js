@@ -1,7 +1,7 @@
 import he from 'he';
 import XmlParser from 'fast-xml-parser';
 
-import Errors from '../errors';
+import Errors, { createError } from '../constant/errors';
 
 import {
   isArray,
@@ -43,9 +43,10 @@ const textNodeName = '#text';
 
 export { getValues, textNodeName };
 
-export default function xmlLoader(file, options) {
+export default function xmlLoader(entry, options) {
+  const file = entry.getFile('utf8');
   if (options.validateXml && isExists(XmlParser.validate(file).err)) {
-    throw Errors.INVALID_XML;
+    throw createError(Errors.EINVAL, 'xml', 'path', entry.entryName);
   }
   return XmlParser.parse(file, {
     // Text node name for identification.

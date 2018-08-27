@@ -7,7 +7,7 @@ import Context from './model/Context';
 import CssItem from './model/CssItem';
 import cssLoader from './loader/cssLoader';
 import DeadItem from './model/DeadItem';
-import Errors from './errors';
+import Errors, { createError } from './constant/errors';
 import FontItem from './model/FontItem';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
@@ -57,7 +57,7 @@ class EpubParser {
       // - mimetype file must be first file in archive.
       // - mimetype file should not compressed.
       // - mimetype file should only contain string 'application/epub+zip'.
-      // - Should not use extra field feature of ZIP format for mimetype file.
+      // - Shouldn't use extra field feature of ZIP format for mimetype file.
       validatePackage: false,
       // If true, stop parsing when XML parsing errors occur.
       validateXml: false,
@@ -152,10 +152,10 @@ class EpubParser {
   constructor(input) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
-        throw Errors.PATH_NOT_FOUND;
+        throw createError(Errors.ENOENT, input);
       }
     } else {
-      throw Errors.INVALID_INPUT;
+      throw createError(Errors.EINVAL, 'input', 'input', input);
     }
     privateProps.set(this, { input });
   }
@@ -185,7 +185,7 @@ class EpubParser {
 
             const entry = findEntry(item.href, entries);
             if (!isExists(entry)) {
-              return undefined;
+              throw createError(Errors.ENOFILE, item.href);
             }
 
             const encoding = readOptions.encoding !== 'default' ? readOptions.encoding : item.defaultEncoding;
@@ -246,10 +246,7 @@ class EpubParser {
       const { input } = this;
       const context = new Context();
 
-      const error = validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
-      if (isExists(error)) {
-        throw error;
-      }
+      validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
       context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
 
       if (fs.lstatSync(input).isFile()) {
@@ -268,16 +265,13 @@ class EpubParser {
   }
 
   _prepareRead(targetItem, options = {}) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const targetItems = isArray(targetItem) ? targetItem : [targetItem];
       if (targetItems.find(item => !(item instanceof Item))) {
-        throw Errors.INVALID_ITEM;
+        throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
       }
 
-      const error = validateOptions(options, EpubParser.readDefaultOptions, EpubParser.readOptionTypes);
-      if (isExists(error)) {
-        throw error;
-      }
+      validateOptions(options, EpubParser.readDefaultOptions, EpubParser.readOptionTypes);
 
       const readOptions = mergeObjects(EpubParser.readDefaultOptions, options);
       const { input } = this;
@@ -288,13 +282,11 @@ class EpubParser {
             targetItems, readOptions, entries, zip,
           });
         }).catch((err) => {
-          throw err;
+          reject(err);
         });
       } else {
         const entries = this._getEntries(input);
-        resolve({
-          targetItems, readOptions, entries,
-        });
+        resolve({ targetItems, readOptions, entries });
       }
     });
   }
@@ -304,17 +296,15 @@ class EpubParser {
       if (isExists(context.zip) && context.options.validatePackage) {
         const firstEntry = context.entries[0];
         if (firstEntry.entryName !== 'mimetype') {
-          // mimetype file must be first file in archive.
-          throw Errors.INVALID_PACKAGE;
-        } else if (firstEntry.method !== 0/* adm-zip/util/constants.js/STORED */) {
-          // mimetype file should not compressed.
-          throw Errors.INVALID_PACKAGE;
+          throw createError(Errors.EINVAL, 'package', 'reason', 'mimetype file must be first file in archive.');
+        } else if (firstEntry.method !== 0 /* STORED */) {
+          throw createError(Errors.EINVAL, 'package', 'reason', 'mimetype file should not compressed.');
         } else if (firstEntry.getFile('utf8') !== 'application/epub+zip') {
-          // mimetype file should only contain string 'application/epub+zip'.
-          throw Errors.INVALID_PACKAGE;
+          const reason = 'mimetype file should only contain string \'application/epub+zip\'.';
+          throw createError(Errors.EINVAL, 'package', 'reason', reason);
         } else if (firstEntry.extraLength > 0) {
-          // Should not use extra field feature of ZIP format for mimetype file.
-          throw Errors.INVALID_PACKAGE;
+          const reason = 'shouldn\'t use extra field feature of ZIP format for mimetype file.';
+          throw createError(Errors.EINVAL, 'package', 'reason', reason);
         }
       }
       resolve(context);
@@ -323,14 +313,19 @@ class EpubParser {
 
   _parseMetaInf(context) {
     return new Promise((resolve) => {
-      const containerEntry = findEntry('META-INF/container.xml', context.entries);
+      const entryName = 'META-INF/container.xml';
+      const containerEntry = findEntry(entryName, context.entries);
       if (!isExists(containerEntry)) {
-        throw Errors.META_INF_NOT_FOUND;
+        throw createError(Errors.ENOFILE, entryName);
       }
 
-      const { container } = xmlLoader(containerEntry.getFile('utf8'), context.options);
-      if (!isExists(container) || !isExists(container.rootfiles)) {
-        throw Errors.META_INF_NOT_FOUND;
+      const { container } = xmlLoader(containerEntry, context.options);
+      if (!isExists(container)) {
+        throw createError(Errors.ENOELMT, 'container', entryName);
+      }
+
+      if (!isExists(container.rootfiles)) {
+        throw createError(Errors.ENOELMT, 'rootfiles', entryName);
       }
 
       const { rootfiles } = container;
@@ -339,12 +334,12 @@ class EpubParser {
         return item['media-type'] === 'application/oebps-package+xml';
       });
       if (!isExists(rootfile)) {
-        throw Errors.META_INF_NOT_FOUND;
+        throw createError(Errors.ENOELMT, 'rootfile', entryName);
       }
 
       const opfPath = rootfile['full-path'];
       if (!isExists(opfPath)) {
-        throw Errors.META_INF_NOT_FOUND;
+        throw createError(Errors.ENOATTR, 'rootfile', 'full-path', entryName);
       }
 
       context.opfPath = safePath(opfPath);
@@ -411,15 +406,19 @@ class EpubParser {
 
   _parseOpf(context) {
     return new Promise((resolve) => {
-      const { entries, options } = context;
-      const opfEntry = findEntry(context.opfPath, entries);
+      const { entries, options, opfPath } = context;
+      const opfEntry = findEntry(opfPath, entries);
       if (!isExists(opfEntry)) {
-        throw Errors.OPF_NOT_FOUND;
+        throw createError(Errors.ENOFILE, opfPath);
       }
 
-      const { package: root } = xmlLoader(opfEntry.getFile('utf8'), options);
-      if (!isExists(root) || !isExists(root.metadata) || !isExists(root.manifest) || !isExists(root.spine)) {
-        throw Errors.INVALID_OPF;
+      const { package: root } = xmlLoader(opfEntry, options);
+      if (!isExists(root)) {
+        throw createError(Errors.ENOELMT, 'package', opfPath);
+      }
+
+      if (!isExists(root.metadata) || !isExists(root.manifest) || !isExists(root.spine)) {
+        throw createError(Errors.ENOELMT, 'metadata or manifest or spine', opfPath);
       }
 
       const { rawBook } = context;
@@ -560,12 +559,16 @@ class EpubParser {
       if (isExists(ncxItem)) {
         const ncxEntry = findEntry(ncxItem.href, context.entries);
         if (!allowNcxFileMissing && !isExists(ncxEntry)) {
-          throw Errors.NCX_NOT_FOUND;
+          throw createError(Errors.ENOFILE, ncxItem.href);
         }
 
-        const { ncx } = xmlLoader(ncxEntry.getFile('utf8'), context.options);
-        if (!isExists(ncx) || !isExists(ncx.navMap)) {
-          throw Errors.INVALID_NCX;
+        const { ncx } = xmlLoader(ncxEntry, context.options);
+        if (!isExists(ncx)) {
+          throw createError(Errors.ENOELMT, 'ncx', ncxItem.href);
+        }
+
+        if (!isExists(ncx.navMap)) {
+          throw createError(Errors.ENOELMT, 'navMap', ncxItem.href);
         }
 
         ncxItem.navPoints = [];
@@ -584,37 +587,38 @@ class EpubParser {
         getValues(ncx.navMap.navPoint, keyTranslator).forEach((navPoint) => { // eslint-disable-line arrow-body-style
           return ncxItem.navPoints.push(normalizeSrc(navPoint));
         });
-      } else if (!allowNcxFileMissing) {
-        throw Errors.NCX_NOT_FOUND;
       }
       resolve(context);
     });
   }
 
   _unzipIfNeeded(context) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const { options, zip } = context;
       const { unzipPath, removePreviousFile, createIntermediateDirectories } = options;
-      if (isExists(zip)) {
-        if (isExists(unzipPath)) {
-          if (removePreviousFile) {
-            removeDirectory(unzipPath);
-          }
-          if (createIntermediateDirectories) {
-            createDirectory(unzipPath);
-          }
-          zip.extract(null, unzipPath, (err) => {
-            zip.close();
-            if (isExists(err)) {
-              throw err;
-            }
-            resolve(context);
-          });
-        } else {
-          zip.close();
-          resolve(context);
+
+      if (!isExists(zip)) {
+        resolve(context);
+        return;
+      }
+
+      if (isExists(unzipPath)) {
+        if (removePreviousFile) {
+          removeDirectory(unzipPath);
         }
+        if (createIntermediateDirectories) {
+          createDirectory(unzipPath);
+        }
+        zip.extract(null, unzipPath, (err) => {
+          zip.close();
+          if (isExists(err)) {
+            reject(err);
+          } else {
+            resolve(context);
+          }
+        });
       } else {
+        zip.close();
         resolve(context);
       }
     });

@@ -1,4 +1,6 @@
 import EpubParser from './EpubParser';
-import Errors from './errors';
+import Errors from './constant/errors';
 
-export { EpubParser, Errors };
+export default EpubParser;
+
+export { Errors };
