@@ -1,5 +1,5 @@
-import { mergeObjects } from '../util';
 import CssItem from './CssItem';
+import mergeObjects from '../util/mergeObjects';
 
 class InlineCssItem extends CssItem {
   constructor(rawObj) {

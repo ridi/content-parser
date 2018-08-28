@@ -57,6 +57,7 @@ function handleRuleBlock(declarationList, options, cssItem) {
       if (type === 'Url' && value.type === 'String') {
         let url = value.value.replace(/['"]/g, '');
         if (isExists(options.basePath) && !isUrl(url)) {
+          // src="../Images/line.jpg" => src="{basePath}/Images/line.jpg"
           url = safePathJoin(options.basePath, safeDirname(cssItem.href), url);
         }
         oldItem = item;

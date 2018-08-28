@@ -1,8 +1,10 @@
 import { createDirectory, removeDirectory } from './directory';
+import { getItemEncoding, getItemType } from './itemUtil';
+import { openZip, extractAll } from './zipUtil';
+import { readEntries, findEntry } from './readEntries';
 import mergeObjects from './mergeObjects';
 import stringContains from './stringContains';
 import validateOptions from './validateOptions';
-import openZip from './zip';
 
 import {
   safeDirname,
@@ -24,6 +26,12 @@ export {
   createDirectory,
   removeDirectory,
 
+  getItemEncoding,
+  getItemType,
+
+  readEntries,
+  findEntry,
+
   mergeObjects,
 
   safeDirname,
@@ -36,6 +44,7 @@ export {
   validateOptions,
 
   openZip,
+  extractAll,
 
   getType,
   isArray,

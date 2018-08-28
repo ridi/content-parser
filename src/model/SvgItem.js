@@ -1,5 +1,5 @@
-import { mergeObjects } from '../util';
 import ImageItem from './ImageItem';
+import mergeObjects from '../util/mergeObjects';
 
 class SvgItem extends ImageItem {
   constructor(rawObj) {

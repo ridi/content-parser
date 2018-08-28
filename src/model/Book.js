@@ -1,4 +1,4 @@
-import { isString, mergeObjects } from '../util';
+import { isString } from '../util/typecheck';
 import Author from './Author';
 import CssItem from './CssItem';
 import DateTime from './DateTime';
@@ -9,6 +9,7 @@ import Identifier from './Identifier';
 import ImageItem from './ImageItem';
 import InlineCssItem from './InlineCssItem';
 import Item from './Item';
+import mergeObjects from '../util/mergeObjects';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';

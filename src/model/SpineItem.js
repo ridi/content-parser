@@ -1,5 +1,6 @@
-import { isExists, mergeObjects } from '../util';
+import { isExists } from '../util/typecheck';
 import Item from './Item';
+import mergeObjects from '../util/mergeObjects';
 
 const privateProps = new WeakMap();
 

@@ -1,6 +1,5 @@
 import { parse as parseHtml } from 'himalaya';
 import fs from 'fs';
-import path from 'path';
 
 import Book from './model/Book';
 import Context from './model/Context';
@@ -8,7 +7,6 @@ import CssItem from './model/CssItem';
 import cssLoader from './loader/cssLoader';
 import DeadItem from './model/DeadItem';
 import Errors, { createError } from './constant/errors';
-import FontItem from './model/FontItem';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
 import InlineCssItem from './model/InlineCssItem';
@@ -16,7 +14,6 @@ import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
 import spineLoader from './loader/spineLoader';
-import SvgItem from './model/SvgItem';
 import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
 
 import {
@@ -26,18 +23,19 @@ import {
   isUrl,
   mergeObjects,
   validateOptions,
+  getItemEncoding,
+  getItemType,
   createDirectory,
   removeDirectory,
   safePath,
   safeDirname,
   safePathJoin,
-  getPathes,
-  openZip,
+  readEntries,
+  findEntry,
+  extractAll,
 } from './util';
 
 const privateProps = new WeakMap();
-
-const findEntry = (entryName, entries) => entries.find(entry => entry.entryName === entryName);
 
 const defaultExtractAdapter = (body, attrs) => {
   let string = '';
@@ -166,135 +164,19 @@ class EpubParser {
       .then(book => book);
   }
 
-  read(targetItem, options = {}) {
-    return this._prepareRead(targetItem, options)
-      .then((context) => { // eslint-disable-line arrow-body-style
-        return new Promise((resolve) => {
-          const {
-            targetItems, readOptions, entries, zip,
-          } = context;
-          const results = targetItems.map((item) => {
-            if (item instanceof InlineCssItem) {
-              return cssLoader(item, item.text, readOptions);
-            }
-
-            const entry = findEntry(item.href, entries);
-            if (!isExists(entry)) {
-              throw createError(Errors.ENOFILE, item.href);
-            }
-
-            const file = entry.getFile(this._getEncoding(item));
-            if (item instanceof SpineItem) {
-              return spineLoader(item, file, readOptions);
-            }
-            if (item instanceof CssItem) {
-              return cssLoader(item, file, readOptions);
-            }
-            return file;
-          });
-
-          if (isExists(zip)) {
-            zip.close();
-          }
-
-          if (isArray(targetItem)) {
-            resolve(results);
-          } else {
-            resolve(results[0]);
-          }
-        });
-      }).catch((err) => {
-        throw err;
-      });
-  }
-
-  _getEntries(input) {
-    if (!isString(input)) {
-      return Object.values(input.entries()).reduce((entries, entry) => { // eslint-disable-line arrow-body-style
-        return entries.concat([{
-          entryName: entry.name,
-          getFile: (encoding) => {
-            if (isExists(encoding)) {
-              return input.entryDataSync(entry).toString(encoding);
-            }
-            return input.entryDataSync(entry);
-          },
-          getSize: () => entry.size,
-          method: entry.method,
-          extraLength: entry.extraLen,
-        }]);
-      }, []);
-    }
-    return getPathes(input).reduce((entries, fullPath) => {
-      const subPathOffset = path.normalize(input).length + path.sep.length;
-      return entries.concat([{
-        entryName: safePath(fullPath).substring(subPathOffset),
-        getFile: encoding => fs.readFileSync(fullPath, encoding),
-        getSize: () => fs.lstatSync(fullPath).size,
-      }]);
-    }, []);
-  }
-
-  _getEncoding(item) {
-    switch (item.constructor.name) {
-      case CssItem.name:
-      case InlineCssItem.name:
-      case NcxItem.name:
-      case SpineItem.name:
-      case SvgItem.name:
-        return 'utf8';
-      default:
-        return undefined; // Buffer
-    }
-  }
-
   _prepareParse(options = {}) {
-    return new Promise((resolve) => {
-      const { input } = this;
-      const context = new Context();
-
-      validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
-      context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
-
-      if (fs.lstatSync(input).isFile()) {
-        openZip(input).then((zip) => {
-          context.entries = this._getEntries(zip);
-          context.zip = zip;
-          resolve(context);
-        }).catch((err) => {
-          throw err;
-        });
-      } else {
-        context.entries = this._getEntries(input);
-        resolve(context);
-      }
-    });
-  }
-
-  _prepareRead(targetItem, options = {}) {
     return new Promise((resolve, reject) => {
-      const targetItems = isArray(targetItem) ? targetItem : [targetItem];
-      if (targetItems.find(item => !(item instanceof Item))) {
-        throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
-      }
+      validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
 
-      validateOptions(options, EpubParser.readDefaultOptions, EpubParser.readOptionTypes);
-
-      const readOptions = mergeObjects(EpubParser.readDefaultOptions, options);
-      const { input } = this;
-      if (fs.lstatSync(input).isFile()) {
-        openZip(input).then((zip) => {
-          const entries = this._getEntries(zip);
-          resolve({
-            targetItems, readOptions, entries, zip,
-          });
-        }).catch((err) => {
-          reject(err);
-        });
-      } else {
-        const entries = this._getEntries(input);
-        resolve({ targetItems, readOptions, entries });
-      }
+      const context = new Context();
+      context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
+      readEntries(this.input).then((result) => {
+        context.entries = result.entries;
+        if (isExists(result.zip)) {
+          context.zip = result.zip;
+        }
+        resolve(context);
+      }).catch(err => reject(err));
     });
   }
 
@@ -321,11 +203,19 @@ class EpubParser {
   _parseMetaInf(context) {
     return new Promise((resolve) => {
       const entryName = 'META-INF/container.xml';
-      const containerEntry = findEntry(entryName, context.entries);
+      const containerEntry = findEntry(context.entries, entryName);
       if (!isExists(containerEntry)) {
         throw createError(Errors.ENOFILE, entryName);
       }
 
+      // container.xml
+      // <?xml ... ?>
+      // <container ...>
+      //   <rootfiles>
+      //     <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+      //     ...                  ^~~~~~~~~~~~~~~~~
+      //   </rootfiles>
+      // </container>
       const { container } = xmlLoader(containerEntry, context.options);
       if (!isExists(container)) {
         throw createError(Errors.ENOELMT, 'container', entryName);
@@ -356,69 +246,27 @@ class EpubParser {
     });
   }
 
-  _getItemType(mediaType) {
-    // See: http://www.idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7
-    const types = {
-      'application/font': FontItem,
-      'application/font-otf': FontItem,
-      'application/font-sfnt': FontItem,
-      'application/font-woff': FontItem,
-      'application/vnd.ms-opentype': FontItem,
-      'application/x-font-ttf': FontItem,
-      'application/x-font-truetype': FontItem,
-      'application/x-font-opentype': FontItem,
-      'application/x-dtbncx+xml': NcxItem,
-      'application/xhtml+xml': SpineItem,
-      'font/opentype': FontItem,
-      'font/otf': FontItem,
-      'font/woff2': FontItem,
-      'image/gif': ImageItem,
-      'image/jpeg': ImageItem,
-      'image/png': ImageItem,
-      'image/bmp': ImageItem, // Not recommended in EPUB spec.
-      'image/svg+xml': SvgItem,
-      'text/css': CssItem,
-    };
-    const type = types[mediaType.toLowerCase()];
-    if (!isExists(type)) {
-      return DeadItem;
-    }
-    return type;
-  }
-
-  _parseStyle(spineEntry, foundStyle) {
-    const document = parseHtml(spineEntry.getFile('utf8'));
-    const html = document.find(child => child.tagName === 'html');
-    const head = html.children.find(child => child.tagName === 'head');
-    head.children.filter(child => child.tagName === 'link').forEach((link) => {
-      const { attributes: attrs } = link;
-      if (isExists(attrs)) {
-        const rel = attrs.find(property => property.key === 'rel');
-        const type = attrs.find(property => property.key === 'type');
-        if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
-          const href = attrs.find(property => property.key === 'href');
-          if (isExists(href) && isExists(href.value) && !isUrl(href.value)) {
-            foundStyle({ href: href.value });
-          }
-        }
-      }
-    });
-    head.children.filter(child => child.tagName === 'style').forEach((style) => {
-      const firstNode = style.children[0];
-      if (isExists(firstNode)) {
-        foundStyle({ text: firstNode.content || '' });
-      }
-    });
-  }
-
   _parseOpf(context) {
     return new Promise((resolve) => {
       const { entries, options, opfPath } = context;
-      const opfEntry = findEntry(opfPath, entries);
+      const opfEntry = findEntry(entries, opfPath);
       if (!isExists(opfEntry)) {
         throw createError(Errors.ENOFILE, opfPath);
       }
 
+      // content.opf
+      // <?xml ... ?>
+      // <package version="2.0" ...>
+      //                   ^~~
+      //   <metadata ...>...</metadata>
+      //    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+      //   <manifest>...</manifest>
+      //    ^~~~~~~~~~~~~~~~~~~~~~
+      //   <spine toc="...">...</spine>
+      //    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+      //   <guide>...</guide>
+      //    ^~~~~~~~~~~~~~~~
+      // </package>
       const { package: root } = xmlLoader(opfEntry, options);
       if (!isExists(root)) {
         throw createError(Errors.ENOELMT, 'package', opfPath);
@@ -428,13 +276,21 @@ class EpubParser {
         throw createError(Errors.ENOELMT, 'metadata or manifest or spine', opfPath);
       }
 
-      const { rawBook } = context;
-      rawBook.epubVersion = parseFloat(root.version);
+      context.rawBook.epubVersion = parseFloat(root.version);
+      this._parseMetadata(root.metadata, context)
+        .then(ctx => this._parseManifestWithSpine(root.manifest, root.spine, ctx))
+        .then(ctx => this._parseGuide(root.guide, ctx))
+        .then(ctx => resolve(ctx));
+    });
+  }
 
+  _parseMetadata(metadata, context) {
+    return new Promise((resolve) => {
+      const { rawBook } = context;
       const {
         title, creator, subject, description, publisher, contributor, date, type,
         format, identifier, source, language, relation, coverage, rights, meta,
-      } = root.metadata;
+      } = metadata;
       rawBook.titles = getValues(title);
       rawBook.creators = getValues(creator, key => (key === textNodeName ? 'name' : key));
       rawBook.subjects = getValues(subject);
@@ -451,35 +307,46 @@ class EpubParser {
       rawBook.coverage = coverage;
       rawBook.rights = rights;
       rawBook.metas = getValues(meta);
+      resolve(context);
+    });
+  }
 
-      rawBook.items = [];
-      const { toc: tocId } = root.spine;
-      const itemrefs = getValues(root.spine.itemref);
-      const inlineStyleItems = [];
+  _parseManifestWithSpine(manifest, spine, context) {
+    return new Promise((resolve) => {
+      const { rawBook, basePath, options } = context;
+      const { toc: tocId } = spine;
+      const items = getValues(manifest.item);
+      const itemrefs = getValues(spine.itemref);
       const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
       let foundCover = false;
       let spineIndex = 0;
+      let inlineStyles = [];
       let cssIdx = 0;
-      getValues(root.manifest.item).forEach((item) => {
+
+      rawBook.items = [];
+      for (const item of items) { // eslint-disable-line no-restricted-syntax
         const rawItem = {};
         rawItem.id = item.id;
-        if (isExists(item.href) && item.href.length > 0) {
-          rawItem.href = safePathJoin(context.basePath, item.href);
-        } else {
-          rawItem.href = safePath(item.href);
+        if (isExists(item.href)) {
+          // ../Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
+          rawItem.href = safePathJoin(basePath, item.href);
         }
         rawItem.mediaType = item['media-type'];
-        rawItem.itemType = this._getItemType(rawItem.mediaType);
+        rawItem.itemType = getItemType(rawItem.mediaType);
         if (rawItem.itemType === DeadItem) {
           rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
         }
 
-        const itemEntry = findEntry(rawItem.href, context.entries);
+        const itemEntry = findEntry(context.entries, rawItem.href);
         if (isExists(itemEntry)) {
           rawItem.size = itemEntry.getSize();
+
           if (rawItem.itemType === SpineItem) {
+            // Checks if item is referenced in spine list.
             const ref = itemrefs.find(itemref => itemref.idref === rawItem.id);
             if (isExists(ref)) {
+              // If isLinear is false, then spineIndex is not assigned.
+              // Because this spine is excluded from flow.
               rawItem.isLinear = isExists(ref.linear) ? JSON.parse(ref.linear) : true;
               if (options.ignoreLinear || rawItem.isLinear) {
                 rawItem.spineIndex = spineIndex;
@@ -489,35 +356,12 @@ class EpubParser {
               rawItem.itemType = DeadItem;
               rawItem.reason = DeadItem.Reason.NOT_SPINE;
             }
-          }
-          if (options.useStyleNamespace) {
-            if (rawItem.itemType === CssItem) {
-              rawItem.namespace = `${options.styleNamespacePrefix}${cssIdx}`;
-              cssIdx += 1;
-            } else if (rawItem.itemType === SpineItem) {
-              rawItem.styles = [];
-              this._parseStyle(itemEntry, (style) => {
-                if (isExists(style.href)) {
-                  rawItem.styles.push(safePathJoin(safeDirname(rawItem.href), style.href));
-                } else {
-                  const namespace = `${options.styleNamespacePrefix}${cssIdx}`;
-                  const href = `${rawItem.href}_${namespace}`;
-                  rawItem.styles.push(href);
-                  inlineStyleItems.push({
-                    id: `${rawItem.id}_${namespace}`,
-                    href,
-                    mediaType: 'text/css',
-                    size: style.text.length,
-                    itemType: InlineCssItem,
-                    namespace,
-                    text: style.text,
-                  });
-                  cssIdx += 1;
-                }
-              });
-            }
           } else if (rawItem.itemType === ImageItem) {
             if (!foundCover) {
+              // EPUB2 spec doesn't have cover image declaration, it founding for cover image in order listed below.
+              // 1. metadata.meta[name="cover"].content === imageItem.id
+              // 2. imageItem.id === 'cover'
+              // 3. guide.reference[type="cover"].href === imageItem.href (see _parseGuide)
               if (isExists(coverMeta) && rawItem.id === coverMeta.content) {
                 rawItem.isCover = true;
                 foundCover = true;
@@ -527,23 +371,93 @@ class EpubParser {
               }
             }
           } else if (rawItem.itemType === NcxItem) {
+            // NCX is valid only if rawItem.id matches tocId.
             if (rawItem.id !== tocId) {
               rawItem.itemType = DeadItem;
               rawItem.reason = DeadItem.Reason.NOT_NCX;
+            }
+          }
+
+          if (options.useStyleNamespace) {
+            if (rawItem.itemType === CssItem) {
+              rawItem.namespace = `${options.styleNamespacePrefix}${cssIdx}`;
+              cssIdx += 1;
+            } else if (rawItem.itemType === SpineItem) {
+              const result = this._parseSpineStyle(rawItem, itemEntry.getFile('utf8'), cssIdx, options);
+              rawItem.styles = result.styles;
+              inlineStyles = inlineStyles.concat(result.inlineStyles);
+              cssIdx = result.cssIdx; // eslint-disable-line
             }
           }
         } else {
           rawItem.itemType = DeadItem;
           rawItem.reason = DeadItem.Reason.NOT_EXISTS;
         }
-
         rawBook.items.push(rawItem);
-      });
-      inlineStyleItems.forEach(inlineStyleItem => rawBook.items.push(inlineStyleItem));
+      }
+      inlineStyles.forEach(inlineStyle => rawBook.items.push(inlineStyle));
+      context.foundCover = foundCover;
+      resolve(context);
+    });
+  }
+
+  _parseSpineStyle(rawItem, file, cssIdx, options) {
+    const styles = [];
+    const inlineStyles = [];
+    const document = parseHtml(file);
+    const html = document.find(child => child.tagName === 'html');
+    const head = html.children.find(child => child.tagName === 'head');
+
+    // <link rel="stylesheet" type="text/css" href="..." ... />
+    //                                              ^~~
+    head.children.filter(child => child.tagName === 'link').forEach((link) => {
+      const { attributes: attrs } = link;
+      if (isExists(attrs)) {
+        const rel = attrs.find(property => property.key === 'rel');
+        const type = attrs.find(property => property.key === 'type');
+        if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
+          const href = attrs.find(property => property.key === 'href');
+          if (isExists(href) && isExists(href.value) && !isUrl(href.value)) {
+            styles.push(safePathJoin(safeDirname(rawItem.href), href.value));
+          }
+        }
+      }
+    });
+
+    // <style ...>...</style>
+    //            ^~~
+    head.children.filter(child => child.tagName === 'style').forEach((style) => {
+      const firstNode = style.children[0];
+      if (isExists(firstNode)) {
+        const namespace = `${options.styleNamespacePrefix}${cssIdx}`;
+        const href = `${rawItem.href}_${namespace}`;
+        const text = firstNode.content || '';
+        styles.push(href);
+        inlineStyles.push({
+          id: `${rawItem.id}_${namespace}`,
+          href,
+          mediaType: 'text/css',
+          size: text.length,
+          itemType: InlineCssItem,
+          namespace,
+          text,
+        });
+        cssIdx += 1;
+      }
+    });
+
+    return { styles, inlineStyles, cssIdx };
+  }
+
+  _parseGuide(guide, context) {
+    return new Promise((resolve) => {
+      const { rawBook } = context;
+      let { foundCover } = context;
 
       rawBook.guide = [];
-      if (isExists(root.guide)) {
-        getValues(root.guide.reference).forEach((reference) => {
+      if (isExists(guide)) {
+        getValues(guide.reference).forEach((reference) => {
+          // If reference.type is 'cover' and there is an image item matching reference.href, it is cover image.
           if (!foundCover && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
             const imageItem = rawBook.items.find(item => item.href === reference.href && item.itemType === ImageItem);
             if (isExists(imageItem)) {
@@ -554,22 +468,38 @@ class EpubParser {
           rawBook.guide.push(mergeObjects(reference, { href: safePathJoin(context.basePath, reference.href) }));
         });
       }
-
       resolve(context);
     });
   }
 
   _parseNcx(context) {
     return new Promise((resolve) => {
-      const { allowNcxFileMissing } = context.options;
-      const ncxItem = context.rawBook.items.find(item => item.itemType === NcxItem);
+      const { rawBook, entries, options } = context;
+      const { allowNcxFileMissing } = options;
+      const ncxItem = rawBook.items.find(item => item.itemType === NcxItem);
       if (isExists(ncxItem)) {
-        const ncxEntry = findEntry(ncxItem.href, context.entries);
+        const ncxEntry = findEntry(entries, ncxItem.href);
         if (!allowNcxFileMissing && !isExists(ncxEntry)) {
           throw createError(Errors.ENOFILE, ncxItem.href);
         }
 
-        const { ncx } = xmlLoader(ncxEntry, context.options);
+        // toc.ncx
+        // <?xml ... ?>
+        // <!DOCTYPE ncx ... >
+        // <ncx ... >
+        //   ...
+        //   <navMap>
+        //     <navPoint id="..." playOrder="...">
+        //       <navLabel><text>...</text></navLabel>
+        //       <content src="..." />
+        //       {<navPoint>...</navPoint>}
+        //     </navPoint>
+        //     ...
+        //   </navMap>
+        //   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //   ...
+        // </ncx>
+        const { ncx } = xmlLoader(ncxEntry, options);
         if (!isExists(ncx)) {
           throw createError(Errors.ENOELMT, 'ncx', ncxItem.href);
         }
@@ -579,6 +509,7 @@ class EpubParser {
         }
 
         ncxItem.navPoints = [];
+
         const normalizeSrc = (np) => {
           if (isExists(np.children)) {
             np.children.forEach((child, idx) => {
@@ -586,10 +517,12 @@ class EpubParser {
             });
           }
           if (isExists(np.content) && isExists(np.content.src) && np.content.src.length > 0) {
+            // Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
             np.content.src = safePathJoin(context.basePath, np.content.src);
           }
           return np;
         };
+
         const keyTranslator = key => (key === 'navPoint' ? 'children' : key);
         getValues(ncx.navMap.navPoint, keyTranslator).forEach((navPoint) => { // eslint-disable-line arrow-body-style
           return ncxItem.navPoints.push(normalizeSrc(navPoint));
@@ -604,29 +537,21 @@ class EpubParser {
       const { options, zip } = context;
       const { unzipPath, removePreviousFile, createIntermediateDirectories } = options;
 
-      if (!isExists(zip)) {
+      if (!isExists(zip) || !isExists(unzipPath)) {
+        if (isExists(zip)) {
+          zip.close();
+        }
         resolve(context);
-        return;
-      }
-
-      if (isExists(unzipPath)) {
+      } else {
         if (removePreviousFile) {
           removeDirectory(unzipPath);
         }
         if (createIntermediateDirectories) {
           createDirectory(unzipPath);
         }
-        zip.extract(null, unzipPath, (err) => {
-          zip.close();
-          if (isExists(err)) {
-            reject(err);
-          } else {
-            resolve(context);
-          }
-        });
-      } else {
-        zip.close();
-        resolve(context);
+        extractAll(zip, unzipPath, true)
+          .then(() => resolve(context))
+          .catch(err => reject(err));
       }
     });
   }
@@ -634,6 +559,70 @@ class EpubParser {
   _createBook(context) {
     return new Promise((resolve) => {
       resolve(new Book(context.rawBook));
+    });
+  }
+
+  read(target, options = {}) {
+    return this._prepareRead(target, options)
+      .then(context => this._read(context))
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  _prepareRead(target, options = {}) {
+    return new Promise((resolve, reject) => {
+      const targetItems = isArray(target) ? target : [target];
+      if (targetItems.find(item => !(item instanceof Item))) {
+        throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
+      }
+
+      validateOptions(options, EpubParser.readDefaultOptions, EpubParser.readOptionTypes);
+
+      readEntries(this.input).then((result) => {
+        resolve({
+          targetItems,
+          options: mergeObjects(EpubParser.readDefaultOptions, options),
+          entries: result.entries,
+          zip: result.zip,
+        });
+      }).catch(err => reject(err));
+    });
+  }
+
+  _read(context) {
+    return new Promise((resolve) => {
+      const { targetItems, options, entries } = context;
+      const results = targetItems.map((item) => {
+        if (item instanceof InlineCssItem) {
+          return cssLoader(item, item.text, options);
+        }
+
+        const entry = findEntry(entries, item.href);
+        if (!isExists(entry)) {
+          throw createError(Errors.ENOFILE, item.href);
+        }
+
+        const file = entry.getFile(getItemEncoding(item));
+        if (item instanceof SpineItem) {
+          return spineLoader(item, file, options);
+        }
+        if (item instanceof CssItem) {
+          return cssLoader(item, file, options);
+        }
+        return file;
+      });
+
+      const { zip } = context;
+      if (isExists(zip)) {
+        zip.close();
+      }
+
+      if (results.length > 1) {
+        resolve(results);
+      } else {
+        resolve(results[0]);
+      }
     });
   }
 }

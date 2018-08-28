@@ -1,7 +1,7 @@
 import { should } from 'chai';
 
 import Files from '../files';
-import openZip from '../../src/util/zip';
+import { openZip } from '../../src/util/zipUtil';
 
 should(); // Initialize should
 

@@ -17,6 +17,7 @@ function formatAttributes(attributes, options) {
       return `${attrs} ${key}`;
     }
     if (isExists(options.basePath) && stringContains(['href', 'src'], key) && !isUrl(value)) {
+      // src="../Images/background.jpg" => src="{basePath}/Images/background.jpg"
       return `${attrs} ${key}="${safePathJoin(options.basePath, value)}"`;
     }
     return `${attrs} ${key}="${value}"`;

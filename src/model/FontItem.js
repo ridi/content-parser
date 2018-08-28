@@ -1,5 +1,5 @@
-import { mergeObjects } from '../util';
 import Item from './Item';
+import mergeObjects from '../util/mergeObjects';
 
 class FontItem extends Item {
   constructor(rawObj) {

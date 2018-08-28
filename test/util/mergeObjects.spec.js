@@ -19,7 +19,7 @@ describe('Util - Merge objects', () => {
       },
     };
     mergeObjects(
-      {
+      { // obj1
         a: 'a',
         b: true,
         c: {
@@ -28,7 +28,7 @@ describe('Util - Merge objects', () => {
           f: {},
         },
       },
-      {
+      { // obj2
         a: true,
         c: {
           d: 'd',
