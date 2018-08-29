@@ -278,7 +278,7 @@ class EpubParser {
 
       context.rawBook.epubVersion = parseFloat(root.version);
       this._parseMetadata(root.metadata, context)
-        .then(ctx => this._parseManifestWithSpine(root.manifest, root.spine, ctx))
+        .then(ctx => this._parseManifestAndSpine(root.manifest, root.spine, ctx))
         .then(ctx => this._parseGuide(root.guide, ctx))
         .then(ctx => resolve(ctx));
     });
@@ -311,7 +311,7 @@ class EpubParser {
     });
   }
 
-  _parseManifestWithSpine(manifest, spine, context) {
+  _parseManifestAndSpine(manifest, spine, context) {
     return new Promise((resolve) => {
       const { rawBook, basePath, options } = context;
       const { toc: tocId } = spine;
@@ -401,10 +401,10 @@ class EpubParser {
     });
   }
 
-  _parseSpineStyle(rawItem, file, cssIdx, options) {
+  _parseSpineStyle(rawItem, text, cssIdx, options) {
     const styles = [];
     const inlineStyles = [];
-    const document = parseHtml(file);
+    const document = parseHtml(text);
     const html = document.find(child => child.tagName === 'html');
     const head = html.children.find(child => child.tagName === 'head');
 
@@ -431,16 +431,16 @@ class EpubParser {
       if (isExists(firstNode)) {
         const namespace = `${options.styleNamespacePrefix}${cssIdx}`;
         const href = `${rawItem.href}_${namespace}`;
-        const text = firstNode.content || '';
+        const content = firstNode.content || '';
         styles.push(href);
         inlineStyles.push({
           id: `${rawItem.id}_${namespace}`,
           href,
           mediaType: 'text/css',
-          size: text.length,
+          size: content.length,
           itemType: InlineCssItem,
           namespace,
-          text,
+          text: content,
         });
         cssIdx += 1;
       }
