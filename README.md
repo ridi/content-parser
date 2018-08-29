@@ -33,7 +33,7 @@ import EpubParser from '@ridi/epub-parser';
 
 const parser = new EpubParser('./foo/bar.epub' or './unzippedPath');
 parser.parse().then((book) => {
-  parser.read(book.spines).then((results) => {
+  parser.readItems(book.spines).then((results) => {
     ...
   });
   ...
@@ -52,9 +52,25 @@ Or throw exception.
 
 #### [parseOptions](#parseOptions): `Object`
 
-### read(target(s), readOptions)
+### readItem(item, readOptions)
 
-Returns `string` or `Object` or `Buffer` or `string[]` or `Object[]` or `Buffer[]` in `Promise` with:
+Returns `string` or `Object` or `Buffer` in `Promise` (see [detail](#detail)) or throw exception.
+
+#### item: `Item` (see: [Item Types](#itemTypes))
+
+#### [readOptions](#readOptions): `Object`
+
+### readItems(items, readOptions)
+
+Returns `string[]` or `Object[]` or `Buffer[]` in `Promise` (see [detail](#detail)) or throw exception.
+
+#### items: `Item[]` (see: [Item Types](#itemTypes))
+
+#### [readOptions](#readOptions): `Object`
+
+<a id="detail"></a>
+
+#### Returns detail
 
 - [SpineItem](#spineItem):
 
@@ -74,12 +90,6 @@ Returns `string` or `Object` or `Buffer` or `string[]` or `Object[]` or `Buffer[
 - Other items:
 
   - `Buffer`
-
-Or throw exception.
-
-#### target(s): `Item`, `Item[]` (see: [Item Types](#itemTypes))
-
-#### [readOptions](#readOptions): `Object`
 
 ## Model
 

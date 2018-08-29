@@ -562,18 +562,21 @@ class EpubParser {
     });
   }
 
-  read(target, options = {}) {
-    return this._prepareRead(target, options)
+  readItem(item, options = {}) {
+    return this.readItems([item], options).then(results => results[0]);
+  }
+
+  readItems(items, options = {}) {
+    return this._prepareRead(items, options)
       .then(context => this._read(context))
       .catch((err) => {
         throw err;
       });
   }
 
-  _prepareRead(target, options = {}) {
+  _prepareRead(items, options = {}) {
     return new Promise((resolve, reject) => {
-      const targetItems = isArray(target) ? target : [target];
-      if (targetItems.find(item => !(item instanceof Item))) {
+      if (items.find(item => !(item instanceof Item))) {
         throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
       }
 
@@ -581,7 +584,7 @@ class EpubParser {
 
       readEntries(this.input).then((result) => {
         resolve({
-          targetItems,
+          items,
           options: mergeObjects(EpubParser.readDefaultOptions, options),
           entries: result.entries,
           zip: result.zip,
@@ -592,8 +595,8 @@ class EpubParser {
 
   _read(context) {
     return new Promise((resolve) => {
-      const { targetItems, options, entries } = context;
-      const results = targetItems.map((item) => {
+      const { items, options, entries } = context;
+      const results = items.map((item) => {
         if (item instanceof InlineCssItem) {
           return cssLoader(item, item.text, options);
         }
@@ -618,11 +621,7 @@ class EpubParser {
         zip.close();
       }
 
-      if (results.length > 1) {
-        resolve(results);
-      } else {
-        resolve(results[0]);
-      }
+      resolve(results);
     });
   }
 }

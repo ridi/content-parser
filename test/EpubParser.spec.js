@@ -270,13 +270,13 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
   describe('Reading test', () => {
     describe('Options validation', () => {
       it('Invalid options (Unknown option)', () => {
-        return parser.read(book.spines[0], { i_am_invalid_option: true }).catch((err) => {
+        return parser.readItem(book.spines[0], { i_am_invalid_option: true }).catch((err) => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
     
       it('Invalid option value (Type mismatch)', () => {
-        return parser.read(book.spines[0], { basePath: true }).catch((err) => {
+        return parser.readItem(book.spines[0], { basePath: true }).catch((err) => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
@@ -284,7 +284,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
 
     describe('Error Situation', () => {
       it('Invalid item', () => {
-        return parser.read({ href: Files.EXPECTED_READ_SPINE_WITH_BASE_PATH }).catch((err) => {
+        return parser.readItem({ href: Files.EXPECTED_READ_SPINE_WITH_BASE_PATH }).catch((err) => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
@@ -293,7 +293,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
     describe('Read full-text', () => {
       it('Read single item (default)', () => {
         const expected = fs.readFileSync(Files.EXPECTED_READ_SPIN, 'utf8');
-        return parser.read(book.spines[0]).then((result) => {
+        return parser.readItem(book.spines[0]).then((result) => {
           result.should.equal(expected);
         });
       });
@@ -301,7 +301,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       it('Read single item (use basePath option)', () => {
         const expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
         const options = { basePath: './a/b/c' };
-        return parser.read(book.spines[0], options).then((result) => {
+        return parser.readItem(book.spines[0], options).then((result) => {
           result.should.equal(expected);
         });
       });
@@ -309,7 +309,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       it('Read multiple item (use css options)', () => {
         const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES));
         const options = { css: { removeTags: ['html', 'body'] } };
-        return parser.read(book.styles, options).then((results) => {
+        return parser.readItems(book.styles, options).then((results) => {
           results.should.deep.equal(expectedList);
         });
       });
@@ -319,7 +319,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       it('Extract body from SpineItem (default)', () => {
         const expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY, 'utf8'));
         const options = { spine: { extractBody: true } };
-        return parser.read(book.spines[0], options).then((result) => {
+        return parser.readItem(book.spines[0], options).then((result) => {
           result.should.deep.equal(expected);
         });
       });
@@ -333,7 +333,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
         };
         const expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY_WITH_CUSTOM_ADAPTOR, 'utf8'));
         const options = { spine: { extractBody: true, extractAdapter: customAdapter } };
-        return parser.read(book.spines[0], options).then((result) => {
+        return parser.readItem(book.spines[0], options).then((result) => {
           result.should.deep.equal(expected);
         });
       });
@@ -341,7 +341,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       it('Extract styles from CssItems', () => {
         const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH));
         const options = { basePath: './a/b/c', css: { removeTags: ['html', 'body'] } };
-        return parser.read(book.styles, options).then((results) => {
+        return parser.readItems(book.styles, options).then((results) => {
           results.should.deep.equal(expectedList);
         });
       });
