@@ -52,6 +52,8 @@ Or throw exception.
 
 #### [parseOptions](#parseOptions): `Object`
 
+---
+
 ### readItem(item, readOptions)
 
 Returns `string` or `Object` or `Buffer` in `Promise` (see [detail](#detail)) or throw exception.
@@ -59,6 +61,8 @@ Returns `string` or `Object` or `Buffer` in `Promise` (see [detail](#detail)) or
 #### item: `Item` (see: [Item Types](#itemTypes))
 
 #### [readOptions](#readOptions): `Object`
+
+---
 
 ### readItems(items, readOptions)
 
