@@ -48,6 +48,9 @@ const defaultExtractAdapter = (body, attrs) => {
 };
 
 class EpubParser {
+  /**
+   * Get default values of parse options
+   */
   static get parseDefaultOptions() {
     return {
       // If true, validation package specifications in IDPF listed below.
@@ -83,6 +86,9 @@ class EpubParser {
     };
   }
 
+  /**
+   * Get types of parse options
+   */
   static get parseOptionTypes() {
     return {
       validatePackage: 'Boolean',
@@ -97,6 +103,9 @@ class EpubParser {
     };
   }
 
+  /**
+   * Get default values of read options
+   */
   static get readDefaultOptions() {
     return {
       // If specified, change base path of paths used by spine and css.
@@ -124,6 +133,9 @@ class EpubParser {
     };
   }
 
+  /**
+   * Get types of read option
+   */
   static get readOptionTypes() {
     return {
       basePath: 'String|Undefined',
@@ -140,8 +152,18 @@ class EpubParser {
     };
   }
 
+  /**
+   * Get file or directory
+   */
   get input() { return privateProps.get(this).input; }
 
+  /**
+   * Create new EpubParser
+   * @param {string} input file or directory
+   * @throws {Errors.ENOENT} no such file or directory
+   * @throws {Errors.EINVAL} invalid input
+   * @example new EpubParser('./foo/bar.epub' or './foo/bar');
+   */
   constructor(input) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
@@ -153,6 +175,18 @@ class EpubParser {
     privateProps.set(this, { input });
   }
 
+  /**
+   * EPUB Parsing
+   * @param {object} options parse options
+   * @returns {Promise.<Book>} returns Book
+   * @see EpubParser.parseDefaultOptions
+   * @see EpubParser.parseOptionTypes
+   * @example
+   * const options = { validatePackage: true, unzipPath: './foo/bar' };
+   * parse.parse(options).then((book) => {
+   *   ...
+   * });
+   */
   parse(options = {}) {
     return this._prepareParse(options)
       .then(context => this._validatePackageIfNeeded(context))
@@ -164,6 +198,16 @@ class EpubParser {
       .then(book => book);
   }
 
+  /**
+   * Validate parse options and get entries from input
+   * @param {object} options parse options
+   * @returns {Promise.<Context>} returns Context containing parse options, entries and zip if input is file
+   * @throws {Errors.EINVAL} invalid options or value type
+   * @throws {Errors.ENOENT} no such file or directory
+   * @throws {Errors.ENOFILE} no such file
+   * @see EpubParser.parseDefaultOptions
+   * @see EpubParser.parseOptionTypes
+   */
   _prepareParse(options = {}) {
     return new Promise((resolve, reject) => {
       validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
@@ -180,6 +224,13 @@ class EpubParser {
     });
   }
 
+  /**
+   * Validate package spec if zip exists and validatePackage option specified
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Context>} returns Context (no change at this step)
+   * @throws {Errors.EINVAL} invalid package
+   * @see EpubParser.parseDefaultOptions.validatePackage
+   */
   _validatePackageIfNeeded(context) {
     return new Promise((resolve) => {
       if (isExists(context.zip) && context.options.validatePackage) {
@@ -200,6 +251,15 @@ class EpubParser {
     });
   }
 
+  /**
+   * Locate OPF and base path in container.xml
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Context>} returns Context containing OPF and base path
+   * @throws {Errors.ENOFILE} container.xml not found
+   * @throws {Errors.EINVAL} invalid xml
+   * @throws {Errors.ENOELMT} no such element in container.xml
+   * @throws {Errors.ENOATTR} no such attribute in element
+   */
   _parseMetaInf(context) {
     return new Promise((resolve) => {
       const entryName = 'META-INF/container.xml';
@@ -246,6 +306,14 @@ class EpubParser {
     });
   }
 
+  /**
+   * OPF parsing
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Context>} returns Context containing OPF parsing result
+   * @throws {Errors.EINVAL} invalid xml
+   * @throws {Errors.ENOFILE} OPF not found
+   * @throws {Errors.ENOELMT} no such element in OPF
+   */
   _parseOpf(context) {
     return new Promise((resolve) => {
       const { entries, options, opfPath } = context;
@@ -284,6 +352,12 @@ class EpubParser {
     });
   }
 
+  /**
+   * Metadata parsing in OPF
+   * @param {object} metadata metadata AST
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Context>} returns Context containing metadata
+   */
   _parseMetadata(metadata, context) {
     return new Promise((resolve) => {
       const { rawBook } = context;
@@ -311,6 +385,15 @@ class EpubParser {
     });
   }
 
+  /**
+   * Manifest and spine parsing in OPF
+   * @param {object} manifest manifest AST
+   * @param {object} spine spine AST
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Context>} returns Context containing manifest and spine
+   * @see EpubParser.parseDefaultOptions.useStyleNamespace
+   * @see EpubParser.parseDefaultOptions.styleNamespacePrefix
+   */
   _parseManifestAndSpine(manifest, spine, context) {
     return new Promise((resolve) => {
       const { rawBook, basePath, options } = context;
@@ -401,6 +484,20 @@ class EpubParser {
     });
   }
 
+  /**
+   * @typedef {object} StyleParseResult
+   * @property {string[]} styles path of styles linked to spine
+   * @property {object[]} inlineStyles inline styles included in Spine
+   * @property {number} cssIdx current index after parsing
+   */
+  /**
+   * @param {object} rawItem
+   * @param {string} text contents of spine
+   * @param {number} cssIdx suffix of namespace (zero-base)
+   * @param {object} options parse options
+   * @returns {StyleParseResult} returns styles and inline style from spine
+   * @see EpubParser.parseDefaultOptions.styleNamespacePrefix
+   */
   _parseSpineStyle(rawItem, text, cssIdx, options) {
     const styles = [];
     const inlineStyles = [];
@@ -418,6 +515,7 @@ class EpubParser {
         if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
           const href = attrs.find(property => property.key === 'href');
           if (isExists(href) && isExists(href.value) && !isUrl(href.value)) {
+            // href="../Styles/Style0001.css" => href="OEBPS/Styles/Style0001.css"
             styles.push(safePathJoin(safeDirname(rawItem.href), href.value));
           }
         }
@@ -449,6 +547,12 @@ class EpubParser {
     return { styles, inlineStyles, cssIdx };
   }
 
+  /**
+   * Guide parsing in OPF
+   * @param {object} guide guide AST
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Context>} returns Context containing guide
+   */
   _parseGuide(guide, context) {
     return new Promise((resolve) => {
       const { rawBook } = context;
@@ -457,7 +561,7 @@ class EpubParser {
       rawBook.guide = [];
       if (isExists(guide)) {
         getValues(guide.reference).forEach((reference) => {
-          // If reference.type is 'cover' and there is an image item matching reference.href, it is cover image.
+          // If reference.type equal 'cover' and there is an image item matching reference.href, it is cover image.
           if (!foundCover && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
             const imageItem = rawBook.items.find(item => item.href === reference.href && item.itemType === ImageItem);
             if (isExists(imageItem)) {
@@ -472,6 +576,15 @@ class EpubParser {
     });
   }
 
+  /**
+   * NCX parsing
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Context>} returns Context containing ncx if exists
+   * @throws {Errors.EINVAL} invalid xml
+   * @throws {Errors.ENOFILE} NCX not found (only if allowNcxFileMissing option is false)
+   * @throws {Errors.ENOELMT} no such element in NCX
+   * @see EpubParser.parseDefaultOptions.allowNcxFileMissing
+   */
   _parseNcx(context) {
     return new Promise((resolve) => {
       const { rawBook, entries, options } = context;
@@ -532,6 +645,15 @@ class EpubParser {
     });
   }
 
+  /**
+   * Unzipping if zip exists and unzipPath option specified
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Context>} returns Context (no change at this step)
+   * @throws {Errors.ENOENT} no such file or directory
+   * @see EpubParser.parseDefaultOptions.unzipPath
+   * @see EpubParser.parseDefaultOptions.removePreviousFile
+   * @see EpubParser.parseDefaultOptions.createIntermediateDirectories
+   */
   _unzipIfNeeded(context) {
     return new Promise((resolve, reject) => {
       const { options, zip } = context;
@@ -556,16 +678,50 @@ class EpubParser {
     });
   }
 
+  /**
+   * Create new Book from context
+   * @param {Context} context intermediate result
+   * @returns {Promise.<Book>} returns Book
+   */
   _createBook(context) {
     return new Promise((resolve) => {
       resolve(new Book(context.rawBook));
     });
   }
 
+  /**
+   * Reading contents of Item
+   * @param {Item} item target
+   * @param {object} options read options
+   * @returns {(string | Buffer | object)} return type is different depending on item and options
+   * @see EpubParser.readDefaultOptions
+   * @see EpubParser.readOptionTypes
+   * @see {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
+   * @example
+   * const options = { ... };
+   * parse.readItem(book.spine[0], options).then((result) => {
+   *   ...
+   * });
+   */
   readItem(item, options = {}) {
     return this.readItems([item], options).then(results => results[0]);
   }
 
+  /**
+   * Reading contents of Items
+   * @param {Item[]} items targets
+   * @param {object} options read options
+   * @returns {(string[] | Buffer[] | object[])}
+   *          returns type is different depending on items and options with:
+   *          {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
+   * @see EpubParser.readDefaultOptions
+   * @see EpubParser.readOptionTypes
+   * @example
+   * const options = { ... };
+   * parse.readItems(book.styles, options).then((results) => {
+   *   ...
+   * });
+   */
   readItems(items, options = {}) {
     return this._prepareRead(items, options)
       .then(context => this._read(context))
@@ -574,6 +730,25 @@ class EpubParser {
       });
   }
 
+  /**
+   * @typedef ReadContext
+   * @property {Item[]} items targets
+   * @property {object} options read options
+   * @property {object} entries from input
+   * @property {StreamZip} zip
+   */
+  /**
+   * Validate read options and get entries from input
+   * @param {Item[]} items targets
+   * @param {object} options read options
+   * @returns {Promise.<ReadContext>}
+   *          returns ReadContext containing target items, read options, entries and zip if input is file
+   * @throws {Errors.EINVAL} invalid options or value type
+   * @throws {Errors.ENOENT} no such file or directory
+   * @throws {Errors.ENOFILE} no such file
+   * @see EpubParser.readDefaultOptions
+   * @see EpubParser.readOptionTypes
+   */
   _prepareRead(items, options = {}) {
     return new Promise((resolve, reject) => {
       if (items.find(item => !(item instanceof Item))) {
@@ -593,6 +768,14 @@ class EpubParser {
     });
   }
 
+  /**
+   * Contents is read using loader suitable for context
+   * @param {ReadContext} context properties required for reading
+   * @returns {(string[] | Buffer[] | object[])}
+   *          returns type is different depending on items and options with:
+   *          {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
+   * @throws {Errors.ENOFILE} no such file
+   */
   _read(context) {
     return new Promise((resolve) => {
       const { items, options, entries } = context;

@@ -50,27 +50,27 @@ Returns `Promise<Book>` with:
 
 Or throw exception.
 
-#### [parseOptions](#parseOptions): `Object`
+#### [parseOptions](#parseOptions): `object`
 
 ---
 
 ### readItem(item, readOptions)
 
-Returns `string` or `Object` or `Buffer` in `Promise` (see [detail](#detail)) or throw exception.
+Returns `string` or `object` or `Buffer` in `Promise` (see [detail](#detail)) or throw exception.
 
 #### item: `Item` (see: [Item Types](#itemTypes))
 
-#### [readOptions](#readOptions): `Object`
+#### [readOptions](#readOptions): `object`
 
 ---
 
 ### readItems(items, readOptions)
 
-Returns `string[]` or `Object[]` or `Buffer[]` in `Promise` (see [detail](#detail)) or throw exception.
+Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detail)) or throw exception.
 
 #### items: `Item[]` (see: [Item Types](#itemTypes))
 
-#### [readOptions](#readOptions): `Object`
+#### [readOptions](#readOptions): `object`
 
 <a id="detail"></a>
 
@@ -80,11 +80,11 @@ Returns `string[]` or `Object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
   - `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
 
-  - `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
+  - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
     - `body`: Same reuslt as `document.body.innerHTML`
     - `attrs`: Attributes in body tag.
 
-  - `Object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
+  - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
     - `content`: `extractBody` output transformed by adapter.
 
 - [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
