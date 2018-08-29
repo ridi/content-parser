@@ -693,10 +693,11 @@ class EpubParser {
    * Reading contents of Item
    * @param {Item} item target
    * @param {object} options read options
-   * @returns {(string | Buffer | object)} return type is different depending on item and options
+   * @returns {(string | Buffer | object)}
+   *          returns type is different depending on items and options with:
+   *          {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
    * @see EpubParser.readDefaultOptions
    * @see EpubParser.readOptionTypes
-   * @see {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
    * @example
    * const options = { ... };
    * parse.readItem(book.spine[0], options).then((result) => {
