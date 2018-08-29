@@ -171,6 +171,8 @@ describe('Parsing test', () => {
         });
         rawBook.guide.should.deep.equal(expectedRawBook.guide);
   
+        context.foundCover.should.be.true;
+
         _context = context;
       });
     });
