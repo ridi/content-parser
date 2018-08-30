@@ -21,13 +21,13 @@
   ],
   "main": "./lib/index.js",
   "scripts": {
-    "clean": "rimraf coverage lib temp",
-    "build": "yarn lint && yarn clean && mkdir lib && cross-env BABEL_ENV=production babel src --out-file lib/index.js",
+    "clean": "rimraf coverage lib/* temp",
+    "build": "yarn lint && yarn clean && cross-env BABEL_ENV=production babel src --out-file lib/index.js",
     "watch": "yarn build -- --watch",
     "test": "cross-env BABEL_ENV=production && yarn lint && yarn cover",
     "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --require babel-polyfill --recursive",
     "lint": "eslint src",
-    "publish": "yarn build && npm publish --access=public"
+    "prepublish": "yarn build"
   },
   "dependencies": {
     "css-tree": "^1.0.0-alpha.29",
