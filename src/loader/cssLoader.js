@@ -8,6 +8,18 @@ import {
   safePathJoin,
 } from '../util';
 
+// Type reference: https://github.com/csstree/csstree/blob/master/docs/ast.md
+const Types = {
+  SELECTOR_LIST: 'SelectorList',
+  TYPE_SELECTOR: 'TypeSelector',
+  ID_SELECTOR: 'IdSelector',
+  CLASS_SELECTOR: 'ClassSelector',
+  WHITE_SPACE: 'WhiteSpace',
+  STRING: 'String',
+  URL: 'Url',
+  // See type reference for more types.
+};
+
 function handleRulePrelude(selectorList, options, cssItem) {
   selectorList.children.each(function(selector, item, list) { // eslint-disable-line
     let shouldRemove = false;
@@ -16,22 +28,22 @@ function handleRulePrelude(selectorList, options, cssItem) {
       // Ignore nodes in nested selectors
       if (!isExists(context.selector) || context.selector === selectorList) {
         const { name, type } = node;
-        if (type === 'SelectorList') {
+        if (type === Types.SELECTOR_LIST) {
           // Ignore selectors inside :not()
           if (isExists(context.function) || context.function.name.toLowerCase() !== 'not') {
             if (handleRulePrelude(node, options, cssItem)) {
               shouldRemove = true;
             }
           }
-        } else if (type === 'TypeSelector') {
+        } else if (type === Types.TYPE_SELECTOR) {
           if (stringContains(options.css.removeTags, name)) {
             shouldRemove = true;
           }
-        } else if (type === 'IdSelector') {
+        } else if (type === Types.ID_SELECTOR) {
           if (stringContains(options.css.removeIds, name)) {
             shouldRemove = true;
           }
-        } else if (type === 'ClassSelector') {
+        } else if (type === Types.CLASS_SELECTOR) {
           if (stringContains(options.css.removeClasses, name)) {
             shouldRemove = true;
           }
@@ -41,8 +53,8 @@ function handleRulePrelude(selectorList, options, cssItem) {
     if (shouldRemove) {
       list.remove(item);
     } else {
-      selector.children.prependData({ type: 'WhiteSpace', value: ' ' });
-      selector.children.prependData({ type: 'ClassSelector', name: cssItem.namespace });
+      selector.children.prependData({ type: Types.WHITE_SPACE, value: ' ' });
+      selector.children.prependData({ type: Types.CLASS_SELECTOR, name: cssItem.namespace });
     }
   });
   return selectorList.children.isEmpty();
@@ -54,14 +66,14 @@ function handleRuleBlock(declarationList, options, cssItem) {
     let newItem;
     csstree.walk(declaration, (node, item) => {
       const { type, value } = node;
-      if (type === 'Url' && value.type === 'String') {
+      if (type === Types.URL && value.type === Types.STRING) {
         let url = value.value.replace(/['"]/g, '');
         if (isExists(options.basePath) && !isUrl(url)) {
           // src="../Images/line.jpg" => src="{basePath}/Images/line.jpg"
           url = safePathJoin(options.basePath, safeDirname(cssItem.href), url);
         }
         oldItem = item;
-        newItem = List.createItem({ type: 'Url', value: { type: 'String', value: `"${url}"` } });
+        newItem = List.createItem({ type: Types.URL, value: { type: Types.STRING, value: `"${url}"` } });
       }
     });
     if (isExists(oldItem) && isExists(newItem)) {

@@ -2,6 +2,7 @@ import { should } from 'chai';
 
 import {
   isArray,
+  isBool,
   isExists,
   isObject,
   isString,
@@ -28,6 +29,17 @@ describe('Util - Type check', () => {
     Array.isArray = undefined;
     isArray([]).should.be.true;
     Array.isArray = temp;
+  });
+
+  it('isBool test', () => {
+    isBool({}).should.be.false;
+    isBool(new Book()).should.be.false;
+    isBool('string').should.be.false;
+    isBool([]).should.be.false;
+    isBool(5).should.be.false;
+    isBool(false).should.be.true;
+    isBool(null).should.be.false;
+    isBool(undefined).should.be.false;
   });
 
   it('isExists test', () => {

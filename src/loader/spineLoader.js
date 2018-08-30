@@ -10,6 +10,13 @@ import {
   safePathJoin,
 } from '../util';
 
+// Type reference: https://github.com/andrejewski/himalaya/blob/master/text/ast-spec-v1.md
+const Types = {
+  TEXT: 'text',
+  COMMENT: 'comment',
+  ELEMENT: 'element',
+};
+
 function formatAttributes(attributes, options) {
   return attributes.reduce((attrs, attribute) => {
     const { key, value } = attribute;
@@ -26,10 +33,10 @@ function formatAttributes(attributes, options) {
 
 function stringify(tree, options) {
   return tree.map((node) => {
-    if (node.type === 'text') {
+    if (node.type === Types.TEXT) {
       return node.content;
     }
-    if (node.type === 'comment') {
+    if (node.type === Types.COMMENT) {
       return `<!--${node.content}-->`;
     }
     const { tagName, attributes, children } = node;

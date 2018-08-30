@@ -3,6 +3,7 @@ import { getItemEncoding, getItemType } from './itemUtil';
 import { openZip, extractAll } from './zipUtil';
 import { readEntries, findEntry } from './readEntries';
 import mergeObjects from './mergeObjects';
+import parseBool from './parseBool';
 import stringContains from './stringContains';
 import validateOptions from './validateOptions';
 
@@ -16,6 +17,7 @@ import {
 import {
   getType,
   isArray,
+  isBool,
   isExists,
   isObject,
   isString,
@@ -39,6 +41,8 @@ export {
   safePathJoin,
   getPathes,
 
+  parseBool,
+
   stringContains,
 
   validateOptions,
@@ -48,6 +52,7 @@ export {
 
   getType,
   isArray,
+  isBool,
   isExists,
   isObject,
   isString,

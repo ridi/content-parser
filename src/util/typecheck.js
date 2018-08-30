@@ -10,6 +10,10 @@ export function isArray(any) {
   return getType(any) === 'Array';
 }
 
+export function isBool(any) {
+  return getType(any) === 'Boolean';
+}
+
 export function isExists(any) {
   return any !== undefined && any !== null;
 }

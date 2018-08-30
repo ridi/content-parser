@@ -21,6 +21,7 @@ import {
   isExists,
   isString,
   isUrl,
+  parseBool,
   mergeObjects,
   validateOptions,
   getItemEncoding,
@@ -430,7 +431,7 @@ class EpubParser {
             if (isExists(ref)) {
               // If isLinear is false, then spineIndex is not assigned.
               // Because this spine is excluded from flow.
-              rawItem.isLinear = isExists(ref.linear) ? JSON.parse(ref.linear) : true;
+              rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
               if (options.ignoreLinear || rawItem.isLinear) {
                 rawItem.spineIndex = spineIndex;
                 spineIndex += 1;
