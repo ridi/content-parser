@@ -1,39 +1,38 @@
-import { parse as parseHtml } from 'himalaya';
 import fs from 'fs';
+import { parse as parseHtml } from 'himalaya';
 
+import Errors, { createError } from './constant/errors';
+import cssLoader from './loader/cssLoader';
+import spineLoader from './loader/spineLoader';
+import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
 import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';
-import cssLoader from './loader/cssLoader';
 import DeadItem from './model/DeadItem';
-import Errors, { createError } from './constant/errors';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
 import InlineCssItem from './model/InlineCssItem';
 import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
-import spineLoader from './loader/spineLoader';
-import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
-
 import {
+  createDirectory,
+  extractAll,
+  findEntry,
+  getItemEncoding,
+  getItemType,
   isArray,
   isExists,
   isString,
   isUrl,
-  parseBool,
   mergeObjects,
-  validateOptions,
-  getItemEncoding,
-  getItemType,
-  createDirectory,
-  removeDirectory,
-  safePath,
-  safeDirname,
-  safePathJoin,
+  parseBool,
   readEntries,
-  findEntry,
-  extractAll,
+  removeDirectory,
+  safeDirname,
+  safePath,
+  safePathJoin,
+  validateOptions,
 } from './util';
 
 const privateProps = new WeakMap();

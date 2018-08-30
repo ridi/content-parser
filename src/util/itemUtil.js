@@ -1,4 +1,3 @@
-import { getType, isExists } from './typecheck';
 import CssItem from '../model/CssItem';
 import DeadItem from '../model/DeadItem';
 import FontItem from '../model/FontItem';
@@ -7,6 +6,7 @@ import InlineCssItem from '../model/InlineCssItem';
 import NcxItem from '../model/NcxItem';
 import SpineItem from '../model/SpineItem';
 import SvgItem from '../model/SvgItem';
+import { getType, isExists } from './typecheck';
 
 export function getItemEncoding(item) {
   switch ((getType(item) === 'Function' && item.name) || item.constructor.name) {

@@ -2,8 +2,8 @@ import { should } from 'chai';
 import fs from 'fs';
 import path from 'path';
 
-import { readEntries, findEntry } from '../../src/util/readEntries';
 import { stringContains } from '../../src/util';
+import { findEntry, readEntries } from '../../src/util/readEntries';
 import Files from '../files';
 
 should(); // Initialize should

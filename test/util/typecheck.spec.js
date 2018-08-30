@@ -1,14 +1,7 @@
 import { should } from 'chai';
 
-import {
-  isArray,
-  isBool,
-  isExists,
-  isObject,
-  isString,
-  isUrl,
-} from '../../src/util/typecheck';
 import Book from '../../src/model/Book';
+import { isArray, isBool, isExists, isObject, isString, isUrl } from '../../src/util/typecheck';
 
 should(); // Initialize should
 

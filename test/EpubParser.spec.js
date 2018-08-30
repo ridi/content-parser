@@ -3,21 +3,14 @@ import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs';
 import path from 'path';
 
-import EpubParser from '../src/EpubParser';
 import Errors from '../src/constant/errors';
-import { isExists } from '../src/util';
-import Author from '../src/model/Author';
+import EpubParser from '../src/EpubParser';
 import Book from '../src/model/Book';
-import Context from '../src/model/Context';
-import DateTime from '../src/model/DateTime';
 import DeadItem from '../src/model/DeadItem';
-import Files from './files';
-import Guide from '../src/model/Guide';
-import Identifier from '../src/model/Identifier';
-import InlineCssItem from '../src/model/InlineCssItem';
-import Item from '../src/model/Item';
-import NcxItem from '../src/model/NcxItem'
+import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
+import { isExists } from '../src/util';
+import Files from './files';
 import validationBook from './validationBook';
 
 chai.use(chaiAsPromised);
