@@ -1,38 +1,8 @@
 {
-  "env": {
-    "development": {
-      "presets": ["env", "es2015"],
-      "plugins": [
-        "add-module-exports"
-      ]
-    },
-    "production": {
-      "presets": [
-        "env",
-        "es2015",
-        [
-          "minify",
-          {
-            "evaluate": false,
-            "mangle": {
-              "exclude": [
-                "CssItem",
-                "DeadItem",
-                "FontItem",
-                "ImageItem",
-                "InlineCssItem",
-                "Item",
-                "NcxItem",
-                "SpineItem",
-                "SvgItem"
-              ]
-            }
-          }
-        ]
-      ],
-      "plugins": [
-        "add-module-exports"
-      ]
-    }
-  }
+	"presets": [
+		["env", "es2015"]
+	],
+	"plugins": [
+		"add-module-exports"
+	]
 }
