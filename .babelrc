@@ -1,13 +1,35 @@
 {
   "env": {
     "development": {
-      "presets": ["env"],
+      "presets": ["env", "es2015"],
       "plugins": [
         "add-module-exports"
       ]
     },
     "production": {
-      "presets": ["env", "minify"],
+      "presets": [
+        "env",
+        "es2015",
+        [
+          "minify",
+          {
+            "evaluate": false,
+            "mangle": {
+              "exclude": [
+                "CssItem",
+                "DeadItem",
+                "FontItem",
+                "ImageItem",
+                "InlineCssItem",
+                "Item",
+                "NcxItem",
+                "SpineItem",
+                "SvgItem"
+              ]
+            }
+          }
+        ]
+      ],
       "plugins": [
         "add-module-exports"
       ]

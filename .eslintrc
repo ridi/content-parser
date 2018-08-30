@@ -1,4 +1,9 @@
 {
   "parser": "babel-eslint",
-  "extends": "@ridi/eslint-config"
+  "extends": "@ridi/eslint-config",
+  "rules": {
+    "no-param-reassign": 0,
+    "no-underscore-dangle": 0,
+    "react/destructuring-assignment": 0
+  }
 }

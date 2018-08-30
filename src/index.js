@@ -1,10 +1,6 @@
-const defaultAwesomeFunction = (name) => {
-  const returnStr = `I am the Default Awesome Function, fellow comrade! - ${name}`;
-  return returnStr;
-};
+import Errors from './constant/errors';
+import EpubParser from './EpubParser';
 
-const awesomeFunction = () => 'I am just an Awesome Function.';
+export default EpubParser;
 
-export default defaultAwesomeFunction;
-
-export { awesomeFunction };
+export { Errors };

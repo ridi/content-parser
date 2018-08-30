@@ -1,0 +1,183 @@
+{
+  "items": [
+    {
+      "id": "ncx",
+      "href": "OEBPS/toc.ncx",
+      "mediaType": "application/x-dtbncx+xml",
+      "size": 1,
+      "navPoints": []
+    },
+    {
+      "id": "Section0001.xhtml",
+      "href": "OEBPS/Text/Section0001.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 0,
+      "isLinear": true,
+      "styles": [
+        {
+          "id": "Style0001.css",
+          "href": "OEBPS/Styles/Style0001.css",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style2"
+        },
+        {
+          "id": "Style0002.css",
+          "href": "OEBPS/Styles/Style0002.css",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style3"
+        },
+        {
+          "id": "Style0003.css",
+          "href": "OEBPS/Styles/Style0003.css",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style4"
+        },
+        {
+          "id": "Section0001.xhtml_ridi_style0",
+          "href": "OEBPS/Text/Section0001.xhtml_ridi_style0",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style0",
+          "text": "\n/*<![CDATA[*/\n\n  p {\n  font-size: 17px;\n  text-align: center;\n  }\n  /*]]>*/\n  "
+        },
+        {
+          "id": "Section0001.xhtml_ridi_style1",
+          "href": "OEBPS/Text/Section0001.xhtml_ridi_style1",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style1",
+          "text": "\n  body {\n  color: #ffffff;\n  }\n  "
+        }
+      ]
+    },
+    {
+      "id": "Style0001.css",
+      "href": "OEBPS/Styles/Style0001.css",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style2"
+    },
+    {
+      "id": "Style0002.css",
+      "href": "OEBPS/Styles/Style0002.css",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style3"
+    },
+    {
+      "id": "Style0003.css",
+      "href": "OEBPS/Styles/Style0003.css",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style4"
+    },
+    {
+      "id": "Section0001.xhtml_ridi_style0",
+      "href": "OEBPS/Text/Section0001.xhtml_ridi_style0",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style0",
+      "text": "\n/*<![CDATA[*/\n\n  p {\n  font-size: 17px;\n  text-align: center;\n  }\n  /*]]>*/\n  "
+    },
+    {
+      "id": "Section0001.xhtml_ridi_style1",
+      "href": "OEBPS/Text/Section0001.xhtml_ridi_style1",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style1",
+      "text": "\n  body {\n  color: #ffffff;\n  }\n  "
+    }
+  ],
+  "spines": [
+    {
+      "id": "Section0001.xhtml",
+      "href": "OEBPS/Text/Section0001.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 0,
+      "isLinear": true,
+      "styles": [
+        {
+          "id": "Style0001.css",
+          "href": "OEBPS/Styles/Style0001.css",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style2"
+        },
+        {
+          "id": "Style0002.css",
+          "href": "OEBPS/Styles/Style0002.css",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style3"
+        },
+        {
+          "id": "Style0003.css",
+          "href": "OEBPS/Styles/Style0003.css",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style4"
+        },
+        {
+          "id": "Section0001.xhtml_ridi_style0",
+          "href": "OEBPS/Text/Section0001.xhtml_ridi_style0",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style0",
+          "text": "\n/*<![CDATA[*/\n\n  p {\n  font-size: 17px;\n  text-align: center;\n  }\n  /*]]>*/\n  "
+        },
+        {
+          "id": "Section0001.xhtml_ridi_style1",
+          "href": "OEBPS/Text/Section0001.xhtml_ridi_style1",
+          "mediaType": "text/css",
+          "size": 1,
+          "namespace": "ridi_style1",
+          "text": "\n  body {\n  color: #ffffff;\n  }\n  "
+        }
+      ]
+    }
+  ],
+  "styles": [
+    {
+      "id": "Style0001.css",
+      "href": "OEBPS/Styles/Style0001.css",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style2"
+    },
+    {
+      "id": "Style0002.css",
+      "href": "OEBPS/Styles/Style0002.css",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style3"
+    },
+    {
+      "id": "Style0003.css",
+      "href": "OEBPS/Styles/Style0003.css",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style4"
+    },
+    {
+      "id": "Section0001.xhtml_ridi_style0",
+      "href": "OEBPS/Text/Section0001.xhtml_ridi_style0",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style0",
+      "text": "\n/*<![CDATA[*/\n\n  p {\n  font-size: 17px;\n  text-align: center;\n  }\n  /*]]>*/\n  "
+    },
+    {
+      "id": "Section0001.xhtml_ridi_style1",
+      "href": "OEBPS/Text/Section0001.xhtml_ridi_style1",
+      "mediaType": "text/css",
+      "size": 1,
+      "namespace": "ridi_style1",
+      "text": "\n  body {\n  color: #ffffff;\n  }\n  "
+    }
+  ]
+}

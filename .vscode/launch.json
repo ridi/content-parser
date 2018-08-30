@@ -5,11 +5,17 @@
       "type": "node",
       "request": "launch",
       "name": "Start",
-      "protocol": "inspector",
       "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "npm",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "./test/**/*.spec.js",
+        "--require", "babel-core/register",
+        "--require", "babel-polyfill",
+        "--recursive",
+        "--colors"
+      ],
       "runtimeArgs": [
-          "run-script", "test"
+        "--nolazy"
       ]
     }
   ]

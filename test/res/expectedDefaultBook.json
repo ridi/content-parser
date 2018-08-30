@@ -1,0 +1,793 @@
+{
+  "titles": [
+    "Default"
+  ],
+  "creators": [
+    {
+      "name": "Davin Ahn",
+      "role": "aut"
+    },
+    {
+      "name": "Davin Ahn",
+      "role": "edt"
+    }
+  ],
+  "subjects": [
+    "Subject"
+  ],
+  "description": "Description",
+  "publisher": "Davin",
+  "contributors": [
+    {
+      "name": "Davin Ahn",
+      "role": "undefined"
+    }
+  ],
+  "dates": [
+    {
+      "value": "2018-08-25",
+      "event": "modification"
+    },
+    {
+      "value": "2018-08-07",
+      "event": "creation"
+    },
+    {
+      "value": "2018-08-07",
+      "event": "undefined"
+    }
+  ],
+  "type": "Type",
+  "format": "Format",
+  "identifiers": [
+    {
+      "value": "0-306-40615-2",
+      "scheme": "isbn"
+    },
+    {
+      "value": "256266",
+      "scheme": "undefined"
+    },
+    {
+      "value": "urn:uuid:1379039a-3ea4-4071-9ce8-2b0c29fc0030",
+      "scheme": "uuid"
+    }
+  ],
+  "source": "My brain",
+  "language": "en",
+  "relation": "https://github.com/ridi/epub-parser",
+  "coverage": "Coverage",
+  "rights": "Copyright (c) 2018 Davin",
+  "epubVersion": 2,
+  "metas": [
+    {
+      "name": "Sigil version",
+      "content": "0.9.10"
+    },
+    {
+      "name": "cover",
+      "content": "ridibooks_logo.png"
+    }
+  ],
+  "items": [
+    {
+      "id": "ncx",
+      "href": "OEBPS/toc.ncx",
+      "mediaType": "application/x-dtbncx+xml",
+      "size": 1,
+      "navPoints": [
+        {
+          "id": "navPoint-1",
+          "label": "Cover",
+          "src": "OEBPS/Text/Cover.xhtml",
+          "depth": 0,
+          "children": [],
+          "spine": {
+            "id": "Cover.xhtml",
+            "href": "OEBPS/Text/Cover.xhtml",
+            "mediaType": "application/xhtml+xml",
+            "size": 1,
+            "spineIndex": 0,
+            "isLinear": true
+          }
+        },
+        {
+          "id": "navPoint-2",
+          "label": "Chapter 1",
+          "src": "OEBPS/Text/Section0001.xhtml",
+          "depth": 0,
+          "children": [
+            {
+              "id": "navPoint-3",
+              "label": "1.",
+              "src": "OEBPS/Text/Section0001.xhtml#1",
+              "anchor": "1",
+              "depth": 1,
+              "children": [
+                {
+                  "id": "navPoint-4",
+                  "label": "1.1.",
+                  "src": "OEBPS/Text/Section0001.xhtml#1_1",
+                  "anchor": "1_1",
+                  "depth": 2,
+                  "children": [],
+                  "spine": {
+                    "id": "Section0001.xhtml",
+                    "href": "OEBPS/Text/Section0001.xhtml",
+                    "mediaType": "application/xhtml+xml",
+                    "size": 1,
+                    "spineIndex": 1,
+                    "isLinear": true
+                  }
+                },
+                {
+                  "id": "navPoint-5",
+                  "label": "1.2.",
+                  "src": "OEBPS/Text/Section0001.xhtml#1_2",
+                  "anchor": "1_2",
+                  "depth": 2,
+                  "children": [],
+                  "spine": {
+                    "id": "Section0001.xhtml",
+                    "href": "OEBPS/Text/Section0001.xhtml",
+                    "mediaType": "application/xhtml+xml",
+                    "size": 1,
+                    "spineIndex": 1,
+                    "isLinear": true
+                  }
+                }
+              ],
+              "spine": {
+                "id": "Section0001.xhtml",
+                "href": "OEBPS/Text/Section0001.xhtml",
+                "mediaType": "application/xhtml+xml",
+                "size": 1,
+                "spineIndex": 1,
+                "isLinear": true
+              }
+            },
+            {
+              "id": "navPoint-6",
+              "label": "2.",
+              "src": "OEBPS/Text/Section0001.xhtml#2",
+              "anchor": "2",
+              "depth": 1,
+              "children": [
+                {
+                  "id": "navPoint-7",
+                  "label": "2.1.",
+                  "src": "OEBPS/Text/Section0001.xhtml#2_1",
+                  "anchor": "2_1",
+                  "depth": 2,
+                  "children": [],
+                  "spine": {
+                    "id": "Section0001.xhtml",
+                    "href": "OEBPS/Text/Section0001.xhtml",
+                    "mediaType": "application/xhtml+xml",
+                    "size": 1,
+                    "spineIndex": 1,
+                    "isLinear": true
+                  }
+                },
+                {
+                  "id": "navPoint-8",
+                  "label": "2.2.",
+                  "src": "OEBPS/Text/Section0001.xhtml#2_2",
+                  "anchor": "2_2",
+                  "depth": 2,
+                  "children": [],
+                  "spine": {
+                    "id": "Section0001.xhtml",
+                    "href": "OEBPS/Text/Section0001.xhtml",
+                    "mediaType": "application/xhtml+xml",
+                    "size": 1,
+                    "spineIndex": 1,
+                    "isLinear": true
+                  }
+                }
+              ],
+              "spine": {
+                "id": "Section0001.xhtml",
+                "href": "OEBPS/Text/Section0001.xhtml",
+                "mediaType": "application/xhtml+xml",
+                "size": 1,
+                "spineIndex": 1,
+                "isLinear": true
+              }
+            }
+          ],
+          "spine": {
+            "id": "Section0001.xhtml",
+            "href": "OEBPS/Text/Section0001.xhtml",
+            "mediaType": "application/xhtml+xml",
+            "size": 1,
+            "spineIndex": 1,
+            "isLinear": true
+          }
+        },
+        {
+          "id": "navPoint-9",
+          "label": "Chapter 2",
+          "src": "OEBPS/Text/Section0002.xhtml",
+          "depth": 0,
+          "children": [
+            {
+              "id": "navPoint-10",
+              "label": "1.",
+              "src": "OEBPS/Text/Section0002.xhtml#1",
+              "anchor": "1",
+              "depth": 1,
+              "children": [
+                {
+                  "id": "navPoint-11",
+                  "label": "1.1.",
+                  "src": "OEBPS/Text/Section0002.xhtml#1_1",
+                  "anchor": "1_1",
+                  "depth": 2,
+                  "children": [],
+                  "spine": {
+                    "id": "Section0002.xhtml",
+                    "href": "OEBPS/Text/Section0002.xhtml",
+                    "mediaType": "application/xhtml+xml",
+                    "size": 1,
+                    "spineIndex": 2,
+                    "isLinear": true
+                  }
+                },
+                {
+                  "id": "navPoint-12",
+                  "label": "1.2.",
+                  "src": "OEBPS/Text/Section0002.xhtml#1_2",
+                  "anchor": "1_2",
+                  "depth": 2,
+                  "children": [],
+                  "spine": {
+                    "id": "Section0002.xhtml",
+                    "href": "OEBPS/Text/Section0002.xhtml",
+                    "mediaType": "application/xhtml+xml",
+                    "size": 1,
+                    "spineIndex": 2,
+                    "isLinear": true
+                  }
+                },
+                {
+                  "id": "navPoint-13",
+                  "label": "1.3.",
+                  "src": "OEBPS/Text/Section0002.xhtml#1_3",
+                  "anchor": "1_3",
+                  "depth": 2,
+                  "children": [
+                    {
+                      "id": "navPoint-14",
+                      "label": "1.3.1.",
+                      "src": "OEBPS/Text/Section0002.xhtml#1_3_1",
+                      "anchor": "1_3_1",
+                      "depth": 3,
+                      "children": [],
+                      "spine": {
+                        "id": "Section0002.xhtml",
+                        "href": "OEBPS/Text/Section0002.xhtml",
+                        "mediaType": "application/xhtml+xml",
+                        "size": 1,
+                        "spineIndex": 2,
+                        "isLinear": true
+                      }
+                    }
+                  ],
+                  "spine": {
+                    "id": "Section0002.xhtml",
+                    "href": "OEBPS/Text/Section0002.xhtml",
+                    "mediaType": "application/xhtml+xml",
+                    "size": 1,
+                    "spineIndex": 2,
+                    "isLinear": true
+                  }
+                }
+              ],
+              "spine": {
+                "id": "Section0002.xhtml",
+                "href": "OEBPS/Text/Section0002.xhtml",
+                "mediaType": "application/xhtml+xml",
+                "size": 1,
+                "spineIndex": 2,
+                "isLinear": true
+              }
+            },
+            {
+              "id": "navPoint-15",
+              "label": "2.",
+              "src": "OEBPS/Text/Section0002.xhtml#2",
+              "anchor": "2",
+              "depth": 1,
+              "children": [],
+              "spine": {
+                "id": "Section0002.xhtml",
+                "href": "OEBPS/Text/Section0002.xhtml",
+                "mediaType": "application/xhtml+xml",
+                "size": 1,
+                "spineIndex": 2,
+                "isLinear": true
+              }
+            }
+          ],
+          "spine": {
+            "id": "Section0002.xhtml",
+            "href": "OEBPS/Text/Section0002.xhtml",
+            "mediaType": "application/xhtml+xml",
+            "size": 1,
+            "spineIndex": 2,
+            "isLinear": true
+          }
+        },
+        {
+          "id": "navPoint-16",
+          "label": "Copyrights",
+          "src": "",
+          "depth": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "Cover.xhtml",
+      "href": "OEBPS/Text/Cover.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 0,
+      "isLinear": true
+    },
+    {
+      "id": "Section0001.xhtml",
+      "href": "OEBPS/Text/Section0001.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 1,
+      "isLinear": true
+    },
+    {
+      "id": "Section0002.xhtml",
+      "href": "OEBPS/Text/Section0002.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 2,
+      "isLinear": true
+    },
+    {
+      "id": "Section0003.xhtml",
+      "href": "OEBPS/Text/Section0003.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "reason": "not_exists"
+    },
+    {
+      "id": "Style0001.css",
+      "href": "OEBPS/Styles/Style0001.css",
+      "mediaType": "text/css",
+      "size": 1
+    },
+    {
+      "id": "NotoSans-Regular.ttf",
+      "href": "OEBPS/Fonts/NotoSans-Regular.ttf",
+      "mediaType": "application/x-font-ttf",
+      "size": 1
+    },
+    {
+      "id": "ridibooks_logo.png",
+      "href": "OEBPS/Images/ridibooks_logo.png",
+      "mediaType": "image/png",
+      "size": 1,
+      "isCover": true
+    },
+    {
+      "id": "ridibooks.png",
+      "href": "OEBPS/Images/ridibooks.png",
+      "mediaType": "image/png",
+      "size": 1
+    },
+    {
+      "id": "Section0004.xhtml",
+      "href": "OEBPS/Text/Section0004.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 3,
+      "isLinear": false
+    },
+    {
+      "id": "Section0005.xhtml",
+      "href": "OEBPS/Text/Section0005.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 4,
+      "isLinear": true
+    },
+    {
+      "id": "Section0006.xhtml",
+      "href": "OEBPS/Text/Section0006.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "reason": "not_spine"
+    },
+    {
+      "id": "empty.mp4",
+      "href": "OEBPS/Video/empty.mp4",
+      "mediaType": "video/mp4",
+      "size": 1,
+      "reason": "not_support_type"
+    }
+  ],
+  "ncx": {
+    "id": "ncx",
+    "href": "OEBPS/toc.ncx",
+    "mediaType": "application/x-dtbncx+xml",
+    "size": 1,
+    "navPoints": [
+      {
+        "id": "navPoint-1",
+        "label": "Cover",
+        "src": "OEBPS/Text/Cover.xhtml",
+        "depth": 0,
+        "children": [],
+        "spine": {
+          "id": "Cover.xhtml",
+          "href": "OEBPS/Text/Cover.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "size": 1,
+          "spineIndex": 0,
+          "isLinear": true
+        }
+      },
+      {
+        "id": "navPoint-2",
+        "label": "Chapter 1",
+        "src": "OEBPS/Text/Section0001.xhtml",
+        "depth": 0,
+        "children": [
+          {
+            "id": "navPoint-3",
+            "label": "1.",
+            "src": "OEBPS/Text/Section0001.xhtml#1",
+            "anchor": "1",
+            "depth": 1,
+            "children": [
+              {
+                "id": "navPoint-4",
+                "label": "1.1.",
+                "src": "OEBPS/Text/Section0001.xhtml#1_1",
+                "anchor": "1_1",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0001.xhtml",
+                  "href": "OEBPS/Text/Section0001.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "size": 1,
+                  "spineIndex": 1,
+                  "isLinear": true
+                }
+              },
+              {
+                "id": "navPoint-5",
+                "label": "1.2.",
+                "src": "OEBPS/Text/Section0001.xhtml#1_2",
+                "anchor": "1_2",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0001.xhtml",
+                  "href": "OEBPS/Text/Section0001.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "size": 1,
+                  "spineIndex": 1,
+                  "isLinear": true
+                }
+              }
+            ],
+            "spine": {
+              "id": "Section0001.xhtml",
+              "href": "OEBPS/Text/Section0001.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "size": 1,
+              "spineIndex": 1,
+              "isLinear": true
+            }
+          },
+          {
+            "id": "navPoint-6",
+            "label": "2.",
+            "src": "OEBPS/Text/Section0001.xhtml#2",
+            "anchor": "2",
+            "depth": 1,
+            "children": [
+              {
+                "id": "navPoint-7",
+                "label": "2.1.",
+                "src": "OEBPS/Text/Section0001.xhtml#2_1",
+                "anchor": "2_1",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0001.xhtml",
+                  "href": "OEBPS/Text/Section0001.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "size": 1,
+                  "spineIndex": 1,
+                  "isLinear": true
+                }
+              },
+              {
+                "id": "navPoint-8",
+                "label": "2.2.",
+                "src": "OEBPS/Text/Section0001.xhtml#2_2",
+                "anchor": "2_2",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0001.xhtml",
+                  "href": "OEBPS/Text/Section0001.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "size": 1,
+                  "spineIndex": 1,
+                  "isLinear": true
+                }
+              }
+            ],
+            "spine": {
+              "id": "Section0001.xhtml",
+              "href": "OEBPS/Text/Section0001.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "size": 1,
+              "spineIndex": 1,
+              "isLinear": true
+            }
+          }
+        ],
+        "spine": {
+          "id": "Section0001.xhtml",
+          "href": "OEBPS/Text/Section0001.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "size": 1,
+          "spineIndex": 1,
+          "isLinear": true
+        }
+      },
+      {
+        "id": "navPoint-9",
+        "label": "Chapter 2",
+        "src": "OEBPS/Text/Section0002.xhtml",
+        "depth": 0,
+        "children": [
+          {
+            "id": "navPoint-10",
+            "label": "1.",
+            "src": "OEBPS/Text/Section0002.xhtml#1",
+            "anchor": "1",
+            "depth": 1,
+            "children": [
+              {
+                "id": "navPoint-11",
+                "label": "1.1.",
+                "src": "OEBPS/Text/Section0002.xhtml#1_1",
+                "anchor": "1_1",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0002.xhtml",
+                  "href": "OEBPS/Text/Section0002.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "size": 1,
+                  "spineIndex": 2,
+                  "isLinear": true
+                }
+              },
+              {
+                "id": "navPoint-12",
+                "label": "1.2.",
+                "src": "OEBPS/Text/Section0002.xhtml#1_2",
+                "anchor": "1_2",
+                "depth": 2,
+                "children": [],
+                "spine": {
+                  "id": "Section0002.xhtml",
+                  "href": "OEBPS/Text/Section0002.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "size": 1,
+                  "spineIndex": 2,
+                  "isLinear": true
+                }
+              },
+              {
+                "id": "navPoint-13",
+                "label": "1.3.",
+                "src": "OEBPS/Text/Section0002.xhtml#1_3",
+                "anchor": "1_3",
+                "depth": 2,
+                "children": [
+                  {
+                    "id": "navPoint-14",
+                    "label": "1.3.1.",
+                    "src": "OEBPS/Text/Section0002.xhtml#1_3_1",
+                    "anchor": "1_3_1",
+                    "depth": 3,
+                    "children": [],
+                    "spine": {
+                      "id": "Section0002.xhtml",
+                      "href": "OEBPS/Text/Section0002.xhtml",
+                      "mediaType": "application/xhtml+xml",
+                      "size": 1,
+                      "spineIndex": 2,
+                      "isLinear": true
+                    }
+                  }
+                ],
+                "spine": {
+                  "id": "Section0002.xhtml",
+                  "href": "OEBPS/Text/Section0002.xhtml",
+                  "mediaType": "application/xhtml+xml",
+                  "size": 1,
+                  "spineIndex": 2,
+                  "isLinear": true
+                }
+              }
+            ],
+            "spine": {
+              "id": "Section0002.xhtml",
+              "href": "OEBPS/Text/Section0002.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "size": 1,
+              "spineIndex": 2,
+              "isLinear": true
+            }
+          },
+          {
+            "id": "navPoint-15",
+            "label": "2.",
+            "src": "OEBPS/Text/Section0002.xhtml#2",
+            "anchor": "2",
+            "depth": 1,
+            "children": [],
+            "spine": {
+              "id": "Section0002.xhtml",
+              "href": "OEBPS/Text/Section0002.xhtml",
+              "mediaType": "application/xhtml+xml",
+              "size": 1,
+              "spineIndex": 2,
+              "isLinear": true
+            }
+          }
+        ],
+        "spine": {
+          "id": "Section0002.xhtml",
+          "href": "OEBPS/Text/Section0002.xhtml",
+          "mediaType": "application/xhtml+xml",
+          "size": 1,
+          "spineIndex": 2,
+          "isLinear": true
+        }
+      },
+      {
+        "id": "navPoint-16",
+        "label": "Copyrights",
+        "src": "",
+        "depth": 0,
+        "children": []
+      }
+    ]
+  },
+  "spines": [
+    {
+      "id": "Cover.xhtml",
+      "href": "OEBPS/Text/Cover.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 0,
+      "isLinear": true
+    },
+    {
+      "id": "Section0001.xhtml",
+      "href": "OEBPS/Text/Section0001.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 1,
+      "isLinear": true
+    },
+    {
+      "id": "Section0002.xhtml",
+      "href": "OEBPS/Text/Section0002.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 2,
+      "isLinear": true
+    },
+    {
+      "id": "Section0004.xhtml",
+      "href": "OEBPS/Text/Section0004.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 3,
+      "isLinear": false
+    },
+    {
+      "id": "Section0005.xhtml",
+      "href": "OEBPS/Text/Section0005.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "spineIndex": 4,
+      "isLinear": true
+    }
+  ],
+  "fonts": [
+    {
+      "id": "NotoSans-Regular.ttf",
+      "href": "OEBPS/Fonts/NotoSans-Regular.ttf",
+      "mediaType": "application/x-font-ttf",
+      "size": 1
+    }
+  ],
+  "cover": {
+    "id": "ridibooks_logo.png",
+    "href": "OEBPS/Images/ridibooks_logo.png",
+    "mediaType": "image/png",
+    "size": 1,
+    "isCover": true
+  },
+  "images": [
+    {
+      "id": "ridibooks_logo.png",
+      "href": "OEBPS/Images/ridibooks_logo.png",
+      "mediaType": "image/png",
+      "size": 1,
+      "isCover": true
+    },
+    {
+      "id": "ridibooks.png",
+      "href": "OEBPS/Images/ridibooks.png",
+      "mediaType": "image/png",
+      "size": 1,
+      "isCover": false
+    }
+  ],
+  "styles": [
+    {
+      "id": "Style0001.css",
+      "href": "OEBPS/Styles/Style0001.css",
+      "mediaType": "text/css",
+      "size": 1
+    }
+  ],
+  "deadItems": [
+    {
+      "id": "Section0003.xhtml",
+      "href": "OEBPS/Text/Section0003.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "reason": "not_exists"
+    },
+    {
+      "id": "Section0006.xhtml",
+      "href": "OEBPS/Text/Section0006.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "reason": "not_spine"
+    },
+    {
+      "id": "empty.mp4",
+      "href": "OEBPS/Video/empty.mp4",
+      "mediaType": "video/mp4",
+      "size": 1,
+      "reason": "not_support_type"
+    }
+  ],
+  "guide": [
+    {
+      "title": "Cover",
+      "type": "cover",
+      "href": "OEBPS/Text/Cover.xhtml",
+      "item": {
+        "id": "Cover.xhtml",
+        "href": "OEBPS/Text/Cover.xhtml",
+        "mediaType": "application/xhtml+xml",
+        "size": 1,
+        "spineIndex": 0,
+        "isLinear": true
+      }
+    }
+  ]
+}

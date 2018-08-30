@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:language>en</dc:language>
+    <dc:coverage>Coverage</dc:coverage>
+    <dc:subject>Subject</dc:subject>
+    <dc:rights>Copyright (c) 2018 Davin</dc:rights>
+    <dc:source>My brain</dc:source>
+    <dc:title>Default</dc:title>
+    <meta name="Sigil version" content="0.9.10" />
+    <dc:identifier opf:scheme="ISBN">0-306-40615-2</dc:identifier>
+    <dc:date opf:event="modification">2018-08-25</dc:date>
+    <dc:date opf:event="creation">2018-08-07</dc:date>
+    <dc:date>2018-08-07</dc:date>
+    <dc:description>Description</dc:description>
+    <dc:publisher>Davin</dc:publisher>
+    <dc:creator opf:role="aut">Davin Ahn</dc:creator>
+    <dc:creator opf:role="edt">Davin Ahn</dc:creator>
+    <dc:contributor>Davin Ahn</dc:contributor>
+    <dc:format>Format</dc:format>
+    <dc:relation>https://github.com/ridi/epub-parser</dc:relation>
+    <dc:type>Type</dc:type>
+    <dc:identifier>256266</dc:identifier>
+    <dc:identifier id="BookId" opf:scheme="UUID">urn:uuid:1379039a-3ea4-4071-9ce8-2b0c29fc0030</dc:identifier>
+    <meta name="cover" content="ridibooks_logo.png" />
+  </metadata>
+  <manifest>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="Cover.xhtml" href="Text/Cover.xhtml" media-type="application/xhtml+xml"/>
+    <item id="Section0001.xhtml" href="Text/Section0001.xhtml" media-type="application/xhtml+xml"/>
+    <item id="Section0002.xhtml" href="Text/Section0002.xhtml" media-type="application/xhtml+xml"/>
+    <item id="Section0003.xhtml" href="Text/Section0003.xhtml" media-type="application/xhtml+xml"/>
+    <item id="Style0001.css" href="Styles/Style0001.css" media-type="text/css"/>
+    <item id="NotoSans-Regular.ttf" href="Fonts/NotoSans-Regular.ttf" media-type="application/x-font-ttf"/>
+    <item id="ridibooks_logo.png" href="Images/ridibooks_logo.png" media-type="image/png"/>
+    <item id="ridibooks.png" href="Images/ridibooks.png" media-type="image/png"/>
+    <item id="Section0004.xhtml" href="Text/Section0004.xhtml" media-type="application/xhtml+xml"/>
+    <item id="Section0005.xhtml" href="Text/Section0005.xhtml" media-type="application/xhtml+xml"/>
+    <item id="Section0006.xhtml" href="Text/Section0006.xhtml" media-type="application/xhtml+xml"/>
+    <item id="empty.mp4" href="Video/empty.mp4" media-type="video/mp4"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="Cover.xhtml"/>
+    <itemref idref="Section0001.xhtml"/>
+    <itemref idref="Section0002.xhtml"/>
+    <itemref idref="Section0003.xhtml"/>
+    <itemref idref="Section0004.xhtml" linear="false"/>
+    <itemref idref="Section0005.xhtml"/>
+  </spine>
+  <guide>
+    <reference type="cover" title="Cover" href="Text/Cover.xhtml"/>
+  </guide>
+</package>

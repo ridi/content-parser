@@ -1,5 +1,5 @@
 {
-  "name": "epub-parser",
+  "name": "@ridi/epub-parser",
   "version": "0.0.1",
   "description": "Common EPUB2 data parser for Ridibooks services written in ES6",
   "author": {
@@ -22,12 +22,21 @@
   ],
   "main": "./lib/index.js",
   "scripts": {
-    "clean": "rimraf lib coverage",
-    "build": "yarn lint && cross-env BABEL_ENV=production babel src --out-dir lib",
+    "clean": "rimraf coverage lib temp",
+    "build": "yarn lint && yarn clean && mkdir lib && cross-env BABEL_ENV=production babel src --out-file lib/index.js",
     "watch": "yarn build -- --watch",
-    "test": "cross-env BABEL_ENV=production npm run cover",
-    "cover": "istanbul cover _mocha -- --require babel-core/register --require babel-polyfill --recursive",
+    "test": "cross-env BABEL_ENV=production && yarn lint && yarn cover",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --require babel-polyfill --recursive",
     "lint": "eslint src"
+  },
+  "dependencies": {
+    "css-tree": "^1.0.0-alpha.29",
+    "fast-xml-parser": "^3.11.2",
+    "he": "^1.1.1",
+    "himalaya": "^1.1.0",
+    "natural-orderby": "^1.0.2",
+    "node-stream-zip": "^1.7.0",
+    "string-format": "^2.0.0"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",
@@ -36,8 +45,10 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-minify": "^0.4.3",
     "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
