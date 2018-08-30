@@ -2,6 +2,7 @@
 
 > Common EPUB2 data parser for Ridibooks services written in ES6
 
+[![npm version](https://badge.fury.io/js/%40ridi%2Fepub-parser.svg)](https://badge.fury.io/js/%40ridi%2Fepub-parser)
 [![Build Status](https://travis-ci.org/ridi/epub-parser.svg?branch=master)](https://travis-ci.org/ridi/epub-parser)
 
 ## Features
