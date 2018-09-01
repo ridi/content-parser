@@ -4,7 +4,7 @@ import { parse as parseHtml } from 'himalaya';
 import Errors, { createError } from './constant/errors';
 import cssLoader from './loader/cssLoader';
 import spineLoader from './loader/spineLoader';
-import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
+import xmlLoader, { getValue, getValues, textNodeName } from './loader/xmlLoader';
 import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';
@@ -368,18 +368,18 @@ class EpubParser {
       rawBook.titles = getValues(title);
       rawBook.creators = getValues(creator, key => (key === textNodeName ? 'name' : key));
       rawBook.subjects = getValues(subject);
-      rawBook.description = description;
-      rawBook.publisher = publisher;
+      rawBook.description = getValue(description);
+      rawBook.publisher = getValue(publisher);
       rawBook.contributors = getValues(contributor, key => (key === textNodeName ? 'name' : key));
       rawBook.dates = getValues(date, key => (key === textNodeName ? 'value' : key));
-      rawBook.type = type;
-      rawBook.format = format;
+      rawBook.type = getValue(type);
+      rawBook.format = getValue(format);
       rawBook.identifiers = getValues(identifier, key => (key === textNodeName ? 'value' : key));
-      rawBook.source = source;
-      rawBook.language = language;
-      rawBook.relation = relation;
-      rawBook.coverage = coverage;
-      rawBook.rights = rights;
+      rawBook.source = getValue(source);
+      rawBook.language = getValue(language);
+      rawBook.relation = getValue(relation);
+      rawBook.coverage = getValue(coverage);
+      rawBook.rights = getValue(rights);
       rawBook.metas = getValues(meta);
       resolve(context);
     });
@@ -771,8 +771,8 @@ class EpubParser {
 
   /**
    * Contents is read using loader suitable for context
-   * @param {ReadContext} context properties required for reading
-   * @returns {(string[] | Buffer[] | object[])}
+   * @param {!ReadContext} context properties required for reading
+   * @returns {!(string[] | Buffer[] | object[])}
    *          returns type is different depending on items and options with:
    *          {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
    * @throws {Errors.ENOFILE} no such file

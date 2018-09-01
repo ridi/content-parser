@@ -32,6 +32,20 @@ const normalizeKey = (obj, keyTranslator) => {
   return newObj;
 };
 
+const getValue = (any, keyTranslator) => {
+  if (!isExists(any)) {
+    return undefined;
+  }
+  if (isArray(any)) {
+    const first = any[0];
+    if (!isExists(first)) {
+      return undefined;
+    }
+    return normalizeKey(first, keyTranslator);
+  }
+  return normalizeKey(any, keyTranslator);
+};
+
 const getValues = (any, keyTranslator) => {
   if (!isExists(any)) {
     return [];
@@ -41,7 +55,7 @@ const getValues = (any, keyTranslator) => {
 
 const textNodeName = '#text';
 
-export { getValues, textNodeName };
+export { getValue, getValues, textNodeName };
 
 export default function xmlLoader(entry, options) {
   const file = entry.getFile('utf8');
