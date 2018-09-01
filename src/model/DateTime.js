@@ -1,4 +1,12 @@
-import { isString } from '../util';
+import { isExists, isString, stringContains } from '../util';
+
+const Events = Object.freeze({
+  UNDEFINED: 'undefined',
+  UNKNOWN: 'unknown',
+  CREATION: 'creation',
+  MODIFICATION: 'modification',
+  PUBLICATION: 'publication',
+});
 
 class DateTime {
   constructor(rawObj) {
@@ -7,7 +15,15 @@ class DateTime {
     } else {
       this.value = rawObj.value;
     }
-    this.event = (rawObj.event || DateTime.Events.UNDEFINED).toLowerCase();
+    if (isExists(rawObj.event)) {
+      if (stringContains(Object.values(Events), rawObj.event)) {
+        this.event = rawObj.event.toLowerCase();
+      } else {
+        this.event = Events.UNKNOWN;
+      }
+    } else {
+      this.event = Events.UNDEFINED;
+    }
     Object.freeze(this);
   }
 
@@ -19,11 +35,6 @@ class DateTime {
   }
 }
 
-DateTime.Events = Object.freeze({
-  UNDEFINED: 'undefined',
-  CREATION: 'creation',
-  MODIFICATION: 'modification',
-  PUBLICATION: 'publication',
-});
+DateTime.Events = Events;
 
 export default DateTime;
