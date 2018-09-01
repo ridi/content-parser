@@ -8,7 +8,7 @@ should(); // Initialize should
 describe('Model - InlineCssItem', () => {
   it('constructor test', () => {
     let item = new InlineCssItem({});
-    assert(item.text === undefined);
+    assert(item.text === '');
     assert(item instanceof CssItem);
 
     item = new InlineCssItem({

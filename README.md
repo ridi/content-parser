@@ -102,68 +102,68 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 ### [Book](./src/model/Book.js)
 
-- titles: *string[]*
-- creators: *[Author](#author)[]*
-- subjects: *string[]*
-- description: *string?*
-- publisher: *string?*
-- contributors: *[Author](#author)[]*
-- dates: *[DateTime](#dateTime)[]*
-- type: *string?*
-- format: *string?*
-- identifiers: *[Identifier](#identifier)[]*
-- source: *string?*
-- language: *string?*
-- relation: *string?*
-- rights: *string?*
-- version: *[Version](#version)?*
-- metas: *[Meta](#meta)[]*
-- items: *[Item](#item)[]*
-- ncx: *[NcxItem](#ncxItem)?*
-- spines: *[SpintItem](#spineItem)[]*
-- fonts: *[FontItem](#fontItem)[]*
-- cover: *[ImageItem](#imageItem)?*
-- images: *[ImageItem](#imageItem)[]*
-- styles: *[CssItem](#cssItem)[]*
-- guide: *[Guide](#Guide)[]*
-- deadItems: *[DeadItem](#deadItem)[]*
+- titles: *!string[]*
+- creators: *![Author](#author)[]*
+- subjects: *!string[]*
+- description: *?string*
+- publisher: *?string*
+- contributors: *![Author](#author)[]*
+- dates: *![DateTime](#dateTime)[]*
+- type: *?string*
+- format: *?string*
+- identifiers: *![Identifier](#identifier)[]*
+- source: *?string*
+- language: *?string*
+- relation: *?string*
+- rights: *?string*
+- version: *![Version](#version)*
+- metas: *![Meta](#meta)[]*
+- items: *![Item](#item)[]*
+- ncx: *![NcxItem](#ncxItem)*
+- spines: *![SpintItem](#spineItem)[]*
+- fonts: *![FontItem](#fontItem)[]*
+- cover: *?[ImageItem](#imageItem)*
+- images: *![ImageItem](#imageItem)[]*
+- styles: *![CssItem](#cssItem)[]*
+- guide: *![Guide](#Guide)[]*
+- deadItems: *![DeadItem](#deadItem)[]*
 
 <a id="author"></a>
 
 ### [Author](./src/model/Author.js)
 
-- name: *string?*
-- role: *string* (**Default: Author.Roles.UNDEFINED**)
+- name: *?string*
+- role: *!string* (**Default: Author.Roles.UNDEFINED**)
 
 <a id="dateTime"></a>
 
 ### [DateTime](./src/model/DateTime.js)
 
-- value: *strung?*
-- event: *string* (**Default: DateTime.Events.UNDEFINED**)
+- value: *?strung*
+- event: *!string* (**Default: DateTime.Events.UNDEFINED**)
 
 <a id="identifier"></a>
 
 ### [Identifier](./src/model/Identifier.js)
 
-- value: *string?*
-- scheme: *string?* (**Default: Identifier.Schemes.UNDEFINED**)
+- value: *?string*
+- scheme: *!string* (**Default: Identifier.Schemes.UNDEFINED**)
 
 <a id="meta"></a>
 
 ### [Meta](./src/model/Meta.js)
 
-- name: *string?*
-- content: *string?*
+- name: *?string*
+- content: *?string*
 
 <a id="guide"></a>
 
 ### [Guide](./src/model/Guide.js)
 
-- title: *string?*
-- type: *string* (**Default: Guide.Types.UNDEFINED**)
-- href: *string?*
-- item: *[Item](#item)?*
+- title: *?string*
+- type: *!string* (**Default: Guide.Types.UNDEFINED**)
+- href: *?string*
+- item: *?[Item](#item)*
 
 <a id="itemTypes"></a>
 
@@ -173,40 +173,40 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 #### [Item](./src/model/Item.js)
 
-- id: *id?*
-- href: *string?*
-- mediaType: *string?*
-- size: *number?*
-- isFileExists: *boolean* (**size !== undefined**)
+- id: *?id*
+- href: *?string*
+- mediaType: *?string*
+- size: *?number*
+- isFileExists: *!boolean* (**size !== undefined**)
 
 <a id="ncxItem"></a>
 
 #### [NcxItem](./src/model/NcxItem.js) (extend [Item](#item))
 
-- navPoints: *[NavPoint](#navPoint)[]*
+- navPoints: *![NavPoint](#navPoint)[]*
 
 <a id="spineItem"></a>
 
 #### [SpineItem](./src/model/SpineItem.js) (extend [Item](#item))
 
-- spineIndex: *number* (**Default: -1**)
-- isLinear: *boolean* (**Default: true**)
-- styles: *[CssItem](#cssItem)[]?*
+- spineIndex: *!number* (**Default: -1**)
+- isLinear: *!boolean* (**Default: true**)
+- styles: *?[CssItem](#cssItem)[]*
 
 <a id="cssItem"></a>
 
 #### [CssItem](./src/model/CssItem.js) (extend [Item](#item))
-- namespace: *string?*
+- namespace: *?string*
 
 <a id="inlineCssItem"></a>
 
 #### [InlineCssItem](./src/model/InlineCssItem.js) (extend [CssItem](#cssItem))
-- text: *string?*
+- text: *!string* (**Default: ''**)
 
 <a id="imageItem"></a>
 
 #### [ImageItem](./src/model/ImageItem.js) (extend [Item](#item))
-- isCover: *boolean* (**Default: false**)
+- isCover: *!boolean* (**Default: false**)
 
 <a id="svgItem"></a>
 
@@ -219,29 +219,29 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 <a id="deadItem"></a>
 
 #### [DeadItem](./src/model/DeadItem.js) (extend [Item](#item))
-- reason: *string* (**Default: DeadItem.Reason.UNDEFINED**)
+- reason: *!string* (**Default: DeadItem.Reason.UNDEFINED**)
 
 <a id="navPoint"></a>
 
 ### [NavPoint](./src/model/NavPoint.js)
 
-- id: *string?*
-- label: *string?*
-- src: *string?*
-- anchor: *string?*
-- depth: *number* (**Default: 0**)
-- children: *NavPoint[]*
-- spine: *[SpineItem](#spineItem)?*
+- id: *?string*
+- label: *?string*
+- src: *?string*
+- anchor: *?string*
+- depth: *!number* (**Default: 0**)
+- children: *!NavPoint[]*
+- spine: *?[SpineItem](#spineItem)*
 
 <a id="version"></a>
 
 ### [Version](./src/model/Version.js)
 
-- major: *number*
-- minor: *number*
-- patch: *number*
-- isValid: *boolean*
-- toString(): *string*
+- major: *!number*
+- minor: *!number*
+- patch: *!number*
+- isValid: *!boolean*
+- toString(): *!string*
 
 <a id="parseOptions"></a>
 
