@@ -137,7 +137,7 @@ describe('Parsing test', () => {
         rawBook.relation.should.equal(expectedRawBook.relation);
         rawBook.coverage.should.equal(expectedRawBook.coverage);
         rawBook.rights.should.equal(expectedRawBook.rights);
-        rawBook.epubVersion.should.equal(expectedRawBook.epubVersion);
+        rawBook.version.should.equal(expectedRawBook.version);
         rawBook.metas.should.deep.equal(expectedRawBook.metas);
   
         let current = 0;

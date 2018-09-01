@@ -57,7 +57,8 @@ export default function validationBook(book, expectedBook, options = {}) {
 
   book.rights.should.equal(expectedBook.rights);
 
-  book.epubVersion.should.equal(expectedBook.epubVersion);
+  book.version.isValid.should.be.true;
+  book.version.toString().should.equal(expectedBook.version);
 
   book.items.should.have.lengthOf(expectedBook.items.length);
   book.items.forEach((item, idx) => {

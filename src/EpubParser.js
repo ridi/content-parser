@@ -344,7 +344,7 @@ class EpubParser {
         throw createError(Errors.ENOELMT, 'metadata or manifest or spine', opfPath);
       }
 
-      context.rawBook.epubVersion = parseFloat(root.version);
+      context.rawBook.version = root.version;
       this._parseMetadata(root.metadata, context)
         .then(ctx => this._parseManifestAndSpine(root.manifest, root.spine, ctx))
         .then(ctx => this._parseGuide(root.guide, ctx))

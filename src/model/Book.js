@@ -13,6 +13,7 @@ import mergeObjects from '../util/mergeObjects';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
+import Version from './Version';
 
 /* eslint-disable new-cap */
 class Book {
@@ -33,7 +34,7 @@ class Book {
     this.relation = rawBook.relation;
     this.coverage = rawBook.coverage;
     this.rights = rawBook.rights;
-    this.epubVersion = rawBook.epubVersion;
+    this.version = new Version(rawBook.version);
     this.metas = (rawBook.metas || []).map(rawObj => new Meta(rawObj));
     this.items = (rawBook.items || []).map((rawObj) => {
       let { itemType } = rawObj;
@@ -86,7 +87,7 @@ class Book {
       relation: this.relation,
       coverage: this.coverage,
       rights: this.rights,
-      epubVersion: this.epubVersion,
+      version: this.version.toString(),
       metas: this.metas.map(meta => meta.toRaw()),
       items: this.items.map(item => item.toRaw()),
       guide: this.guide.map(guide => guide.toRaw()),

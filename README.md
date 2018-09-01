@@ -116,8 +116,8 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 - language: *string?*
 - relation: *string?*
 - rights: *string?*
-- epubVersion: *number?*
-- metas: *[Meta](meta)[]*
+- version: *[Version](#version)?*
+- metas: *[Meta](#meta)[]*
 - items: *[Item](#item)[]*
 - ncx: *[NcxItem](#ncxItem)?*
 - spines: *[SpintItem](#spineItem)[]*
@@ -232,6 +232,16 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 - depth: *number* (**Default: 0**)
 - children: *NavPoint[]*
 - spine: *[SpineItem](#spineItem)?*
+
+<a id="version"></a>
+
+### [Version](./src/model/Version.js)
+
+- major: *number*
+- minor: *number*
+- patch: *number*
+- isValid: *boolean*
+- toString(): *string*
 
 <a id="parseOptions"></a>
 
