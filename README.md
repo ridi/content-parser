@@ -103,30 +103,30 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 ### [Book](./src/model/Book.js)
 
 - titles: *!string[]*
-- creators: *![Author](#author)[]*
+- creators: *\![Author](#author)[]*
 - subjects: *!string[]*
 - description: *?string*
 - publisher: *?string*
-- contributors: *![Author](#author)[]*
-- dates: *![DateTime](#dateTime)[]*
+- contributors: *\![Author](#author)[]*
+- dates: *\![DateTime](#dateTime)[]*
 - type: *?string*
 - format: *?string*
-- identifiers: *![Identifier](#identifier)[]*
+- identifiers: *\![Identifier](#identifier)[]*
 - source: *?string*
 - language: *?string*
 - relation: *?string*
 - rights: *?string*
-- version: *![Version](#version)*
-- metas: *![Meta](#meta)[]*
-- items: *![Item](#item)[]*
-- ncx: *![NcxItem](#ncxItem)*
-- spines: *![SpintItem](#spineItem)[]*
-- fonts: *![FontItem](#fontItem)[]*
+- version: *\![Version](#version)*
+- metas: *\![Meta](#meta)[]*
+- items: *\![Item](#item)[]*
+- ncx: *\![NcxItem](#ncxItem)*
+- spines: *\![SpintItem](#spineItem)[]*
+- fonts: *\![FontItem](#fontItem)[]*
 - cover: *?[ImageItem](#imageItem)*
-- images: *![ImageItem](#imageItem)[]*
-- styles: *![CssItem](#cssItem)[]*
-- guide: *![Guide](#Guide)[]*
-- deadItems: *![DeadItem](#deadItem)[]*
+- images: *\![ImageItem](#imageItem)[]*
+- styles: *\![CssItem](#cssItem)[]*
+- guide: *\![Guide](#Guide)[]*
+- deadItems: *\![DeadItem](#deadItem)[]*
 
 <a id="author"></a>
 
@@ -183,7 +183,7 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 #### [NcxItem](./src/model/NcxItem.js) (extend [Item](#item))
 
-- navPoints: *![NavPoint](#navPoint)[]*
+- navPoints: *\![NavPoint](#navPoint)[]*
 
 <a id="spineItem"></a>
 
@@ -196,7 +196,7 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 <a id="cssItem"></a>
 
 #### [CssItem](./src/model/CssItem.js) (extend [Item](#item))
-- namespace: *?string*
+- namespace: *!string*
 
 <a id="inlineCssItem"></a>
 
@@ -261,7 +261,7 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 <a id="validatePackage"></a>
 
-### validatePackage: *`boolean`*
+### validatePackage: *`!boolean`*
 
 If true, validation package specifications in [IDPF listed](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) below.
 - Zip header should not corrupt.
@@ -276,7 +276,7 @@ If true, validation package specifications in [IDPF listed](http://www.idpf.org/
 
 <a id="validateXml"></a>
 
-### validateXml: *`boolean`*
+### validateXml: *`!boolean`*
 
 If true, stop parsing when XML parsing errors occur.
 
@@ -286,7 +286,7 @@ If true, stop parsing when XML parsing errors occur.
 
 <a id="allowNcxFileMissing"></a>
 
-### allowNcxFileMissing: *`boolean`*
+### allowNcxFileMissing: *`!boolean`*
 
 If false, stop parsing when NCX file not exists.
 
@@ -296,7 +296,7 @@ If false, stop parsing when NCX file not exists.
 
 <a id="unzipPath"></a>
 
-### unzipPath: *`string?`*
+### unzipPath: *`?string`*
 
 If specified, uncompress to that path.
 > Only if input is EPUB file.
@@ -307,7 +307,7 @@ If specified, uncompress to that path.
 
 <a id="createIntermediateDirectories"></a>
 
-### createIntermediateDirectories: *`boolean`*
+### createIntermediateDirectories: *`!boolean`*
 
 If true, creates intermediate directories for unzipPath.
 
@@ -317,7 +317,7 @@ If true, creates intermediate directories for unzipPath.
 
 <a id="removePreviousFile"></a>
 
-### removePreviousFile: *`boolean`*
+### removePreviousFile: *`!boolean`*
 
 If true, removes a previous file from unzipPath.
 
@@ -327,7 +327,7 @@ If true, removes a previous file from unzipPath.
 
 <a id="ignoreLinear"></a>
 
-### ignoreLinear: *`boolean`*
+### ignoreLinear: *`!boolean`*
 
 If true, ignore `spineIndex` difference caused by `isLinear` property of [SpineItem](#spineItem).
 
@@ -345,7 +345,7 @@ If true, ignore `spineIndex` difference caused by `isLinear` property of [SpineI
 
 <a id="useStyleNamespace"></a>
 
-### useStyleNamespace: *`boolean`*
+### useStyleNamespace: *`!boolean`*
 
 If true, One namespace is given per CSS file or inline style, and styles used for spine is described.
 
@@ -359,7 +359,7 @@ In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem
 
 <a id="styleNamespacePrefix"></a>
 
-### styleNamespacePrefix: *`string`*
+### styleNamespacePrefix: *`!string`*
 
 Prepend given string to namespace for identification.
 
@@ -383,7 +383,7 @@ Prepend given string to namespace for identification.
 
 <a id="basePath"></a>
 
-### basePath: *`string?`*
+### basePath: *`?string`*
 
 If specified, change base path of paths used by spine and css.
 
@@ -423,7 +423,7 @@ CSS: [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
 
 <a id="spine_extractBody"></a>
 
-### spine.extractBody: *`boolean`*
+### spine.extractBody: *`!boolean`*
 
 If true, extract body. Otherwise it returns a full string.
 
@@ -457,7 +457,7 @@ false:
 
 <a id="spine_extractAdapter"></a>
 
-### spine.extractAdapter: *`function`*
+### spine.extractAdapter: *`?function`*
 
 If specified, transforms output of extractBody.
 
@@ -491,7 +491,7 @@ Result:
 
 <a id="css_removeAtrules"></a>
 
-### css.removeAtrules: *`string[]`*
+### css.removeAtrules: *`!string[]`*
 
 Remove at-rules.
 
@@ -501,7 +501,7 @@ Remove at-rules.
 
 <a id="css_removeTags"></a>
 
-### css.removeTags: *`string[]`*
+### css.removeTags: *`!string[]`*
 
 Remove selector that point to specified tags.
 
@@ -511,7 +511,7 @@ Remove selector that point to specified tags.
 
 <a id="css_removeIds"></a>
 
-### css.removeIds: *`string[]`*
+### css.removeIds: *`!string[]`*
 
 Remove selector that point to specified ids.
 
@@ -521,7 +521,7 @@ Remove selector that point to specified ids.
 
 <a id="css_removeClasses"></a>
 
-### css.removeClasses: *`string[]`*
+### css.removeClasses: *`!string[]`*
 
 Remove selector that point to specified classes.
 
