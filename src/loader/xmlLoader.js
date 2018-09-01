@@ -41,7 +41,7 @@ const getValue = (any, keyTranslator) => {
     if (!isExists(first)) {
       return undefined;
     }
-    return normalizeKey(first, keyTranslator);
+    any = first;
   }
   return normalizeKey(any, keyTranslator);
 };
