@@ -4,6 +4,8 @@ import mergeObjects from '../util/mergeObjects';
 
 const privateProps = new WeakMap();
 
+const unknownIndex = -1;
+
 class SpineItem extends Item {
   get styles() {
     const props = privateProps.get(this);
@@ -19,7 +21,7 @@ class SpineItem extends Item {
 
   constructor(rawObj) {
     super(rawObj);
-    this.spineIndex = isExists(rawObj.spineIndex) ? rawObj.spineIndex : SpineItem.UNKNOWN_INDEX;
+    this.spineIndex = isExists(rawObj.spineIndex) ? rawObj.spineIndex : unknownIndex;
     this.isLinear = isExists(rawObj.isLinear) ? rawObj.isLinear : true;
     if (isExists(rawObj.styles)) {
       privateProps.set(this, { findItem: rawObj.findItem, styles: rawObj.styles });
@@ -42,6 +44,6 @@ class SpineItem extends Item {
   }
 }
 
-SpineItem.UNKNOWN_INDEX = -1;
+SpineItem.UNKNOWN_INDEX = unknownIndex;
 
 export default SpineItem;

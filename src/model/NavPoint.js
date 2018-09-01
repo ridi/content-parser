@@ -1,9 +1,16 @@
+import { isExists } from '../util/typecheck';
 import mergeObjects from '../util/mergeObjects';
 
 const privateProps = new WeakMap();
 
 class NavPoint {
-  get spine() { return privateProps.get(this).findItem(this.src); }
+  get spine() {
+    const { findItem } = privateProps.get(this);
+    if (!isExists(findItem)) {
+      return undefined;
+    }
+    return findItem(this.src);
+  }
 
   constructor(rawObj) {
     this.id = rawObj.id;
@@ -25,7 +32,6 @@ class NavPoint {
       content: {
         src: this.src,
       },
-      depth: this.depth,
       children: this.children.map(child => child.toRaw()),
     };
   }

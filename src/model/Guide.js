@@ -25,7 +25,13 @@ const Types = Object.freeze({
 const privateProps = new WeakMap();
 
 class Guide {
-  get item() { return privateProps.get(this).findItem(this.href); }
+  get item() {
+    const { findItem } = privateProps.get(this);
+    if (!isExists(findItem)) {
+      return undefined;
+    }
+    return findItem(this.href);
+  }
 
   constructor(rawObj) {
     this.title = rawObj.title;
