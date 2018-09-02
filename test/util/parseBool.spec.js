@@ -20,5 +20,6 @@ describe('Util - Primitive type parser', () => {
     parseBool(5).should.be.false;
     parseBool({}).should.be.false;
     parseBool([]).should.be.false;
+    parseBool(true).should.be.true;
   });
 });

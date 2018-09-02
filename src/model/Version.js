@@ -6,7 +6,7 @@ class Version {
       string = '2.0';
     }
     const result = string.split('.');
-    this.major = parseInt(result[0], 10) || 0;
+    this.major = parseInt(result[0], 10);
     this.minor = parseInt(result[1] || 0, 10) || 0;
     this.patch = parseInt(result[2] || 0, 10) || 0;
   }

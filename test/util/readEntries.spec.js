@@ -76,4 +76,12 @@ describe('Util - entry manager', () => {
       entry.getFile('utf8').should.equal(expectedFile.string);
     });
   });
+
+  describe('Error Situation', () => {
+    it('Invalid file path', () => {
+      return readEntries('?!').catch((err) => {
+        err.code.should.equal('ENOENT');
+      });
+    });
+  });
 });

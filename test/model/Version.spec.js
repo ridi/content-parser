@@ -18,6 +18,9 @@ describe('Model - Version', () => {
     version = new Version();
     version.toString().should.equal('2.0.0');
 
+    version = new Version('x');
+    version.toString().should.equal('2.0.0');
+
     version = new Version('2.x');
     version.toString().should.equal('2.0.0');
 

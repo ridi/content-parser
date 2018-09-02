@@ -36,11 +36,11 @@ function fromDirectory(dir) {
 export const findEntry = (entries, entryName) => entries.find(entry => entry.entryName === entryName);
 
 export function readEntries(input) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (fs.lstatSync(input).isFile()) {
       openZip(input).then((zip) => {
         resolve({ entries: fromZip(zip), zip });
-      }).catch(err => reject(err));
+      });
     } else {
       resolve({ entries: fromDirectory(input) });
     }
