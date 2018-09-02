@@ -102,52 +102,52 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 ### [Book](./src/model/Book.js)
 
-- titles: *!string[]*
-- creators: *\![Author](#author)[]*
-- subjects: *!string[]*
+- titles: *string[]*
+- creators: *[Author](#author)[]*
+- subjects: *string[]*
 - description: *?string*
 - publisher: *?string*
-- contributors: *\![Author](#author)[]*
-- dates: *\![DateTime](#dateTime)[]*
+- contributors: *[Author](#author)[]*
+- dates: *[DateTime](#dateTime)[]*
 - type: *?string*
 - format: *?string*
-- identifiers: *\![Identifier](#identifier)[]*
+- identifiers: *[Identifier](#identifier)[]*
 - source: *?string*
 - language: *?string*
 - relation: *?string*
 - rights: *?string*
-- version: *\![Version](#version)*
-- metas: *\![Meta](#meta)[]*
-- items: *\![Item](#item)[]*
-- ncx: *\![NcxItem](#ncxItem)*
-- spines: *\![SpintItem](#spineItem)[]*
-- fonts: *\![FontItem](#fontItem)[]*
+- version: *[Version](#version)*
+- metas: *[Meta](#meta)[]*
+- items: *[Item](#item)[]*
+- ncx: *[NcxItem](#ncxItem)*
+- spines: *[SpintItem](#spineItem)[]*
+- fonts: *[FontItem](#fontItem)[]*
 - cover: *?[ImageItem](#imageItem)*
-- images: *\![ImageItem](#imageItem)[]*
-- styles: *\![CssItem](#cssItem)[]*
-- guide: *\![Guide](#Guide)[]*
-- deadItems: *\![DeadItem](#deadItem)[]*
+- images: *[ImageItem](#imageItem)[]*
+- styles: *[CssItem](#cssItem)[]*
+- guide: *[Guide](#Guide)[]*
+- deadItems: *[DeadItem](#deadItem)[]*
 
 <a id="author"></a>
 
 ### [Author](./src/model/Author.js)
 
 - name: *?string*
-- role: *!string* (**Default: Author.Roles.UNDEFINED**)
+- role: *string* (**Default: Author.Roles.UNDEFINED**)
 
 <a id="dateTime"></a>
 
 ### [DateTime](./src/model/DateTime.js)
 
-- event: *!string* (**Default: DateTime.Events.UNDEFINED**)
 - value: *?string*
+- event: *string* (**Default: DateTime.Events.UNDEFINED**)
 
 <a id="identifier"></a>
 
 ### [Identifier](./src/model/Identifier.js)
 
 - value: *?string*
-- scheme: *!string* (**Default: Identifier.Schemes.UNDEFINED**)
+- scheme: *string* (**Default: Identifier.Schemes.UNDEFINED**)
 
 <a id="meta"></a>
 
@@ -161,7 +161,7 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 ### [Guide](./src/model/Guide.js)
 
 - title: *?string*
-- type: *!string* (**Default: Guide.Types.UNDEFINED**)
+- type: *string* (**Default: Guide.Types.UNDEFINED**)
 - href: *?string*
 - item: *?[Item](#item)*
 
@@ -177,36 +177,36 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 - href: *?string*
 - mediaType: *?string*
 - size: *?number*
-- isFileExists: *!boolean* (**size !== undefined**)
+- isFileExists: *boolean* (**size !== undefined**)
 
 <a id="ncxItem"></a>
 
 #### [NcxItem](./src/model/NcxItem.js) (extend [Item](#item))
 
-- navPoints: *\![NavPoint](#navPoint)[]*
+- navPoints: *[NavPoint](#navPoint)[]*
 
 <a id="spineItem"></a>
 
 #### [SpineItem](./src/model/SpineItem.js) (extend [Item](#item))
 
-- spineIndex: *!number* (**Default: -1**)
-- isLinear: *!boolean* (**Default: true**)
+- spineIndex: *number* (**Default: -1**)
+- isLinear: *boolean* (**Default: true**)
 - styles: *?[CssItem](#cssItem)[]*
 
 <a id="cssItem"></a>
 
 #### [CssItem](./src/model/CssItem.js) (extend [Item](#item))
-- namespace: *!string*
+- namespace: *string*
 
 <a id="inlineCssItem"></a>
 
 #### [InlineCssItem](./src/model/InlineCssItem.js) (extend [CssItem](#cssItem))
-- text: *!string* (**Default: ''**)
+- text: *string* (**Default: ''**)
 
 <a id="imageItem"></a>
 
 #### [ImageItem](./src/model/ImageItem.js) (extend [Item](#item))
-- isCover: *!boolean* (**Default: false**)
+- isCover: *boolean* (**Default: false**)
 
 <a id="svgItem"></a>
 
@@ -219,7 +219,7 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 <a id="deadItem"></a>
 
 #### [DeadItem](./src/model/DeadItem.js) (extend [Item](#item))
-- reason: *!string* (**Default: DeadItem.Reason.UNDEFINED**)
+- reason: *string* (**Default: DeadItem.Reason.UNDEFINED**)
 
 <a id="navPoint"></a>
 
@@ -229,19 +229,19 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 - label: *?string*
 - src: *?string*
 - anchor: *?string*
-- depth: *!number* (**Default: 0**)
-- children: *!NavPoint[]*
+- depth: *number* (**Default: 0**)
+- children: *NavPoint[]*
 - spine: *?[SpineItem](#spineItem)*
 
 <a id="version"></a>
 
 ### [Version](./src/model/Version.js)
 
-- major: *!number*
-- minor: *!number*
-- patch: *!number*
-- isValid: *!boolean*
-- toString(): *!string*
+- major: *number*
+- minor: *number*
+- patch: *number*
+- isValid: *boolean*
+- toString(): *string*
 
 <a id="parseOptions"></a>
 
@@ -261,7 +261,7 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 <a id="validatePackage"></a>
 
-### validatePackage: *`!boolean`*
+### validatePackage: *`boolean`*
 
 If true, validation package specifications in [IDPF listed](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) below.
 - Zip header should not corrupt.
@@ -276,7 +276,7 @@ If true, validation package specifications in [IDPF listed](http://www.idpf.org/
 
 <a id="validateXml"></a>
 
-### validateXml: *`!boolean`*
+### validateXml: *`boolean`*
 
 If true, stop parsing when XML parsing errors occur.
 
@@ -286,7 +286,7 @@ If true, stop parsing when XML parsing errors occur.
 
 <a id="allowNcxFileMissing"></a>
 
-### allowNcxFileMissing: *`!boolean`*
+### allowNcxFileMissing: *`boolean`*
 
 If false, stop parsing when NCX file not exists.
 
@@ -307,7 +307,7 @@ If specified, uncompress to that path.
 
 <a id="createIntermediateDirectories"></a>
 
-### createIntermediateDirectories: *`!boolean`*
+### createIntermediateDirectories: *`boolean`*
 
 If true, creates intermediate directories for unzipPath.
 
@@ -317,7 +317,7 @@ If true, creates intermediate directories for unzipPath.
 
 <a id="removePreviousFile"></a>
 
-### removePreviousFile: *`!boolean`*
+### removePreviousFile: *`boolean`*
 
 If true, removes a previous file from unzipPath.
 
@@ -327,7 +327,7 @@ If true, removes a previous file from unzipPath.
 
 <a id="ignoreLinear"></a>
 
-### ignoreLinear: *`!boolean`*
+### ignoreLinear: *`boolean`*
 
 If true, ignore `spineIndex` difference caused by `isLinear` property of [SpineItem](#spineItem).
 
@@ -345,7 +345,7 @@ If true, ignore `spineIndex` difference caused by `isLinear` property of [SpineI
 
 <a id="useStyleNamespace"></a>
 
-### useStyleNamespace: *`!boolean`*
+### useStyleNamespace: *`boolean`*
 
 If true, One namespace is given per CSS file or inline style, and styles used for spine is described.
 
@@ -359,7 +359,7 @@ In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem
 
 <a id="styleNamespacePrefix"></a>
 
-### styleNamespacePrefix: *`!string`*
+### styleNamespacePrefix: *`string`*
 
 Prepend given string to namespace for identification.
 
@@ -423,7 +423,7 @@ CSS: [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
 
 <a id="spine_extractBody"></a>
 
-### spine.extractBody: *`!boolean`*
+### spine.extractBody: *`boolean`*
 
 If true, extract body. Otherwise it returns a full string.
 
@@ -491,7 +491,7 @@ Result:
 
 <a id="css_removeAtrules"></a>
 
-### css.removeAtrules: *`!string[]`*
+### css.removeAtrules: *`string[]`*
 
 Remove at-rules.
 
@@ -501,7 +501,7 @@ Remove at-rules.
 
 <a id="css_removeTags"></a>
 
-### css.removeTags: *`!string[]`*
+### css.removeTags: *`string[]`*
 
 Remove selector that point to specified tags.
 
@@ -511,7 +511,7 @@ Remove selector that point to specified tags.
 
 <a id="css_removeIds"></a>
 
-### css.removeIds: *`!string[]`*
+### css.removeIds: *`string[]`*
 
 Remove selector that point to specified ids.
 
@@ -521,7 +521,7 @@ Remove selector that point to specified ids.
 
 <a id="css_removeClasses"></a>
 
-### css.removeClasses: *`!string[]`*
+### css.removeClasses: *`string[]`*
 
 Remove selector that point to specified classes.
 
