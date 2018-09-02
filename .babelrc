@@ -3,6 +3,9 @@
 		["env", "es2015"]
 	],
 	"plugins": [
-		"add-module-exports"
+		"add-module-exports",
+		["transform-es2015-classes", {
+      "loose": true
+    }]
 	]
 }
