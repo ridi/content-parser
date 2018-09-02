@@ -51,50 +51,54 @@ Returns `Promise<Book>` with:
 
 Or throw exception.
 
-#### [parseOptions](#parseOptions): `object`
+#### [parseOptions](#parseOptions): `?object`
 
 ---
 
 ### readItem(item, readOptions)
 
-Returns `string` or `object` or `Buffer` in `Promise` (see [detail](#detail)) or throw exception.
+Returns [ReadResult](#readResult) or throw exception.
 
 #### item: `Item` (see: [Item Types](#itemTypes))
 
-#### [readOptions](#readOptions): `object`
+#### [readOptions](#readOptions): `?object`
 
 ---
 
 ### readItems(items, readOptions)
 
-Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detail)) or throw exception.
+Returns [ReadResult](#readResult)[] or throw exception.
 
 #### items: `Item[]` (see: [Item Types](#itemTypes))
 
-#### [readOptions](#readOptions): `object`
+#### [readOptions](#readOptions): `?object`
 
-<a id="detail"></a>
+<a id="readResult"></a>
 
-#### Returns detail
+#### ReadResult
 
-- [SpineItem](#spineItem):
+- type: `string`
 
-  - `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
+- value: `string` or `Buffer` or `object`
 
-  - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
-    - `body`: Same reuslt as `document.body.innerHTML`
-    - `attrs`: Attributes in body tag.
+  - [SpineItem](#spineItem):
 
-  - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
-    - `content`: `extractBody` output transformed by adapter.
+    - `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
 
-- [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
+    - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
+      - `body`: Same reuslt as `document.body.innerHTML`
+      - `attrs`: Attributes in body tag.
 
-  - `string`
+    - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
+      - `content`: `extractBody` output transformed by adapter.
 
-- Other items:
+  - [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
 
-  - `Buffer`
+    - `string`
+
+  - Other items:
+
+    - `Buffer`
 
 ## Model
 

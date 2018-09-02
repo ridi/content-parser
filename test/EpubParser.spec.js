@@ -289,7 +289,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
       it('Read single item (default)', () => {
         const expected = fs.readFileSync(Files.EXPECTED_READ_SPIN, 'utf8');
         return parser.readItem(book.spines[0]).then((result) => {
-          result.should.equal(expected);
+          result.value.should.equal(expected);
         });
       });
   
@@ -297,7 +297,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
         const expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
         const options = { basePath: './a/b/c' };
         return parser.readItem(book.spines[0], options).then((result) => {
-          result.should.equal(expected);
+          result.value.should.equal(expected);
         });
       });
   
