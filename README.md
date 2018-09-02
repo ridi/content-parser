@@ -139,8 +139,8 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 ### [DateTime](./src/model/DateTime.js)
 
-- value: *?strung*
 - event: *!string* (**Default: DateTime.Events.UNDEFINED**)
+- value: *?string*
 
 <a id="identifier"></a>
 
