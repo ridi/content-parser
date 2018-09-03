@@ -4,6 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/%40ridi%2Fepub-parser.svg)](https://badge.fury.io/js/%40ridi%2Fepub-parser)
 [![Build Status](https://travis-ci.org/ridi/epub-parser.svg?branch=master)](https://travis-ci.org/ridi/epub-parser)
+[![codecov](https://codecov.io/gh/ridi/epub-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/epub-parser)
 
 ## Features
 
@@ -14,9 +15,10 @@
 ## TODO
 
 - [ ] Add encryption and decryption function
+- [ ] Add `readOptions.spine.serializedAnchor` option
 - [ ] Add `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength` options
 - [ ] Add `readOptions.spine.minify` and `readOptions.css.minify` options
-- [ ] Add `readOptions.removeExternalRefs` options
+- [ ] Add `readOptions.removeExternalRefs` option
 - [ ] Support for EPUB3
 - [ ] Support for CLI
 - [ ] Support for other [OCF](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) spec (manifest.xml, metadata.xml, signatures.xml, encryption.xml, etc)
