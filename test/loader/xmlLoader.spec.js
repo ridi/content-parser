@@ -5,7 +5,7 @@ import xmlLoader, { getValue, getValues, textNodeName } from '../../src/loader/x
 should(); // Initialize should
 
 describe('Loader - XML', () => {  
-  it('To replace fast-xml-parser options, check out the test below.', () => {
+  it('To replace fast-xml-parser options, check out the test below', () => {
     const entry = {
       entryName: 'test.xml',
       getFile: () => '<?xml version="1.0" encoding="UTF-8"?> \
