@@ -84,12 +84,6 @@ describe('Parsing test', () => {
         err.code.should.equal(Errors.EINVAL.code);
       });
     });
-
-    it('Invalid XML', () => {
-      return new EpubParser(Files.INVALID_XML).parse({ validateXml: true }).catch((err) => {
-        err.code.should.equal(Errors.EINVAL.code);
-      });
-    });
   });
 
   describe('Check context by step', () => {

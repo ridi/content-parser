@@ -4,7 +4,6 @@ const Files = {
   EXPECTED_DEFAULT_CONTEXT: './test/res/expectedDefaultContext.json',
   EXPECTED_DEFAULT_BOOK: './test/res/expectedDefaultBook.json',
   INVALID_PACKAGE: './test/res/invalidPackage.epub',
-  INVALID_XML: './test/res/invalidXml.epub',
   NCX_MISSING: './test/res/ncxMissing.epub',
   META_INF_MISSING: './test/res/metainfMissing.epub',
   OPF_MISSING: './test/res/opfMissing.epub',

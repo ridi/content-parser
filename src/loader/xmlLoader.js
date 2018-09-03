@@ -57,7 +57,7 @@ const textNodeName = '#text';
 
 export { getValue, getValues, textNodeName };
 
-export default function xmlLoader(entry, options) {
+export default function xmlLoader(entry, options = {}) {
   const file = entry.getFile('utf8');
   if (options.validateXml && isExists(XmlParser.validate(file).err)) {
     throw createError(Errors.EINVAL, 'xml', 'path', entry.entryName);
@@ -84,7 +84,7 @@ export default function xmlLoader(entry, options) {
     // If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
     cdataTagName: false,
     // If true then values like "+123", or "0123" will not be parsed as number.
-    parseTrueNumberOnly: false,
+    parseTrueNumberOnly: true,
     // Process tag value during transformation. Like HTML decoding, word capitalization, etc.
     // Applicable in case of string only.
     tagValueProcessor: value => he.decode(value),
