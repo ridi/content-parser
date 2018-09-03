@@ -77,29 +77,54 @@ describe('Loader - XML', () => {
     const entry = {
       entryName: 'test.xml',
       getFile: () => '<?xml version="1.0" encoding="UTF-8"?> \
-      <metadata> \
+      <root> \
         <a attr="a1">text1</a> \
         <a attr="a2">text2</a> \
         <a attr="a3">text3</a> \
         <b attr="b1">text4</b> \
-      </metadata>',
+        <c attr="c1"> \
+          <d attr="d1">text5</d> \
+          <d attr="d2">text6</d> \
+        </c> \
+      </root>',
     };
-    const { metadata } = xmlLoader(entry);
-    getValue(metadata.a).attr.should.equal('a1');
-    getValue(metadata.a, (key) => key === textNodeName ? 'custom' : key).custom.should.equal('text1');
+    const { root } = xmlLoader(entry);
+
+    // Gets first of multiple elements.
+    getValue(root.a).attr.should.equal('a1');
+
+    // Can also change property name.
+    getValue(root.a, (key) => key === 'attr' ? 'custom' : key).custom.should.equal('a1');
+
+    // Can not get anything in empty elements.
     assert(getValue([]) === undefined);
-    getValues(metadata.a).should.deep.equal([
+
+    // Gets multiple elements from single or multiple elements.
+    getValues(root.b).should.deep.equal([
+      { '#text': 'text4', attr: 'b1' },
+    ]);
+    getValues(root.a).should.deep.equal([
       { '#text': 'text1', attr: 'a1' },
       { '#text': 'text2', attr: 'a2' },
       { '#text': 'text3', attr: 'a3' },
     ]);
-    getValues(metadata.a, (key) => key === textNodeName ? 'custom' : key).should.deep.equal([
+
+    // Likewise, can also change property name.
+    getValues(root.a, (key) => key === textNodeName ? 'custom' : key).should.deep.equal([
       { custom: 'text1', attr: 'a1' },
       { custom: 'text2', attr: 'a2' },
       { custom: 'text3', attr: 'a3' },
     ]);
-    getValues(metadata.b).should.deep.equal([
-      { '#text': 'text4', attr: 'b1' },
-    ]);
+
+    // KeyTranslator also works in nested structures.
+    const expect = {
+      custom: 'c1',
+      d: [
+        { '#text': 'text5', custom: 'd1' },
+        { '#text': 'text6', custom: 'd2' },
+      ],
+    };
+    getValue(root.c, (key) => key === 'attr' ? 'custom' : key).should.deep.equal(expect);
+    getValues(root.c, (key) => key === 'attr' ? 'custom' : key).should.deep.equal([expect]);
   });
 });
