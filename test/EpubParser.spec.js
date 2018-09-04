@@ -273,7 +273,7 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
 
     describe('Error Situation', () => {
       it('Invalid item', () => {
-        return parser.readItem({ href: Files.EXPECTED_READ_SPINE_WITH_BASE_PATH }).catch((err) => {
+        return parser.readItem({ href: './test' }).catch((err) => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
@@ -290,16 +290,6 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
         const items = book.styles.concat(book.spines);
         return parser.readItems(items).then((results) => {
           results.map(result => result.type).should.deep.equal(items.map(item => item.constructor.name));
-        });
-      });
-    });
-
-    describe('Read extracted text', () => {
-      it('Extract styles from CssItems', () => {
-        const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH));
-        const options = { basePath: './a/b/c', css: { removeTags: ['html', 'body'] } };
-        return parser.readItems(book.styles, options).then((results) => {
-          results.should.deep.equal(expectedList);
         });
       });
     });
