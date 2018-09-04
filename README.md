@@ -257,8 +257,7 @@ Returns [ReadResult](#readResult)[] or throw exception.
 * [validateXml](#validateXml)
 * [allowNcxFileMissing](#allowNcxFileMissing)
 * [unzipPath](#unzipPath)
-* [createIntermediateDirectories](#createIntermediateDirectories)
-* [removePreviousFile](#removePreviousFile)
+* [overwrite](#overwrite)
 * [ignoreLinear](#ignoreLinear)
 * [useStyleNamespace](#useStyleNamespace)
 * [styleNamespacePrefix](#styleNamespacePrefix)
@@ -311,21 +310,11 @@ If specified, uncompress to that path.
 
 ---
 
-<a id="createIntermediateDirectories"></a>
+<a id="overwrite"></a>
 
-### createIntermediateDirectories: *`boolean`*
+### overwrite: *`boolean`*
 
-If true, creates intermediate directories for unzipPath.
-
-**Default:** `true`
-
----
-
-<a id="removePreviousFile"></a>
-
-### removePreviousFile: *`boolean`*
-
-If true, removes a previous file from unzipPath.
+If true, overwrite to unzipPath when uncompress.
 
 **Default:** `true`
 

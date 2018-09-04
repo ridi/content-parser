@@ -64,10 +64,8 @@ class EpubParser {
       allowNcxFileMissing: true,
       // If specified, uncompress to that path. (Only if input is EPUB file.)
       unzipPath: undefined,
-      // If true, creates intermediate directories for unzipPath.
-      createIntermediateDirectories: true,
-      // If true, removes a previous file from unzipPath.
-      removePreviousFile: true,
+      // If true, overwrite to unzipPath when uncompress.
+      overwrite: true,
       // If true, ignore spineIndex difference caused by isLinear property of SpineItem.
       // e.g. If left is false, right is true.
       //  [{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
@@ -93,8 +91,7 @@ class EpubParser {
       validateXml: 'Boolean',
       allowNcxFileMissing: 'Boolean',
       unzipPath: 'String|Undefined',
-      createIntermediateDirectories: 'Boolean',
-      removePreviousFile: 'Boolean',
+      overwrite: 'Boolean',
       ignoreLinear: 'Boolean',
       useStyleNamespace: 'Boolean',
       styleNamespacePrefix: 'String',
@@ -649,8 +646,7 @@ class EpubParser {
    * @returns {Promise.<Context>} returns Context (no change at this step)
    * @throws {Errors.ENOENT} no such file or directory
    * @see EpubParser.parseDefaultOptions.unzipPath
-   * @see EpubParser.parseDefaultOptions.removePreviousFile
-   * @see EpubParser.parseDefaultOptions.createIntermediateDirectories
+   * @see EpubParser.parseDefaultOptions.overwrite
    */
   _unzipIfNeeded(context) {
     return new Promise((resolve, reject) => {
@@ -663,7 +659,7 @@ class EpubParser {
         }
         resolve(context);
       } else {
-        extractAll(zip, unzipPath, mergeObjects(options, { close: true }))
+        extractAll(zip, unzipPath, options.overwrite, true)
           .then(() => resolve(context))
           .catch(err => reject(err));
       }
