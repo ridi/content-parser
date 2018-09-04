@@ -13,10 +13,10 @@ const Files = {
   EXPECTED_EXTRACT_STYLE_BOOK: './test/res/expectedExtractStyleBook.json',
   EXPECTED_EXTRACT_STYLES: './test/res/expectedExtractStyles.json',
   EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH: './test/res/expectedExtractStylesWithBasePath.json',
-  EXPECTED_EXTRACT_BODY: './test/res/expectedExtractBody.json',
-  EXPECTED_EXTRACT_BODY_WITH_CUSTOM_ADAPTOR: './test/res/expectedExtractBodyWithCustomAdaptor.json',
-  EXPECTED_READ_SPIN: './test/res/expectedReadSpine.xhtml',
-  EXPECTED_READ_SPINE_WITH_BASE_PATH: './test/res/expectedReadSpineWithBasePath.xhtml',
+  SPINE_LOADER_DEFAULT: './test/res/spineLoader/default.xhtml',
+  SPINE_LOADER_DEFAULT_WITH_BASE_PATH: './test/res/spineLoader/defaultWithBasePath.xhtml',
+  SPINE_LOADER_DEFAULT_WITH_NO_ADAPTER: './test/res/spineLoader/defaultWithNoAdapter.json',
+  SPINE_LOADER_DEFAULT_WITH_ADAPTER: './test/res/spineLoader/defaultWithAdapter.json',
 };
 
 export default Files;

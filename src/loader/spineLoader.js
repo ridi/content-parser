@@ -47,7 +47,7 @@ function stringify(tree, options) {
   }).join('');
 }
 
-export default function spineLoader(spineItem, file, options) {
+export default function spineLoader(spineItem, file, options = { spine: {}, css: {} }) {
   if (!isExists(options.basePath) && !options.spine.extractBody) {
     return file;
   }
@@ -61,13 +61,14 @@ export default function spineLoader(spineItem, file, options) {
   if (options.spine.extractBody) {
     const html = document.find(child => child.tagName === 'html');
     const body = html.children.find(child => child.tagName === 'body');
-    const result = {
-      body: stringify(body.children, stringifyOptions),
-      attrs: body.attributes.concat([{
+    let attrs = body.attributes;
+    if (isExists(spineItem.styles)) {
+      attrs = attrs.concat([{
         key: 'class',
         value: spineItem.styles.map(style => ` .${style.namespace}`).join(',').trim(),
-      }]),
-    };
+      }]);
+    }
+    const result = { body: stringify(body.children, stringifyOptions), attrs };
     if (isExists(options.spine.extractAdapter)) {
       return options.spine.extractAdapter(result.body, result.attrs);
     }

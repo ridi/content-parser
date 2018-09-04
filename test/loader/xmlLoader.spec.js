@@ -9,21 +9,21 @@ describe('Loader - XML', () => {
     const entry = {
       entryName: 'test.xml',
       getFile: () => '<?xml version="1.0" encoding="UTF-8"?> \
-      <package version="2.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf"> \
-        <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/"> \
-          <dc:language>  en </dc:language> \
-          <dc:identifier>1120</dc:identifier> \
-          <dc:creator opf:role="aut">Davin Ahn</dc:creator> \
-          <dc:creator opf:role="edt">Davin Ahn</dc:creator> \
-          <dc:type>0123</dc:type> \
-          <dc:description><![CDATA[text]]>description</dc:description> \
-          <dc:publisher>Foo &amp Bar</dc:publisher> \
-          <meta name="tool" content="&copy; Baz" /> \
-        </metadata> \
-        <spine toc="ncx"> \
-          <itemref idref="Cover.xhtml"/ linear> \
-        </spine> \
-      </package>',
+        <package version="2.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf"> \
+          <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/"> \
+            <dc:language>  en </dc:language> \
+            <dc:identifier>1120</dc:identifier> \
+            <dc:creator opf:role="aut">Davin Ahn</dc:creator> \
+            <dc:creator opf:role="edt">Davin Ahn</dc:creator> \
+            <dc:type>0123</dc:type> \
+            <dc:description><![CDATA[text]]>description</dc:description> \
+            <dc:publisher>Foo &amp Bar</dc:publisher> \
+            <meta name="tool" content="&copy; Baz" /> \
+          </metadata> \
+          <spine toc="ncx"> \
+            <itemref idref="Cover.xhtml"/ linear> \
+          </spine> \
+        </package>',
     };
     const { package: root } = xmlLoader(entry);
 
@@ -77,16 +77,16 @@ describe('Loader - XML', () => {
     const entry = {
       entryName: 'test.xml',
       getFile: () => '<?xml version="1.0" encoding="UTF-8"?> \
-      <root> \
-        <a attr="a1">text1</a> \
-        <a attr="a2">text2</a> \
-        <a attr="a3">text3</a> \
-        <b attr="b1">text4</b> \
-        <c attr="c1"> \
-          <d attr="d1">text5</d> \
-          <d attr="d2">text6</d> \
-        </c> \
-      </root>',
+        <root> \
+          <a attr="a1">text1</a> \
+          <a attr="a2">text2</a> \
+          <a attr="a3">text3</a> \
+          <b attr="b1">text4</b> \
+          <c attr="c1"> \
+            <d attr="d1">text5</d> \
+            <d attr="d2">text6</d> \
+          </c> \
+        </root>',
     };
     const { root } = xmlLoader(entry);
 
