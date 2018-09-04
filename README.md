@@ -314,7 +314,7 @@ If specified, uncompress to that path.
 
 ### overwrite: *`boolean`*
 
-If true, overwrite to unzipPath when uncompress.
+If true, overwrite to [unzipPath](#unzipPath) when uncompress.
 
 **Default:** `true`
 
