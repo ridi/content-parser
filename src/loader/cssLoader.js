@@ -30,21 +30,21 @@ function handleRulePrelude(selectorList, options, cssItem) {
         const { name, type } = node;
         if (type === Types.SELECTOR_LIST) {
           // Ignore selectors inside :not()
-          if (isExists(context.function) || context.function.name.toLowerCase() !== 'not') {
+          if (isExists(context.function) && context.function.name.toLowerCase() !== 'not') {
             if (handleRulePrelude(node, options, cssItem)) {
               shouldRemove = true;
             }
           }
         } else if (type === Types.TYPE_SELECTOR) {
-          if (stringContains(options.css.removeTags, name)) {
+          if (stringContains(options.css.removeTags || [], name)) {
             shouldRemove = true;
           }
         } else if (type === Types.ID_SELECTOR) {
-          if (stringContains(options.css.removeIds, name)) {
+          if (stringContains(options.css.removeIds || [], name)) {
             shouldRemove = true;
           }
         } else if (type === Types.CLASS_SELECTOR) {
-          if (stringContains(options.css.removeClasses, name)) {
+          if (stringContains(options.css.removeClasses || [], name)) {
             shouldRemove = true;
           }
         }
@@ -52,7 +52,7 @@ function handleRulePrelude(selectorList, options, cssItem) {
     });
     if (shouldRemove) {
       list.remove(item);
-    } else {
+    } else if (isExists(cssItem.namespace)) {
       selector.children.prependData({ type: Types.WHITE_SPACE, value: ' ' });
       selector.children.prependData({ type: Types.CLASS_SELECTOR, name: cssItem.namespace });
     }
@@ -102,7 +102,7 @@ function handleAtrule(node, item, list, options, cssItem) {
       return;
     }
   }
-  if (stringContains(options.css.removeAtrules, node.name)) {
+  if (stringContains(options.css.removeAtrules || [], node.name)) {
     list.remove(item);
   } else if (node.name.toLowerCase() === 'font-face') {
     handleRuleBlock(node.block, options, cssItem);
@@ -114,7 +114,7 @@ const handlers = {
   Rule: handleRuleset,
 };
 
-export default function cssLoader(cssItem, file, options) {
+export default function cssLoader(cssItem, file, options = { css: {} }) {
   const ast = csstree.parse(file);
   csstree.walk(ast, {
     leave: function(node, item, list) { // eslint-disable-line
