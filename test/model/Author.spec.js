@@ -6,7 +6,7 @@ should(); // Initialize should
 
 describe('Model - Author', () => {
   it('constructor test', () => {
-    let author = new Author({});
+    let author = new Author();
     assert(author.name === undefined);
     assert(author.role === Author.Roles.UNDEFINED);
 
@@ -26,10 +26,6 @@ describe('Model - Author', () => {
       author.name = 'Ahn Davin';
       author.role = Author.Roles.AUTHOR;
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new Author();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

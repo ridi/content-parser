@@ -6,7 +6,7 @@ should(); // Initialize should
 
 describe('Model - Identifier', () => {
   it('constructor test', () => {
-    let identifier = new Identifier({});
+    let identifier = new Identifier();
     assert(identifier.value === undefined);
     assert(identifier.scheme === Identifier.Schemes.UNDEFINED);
 
@@ -26,10 +26,6 @@ describe('Model - Identifier', () => {
       identifier.value = '0000000000000';
       identifier.scheme = Identifier.Schemes.ISBN13;
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new Identifier();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

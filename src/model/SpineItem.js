@@ -19,7 +19,7 @@ class SpineItem extends Item {
     return styles.map(style => findItem(style));
   }
 
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     super(rawObj);
     this.spineIndex = isExists(rawObj.spineIndex) ? rawObj.spineIndex : unknownIndex;
     this.isLinear = isExists(rawObj.isLinear) ? rawObj.isLinear : true;

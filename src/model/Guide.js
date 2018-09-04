@@ -33,7 +33,7 @@ class Guide {
     return findItem(this.href);
   }
 
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     this.title = rawObj.title;
     if (isExists(rawObj.type)) {
       if (stringContains(Object.values(Types), rawObj.type)) {

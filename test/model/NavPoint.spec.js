@@ -8,7 +8,7 @@ should(); // Initialize should
 
 describe('Model - NavPoint', () => {
   it('constructor test', () => {
-    let navPoint = new NavPoint({});
+    let navPoint = new NavPoint();
     assert(navPoint.id === undefined);
     assert(navPoint.label === undefined);
     assert(navPoint.src === undefined);
@@ -62,10 +62,6 @@ describe('Model - NavPoint', () => {
       navPoint.children = [];
       navPoint.spine = new SpineItem({});
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new NavPoint();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

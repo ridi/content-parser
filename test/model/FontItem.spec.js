@@ -7,12 +7,8 @@ should(); // Initialize should
 
 describe('Model - FontItem', () => {
   it('constructor test', () => {
-    const item = new FontItem({ id: 'default.otf', href: './default.otf', mediaType: 'font/otf', size: 87964 });
+    const item = new FontItem();
     assert(item instanceof Item);
-
-    (() => {
-      new FontItem();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

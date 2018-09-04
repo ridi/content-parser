@@ -7,7 +7,7 @@ should(); // Initialize should
 
 describe('Model - ImageItem', () => {
   it('constructor test', () => {
-    let item = new ImageItem({});
+    let item = new ImageItem();
     item.isCover.should.be.false;
     assert(item instanceof Item);
 
@@ -17,10 +17,6 @@ describe('Model - ImageItem', () => {
     (() => {
       item.isCover = false;
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new ImageItem();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

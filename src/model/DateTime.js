@@ -9,7 +9,7 @@ const Events = Object.freeze({
 });
 
 class DateTime {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     if (isString(rawObj)) {
       this.value = rawObj;
     } else {

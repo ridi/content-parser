@@ -2,7 +2,7 @@ import Item from './Item';
 import mergeObjects from '../util/mergeObjects';
 
 class ImageItem extends Item {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     super(rawObj);
     this.isCover = rawObj.isCover || false;
     if (this.constructor === ImageItem) {

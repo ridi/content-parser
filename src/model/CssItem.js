@@ -3,7 +3,7 @@ import Item from './Item';
 import mergeObjects from '../util/mergeObjects';
 
 class CssItem extends Item {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     super(rawObj);
     if (isExists(rawObj.namespace)) {
       this.namespace = rawObj.namespace;

@@ -1,7 +1,7 @@
 class Item {
   get isFileExists() { return this.size !== undefined; }
 
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     this.id = rawObj.id;
     this.href = rawObj.href;
     this.mediaType = rawObj.mediaType;

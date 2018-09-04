@@ -7,12 +7,8 @@ should(); // Initialize should
 
 describe('Model - SvgItem', () => {
   it('constructor test', () => {
-    const item = new SvgItem({ id: 'bg.svg', href: './bg.svg', mediaType: 'image/svg+xml', size: 321, isCover: false });
+    const item = new SvgItem();
     assert(item instanceof ImageItem);
-
-    (() => {
-      new SvgItem();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

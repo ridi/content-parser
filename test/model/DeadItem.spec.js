@@ -7,7 +7,7 @@ should(); // Initialize should
 
 describe('Model - DeadItem', () => {
   it('constructor test', () => {
-    let item = new DeadItem({});
+    let item = new DeadItem();
     assert(item.reason === DeadItem.Reason.UNDEFINED);
     assert(item instanceof Item);
 
@@ -24,10 +24,6 @@ describe('Model - DeadItem', () => {
     (() => {
       item.reason = DeadItem.Reason.NOT_EXISTS;
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new DeadItem();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

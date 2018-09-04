@@ -7,7 +7,7 @@ should(); // Initialize should
 
 describe('Model - Guide', () => {
   it('constructor test', () => {
-    let guide = new Guide({});
+    let guide = new Guide();
     assert(guide.title === undefined);
     assert(guide.type === Guide.Types.UNDEFINED);
     assert(guide.href === undefined);
@@ -35,10 +35,6 @@ describe('Model - Guide', () => {
       guide.href = './title.xhtml';
       guide.item = new Item({});
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new Guide();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

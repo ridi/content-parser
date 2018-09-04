@@ -7,7 +7,7 @@ should(); // Initialize should
 
 describe('Model - CssItem', () => {
   it('constructor test', () => {
-    let item = new CssItem({});
+    let item = new CssItem();
     assert(item.namespace === undefined);
     assert(item instanceof Item);
 
@@ -17,10 +17,6 @@ describe('Model - CssItem', () => {
     (() => {
       item.namespace = 'css_2';
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new CssItem();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

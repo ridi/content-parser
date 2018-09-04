@@ -6,7 +6,7 @@ should(); // Initialize should
 
 describe('Model - Meta', () => {
   it('constructor test', () => {
-    let meta = new Meta({});
+    let meta = new Meta();
     assert(meta.name === undefined);
     assert(meta.content === undefined);
 
@@ -18,10 +18,6 @@ describe('Model - Meta', () => {
       meta.name = 'Title';
       meta.content = './cover.xhtml';
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new Meta();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

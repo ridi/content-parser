@@ -6,7 +6,7 @@ should(); // Initialize should
 
 describe('Model - Item', () => {
   it('constructor test', () => {
-    let item = new Item({});
+    let item = new Item();
     assert(item.id === undefined);
     assert(item.href === undefined);
     assert(item.mediaType === undefined);
@@ -28,10 +28,6 @@ describe('Model - Item', () => {
       item.mediaType = 'application/xhtml+xml';
       item.size = 59;
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new Item();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

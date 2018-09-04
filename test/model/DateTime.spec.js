@@ -6,7 +6,7 @@ should(); // Initialize should
 
 describe('Model - DateTime', () => {
   it('constructor test', () => {
-    let date = new DateTime({});
+    let date = new DateTime();
     assert(date.value === undefined);
     assert(date.event === DateTime.Events.UNDEFINED);
 
@@ -26,10 +26,6 @@ describe('Model - DateTime', () => {
       date.value = '2017-09-01';
       date.event = DateTime.Events.MODIFICATION;
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new DateTime();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

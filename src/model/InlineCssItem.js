@@ -2,7 +2,7 @@ import CssItem from './CssItem';
 import mergeObjects from '../util/mergeObjects';
 
 class InlineCssItem extends CssItem {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     super(rawObj);
     this.text = rawObj.text || '';
     Object.freeze(this);

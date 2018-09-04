@@ -7,7 +7,7 @@ should(); // Initialize should
 
 describe('Model - NcxItem', () => {
   it('constructor test', () => {
-    let item = new NcxItem({});
+    let item = new NcxItem();
     item.navPoints.should.have.lengthOf(0);
     assert(item instanceof Item);
 
@@ -17,10 +17,6 @@ describe('Model - NcxItem', () => {
     (() => {
       item.navPoints = [];
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new NcxItem();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

@@ -13,7 +13,7 @@ const Schemes = Object.freeze({
 });
 
 class Identifier {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     if (isString(rawObj)) {
       this.value = rawObj;
     } else {

@@ -7,7 +7,7 @@ should(); // Initialize should
 
 describe('Model - InlineCssItem', () => {
   it('constructor test', () => {
-    let item = new InlineCssItem({});
+    let item = new InlineCssItem();
     assert(item.text === '');
     assert(item instanceof CssItem);
 
@@ -19,10 +19,6 @@ describe('Model - InlineCssItem', () => {
     (() => {
       item.text = '';
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new InlineCssItem();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

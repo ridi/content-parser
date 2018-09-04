@@ -36,7 +36,7 @@ const Roles = Object.freeze({
 });
 
 class Author {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     if (isString(rawObj)) {
       this.name = rawObj;
     } else {

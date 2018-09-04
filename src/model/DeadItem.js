@@ -13,7 +13,7 @@ const Reason = Object.freeze({
 });
 
 class DeadItem extends Item {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     super(rawObj);
     if (isExists(rawObj.reason)) {
       if (stringContains(Object.values(Reason), rawObj.reason)) {

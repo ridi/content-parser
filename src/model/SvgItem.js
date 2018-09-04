@@ -2,7 +2,7 @@ import ImageItem from './ImageItem';
 import mergeObjects from '../util/mergeObjects';
 
 class SvgItem extends ImageItem {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     super(rawObj);
     Object.freeze(this);
   }

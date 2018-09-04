@@ -7,7 +7,7 @@ should(); // Initialize should
 
 describe('Model - SpineItem', () => {
   it('constructor test', () => {
-    let item = new SpineItem({});
+    let item = new SpineItem();
     item.spineIndex.should.equal(SpineItem.UNKNOWN_INDEX);
     item.isLinear.should.be.true;
     assert(item.styles === undefined);
@@ -43,10 +43,6 @@ describe('Model - SpineItem', () => {
       item.isLinear = true;
       item.styles = [];
     }).should.throw(/read only property/gi);
-
-    (() => {
-      new SpineItem();
-    }).should.throw(/cannot read property/gi);
   });
 
   it('toRaw test', () => {

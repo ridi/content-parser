@@ -12,7 +12,7 @@ class NavPoint {
     return findItem(this.src);
   }
 
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     this.id = rawObj.id;
     this.label = (rawObj.navLabel || {}).text;
     this.src = (rawObj.content || {}).src;
