@@ -16,7 +16,6 @@ import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
 import {
-  createDirectory,
   extractAll,
   findEntry,
   getItemEncoding,
@@ -28,7 +27,6 @@ import {
   mergeObjects,
   parseBool,
   readEntries,
-  removeDirectory,
   safeDirname,
   safePath,
   safePathJoin,
@@ -657,7 +655,7 @@ class EpubParser {
   _unzipIfNeeded(context) {
     return new Promise((resolve, reject) => {
       const { options, zip } = context;
-      const { unzipPath, removePreviousFile, createIntermediateDirectories } = options;
+      const { unzipPath } = options;
 
       if (!isExists(zip) || !isExists(unzipPath)) {
         if (isExists(zip)) {
@@ -665,13 +663,7 @@ class EpubParser {
         }
         resolve(context);
       } else {
-        if (removePreviousFile) {
-          removeDirectory(unzipPath);
-        }
-        if (createIntermediateDirectories) {
-          createDirectory(unzipPath);
-        }
-        extractAll(zip, unzipPath, true)
+        extractAll(zip, unzipPath, mergeObjects(options, { close: true }))
           .then(() => resolve(context))
           .catch(err => reject(err));
       }

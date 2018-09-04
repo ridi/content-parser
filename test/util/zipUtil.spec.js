@@ -19,10 +19,27 @@ describe('Util - Zip', () => {
     });
   });
 
-  it('extractAll test', () => {
-    return openZip(Files.DEFAULT).then((zip) => {
-      extractAll(zip, './temp');
-      zip.close();
+  it('extractAll test (default)', (done) => {
+    openZip(Files.DEFAULT).then((zip) => {
+      extractAll(zip, './temp').then(() =>  {
+        zip.close();
+        done();
+      });
+    });
+  });
+
+  it('extractAll test (use options)', (done) => {
+    const options = {
+      createIntermediateDirectories: false,
+      removePreviousFile: false,
+      close: false,
+    };
+    openZip(Files.DEFAULT).then((zip) => {
+      extractAll(zip, './tmp', options).catch((err) => {
+        err.code.should.equal('ENOENT');
+        zip.close();
+        done();
+      });
     });
   });
 });
