@@ -17,6 +17,7 @@ const Types = {
   WHITE_SPACE: 'WhiteSpace',
   STRING: 'String',
   URL: 'Url',
+  RAW: 'Raw',
   // See type reference for more types.
 };
 
@@ -66,14 +67,20 @@ function handleRuleBlock(declarationList, options, cssItem) {
     let newItem;
     csstree.walk(declaration, (node, item) => {
       const { type, value } = node;
-      if (type === Types.URL && value.type === Types.STRING) {
+      if (type === Types.URL && stringContains([Types.STRING, Types.RAW], value.type)) {
         let url = value.value.replace(/['"]/g, '');
         if (isExists(options.basePath) && !isUrl(url)) {
           // src="../Images/line.jpg" => src="{basePath}/Images/line.jpg"
           url = safePathJoin(options.basePath, safeDirname(cssItem.href), url);
         }
         oldItem = item;
-        newItem = List.createItem({ type: Types.URL, value: { type: Types.STRING, value: `"${url}"` } });
+        newItem = List.createItem({
+          type: Types.URL,
+          value: {
+            type: value.type,
+            value: value.type === Types.STRING ? `"${url}"` : url,
+          },
+        });
       }
     });
     if (isExists(oldItem) && isExists(newItem)) {
