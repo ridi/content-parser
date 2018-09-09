@@ -1,6 +1,8 @@
 import { arrayIncludes } from 'himalaya/lib/compat';
 import { parse, parseDefaults } from 'himalaya';
 
+import cssLoader from './cssLoader';
+import CssItem from '../model/CssItem';
 import {
   isExists,
   isUrl,
@@ -17,13 +19,31 @@ const Types = {
   ELEMENT: 'element',
 };
 
+const Names = {
+  Attr: {
+    HREF: 'href',
+    SRC: 'src',
+    STYLE: 'style',
+  },
+  Tag: {
+    DOCTYPE: '!doctype',
+    STYLE: 'style',
+  },
+};
+
 function formatAttributes(attributes, options) {
   return attributes.reduce((attrs, attribute) => {
     const { key, value } = attribute;
     if (value === null) {
       return `${attrs} ${key}`;
     }
-    if (isExists(options.basePath) && stringContains(['href', 'src'], key) && !isUrl(value)) {
+    if (options.spine.useCssOptions && key === Names.Attr.STYLE) {
+      const dummyItem = new CssItem({ href: '' });
+      // css-tree does not work unless style is wrapped in a block.
+      const text = cssLoader(dummyItem, `tmp{${value}}`, options).replace(/'|"/gm, '');
+      return `${attrs} ${key}="${text.substring(4, text.length - 1)}"`;
+    }
+    if (isExists(options.basePath) && stringContains([Names.Attr.HREF, Names.Attr.SRC], key) && !isUrl(value)) {
       // src="../Images/background.jpg" => src="{basePath}/Images/background.jpg"
       return `${attrs} ${key}="${safePathJoin(options.basePath, value)}"`;
     }
@@ -41,22 +61,25 @@ function stringify(tree, options) {
     }
     const { tagName, attributes, children } = node;
     const isSelfClosing = arrayIncludes(options.voidTags, tagName);
+    if (options.spine.useCssOptions && tagName === Names.Tag.STYLE && children.length === 1) {
+      const dummyItem = new CssItem({ href: '' });
+      const inlineStyle = children[0].content;
+      const text = cssLoader(dummyItem, inlineStyle, options);
+      return `<${tagName}${formatAttributes(attributes, options)}>${text}</${tagName}>`;
+    }
     return isSelfClosing
-      ? `<${tagName}${formatAttributes(attributes, options)}${tagName !== '!doctype' ? '/' : ''}>`
+      ? `<${tagName}${formatAttributes(attributes, options)}${tagName !== Names.Tag.DOCTYPE ? '/' : ''}>`
       : `<${tagName}${formatAttributes(attributes, options)}>${stringify(children, options)}</${tagName}>`;
   }).join('');
 }
 
 export default function spineLoader(spineItem, file, options = { spine: {}, css: {} }) {
-  if (!isExists(options.basePath) && !options.spine.extractBody) {
-    return file;
-  }
-
   const document = parse(file);
-  const stringifyOptions = mergeObjects(parseDefaults, {
+  const stringifyOptions = mergeObjects(parseDefaults, mergeObjects(options, {
     basePath: isExists(options.basePath)
-      ? safePathJoin(options.basePath, safeDirname(spineItem.href)) : undefined,
-  });
+      ? safePathJoin(options.basePath, safeDirname(spineItem.href))
+      : undefined,
+  }));
 
   if (options.spine.extractBody) {
     const html = document.find(child => child.tagName === 'html');

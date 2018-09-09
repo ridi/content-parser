@@ -113,6 +113,8 @@ class EpubParser {
         extractBody: false,
         // If specified, transforms output of extractBody.
         extractAdapter: defaultExtractAdapter,
+        // If true, applies readOptions.css to inline styles and style attributes.
+        useCssOptions: false,
       },
       // CssItem or InlineCssItem.
       css: {
@@ -137,6 +139,7 @@ class EpubParser {
       spine: {
         extractBody: 'Boolean',
         extractAdapter: 'Function|Undefined',
+        useCssOptions: 'Boolean',
       },
       css: {
         removeAtrules: 'Array',

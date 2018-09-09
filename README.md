@@ -369,6 +369,7 @@ Prepend given string to namespace for identification.
 * [basePath](#basePath)
 * [spine.extractBody](#spine_extractBody)
 * [spine.extractAdapter](#spine_extractAdapter)
+* [spine.useCssOptions](#spine_useCssOptions)
 * [css.removeAtrules](#css_removeAtrules)
 * [css.removeTags](#css_removeTags)
 * [css.removeIds](#css_removeIds)
@@ -481,6 +482,16 @@ Result:
 ```
 
 **Default:** `defaultExtractAdapter`
+
+---
+
+<a id="spine_useCssOptions"></a>
+
+### spine.useCssOptions: *`boolean`*
+
+If true, applies readOptions.css to inline styles and style attributes.
+
+**Default:** `false`
 
 ---
 

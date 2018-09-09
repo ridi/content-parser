@@ -10,8 +10,8 @@ describe('Loader - CSS', () => {
   it('No options test', () => {
     cssLoader({}, '@namespace url(http://www.w3.org/2000/svg); body {  background-color: #fff; }')
       .should.equal('@namespace url(http://www.w3.org/2000/svg);body{background-color:#fff}');
-    cssLoader({}, '@font-face { font-family: NotoSansRegular, sans serif; src: url(\"../Fonts/NotoSans-Regular.ttf\"); }')
-      .should.equal('@font-face{font-family:NotoSansRegular,sans serif;src:url("../Fonts/NotoSans-Regular.ttf")}');
+    cssLoader({}, '@font-face { font-family: NotoSansRegular, sans serif; src: url(../Fonts/NotoSans-Regular.ttf); }')
+      .should.equal('@font-face{font-family:NotoSansRegular,sans serif;src:url(../Fonts/NotoSans-Regular.ttf)}');
     cssLoader({}, '.txt p > a { color: #ff0000; } p .bold { font-weight: 700; } #ridi { color: red; }')
       .should.equal('.txt p>a{color:#ff0000}p .bold{font-weight:700}#ridi{color:red}');
     cssLoader({}, 'body :not(p) { color: green; } :any-link {color: green; } :matches(.red) h1 { color: red; }')
