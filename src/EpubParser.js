@@ -117,7 +117,7 @@ class EpubParser {
       // CssItem or InlineCssItem.
       css: {
         // Remove at-rules.
-        removeAtrules: ['charset', 'import', 'keyframes', 'media', 'namespace', 'supports'],
+        removeAtrules: [],
         // Remove selector that point to specified tags.
         removeTags: [],
         // Remove selector that point to specified ids.
