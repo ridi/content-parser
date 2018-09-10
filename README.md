@@ -246,7 +246,7 @@ Returns [ReadResult](#readResult)[] or throw exception.
 - major: *number*
 - minor: *number*
 - patch: *number*
-- isValid: *boolean*
+- isValid: *boolean* (Only 2.x.x is valid because current epub-parser only supports EPUB2.)
 - toString(): *string*
 
 <a id="parseOptions"></a>
@@ -501,7 +501,7 @@ If true, applies readOptions.css to inline styles and style attributes.
 
 Remove at-rules.
 
-**Default:** `['charset', 'import', 'keyframes', 'media', 'namespace', 'supports']`
+**Default:** `[]`
 
 ---
 
