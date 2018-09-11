@@ -35,16 +35,6 @@ import {
 
 const privateProps = new WeakMap();
 
-const defaultExtractAdapter = (body, attrs) => {
-  let string = '';
-  attrs.forEach((attr) => {
-    string += ` ${attr.key}=\"${attr.value}\"`; // eslint-disable-line no-useless-escape
-  });
-  return {
-    content: `<article${string}>${body}</article>`,
-  };
-};
-
 class EpubParser {
   /**
    * Get default values of parse options
@@ -109,12 +99,11 @@ class EpubParser {
       // SpineItem.
       spine: {
         // If true, extract body. Otherwise it returns a full string.
-        // e.g. { body: '...', attrs: [{ name: 'style', value: 'background-color: #000000' }, ...] }
+        // If specify a function instead of true, use function to transform body.
+        // e.g. extractBody: (innerHTML, attrs) => `<body>${innerHTML}</body>`
         extractBody: false,
-        // If specified, transforms output of extractBody.
-        extractAdapter: defaultExtractAdapter,
         // If true, applies readOptions.css to inline styles and style attributes.
-        useCssOptions: false,
+        useCssOptions: true,
       },
       // CssItem or InlineCssItem.
       css: {
@@ -137,8 +126,7 @@ class EpubParser {
     return {
       basePath: 'String|Undefined',
       spine: {
-        extractBody: 'Boolean',
-        extractAdapter: 'Function|Undefined',
+        extractBody: 'Boolean|Function',
         useCssOptions: 'Boolean',
       },
       css: {
@@ -811,5 +799,3 @@ class EpubParser {
 }
 
 export default EpubParser;
-
-export { defaultExtractAdapter };

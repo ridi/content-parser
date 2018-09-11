@@ -59,7 +59,17 @@ Or throw exception.
 
 ### readItem(item, readOptions)
 
-Returns [ReadResult](#readResult) or throw exception.
+Returns `string` or `Buffer` in `Promise` with:
+
+- [SpineItem](#spineItem), [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
+
+  - `string`
+
+- Other items:
+
+  - `Buffer`
+
+or throw exception.
 
 #### item: `Item` (see: [Item Types](#itemTypes))
 
@@ -69,38 +79,21 @@ Returns [ReadResult](#readResult) or throw exception.
 
 ### readItems(items, readOptions)
 
-Returns [ReadResult](#readResult)[] or throw exception.
+Returns `string[]` or `Buffer[]` in `Promise` with:
+
+- [SpineItem](#spineItem), [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
+
+  - `string[]`
+
+- Other items:
+
+  - `Buffer[]`
+
+or throw exception.
 
 #### items: `Item[]` (see: [Item Types](#itemTypes))
 
 #### [readOptions](#readOptions): `?object`
-
-<a id="readResult"></a>
-
-#### ReadResult
-
-- type: `string`
-
-- value: `string` or `Buffer` or `object`
-
-  - [SpineItem](#spineItem):
-
-    - `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
-
-    - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
-      - `body`: Same reuslt as `document.body.innerHTML`
-      - `attrs`: Attributes in body tag.
-
-    - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
-      - `content`: `extractBody` output transformed by adapter.
-
-  - [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
-
-    - `string`
-
-  - Other items:
-
-    - `Buffer`
 
 ## Model
 
@@ -368,7 +361,6 @@ Prepend given string to namespace for identification.
 
 * [basePath](#basePath)
 * [spine.extractBody](#spine_extractBody)
-* [spine.extractAdapter](#spine_extractAdapter)
 * [spine.useCssOptions](#spine_useCssOptions)
 * [css.removeAtrules](#css_removeAtrules)
 * [css.removeTags](#css_removeTags)
@@ -422,24 +414,7 @@ CSS: [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
 ### spine.extractBody: *`boolean`*
 
 If true, extract body. Otherwise it returns a full string.
-
-true:
-
-```js
-{
-  body: '\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n',
-  attrs: [
-    {
-      key: 'style',
-      value: 'background-color: #000000;',
-    },
-    { // Only added if useStyleNamespace is true.
-      key: 'class',
-      value: '.ridi_style2, .ridi_style3, .ridi_style4, .ridi_style0, .ridi_style1',
-    },
-  ],
-}
-```
+If specify a function instead of true, use function to transform body.
 
 false:
 
@@ -447,41 +422,27 @@ false:
 '<!doctype><html>\n<head>\n</head>\n<body style="background-color: #000000;">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</body>\n</html>'
 ```
 
-**Default:** `false`
-
----
-
-<a id="spine_extractAdapter"></a>
-
-### spine.extractAdapter: *`?function`*
-
-If specified, transforms output of extractBody.
-
-<a id="defaultExtractAdapter"></a>
-
-Define adapter:
+true:
 
 ```js
-const extractAdapter = (body, attrs) => {
-  let string = '';
-  attrs.forEach((attr) => {
-    string += ` ${attr.key}=\"${attr.value}\"`;
-  });
-  return {
-    content: `<article${string}>${body}</article>`,
-  };
+'<body style="background-color: #000000;">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</body>'
+```
+
+function:
+
+```js
+readOptions.spine.extractBody = (innerHTML, attrs) => {
+  const string = attrs.map((attr) => {
+    return ` ${attr.key}=\"${attr.value}\"`;
+  }).join(' ');
+  return `<article ${string}>${innerHTML}</article>`;
 };
 ```
-
-Result:
-
 ```js
-{
-  content: '<article style=\"background-color: #000000;\" class=\".ridi_style2, .ridi_style3, .ridi_style4, .ridi_style0, .ridi_style1\">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</article>',
-}
+'<article style="background-color: #000000;">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</article>'
 ```
 
-**Default:** `defaultExtractAdapter`
+**Default:** `false`
 
 ---
 

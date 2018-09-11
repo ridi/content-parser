@@ -5,6 +5,7 @@ import cssLoader from './cssLoader';
 import CssItem from '../model/CssItem';
 import {
   isExists,
+  isFunc,
   isUrl,
   stringContains,
   mergeObjects,
@@ -39,7 +40,7 @@ function formatAttributes(attributes, options) {
     }
     if (options.spine.useCssOptions && key === Names.Attr.STYLE) {
       const dummyItem = new CssItem({ href: '' });
-      // css-tree does not work unless style is wrapped in a block.
+      // css-tree does not work unless style value is wrapped in a block.
       const text = cssLoader(dummyItem, `tmp{${value}}`, options).replace(/'|"/gm, '');
       return `${attrs} ${key}="${text.substring(4, text.length - 1)}"`;
     }
@@ -91,11 +92,11 @@ export default function spineLoader(spineItem, file, options = { spine: {}, css:
         value: spineItem.styles.map(style => ` .${style.namespace}`).join(',').trim(),
       }]);
     }
-    const result = { body: stringify(body.children, stringifyOptions), attrs };
-    if (isExists(options.spine.extractAdapter)) {
-      return options.spine.extractAdapter(result.body, result.attrs);
+    const innerHTML = stringify(body.children, stringifyOptions);
+    if (isFunc(options.spine.extractBody)) {
+      return options.spine.extractBody(innerHTML, attrs);
     }
-    return result;
+    return `<body ${attrs.map(attr => `${attr.key}="${attr.value}"`).join(' ')}>${innerHTML}</body>`;
   }
 
   return stringify(document, stringifyOptions);
