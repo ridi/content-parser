@@ -1,6 +1,6 @@
 {
   "name": "@ridi/epub-parser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Common EPUB2 data parser for Ridibooks services written in ES6",
   "author": {
     "name": "Ridibooks Viewer Team",
