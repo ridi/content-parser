@@ -1,6 +1,6 @@
 {
-	"presets": [
-		["env", "es2015"]
+  "presets": [
+		["env"]
 	],
 	"plugins": [
 		"add-module-exports",
