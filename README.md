@@ -131,7 +131,7 @@ Returns [ReadResult](#readResult)[] or throw exception.
 - cover: *?[ImageItem](#imageItem)*
 - images: *[ImageItem](#imageItem)[]*
 - styles: *[CssItem](#cssItem)[]*
-- guide: *[Guide](#Guide)[]*
+- guides: *[Guide](#Guide)[]*
 - deadItems: *[DeadItem](#deadItem)[]*
 
 <a id="author"></a>

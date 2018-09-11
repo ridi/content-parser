@@ -13,7 +13,7 @@ const read = file => fs.readFileSync(file, 'utf8');
 const html = read(Files.SPINE_LOADER_ORIGIN);
 
 describe('Loader - Spine', () => {  
-  it('No options test', () => {
+  it('No option test', () => {
     spineLoader({}, html).should.equal(read(Files.SPINE_LOADER_NO_OPTIONS));
   });
 

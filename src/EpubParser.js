@@ -556,7 +556,7 @@ class EpubParser {
       const { rawBook } = context;
       let { foundCover } = context;
 
-      rawBook.guide = [];
+      rawBook.guides = [];
       if (isExists(guide)) {
         getValues(guide.reference).forEach((reference) => {
           // If reference.type equal 'cover' and there is an image item matching reference.href, it is cover image.
@@ -567,7 +567,7 @@ class EpubParser {
               foundCover = true;
             }
           }
-          rawBook.guide.push(mergeObjects(reference, { href: safePathJoin(context.basePath, reference.href) }));
+          rawBook.guides.push(mergeObjects(reference, { href: safePathJoin(context.basePath, reference.href) }));
         });
       }
       resolve(context);

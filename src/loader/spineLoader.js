@@ -44,7 +44,7 @@ function formatAttributes(attributes, options) {
       return `${attrs} ${key}="${text.substring(4, text.length - 1)}"`;
     }
     if (isExists(options.basePath) && stringContains([Names.Attr.HREF, Names.Attr.SRC], key) && !isUrl(value)) {
-      // src="../Images/background.jpg" => src="{basePath}/Images/background.jpg"
+      // src="../Images/background.jpg" => src="{basePath}/OEBPS/Images/background.jpg"
       return `${attrs} ${key}="${safePathJoin(options.basePath, value)}"`;
     }
     return `${attrs} ${key}="${value}"`;

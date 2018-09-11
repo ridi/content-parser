@@ -65,7 +65,7 @@ class Book {
     this.cover = this.items.find(item => item.isCover);
     this.images = this.items.filter(item => item instanceof ImageItem);
     this.styles = this.items.filter(item => item instanceof CssItem);
-    this.guide = (rawBook.guide || []).map(rawObj => new Guide(mergeObjects(rawObj, { findItem })));
+    this.guides = (rawBook.guides || []).map(rawObj => new Guide(mergeObjects(rawObj, { findItem })));
     this.deadItems = this.items.filter(item => item instanceof DeadItem);
     Object.freeze(this);
   }
@@ -90,7 +90,7 @@ class Book {
       version: this.version.toString(),
       metas: this.metas.map(meta => meta.toRaw()),
       items: this.items.map(item => item.toRaw()),
-      guide: this.guide.map(guide => guide.toRaw()),
+      guides: this.guides.map(guide => guide.toRaw()),
     };
   }
 }

@@ -7,7 +7,7 @@ import Files from '../files';
 should(); // Initialize should
 
 describe('Loader - CSS', () => {  
-  it('No options test', () => {
+  it('No option test', () => {
     cssLoader({}, '@namespace url(http://www.w3.org/2000/svg); body {  background-color: #fff; }')
       .should.equal('@namespace url(http://www.w3.org/2000/svg);body{background-color:#fff}');
     cssLoader({}, '@font-face { font-family: NotoSansRegular, sans serif; src: url(../Fonts/NotoSans-Regular.ttf); }')

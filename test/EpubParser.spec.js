@@ -156,7 +156,7 @@ describe('Parsing test', () => {
             isExists(item.spineIndex).should.be.false;
           }
         });
-        rawBook.guide.should.deep.equal(expectedRawBook.guide);
+        rawBook.guides.should.deep.equal(expectedRawBook.guides);
   
         context.foundCover.should.be.true;
 

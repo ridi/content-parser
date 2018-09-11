@@ -70,7 +70,7 @@ function handleRuleBlock(declarationList, options, cssItem) {
       if (type === Types.URL && stringContains([Types.STRING, Types.RAW], value.type)) {
         let url = value.value.replace(/['"]/g, '');
         if (isExists(options.basePath) && !isUrl(url)) {
-          // src="../Images/line.jpg" => src="{basePath}/Images/line.jpg"
+          // url(../Image/line.jog) => url({basePath}/OEBPS/Image/line.jog)
           url = safePathJoin(options.basePath, safeDirname(cssItem.href), url);
         }
         oldItem = item;
