@@ -1,4 +1,4 @@
-import chai, { should } from 'chai';
+import chai, { assert, should } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs';
 import path from 'path';
@@ -9,7 +9,7 @@ import Book from '../src/model/Book';
 import DeadItem from '../src/model/DeadItem';
 import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
-import { isExists } from '../src/util';
+import { isExists, isString } from '../src/util';
 import Files from './files';
 import validationBook from './validationBook';
 
@@ -282,14 +282,17 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
     describe('Read test', () => {
       it('Read single item', () => {
         return parser.readItem(book.spines[0]).then((result) => {
-          result.type.should.equal(SpineItem.name);
+          assert(isString(result));
+        });
+        return parser.readItem(book.cover).then((result) => {
+          assert(Buffer.isBuffer(result));
         });
       });
 
       it('Read multiple items', () => {
         const items = book.styles.concat(book.spines);
         return parser.readItems(items).then((results) => {
-          results.map(result => result.type).should.deep.equal(items.map(item => item.constructor.name));
+          results.map(result => isString(result)).should.deep.equal(items.map(_ => true));
         });
       });
     });

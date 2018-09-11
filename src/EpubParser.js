@@ -669,17 +669,10 @@ class EpubParser {
   }
 
   /**
-   * @typedef ReadResult
-   * @property {string} type item type
-   * @property {(string | Buffer | object)} value item value
-   *          value type is different depending on items and options with:
-   *          {@link https://github.com/ridi/epub-parser/blob/master/README.md#readResult}
-   */
-  /**
    * Reading contents of Item
    * @param {Item} item target
    * @param {?object} options read options
-   * @returns {ReadResult} reading result
+   * @returns {(string|Buffer)} reading result
    * @see EpubParser.readDefaultOptions
    * @see EpubParser.readOptionTypes
    * @example
@@ -696,7 +689,7 @@ class EpubParser {
    * Reading contents of Items
    * @param {Item[]} items targets
    * @param {?object} options read options
-   * @returns {ReadResult[]} reading results
+   * @returns {(string|Buffer)} reading results
    * @see EpubParser.readDefaultOptions
    * @see EpubParser.readOptionTypes
    * @example
@@ -754,39 +747,31 @@ class EpubParser {
   /**
    * Contents is read using loader suitable for context
    * @param {ReadContext} context properties required for reading
-   * @returns {ReadResult[]} reading results
+   * @returns {(string|Buffer)} reading results
    * @throws {Errors.ENOFILE} no such file
    */
   _read(context) {
     return new Promise((resolve) => {
       const { items, options, entries } = context;
-      const results = items
-        .map((item) => {
-          if (item instanceof InlineCssItem) {
-            return cssLoader(item, item.text, options);
-          }
+      const results = items.map((item) => {
+        if (item instanceof InlineCssItem) {
+          return cssLoader(item, item.text, options);
+        }
 
-          const entry = findEntry(entries, item.href);
-          if (!isExists(entry)) {
-            throw createError(Errors.ENOFILE, item.href);
-          }
+        const entry = findEntry(entries, item.href);
+        if (!isExists(entry)) {
+          throw createError(Errors.ENOFILE, item.href);
+        }
 
-          const file = entry.getFile(getItemEncoding(item));
-          if (item instanceof SpineItem) {
-            return spineLoader(item, file, options);
-          }
-          if (item instanceof CssItem) {
-            return cssLoader(item, file, options);
-          }
-          return file;
-        })
-        .map((result, idx) => {
-          const type = items[idx].constructor.name;
-          return {
-            type,
-            value: result,
-          };
-        });
+        const file = entry.getFile(getItemEncoding(item));
+        if (item instanceof SpineItem) {
+          return spineLoader(item, file, options);
+        }
+        if (item instanceof CssItem) {
+          return cssLoader(item, file, options);
+        }
+        return file;
+      });
 
       const { zip } = context;
       if (isExists(zip)) {
