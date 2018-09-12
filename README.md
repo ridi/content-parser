@@ -240,7 +240,7 @@ or throw exception.
 - major: *number*
 - minor: *number*
 - patch: *number*
-- isValid: *boolean* (Only 2.x.x is valid because current epub-parser only supports EPUB2.)
+- isValid: *boolean* (**Only 2.x.x is valid because current epub-parser only supports EPUB2.**)
 - toString(): *string*
 
 <a id="parseOptions"></a>
