@@ -1,7 +1,7 @@
 import { should } from 'chai';
 
 import Book from '../../src/model/Book';
-import { isArray, isBool, isExists, isObject, isString, isUrl } from '../../src/util/typecheck';
+import { isArray, isBool, isExists, isFunc, isObject, isString, isUrl } from '../../src/util/typecheck';
 
 should(); // Initialize should
 
@@ -17,6 +17,7 @@ describe('Util - Type check', () => {
     isArray(false).should.be.false;
     isArray(null).should.be.false;
     isArray(undefined).should.be.false;
+    isArray(() => {}).should.be.false;
 
     const temp = Array.isArray;
     Array.isArray = undefined;
@@ -33,6 +34,7 @@ describe('Util - Type check', () => {
     isBool(false).should.be.true;
     isBool(null).should.be.false;
     isBool(undefined).should.be.false;
+    isBool(() => {}).should.be.false;
   });
 
   it('isExists test', () => {
@@ -44,6 +46,19 @@ describe('Util - Type check', () => {
     isExists(false).should.be.true;
     isExists(null).should.be.false;
     isExists(undefined).should.be.false;
+    isExists(() => {}).should.be.true;
+  });
+
+  it('isFunc test', () => {
+    isFunc({}).should.be.false;
+    isFunc(new Book()).should.be.false;
+    isFunc('string').should.be.false;
+    isFunc([]).should.be.false;
+    isFunc(5).should.be.false;
+    isFunc(false).should.be.false;
+    isFunc(null).should.be.false;
+    isFunc(undefined).should.be.false;
+    isFunc(() => {}).should.be.true;
   });
 
   it('isObject test', () => {
@@ -55,6 +70,7 @@ describe('Util - Type check', () => {
     isObject(false).should.be.false;
     isObject(null).should.be.false;
     isObject(undefined).should.be.false;
+    isObject(() => {}).should.be.false;
   });
 
   it('isString test', () => {
@@ -66,6 +82,7 @@ describe('Util - Type check', () => {
     isString(false).should.be.false;
     isString(null).should.be.false;
     isString(undefined).should.be.false;
+    isString(() => {}).should.be.false;
   });
 
   it('isUrl test', () => {

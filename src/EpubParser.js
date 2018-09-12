@@ -4,7 +4,7 @@ import { parse as parseHtml } from 'himalaya';
 import Errors, { createError } from './constant/errors';
 import cssLoader from './loader/cssLoader';
 import spineLoader from './loader/spineLoader';
-import xmlLoader, { getValues, textNodeName } from './loader/xmlLoader';
+import xmlLoader, { getValue, getValues, textNodeName } from './loader/xmlLoader';
 import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';
@@ -16,7 +16,6 @@ import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
 import {
-  createDirectory,
   extractAll,
   findEntry,
   getItemEncoding,
@@ -28,7 +27,6 @@ import {
   mergeObjects,
   parseBool,
   readEntries,
-  removeDirectory,
   safeDirname,
   safePath,
   safePathJoin,
@@ -36,16 +34,6 @@ import {
 } from './util';
 
 const privateProps = new WeakMap();
-
-const defaultExtractAdapter = (body, attrs) => {
-  let string = '';
-  attrs.forEach((attr) => {
-    string += ` ${attr.key}=\"${attr.value}\"`; // eslint-disable-line no-useless-escape
-  });
-  return {
-    content: `<article${string}>${body}</article>`,
-  };
-};
 
 class EpubParser {
   /**
@@ -66,10 +54,8 @@ class EpubParser {
       allowNcxFileMissing: true,
       // If specified, uncompress to that path. (Only if input is EPUB file.)
       unzipPath: undefined,
-      // If true, creates intermediate directories for unzipPath.
-      createIntermediateDirectories: true,
-      // If true, removes a previous file from unzipPath.
-      removePreviousFile: true,
+      // If true, overwrite to unzipPath when uncompress.
+      overwrite: true,
       // If true, ignore spineIndex difference caused by isLinear property of SpineItem.
       // e.g. If left is false, right is true.
       //  [{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
@@ -95,8 +81,7 @@ class EpubParser {
       validateXml: 'Boolean',
       allowNcxFileMissing: 'Boolean',
       unzipPath: 'String|Undefined',
-      createIntermediateDirectories: 'Boolean',
-      removePreviousFile: 'Boolean',
+      overwrite: 'Boolean',
       ignoreLinear: 'Boolean',
       useStyleNamespace: 'Boolean',
       styleNamespacePrefix: 'String',
@@ -114,15 +99,16 @@ class EpubParser {
       // SpineItem.
       spine: {
         // If true, extract body. Otherwise it returns a full string.
-        // e.g. { body: '...', attrs: [{ name: 'style', value: 'background-color: #000000' }, ...] }
+        // If specify a function instead of true, use function to transform body.
+        // e.g. extractBody: (innerHTML, attrs) => `<body>${innerHTML}</body>`
         extractBody: false,
-        // If specified, transforms output of extractBody.
-        extractAdapter: defaultExtractAdapter,
+        // If true, applies readOptions.css to inline styles and style attributes.
+        useCssOptions: true,
       },
       // CssItem or InlineCssItem.
       css: {
         // Remove at-rules.
-        removeAtrules: ['charset', 'import', 'keyframes', 'media', 'namespace', 'supports'],
+        removeAtrules: [],
         // Remove selector that point to specified tags.
         removeTags: [],
         // Remove selector that point to specified ids.
@@ -140,8 +126,8 @@ class EpubParser {
     return {
       basePath: 'String|Undefined',
       spine: {
-        extractBody: 'Boolean',
-        extractAdapter: 'Function|Undefined',
+        extractBody: 'Boolean|Function',
+        useCssOptions: 'Boolean',
       },
       css: {
         removeAtrules: 'Array',
@@ -177,7 +163,7 @@ class EpubParser {
 
   /**
    * EPUB Parsing
-   * @param {object} options parse options
+   * @param {?object} options parse options
    * @returns {Promise.<Book>} returns Book
    * @see EpubParser.parseDefaultOptions
    * @see EpubParser.parseOptionTypes
@@ -200,7 +186,7 @@ class EpubParser {
 
   /**
    * Validate parse options and get entries from input
-   * @param {object} options parse options
+   * @param {?object} options parse options
    * @returns {Promise.<Context>} returns Context containing parse options, entries and zip if input is file
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
@@ -344,7 +330,7 @@ class EpubParser {
         throw createError(Errors.ENOELMT, 'metadata or manifest or spine', opfPath);
       }
 
-      context.rawBook.epubVersion = parseFloat(root.version);
+      context.rawBook.version = root.version;
       this._parseMetadata(root.metadata, context)
         .then(ctx => this._parseManifestAndSpine(root.manifest, root.spine, ctx))
         .then(ctx => this._parseGuide(root.guide, ctx))
@@ -368,18 +354,18 @@ class EpubParser {
       rawBook.titles = getValues(title);
       rawBook.creators = getValues(creator, key => (key === textNodeName ? 'name' : key));
       rawBook.subjects = getValues(subject);
-      rawBook.description = description;
-      rawBook.publisher = publisher;
+      rawBook.description = getValue(description);
+      rawBook.publisher = getValue(publisher);
       rawBook.contributors = getValues(contributor, key => (key === textNodeName ? 'name' : key));
       rawBook.dates = getValues(date, key => (key === textNodeName ? 'value' : key));
-      rawBook.type = type;
-      rawBook.format = format;
+      rawBook.type = getValue(type);
+      rawBook.format = getValue(format);
       rawBook.identifiers = getValues(identifier, key => (key === textNodeName ? 'value' : key));
-      rawBook.source = source;
-      rawBook.language = language;
-      rawBook.relation = relation;
-      rawBook.coverage = coverage;
-      rawBook.rights = rights;
+      rawBook.source = getValue(source);
+      rawBook.language = getValue(language);
+      rawBook.relation = getValue(relation);
+      rawBook.coverage = getValue(coverage);
+      rawBook.rights = getValue(rights);
       rawBook.metas = getValues(meta);
       resolve(context);
     });
@@ -558,7 +544,7 @@ class EpubParser {
       const { rawBook } = context;
       let { foundCover } = context;
 
-      rawBook.guide = [];
+      rawBook.guides = [];
       if (isExists(guide)) {
         getValues(guide.reference).forEach((reference) => {
           // If reference.type equal 'cover' and there is an image item matching reference.href, it is cover image.
@@ -569,7 +555,7 @@ class EpubParser {
               foundCover = true;
             }
           }
-          rawBook.guide.push(mergeObjects(reference, { href: safePathJoin(context.basePath, reference.href) }));
+          rawBook.guides.push(mergeObjects(reference, { href: safePathJoin(context.basePath, reference.href) }));
         });
       }
       resolve(context);
@@ -651,13 +637,12 @@ class EpubParser {
    * @returns {Promise.<Context>} returns Context (no change at this step)
    * @throws {Errors.ENOENT} no such file or directory
    * @see EpubParser.parseDefaultOptions.unzipPath
-   * @see EpubParser.parseDefaultOptions.removePreviousFile
-   * @see EpubParser.parseDefaultOptions.createIntermediateDirectories
+   * @see EpubParser.parseDefaultOptions.overwrite
    */
   _unzipIfNeeded(context) {
     return new Promise((resolve, reject) => {
       const { options, zip } = context;
-      const { unzipPath, removePreviousFile, createIntermediateDirectories } = options;
+      const { unzipPath } = options;
 
       if (!isExists(zip) || !isExists(unzipPath)) {
         if (isExists(zip)) {
@@ -665,13 +650,7 @@ class EpubParser {
         }
         resolve(context);
       } else {
-        if (removePreviousFile) {
-          removeDirectory(unzipPath);
-        }
-        if (createIntermediateDirectories) {
-          createDirectory(unzipPath);
-        }
-        extractAll(zip, unzipPath, true)
+        extractAll(zip, unzipPath, options.overwrite, true)
           .then(() => resolve(context))
           .catch(err => reject(err));
       }
@@ -692,10 +671,8 @@ class EpubParser {
   /**
    * Reading contents of Item
    * @param {Item} item target
-   * @param {object} options read options
-   * @returns {(string | Buffer | object)}
-   *          returns type is different depending on items and options with:
-   *          {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
+   * @param {?object} options read options
+   * @returns {(string|Buffer)} reading result
    * @see EpubParser.readDefaultOptions
    * @see EpubParser.readOptionTypes
    * @example
@@ -711,10 +688,8 @@ class EpubParser {
   /**
    * Reading contents of Items
    * @param {Item[]} items targets
-   * @param {object} options read options
-   * @returns {(string[] | Buffer[] | object[])}
-   *          returns type is different depending on items and options with:
-   *          {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
+   * @param {?object} options read options
+   * @returns {(string|Buffer)} reading results
    * @see EpubParser.readDefaultOptions
    * @see EpubParser.readOptionTypes
    * @example
@@ -736,12 +711,12 @@ class EpubParser {
    * @property {Item[]} items targets
    * @property {object} options read options
    * @property {object} entries from input
-   * @property {StreamZip} zip
+   * @property {?StreamZip} zip
    */
   /**
    * Validate read options and get entries from input
    * @param {Item[]} items targets
-   * @param {object} options read options
+   * @param {?object} options read options
    * @returns {Promise.<ReadContext>}
    *          returns ReadContext containing target items, read options, entries and zip if input is file
    * @throws {Errors.EINVAL} invalid options or value type
@@ -772,9 +747,7 @@ class EpubParser {
   /**
    * Contents is read using loader suitable for context
    * @param {ReadContext} context properties required for reading
-   * @returns {(string[] | Buffer[] | object[])}
-   *          returns type is different depending on items and options with:
-   *          {@link https://github.com/ridi/epub-parser/blob/master/README.md#detail}
+   * @returns {(string|Buffer)} reading results
    * @throws {Errors.ENOFILE} no such file
    */
   _read(context) {
@@ -811,5 +784,3 @@ class EpubParser {
 }
 
 export default EpubParser;
-
-export { defaultExtractAdapter };

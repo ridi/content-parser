@@ -33,6 +33,7 @@ npm install @ridi/epub-parser
 
 ```js
 import EpubParser from '@ridi/epub-parser';
+// or const { EpubParser } = require('@ridi/epub-parser');
 
 const parser = new EpubParser('./foo/bar.epub' or './unzippedPath');
 parser.parse().then((book) => {
@@ -53,50 +54,47 @@ Returns `Promise<Book>` with:
 
 Or throw exception.
 
-#### [parseOptions](#parseOptions): `object`
+#### [parseOptions](#parseOptions): `?object`
 
 ---
 
 ### readItem(item, readOptions)
 
-Returns `string` or `object` or `Buffer` in `Promise` (see [detail](#detail)) or throw exception.
+Returns `string` or `Buffer` in `Promise` with:
 
-#### item: `Item` (see: [Item Types](#itemTypes))
-
-#### [readOptions](#readOptions): `object`
-
----
-
-### readItems(items, readOptions)
-
-Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detail)) or throw exception.
-
-#### items: `Item[]` (see: [Item Types](#itemTypes))
-
-#### [readOptions](#readOptions): `object`
-
-<a id="detail"></a>
-
-#### Returns detail
-
-- [SpineItem](#spineItem):
-
-  - `string` ([readOptions.spine.extractBody](#spine_extractBody) is `false`)
-
-  - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is `undefined`):
-    - `body`: Same reuslt as `document.body.innerHTML`
-    - `attrs`: Attributes in body tag.
-
-  - `object` ([readOptions.spine.extractAdapter](#spine_extractAdapter) is [defaultExtractAdapter](#defaultExtractAdapter)):
-    - `content`: `extractBody` output transformed by adapter.
-
-- [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
+- [SpineItem](#spineItem), [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
 
   - `string`
 
 - Other items:
 
   - `Buffer`
+
+or throw exception.
+
+#### item: `Item` (see: [Item Types](#itemTypes))
+
+#### [readOptions](#readOptions): `?object`
+
+---
+
+### readItems(items, readOptions)
+
+Returns `string[]` or `Buffer[]` in `Promise` with:
+
+- [SpineItem](#spineItem), [CssItem](#cssItem), [InlineCssItem](#inlineCssItem), [NcxItem](#ncxItem), [SvgItem](#svgItem):
+
+  - `string[]`
+
+- Other items:
+
+  - `Buffer[]`
+
+or throw exception.
+
+#### items: `Item[]` (see: [Item Types](#itemTypes))
+
+#### [readOptions](#readOptions): `?object`
 
 ## Model
 
@@ -107,65 +105,65 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 - titles: *string[]*
 - creators: *[Author](#author)[]*
 - subjects: *string[]*
-- description: *string?*
-- publisher: *string?*
+- description: *?string*
+- publisher: *?string*
 - contributors: *[Author](#author)[]*
 - dates: *[DateTime](#dateTime)[]*
-- type: *string?*
-- format: *string?*
+- type: *?string*
+- format: *?string*
 - identifiers: *[Identifier](#identifier)[]*
-- source: *string?*
-- language: *string?*
-- relation: *string?*
-- rights: *string?*
-- epubVersion: *number?*
-- metas: *[Meta](meta)[]*
+- source: *?string*
+- language: *?string*
+- relation: *?string*
+- rights: *?string*
+- version: *[Version](#version)*
+- metas: *[Meta](#meta)[]*
 - items: *[Item](#item)[]*
-- ncx: *[NcxItem](#ncxItem)?*
+- ncx: *[NcxItem](#ncxItem)*
 - spines: *[SpintItem](#spineItem)[]*
 - fonts: *[FontItem](#fontItem)[]*
-- cover: *[ImageItem](#imageItem)?*
+- cover: *?[ImageItem](#imageItem)*
 - images: *[ImageItem](#imageItem)[]*
 - styles: *[CssItem](#cssItem)[]*
-- guide: *[Guide](#Guide)[]*
+- guides: *[Guide](#Guide)[]*
 - deadItems: *[DeadItem](#deadItem)[]*
 
 <a id="author"></a>
 
 ### [Author](./src/model/Author.js)
 
-- name: *string?*
+- name: *?string*
 - role: *string* (**Default: Author.Roles.UNDEFINED**)
 
 <a id="dateTime"></a>
 
 ### [DateTime](./src/model/DateTime.js)
 
-- value: *strung?*
+- value: *?string*
 - event: *string* (**Default: DateTime.Events.UNDEFINED**)
 
 <a id="identifier"></a>
 
 ### [Identifier](./src/model/Identifier.js)
 
-- value: *string?*
-- scheme: *string?* (**Default: Identifier.Schemes.UNDEFINED**)
+- value: *?string*
+- scheme: *string* (**Default: Identifier.Schemes.UNDEFINED**)
 
 <a id="meta"></a>
 
 ### [Meta](./src/model/Meta.js)
 
-- name: *string?*
-- content: *string?*
+- name: *?string*
+- content: *?string*
 
 <a id="guide"></a>
 
 ### [Guide](./src/model/Guide.js)
 
-- title: *string?*
+- title: *?string*
 - type: *string* (**Default: Guide.Types.UNDEFINED**)
-- href: *string?*
-- item: *[Item](#item)?*
+- href: *?string*
+- item: *?[Item](#item)*
 
 <a id="itemTypes"></a>
 
@@ -175,10 +173,10 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 #### [Item](./src/model/Item.js)
 
-- id: *id?*
-- href: *string?*
-- mediaType: *string?*
-- size: *number?*
+- id: *?id*
+- href: *?string*
+- mediaType: *?string*
+- size: *?number*
 - isFileExists: *boolean* (**size !== undefined**)
 
 <a id="ncxItem"></a>
@@ -193,17 +191,17 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 - spineIndex: *number* (**Default: -1**)
 - isLinear: *boolean* (**Default: true**)
-- styles: *[CssItem](#cssItem)[]?*
+- styles: *?[CssItem](#cssItem)[]*
 
 <a id="cssItem"></a>
 
 #### [CssItem](./src/model/CssItem.js) (extend [Item](#item))
-- namespace: *string?*
+- namespace: *string*
 
 <a id="inlineCssItem"></a>
 
 #### [InlineCssItem](./src/model/InlineCssItem.js) (extend [CssItem](#cssItem))
-- text: *string?*
+- text: *string* (**Default: ''**)
 
 <a id="imageItem"></a>
 
@@ -227,13 +225,23 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 
 ### [NavPoint](./src/model/NavPoint.js)
 
-- id: *string?*
-- label: *string?*
-- src: *string?*
-- anchor: *string?*
+- id: *?string*
+- label: *?string*
+- src: *?string*
+- anchor: *?string*
 - depth: *number* (**Default: 0**)
 - children: *NavPoint[]*
-- spine: *[SpineItem](#spineItem)?*
+- spine: *?[SpineItem](#spineItem)*
+
+<a id="version"></a>
+
+### [Version](./src/model/Version.js)
+
+- major: *number*
+- minor: *number*
+- patch: *number*
+- isValid: *boolean* (Only 2.x.x is valid because current epub-parser only supports EPUB2.)
+- toString(): *string*
 
 <a id="parseOptions"></a>
 
@@ -243,8 +251,7 @@ Returns `string[]` or `object[]` or `Buffer[]` in `Promise` (see [detail](#detai
 * [validateXml](#validateXml)
 * [allowNcxFileMissing](#allowNcxFileMissing)
 * [unzipPath](#unzipPath)
-* [createIntermediateDirectories](#createIntermediateDirectories)
-* [removePreviousFile](#removePreviousFile)
+* [overwrite](#overwrite)
 * [ignoreLinear](#ignoreLinear)
 * [useStyleNamespace](#useStyleNamespace)
 * [styleNamespacePrefix](#styleNamespacePrefix)
@@ -288,7 +295,7 @@ If false, stop parsing when NCX file not exists.
 
 <a id="unzipPath"></a>
 
-### unzipPath: *`string?`*
+### unzipPath: *`?string`*
 
 If specified, uncompress to that path.
 > Only if input is EPUB file.
@@ -297,21 +304,11 @@ If specified, uncompress to that path.
 
 ---
 
-<a id="createIntermediateDirectories"></a>
+<a id="overwrite"></a>
 
-### createIntermediateDirectories: *`boolean`*
+### overwrite: *`boolean`*
 
-If true, creates intermediate directories for unzipPath.
-
-**Default:** `true`
-
----
-
-<a id="removePreviousFile"></a>
-
-### removePreviousFile: *`boolean`*
-
-If true, removes a previous file from unzipPath.
+If true, overwrite to [unzipPath](#unzipPath) when uncompress.
 
 **Default:** `true`
 
@@ -365,7 +362,7 @@ Prepend given string to namespace for identification.
 
 * [basePath](#basePath)
 * [spine.extractBody](#spine_extractBody)
-* [spine.extractAdapter](#spine_extractAdapter)
+* [spine.useCssOptions](#spine_useCssOptions)
 * [css.removeAtrules](#css_removeAtrules)
 * [css.removeTags](#css_removeTags)
 * [css.removeIds](#css_removeIds)
@@ -375,7 +372,7 @@ Prepend given string to namespace for identification.
 
 <a id="basePath"></a>
 
-### basePath: *`string?`*
+### basePath: *`?string`*
 
 If specified, change base path of paths used by spine and css.
 
@@ -418,24 +415,7 @@ CSS: [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
 ### spine.extractBody: *`boolean`*
 
 If true, extract body. Otherwise it returns a full string.
-
-true:
-
-```js
-{
-  body: '\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n',
-  attrs: [
-    {
-      key: 'style',
-      value: 'background-color: #000000;',
-    },
-    { // Only added if useStyleNamespace is true.
-      key: 'class',
-      value: '.ridi_style2, .ridi_style3, .ridi_style4, .ridi_style0, .ridi_style1',
-    },
-  ],
-}
-```
+If specify a function instead of true, use function to transform body.
 
 false:
 
@@ -443,41 +423,37 @@ false:
 '<!doctype><html>\n<head>\n</head>\n<body style="background-color: #000000;">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</body>\n</html>'
 ```
 
+true:
+
+```js
+'<body style="background-color: #000000;">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</body>'
+```
+
+function:
+
+```js
+readOptions.spine.extractBody = (innerHTML, attrs) => {
+  const string = attrs.map((attr) => {
+    return ` ${attr.key}=\"${attr.value}\"`;
+  }).join(' ');
+  return `<article ${string}>${innerHTML}</article>`;
+};
+```
+```js
+'<article style="background-color: #000000;">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</article>'
+```
+
 **Default:** `false`
 
 ---
 
-<a id="spine_extractAdapter"></a>
+<a id="spine_useCssOptions"></a>
 
-### spine.extractAdapter: *`function`*
+### spine.useCssOptions: *`boolean`*
 
-If specified, transforms output of extractBody.
+If true, applies readOptions.css to inline styles and style attributes.
 
-<a id="defaultExtractAdapter"></a>
-
-Define adapter:
-
-```js
-const extractAdapter = (body, attrs) => {
-  let string = '';
-  attrs.forEach((attr) => {
-    string += ` ${attr.key}=\"${attr.value}\"`;
-  });
-  return {
-    content: `<article${string}>${body}</article>`,
-  };
-};
-```
-
-Result:
-
-```js
-{
-  content: '<article style=\"background-color: #000000;\" class=\".ridi_style2, .ridi_style3, .ridi_style4, .ridi_style0, .ridi_style1\">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</article>',
-}
-```
-
-**Default:** `defaultExtractAdapter`
+**Default:** `false`
 
 ---
 
@@ -487,7 +463,7 @@ Result:
 
 Remove at-rules.
 
-**Default:** `['charset', 'import', 'keyframes', 'media', 'namespace', 'supports']`
+**Default:** `[]`
 
 ---
 

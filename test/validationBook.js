@@ -57,7 +57,8 @@ export default function validationBook(book, expectedBook, options = {}) {
 
   book.rights.should.equal(expectedBook.rights);
 
-  book.epubVersion.should.equal(expectedBook.epubVersion);
+  book.version.isValid.should.be.true;
+  book.version.toString().should.equal(expectedBook.version);
 
   book.items.should.have.lengthOf(expectedBook.items.length);
   book.items.forEach((item, idx) => {
@@ -136,9 +137,9 @@ export default function validationBook(book, expectedBook, options = {}) {
     }
   });
 
-  book.guide.should.have.lengthOf(expectedBook.guide.length);
-  book.guide.forEach((guide, idx) => {
-    const expectedGuide = expectedBook.guide[idx];
+  book.guides.should.have.lengthOf(expectedBook.guides.length);
+  book.guides.forEach((guide, idx) => {
+    const expectedGuide = expectedBook.guides[idx];
     guide.title.should.equal(expectedGuide.title);
     guide.type.should.equal(expectedGuide.type);
     guide.item.id.should.equal(expectedGuide.item.id);

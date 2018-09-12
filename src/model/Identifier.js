@@ -1,13 +1,33 @@
-import { isString } from '../util';
+import { isExists, isString, stringContains } from '../util';
+
+const Schemes = Object.freeze({
+  UNDEFINED: 'undefined',
+  UNKNOWN: 'unknown',
+  DOI: 'doi',
+  ISBN: 'isbn',
+  ISBN13: 'isbn13',
+  ISBN10: 'isbn10',
+  ISSN: 'issn',
+  UUID: 'uuid',
+  URI: 'uri',
+});
 
 class Identifier {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     if (isString(rawObj)) {
       this.value = rawObj;
     } else {
       this.value = rawObj.value;
     }
-    this.scheme = (rawObj.scheme || Identifier.Schemes.UNDEFINED).toLowerCase();
+    if (isExists(rawObj.scheme)) {
+      if (stringContains(Object.values(Schemes), rawObj.scheme)) {
+        this.scheme = rawObj.scheme.toLowerCase();
+      } else {
+        this.scheme = Schemes.UNKNOWN;
+      }
+    } else {
+      this.scheme = Schemes.UNDEFINED;
+    }
     Object.freeze(this);
   }
 
@@ -19,15 +39,6 @@ class Identifier {
   }
 }
 
-Identifier.Schemes = Object.freeze({
-  UNDEFINED: 'undefined',
-  DOI: 'doi',
-  ISBN: 'isbn',
-  ISBN13: 'isbn13',
-  ISBN10: 'isbn10',
-  ISSN: 'issn',
-  UUID: 'uuid',
-  URI: 'uri',
-});
+Identifier.Schemes = Schemes;
 
 export default Identifier;

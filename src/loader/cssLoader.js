@@ -17,6 +17,7 @@ const Types = {
   WHITE_SPACE: 'WhiteSpace',
   STRING: 'String',
   URL: 'Url',
+  RAW: 'Raw',
   // See type reference for more types.
 };
 
@@ -30,21 +31,21 @@ function handleRulePrelude(selectorList, options, cssItem) {
         const { name, type } = node;
         if (type === Types.SELECTOR_LIST) {
           // Ignore selectors inside :not()
-          if (isExists(context.function) || context.function.name.toLowerCase() !== 'not') {
+          if (isExists(context.function) && context.function.name.toLowerCase() !== 'not') {
             if (handleRulePrelude(node, options, cssItem)) {
               shouldRemove = true;
             }
           }
         } else if (type === Types.TYPE_SELECTOR) {
-          if (stringContains(options.css.removeTags, name)) {
+          if (stringContains(options.css.removeTags || [], name)) {
             shouldRemove = true;
           }
         } else if (type === Types.ID_SELECTOR) {
-          if (stringContains(options.css.removeIds, name)) {
+          if (stringContains(options.css.removeIds || [], name)) {
             shouldRemove = true;
           }
         } else if (type === Types.CLASS_SELECTOR) {
-          if (stringContains(options.css.removeClasses, name)) {
+          if (stringContains(options.css.removeClasses || [], name)) {
             shouldRemove = true;
           }
         }
@@ -52,7 +53,7 @@ function handleRulePrelude(selectorList, options, cssItem) {
     });
     if (shouldRemove) {
       list.remove(item);
-    } else {
+    } else if (isExists(cssItem.namespace)) {
       selector.children.prependData({ type: Types.WHITE_SPACE, value: ' ' });
       selector.children.prependData({ type: Types.CLASS_SELECTOR, name: cssItem.namespace });
     }
@@ -66,14 +67,20 @@ function handleRuleBlock(declarationList, options, cssItem) {
     let newItem;
     csstree.walk(declaration, (node, item) => {
       const { type, value } = node;
-      if (type === Types.URL && value.type === Types.STRING) {
+      if (type === Types.URL && stringContains([Types.STRING, Types.RAW], value.type)) {
         let url = value.value.replace(/['"]/g, '');
         if (isExists(options.basePath) && !isUrl(url)) {
-          // src="../Images/line.jpg" => src="{basePath}/Images/line.jpg"
+          // url(../Image/line.jog) => url({basePath}/OEBPS/Image/line.jog)
           url = safePathJoin(options.basePath, safeDirname(cssItem.href), url);
         }
         oldItem = item;
-        newItem = List.createItem({ type: Types.URL, value: { type: Types.STRING, value: `"${url}"` } });
+        newItem = List.createItem({
+          type: Types.URL,
+          value: {
+            type: value.type,
+            value: value.type === Types.STRING ? `"${url}"` : url,
+          },
+        });
       }
     });
     if (isExists(oldItem) && isExists(newItem)) {
@@ -102,7 +109,7 @@ function handleAtrule(node, item, list, options, cssItem) {
       return;
     }
   }
-  if (stringContains(options.css.removeAtrules, node.name)) {
+  if (stringContains(options.css.removeAtrules || [], node.name)) {
     list.remove(item);
   } else if (node.name.toLowerCase() === 'font-face') {
     handleRuleBlock(node.block, options, cssItem);
@@ -114,7 +121,7 @@ const handlers = {
   Rule: handleRuleset,
 };
 
-export default function cssLoader(cssItem, file, options) {
+export default function cssLoader(cssItem, file, options = { css: {} }) {
   const ast = csstree.parse(file);
   csstree.walk(ast, {
     leave: function(node, item, list) { // eslint-disable-line

@@ -58,7 +58,7 @@
   "relation": "https://github.com/ridi/epub-parser",
   "coverage": "Coverage",
   "rights": "Copyright (c) 2018 Davin",
-  "epubVersion": 2,
+  "version": "2.0.0",
   "metas": [
     {
       "name": "Sigil version",
@@ -775,7 +775,7 @@
       "reason": "not_support_type"
     }
   ],
-  "guide": [
+  "guides": [
     {
       "title": "Cover",
       "type": "cover",

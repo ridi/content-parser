@@ -1,27 +1,9 @@
-import { isString } from '../util';
-
-class Author {
-  constructor(rawObj) {
-    if (isString(rawObj)) {
-      this.name = rawObj;
-    } else {
-      this.name = rawObj.name;
-    }
-    this.role = (rawObj.role || Author.Roles.UNDEFINED).toLowerCase();
-    Object.freeze(this);
-  }
-
-  toRaw() {
-    return {
-      name: this.name,
-      role: this.role,
-    };
-  }
-}
+import { isExists, isString, stringContains } from '../util';
 
 // See http://www.idpf.org/epub/20/spec/OPF_2.0.1_draft.htm#Section2.2.6 for a discussion of role.
-Author.Roles = Object.freeze({
+const Roles = Object.freeze({
   UNDEFINED: 'undefined',
+  UNKNOWN: 'unknown',
   ADAPTER: 'adp',
   ANNOTATOR: 'ann',
   ARRANGER: 'arr',
@@ -52,5 +34,34 @@ Author.Roles = Object.freeze({
   TRANSCRIBER: 'trc',
   TRANSLATOR: 'trl',
 });
+
+class Author {
+  constructor(rawObj = {}) {
+    if (isString(rawObj)) {
+      this.name = rawObj;
+    } else {
+      this.name = rawObj.name;
+    }
+    if (isExists(rawObj.role)) {
+      if (stringContains(Object.values(Roles), rawObj.role)) {
+        this.role = rawObj.role.toLowerCase();
+      } else {
+        this.role = Roles.UNKNOWN;
+      }
+    } else {
+      this.role = Roles.UNDEFINED;
+    }
+    Object.freeze(this);
+  }
+
+  toRaw() {
+    return {
+      name: this.name,
+      role: this.role,
+    };
+  }
+}
+
+Author.Roles = Roles;
 
 export default Author;

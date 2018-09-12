@@ -1,0 +1,3 @@
+{
+  "value": "<body id=\"root\" style=\"background-color: #000000;\">\n    <!-- Comment -->\n    <p style=\"color: gray; font-size: 1.5em; background-image: url('../Images/01.png');\">extract body option test</p>\n    <img src=\"../Images/bg.jpg\"/>\n    <pre>\n      \n      Pre\n        Pre\n    </pre>\n    <script>console.log(\"loaded.\");</script>\n  </body>"
+}

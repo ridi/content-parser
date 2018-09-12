@@ -18,6 +18,10 @@ export function isExists(any) {
   return any !== undefined && any !== null;
 }
 
+export function isFunc(any) {
+  return getType(any) === 'Function';
+}
+
 export function isObject(any) {
   return getType(any) === 'Object';
 }

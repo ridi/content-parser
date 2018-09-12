@@ -1,5 +1,5 @@
 class Meta {
-  constructor(rawObj) {
+  constructor(rawObj = {}) {
     this.name = rawObj.name;
     this.content = rawObj.content;
     Object.freeze(this);

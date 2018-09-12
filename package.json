@@ -1,6 +1,6 @@
 {
   "name": "@ridi/epub-parser",
-  "version": "0.0.2",
+  "version": "0.1.0-alpha.1",
   "description": "Common EPUB2 data parser for Ridibooks services written in ES6",
   "author": {
     "name": "Ridibooks Viewer Team",
@@ -14,7 +14,13 @@
   "bugs": "https://github.com/ridi/epub-parser/issues",
   "homepage": "https://github.com/ridi/epub-parser",
   "keywords": [
-    "EPUB"
+    "EPUB",
+    "EPUB2",
+    "parser",
+    "serialize",
+    "deserialize",
+    "unzip",
+    "read"
   ],
   "files": [
     "lib"

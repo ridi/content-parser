@@ -1,4 +1,4 @@
-import chai, { should } from 'chai';
+import chai, { assert, should } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs';
 import path from 'path';
@@ -9,7 +9,7 @@ import Book from '../src/model/Book';
 import DeadItem from '../src/model/DeadItem';
 import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
-import { isExists } from '../src/util';
+import { isExists, isString } from '../src/util';
 import Files from './files';
 import validationBook from './validationBook';
 
@@ -84,12 +84,6 @@ describe('Parsing test', () => {
         err.code.should.equal(Errors.EINVAL.code);
       });
     });
-
-    it('Invalid XML', () => {
-      return new EpubParser(Files.INVALID_XML).parse({ validateXml: true }).catch((err) => {
-        err.code.should.equal(Errors.EINVAL.code);
-      });
-    });
   });
 
   describe('Check context by step', () => {
@@ -137,7 +131,7 @@ describe('Parsing test', () => {
         rawBook.relation.should.equal(expectedRawBook.relation);
         rawBook.coverage.should.equal(expectedRawBook.coverage);
         rawBook.rights.should.equal(expectedRawBook.rights);
-        rawBook.epubVersion.should.equal(expectedRawBook.epubVersion);
+        rawBook.version.should.equal(expectedRawBook.version);
         rawBook.metas.should.deep.equal(expectedRawBook.metas);
   
         let current = 0;
@@ -162,7 +156,7 @@ describe('Parsing test', () => {
             isExists(item.spineIndex).should.be.false;
           }
         });
-        rawBook.guide.should.deep.equal(expectedRawBook.guide);
+        rawBook.guides.should.deep.equal(expectedRawBook.guides);
   
         context.foundCover.should.be.true;
 
@@ -279,65 +273,26 @@ parser.parse({ useStyleNamespace: true }).then((book) => {
 
     describe('Error Situation', () => {
       it('Invalid item', () => {
-        return parser.readItem({ href: Files.EXPECTED_READ_SPINE_WITH_BASE_PATH }).catch((err) => {
+        return parser.readItem({ href: './test' }).catch((err) => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
     });
 
-    describe('Read full-text', () => {
-      it('Read single item (default)', () => {
-        const expected = fs.readFileSync(Files.EXPECTED_READ_SPIN, 'utf8');
+    describe('Read test', () => {
+      it('Read single item', () => {
         return parser.readItem(book.spines[0]).then((result) => {
-          result.should.equal(expected);
+          assert(isString(result));
+        });
+        return parser.readItem(book.cover).then((result) => {
+          assert(Buffer.isBuffer(result));
         });
       });
-  
-      it('Read single item (use basePath option)', () => {
-        const expected = fs.readFileSync(Files.EXPECTED_READ_SPINE_WITH_BASE_PATH, 'utf8');
-        const options = { basePath: './a/b/c' };
-        return parser.readItem(book.spines[0], options).then((result) => {
-          result.should.equal(expected);
-        });
-      });
-  
-      it('Read multiple item (use css options)', () => {
-        const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES));
-        const options = { css: { removeTags: ['html', 'body'] } };
-        return parser.readItems(book.styles, options).then((results) => {
-          results.should.deep.equal(expectedList);
-        });
-      });
-    });
 
-    describe('Read extracted text', () => {
-      it('Extract body from SpineItem (default)', () => {
-        const expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY, 'utf8'));
-        const options = { spine: { extractBody: true } };
-        return parser.readItem(book.spines[0], options).then((result) => {
-          result.should.deep.equal(expected);
-        });
-      });
-  
-      it('Extract body from SpineItem (custom extractAdapter)', () => {
-        const customAdapter = (body, attrs) => {
-          const style = attrs.find((attr) => attr.key === 'style') || { key: 'style', value: '' };
-          return {
-            content: `<article ${style.key}=\"${style.value}\">${body}</article>`,
-          };
-        };
-        const expected = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_BODY_WITH_CUSTOM_ADAPTOR, 'utf8'));
-        const options = { spine: { extractBody: true, extractAdapter: customAdapter } };
-        return parser.readItem(book.spines[0], options).then((result) => {
-          result.should.deep.equal(expected);
-        });
-      });
-  
-      it('Extract styles from CssItems', () => {
-        const expectedList = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLES_WITH_BASE_PATH));
-        const options = { basePath: './a/b/c', css: { removeTags: ['html', 'body'] } };
-        return parser.readItems(book.styles, options).then((results) => {
-          results.should.deep.equal(expectedList);
+      it('Read multiple items', () => {
+        const items = book.styles.concat(book.spines);
+        return parser.readItems(items).then((results) => {
+          results.map(result => isString(result)).should.deep.equal(items.map(_ => true));
         });
       });
     });
