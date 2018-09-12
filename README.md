@@ -32,7 +32,7 @@ npm install @ridi/epub-parser
 ## Usage
 
 ```js
-import EpubParser from '@ridi/epub-parser';
+import { EpubParser } from '@ridi/epub-parser';
 // or const { EpubParser } = require('@ridi/epub-parser');
 
 const parser = new EpubParser('./foo/bar.epub' or './unzippedPath');
