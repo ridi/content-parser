@@ -66,7 +66,7 @@ class EpubParser {
       // If true, One namespace is given per CSS file or inline style, and styles used for spine is described.
       // Otherwise it CssItem.namespace, SpineItem.styles is undefined.
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
-      useStyleNamespace: false,
+      useStyleNamespace: true,
       // Prepend given string to namespace for identification.
       styleNamespacePrefix: 'ridi_style',
     };

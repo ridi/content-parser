@@ -343,7 +343,7 @@ Otherwise it [CssItem](#cssItem)`.namespace`, [SpineItem](#spineItem)`.styles` i
 
 In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem](#CssItem). ([Book](#book)`.styles`, [Book](#book)`.items`, [SpineItem](#spineItem)`.styles`, ...)
 
-**Default:** `false`
+**Default:** `true`
 
 ---
 
