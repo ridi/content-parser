@@ -256,7 +256,7 @@ or throw exception.
 * [unzipPath](#unzipPath)
 * [overwrite](#overwrite)
 * [ignoreLinear](#ignoreLinear)
-* [useStyleNamespace](#useStyleNamespace)
+* [parseStyle](#parseStyle)
 * [styleNamespacePrefix](#styleNamespacePrefix)
 
 ---
@@ -335,11 +335,11 @@ If true, ignore `spineIndex` difference caused by `isLinear` property of [SpineI
 
 ---
 
-<a id="useStyleNamespace"></a>
+<a id="parseStyle"></a>
 
-### useStyleNamespace: *`boolean`*
+### parseStyle: *`boolean`*
 
-If true, One namespace is given per CSS file or inline style, and styles used for spine is described.
+If true, styles used for spine is described, and one namespace is given per CSS file or inline style.
 
 Otherwise it [CssItem](#cssItem)`.namespace`, [SpineItem](#spineItem)`.styles` is `undefined`.
 
@@ -353,7 +353,7 @@ In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem
 
 ### styleNamespacePrefix: *`string`*
 
-Prepend given string to namespace for identification.
+Prepend given string to namespace for identification. (Only using if parseStyle is true.)
 
 **Default:** `'ridi_style'`
 

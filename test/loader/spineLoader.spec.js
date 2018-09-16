@@ -27,7 +27,7 @@ describe('Loader - Spine', () => {
     result = spineLoader({ styles }, html, { spine: { extractBody } });
     result.should.equal(JSON.parse(read(Files.SPINE_LOADER_ADAPTER)).value);
 
-    // used parseOptions.useStyleNamespace option.
+    // used parseOptions.parseStyle option.
     const styles = [
       { namespace: 'ridi_style1' },
       { namespace: 'ridi_style2' },

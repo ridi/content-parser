@@ -105,7 +105,7 @@ export default function validationBook(book, expectedBook, options = {}) {
     spine.id.should.equal(expectedSpine.id);
     spine.spineIndex.should.equal(expectedSpine.spineIndex);
     spine.isLinear.should.equal(expectedSpine.isLinear);
-    if (!options.useStyleNamespace) {
+    if (!options.parseStyle) {
       isExists(spine.styles).should.be.false;
     } else {
       spine.styles.forEach((style, idx) => {
@@ -144,7 +144,7 @@ export default function validationBook(book, expectedBook, options = {}) {
   book.styles.forEach((style, idx) => {
     const expectedStyle = expectedBook.styles[idx];
     style.id.should.equal(expectedStyle.id);
-    if (options.useStyleNamespace) {
+    if (options.parseStyle) {
       style.namespace.should.equal(expectedStyle.namespace);
     } else {
       isExists(style.namespace).should.be.false;

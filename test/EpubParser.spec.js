@@ -95,7 +95,7 @@ describe('Parsing test', () => {
       return parser._prepareParse().then((context) => {
         context.options.should.deep.equal(EpubParser.parseDefaultOptions);
         context.zip.should.not.null;
-        context.options.useStyleNamespace = false;
+        context.options.parseStyle = false;
         _context = context;
       });
     });
@@ -203,14 +203,14 @@ describe('Parsing test', () => {
 
   describe('Parsing test by input', () => {
     it('Input is epub path', () => {
-      return new EpubParser(Files.DEFAULT).parse({ useStyleNamespace: false }).then((book) => {
+      return new EpubParser(Files.DEFAULT).parse({ parseStyle: false }).then((book) => {
         book.should.be.an.instanceOf(Book);
         validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
       });
     });
   
     it('Input is unzipped epub path', () => {
-      return new EpubParser(Files.UNZIPPED_DEFAULT).parse({ useStyleNamespace: false }).then((book) => {
+      return new EpubParser(Files.UNZIPPED_DEFAULT).parse({ parseStyle: false }).then((book) => {
         book.should.be.an.instanceOf(Book);
         validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
       });
@@ -224,8 +224,8 @@ describe('Parsing test', () => {
       });
     });
 
-    it('Use style namespace', () => {
-      return new EpubParser(Files.EXTRACT_STYLE).parse({ useStyleNamespace: true }).then((book) => {
+    it('Parse style', () => {
+      return new EpubParser(Files.EXTRACT_STYLE).parse({ parseStyle: true }).then((book) => {
         const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLE_BOOK));
         book.styles.forEach((style, idx) => {
           const expectedStyle = expectedBook.styles[idx];
@@ -252,7 +252,7 @@ describe('Parsing test', () => {
 
 describe('Book serialization test', () => {
   it('Book -> RawBook -> Book', () => {
-    return new EpubParser(Files.DEFAULT).parse({ useStyleNamespace: false }).then((book) => {
+    return new EpubParser(Files.DEFAULT).parse({ parseStyle: false }).then((book) => {
       book.should.be.an.instanceOf(Book);
       const rawBook = book.toRaw();
       const newBook = new Book(rawBook);
@@ -262,7 +262,7 @@ describe('Book serialization test', () => {
 });
 
 const parser = new EpubParser(Files.UNZIPPED_EXTRACT_STYLE);
-parser.parse({ useStyleNamespace: true }).then((book) => {
+parser.parse({ parseStyle: true }).then((book) => {
   describe('Reading test', () => {
     describe('Options validation', () => {
       it('Invalid options (Unknown option)', () => {

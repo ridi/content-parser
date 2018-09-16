@@ -63,11 +63,11 @@ class EpubParser {
       //   { spineIndex: -1, isLinear: false, ... },      { spineIndex: 2, isLinear: false, ... },
       //   { spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
       ignoreLinear: false,
-      // If true, One namespace is given per CSS file or inline style, and styles used for spine is described.
+      // If true, styles used for spine is described, and one namespace is given per CSS file or inline style.
       // Otherwise it CssItem.namespace, SpineItem.styles is undefined.
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
-      useStyleNamespace: true,
-      // Prepend given string to namespace for identification.
+      parseStyle: true,
+      // Prepend given string to namespace for identification. (Only using if parseStyle is true.)
       styleNamespacePrefix: 'ridi_style',
     };
   }
@@ -83,7 +83,7 @@ class EpubParser {
       unzipPath: 'String|Undefined',
       overwrite: 'Boolean',
       ignoreLinear: 'Boolean',
-      useStyleNamespace: 'Boolean',
+      parseStyle: 'Boolean',
       styleNamespacePrefix: 'String',
     };
   }
@@ -377,7 +377,7 @@ class EpubParser {
    * @param {object} spine spine AST
    * @param {Context} context intermediate result
    * @returns {Promise.<Context>} returns Context containing manifest and spine
-   * @see EpubParser.parseDefaultOptions.useStyleNamespace
+   * @see EpubParser.parseDefaultOptions.parseStyle
    * @see EpubParser.parseDefaultOptions.styleNamespacePrefix
    */
   _parseManifestAndSpine(manifest, spine, context) {
@@ -447,7 +447,7 @@ class EpubParser {
             }
           }
 
-          if (options.useStyleNamespace) {
+          if (options.parseStyle) {
             if (rawItem.itemType === CssItem) {
               rawItem.namespace = `${options.styleNamespacePrefix}${cssIdx}`;
               cssIdx += 1;
