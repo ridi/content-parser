@@ -1,11 +1,28 @@
 import { should } from 'chai';
 
 import Book from '../../src/model/Book';
-import { isArray, isBool, isExists, isFunc, isObject, isString, isUrl } from '../../src/util/typecheck';
+import { isArray, isBool, isExists, isFunc, isObject, isString, isUrl, getType } from '../../src/util/typecheck';
 
 should(); // Initialize should
 
+function test() {}
+
 describe('Util - Type check', () => {
+  it('getType strict mode test', () => {
+    getType(Array, true).should.equal('Array');
+    getType(new Array(), true).should.equal('Array');
+    getType({}, true).should.equal('Object');
+    getType(new Book(), true).should.equal('Book');
+    getType('string', true).should.equal('String');
+    getType([], true).should.equal('Array');
+    getType(5, true).should.equal('Number');
+    getType(false, true).should.equal('Boolean');
+    getType(null, true).should.equal('Null');
+    getType(undefined, true).should.equal('Undefined');
+    getType(() => {}, true).should.equal('');
+    getType(test, true).should.equal('test');
+  });
+
   it('isArray test', () => {
     isArray(Array()).should.be.true;
     isArray(new Array()).should.be.true;
@@ -18,6 +35,7 @@ describe('Util - Type check', () => {
     isArray(null).should.be.false;
     isArray(undefined).should.be.false;
     isArray(() => {}).should.be.false;
+    isArray(test).should.be.false;
 
     const temp = Array.isArray;
     Array.isArray = undefined;
@@ -35,6 +53,7 @@ describe('Util - Type check', () => {
     isBool(null).should.be.false;
     isBool(undefined).should.be.false;
     isBool(() => {}).should.be.false;
+    isBool(test).should.be.false;
   });
 
   it('isExists test', () => {
@@ -47,6 +66,7 @@ describe('Util - Type check', () => {
     isExists(null).should.be.false;
     isExists(undefined).should.be.false;
     isExists(() => {}).should.be.true;
+    isExists(test).should.be.true;
   });
 
   it('isFunc test', () => {
@@ -59,6 +79,7 @@ describe('Util - Type check', () => {
     isFunc(null).should.be.false;
     isFunc(undefined).should.be.false;
     isFunc(() => {}).should.be.true;
+    isFunc(test).should.be.true;
   });
 
   it('isObject test', () => {
@@ -71,6 +92,7 @@ describe('Util - Type check', () => {
     isObject(null).should.be.false;
     isObject(undefined).should.be.false;
     isObject(() => {}).should.be.false;
+    isObject(test).should.be.false;
   });
 
   it('isString test', () => {
@@ -83,6 +105,7 @@ describe('Util - Type check', () => {
     isString(null).should.be.false;
     isString(undefined).should.be.false;
     isString(() => {}).should.be.false;
+    isString(test).should.be.false;
   });
 
   it('isUrl test', () => {

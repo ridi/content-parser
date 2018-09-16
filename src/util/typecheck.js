@@ -1,6 +1,15 @@
-export function getType(any) {
+export function getType(any, strict = false) {
   const string = Object.prototype.toString.call(any).split(' ')[1];
-  return string.substr(0, string.length - 1);
+  const type = string.substr(0, string.length - 1);
+  if (strict) {
+    if (type === 'Function') {
+      return any.name;
+    }
+    if (type !== 'Null' && type !== 'Undefined') {
+      return any.constructor.name;
+    }
+  }
+  return type;
 }
 
 export function isArray(any) {
