@@ -242,7 +242,7 @@ class EpubParser {
    * @param {Context} context intermediate result
    * @returns {Promise.<Context>} returns Context containing OPF and base path
    * @throws {Errors.ENOFILE} container.xml not found
-   * @throws {Errors.EINVAL} invalid xml
+   * @throws {Errors.EINVAL} invalid XML
    * @throws {Errors.ENOELMT} no such element in container.xml
    * @throws {Errors.ENOATTR} no such attribute in element
    */
@@ -566,7 +566,8 @@ class EpubParser {
    * NCX parsing
    * @param {Context} context intermediate result
    * @returns {Promise.<Context>} returns Context containing ncx if exists
-   * @throws {Errors.EINVAL} invalid xml
+   * @throws {Errors.EINVAL} invalid XML
+   * @throws {Errors.EINVAL} can not found ncx attribute OPF
    * @throws {Errors.ENOFILE} NCX not found (only if allowNcxFileMissing option is false)
    * @throws {Errors.ENOELMT} no such element in NCX
    * @see EpubParser.parseDefaultOptions.allowNcxFileMissing
@@ -626,6 +627,8 @@ class EpubParser {
         getValues(ncx.navMap.navPoint, keyTranslator).forEach((navPoint) => { // eslint-disable-line arrow-body-style
           return ncxItem.navPoints.push(normalizeSrc(navPoint));
         });
+      } else if (!allowNcxFileMissing) {
+        throw createError(Errors.EINVAL, 'opf', 'reason', 'can not found ncx attribute');
       }
       resolve(context);
     });

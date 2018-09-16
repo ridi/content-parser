@@ -74,7 +74,7 @@ describe('Parsing test', () => {
 
     it('NCX not found', () => {
       return new EpubParser(Files.NCX_MISSING).parse({ allowNcxFileMissing: false }).catch((err) => {
-        err.code.should.equal(Errors.ENOFILE.code);
+        err.code.should.equal(Errors.EINVAL.code);
       });
     });
 
