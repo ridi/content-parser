@@ -8,20 +8,32 @@
 
 ## Features
 
-- Detailed parsing for EPUB2
-- Supports package validation, decompression and style extraction with various parsing options
-- Extract files within EPUB with various reading options
-
-## TODO
-
-- [ ] Add encryption and decryption function
-- [ ] Add `readOptions.spine.serializedAnchor` option
-- [ ] Add `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength` options
-- [ ] Add `readOptions.spine.minify` and `readOptions.css.minify` options
-- [ ] Add `readOptions.removeExternalRefs` option
-- [ ] Support for EPUB3
-- [ ] Support for CLI
-- [ ] Support for other [OCF](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) spec (manifest.xml, metadata.xml, signatures.xml, encryption.xml, etc)
+- [x] EPUB2 parsing
+- [ ] EPUB3 parsing
+- [x] Package validation with option
+- [x] Unzip epub file when parsing with options
+- [x] Read files
+  - [x] Extract inner HTML of body in Spien with option
+  - [x] Change base path of Spine, CSS and Inline style with option
+  - [x] Customize CSS, Inline Style with options
+- [ ] Encryption and decryption function
+- [ ] More options
+  - [ ] `readOptions.spine.serializedAnchor`
+  - [ ] `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength`
+  - [ ] `readOptions.spine.minify` and `readOptions.css.minify`
+  - [ ] `readOptions.removeExternalRefs` and `readOptions.removeNonexistentRefs`
+- [ ] More [spec](http://www.idpf.org/epub/30/spec/epub30-ocf.html#sec-container-metainf)
+  - [ ] encryption.xml
+  - [ ] manifest.xml
+  - [ ] metadata.xml
+  - [ ] rights.xml
+  - [ ] signatures.xml
+- [ ] Debug mode
+- [ ] Environment
+  - [x] Node 
+  - [ ] CLI
+  - [ ] Browser
+- [ ] Online demo
 
 ## Install
 
@@ -36,8 +48,8 @@ import { EpubParser } from '@ridi/epub-parser';
 // or const { EpubParser } = require('@ridi/epub-parser');
 
 const parser = new EpubParser('./foo/bar.epub' or './unzippedPath');
-parser.parse().then((book) => {
-  parser.readItems(book.spines).then((results) => {
+parser.parse(/* { parseOptions } */).then((book) => {
+  parser.readItems(book.spines/*, { readOptions } */).then((results) => {
     ...
   });
   ...
