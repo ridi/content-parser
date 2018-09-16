@@ -196,7 +196,7 @@ class EpubParser {
    */
   _prepareParse(options = {}) {
     return new Promise((resolve, reject) => {
-      validateOptions(options, EpubParser.parseDefaultOptions, EpubParser.parseOptionTypes);
+      validateOptions(options, EpubParser.parseOptionTypes);
 
       const context = new Context();
       context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
@@ -734,7 +734,7 @@ class EpubParser {
         throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
       }
 
-      validateOptions(options, EpubParser.readDefaultOptions, EpubParser.readOptionTypes);
+      validateOptions(options, EpubParser.readOptionTypes);
 
       readEntries(this.input).then((result) => {
         resolve({

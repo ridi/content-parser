@@ -5,16 +5,6 @@ import validateOptions from '../../src/util/validateOptions';
 
 should(); // Initialize should
 
-const DefaultOptions = {
-  a: true,
-  b: 'b',
-  c: 5,
-  d: undefined,
-  e: {
-    f: 'f',
-  },
-};
-
 const OptionTypes = {
   a: 'Boolean',
   b: 'String',
@@ -28,27 +18,27 @@ const OptionTypes = {
 describe('Util - Option util', () => {
   it('validateOptions test', () => {
     try {
-      validateOptions({ f: 'f' }, DefaultOptions, OptionTypes);
+      validateOptions({ f: 'f' }, OptionTypes);
     } catch (err) {
       err.code.should.equal(Errors.EINVAL.code);
     }
     try {
-      validateOptions({ e: { g: 3 } }, DefaultOptions, OptionTypes);
+      validateOptions({ e: { g: 3 } }, OptionTypes);
     } catch (err) {
       err.code.should.equal(Errors.EINVAL.code);
     }
     try {
-      validateOptions({ c: true }, DefaultOptions, OptionTypes);
+      validateOptions({ c: true }, OptionTypes);
     } catch (err) {
       err.code.should.equal(Errors.EINVAL.code);
     }
     try {
-      validateOptions({ e: { f: undefined } }, DefaultOptions, OptionTypes);
+      validateOptions({ e: { f: undefined } }, OptionTypes);
     } catch (err) {
       err.code.should.equal(Errors.EINVAL.code);
     }
     try {
-      validateOptions({ a: true, e: { f: 'f' } }, DefaultOptions, OptionTypes);
+      validateOptions({ a: true, e: { f: 'f' } }, OptionTypes);
     } catch (err) {
       err.code.should.equal(Errors.EINVAL.code);
     }
