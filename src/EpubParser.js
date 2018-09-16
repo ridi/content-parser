@@ -62,7 +62,7 @@ class EpubParser {
       //   { spineIndex: 1, isLinear: true, ... },        { spineIndex: 1, isLinear: true, ... },
       //   { spineIndex: -1, isLinear: false, ... },      { spineIndex: 2, isLinear: false, ... },
       //   { spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
-      ignoreLinear: true,
+      ignoreLinear: false,
       // If true, One namespace is given per CSS file or inline style, and styles used for spine is described.
       // Otherwise it CssItem.namespace, SpineItem.styles is undefined.
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)

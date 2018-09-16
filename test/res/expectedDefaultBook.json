@@ -702,7 +702,7 @@
       "href": "OEBPS/Text/Section0004.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 3,
+      "spineIndex": -1,
       "isLinear": false
     },
     {
@@ -710,7 +710,7 @@
       "href": "OEBPS/Text/Section0005.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 4,
+      "spineIndex": 3,
       "isLinear": true
     }
   ],

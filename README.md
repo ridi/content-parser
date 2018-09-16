@@ -331,7 +331,7 @@ If true, ignore `spineIndex` difference caused by `isLinear` property of [SpineI
 { spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
 ```
 
-**Default:** `true`
+**Default:** `false`
 
 ---
 
