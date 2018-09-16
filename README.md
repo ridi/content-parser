@@ -132,7 +132,7 @@ or throw exception.
 - metas: *[Meta](#meta)[]*
 - items: *[Item](#item)[]*
 - spines: *[SpintItem](#spineItem)[]*
-- ncx: *[NcxItem](#ncxItem)*
+- ncx: *?[NcxItem](#ncxItem)*
 - fonts: *[FontItem](#fontItem)[]*
 - cover: *?[ImageItem](#imageItem)*
 - images: *[ImageItem](#imageItem)[]*
