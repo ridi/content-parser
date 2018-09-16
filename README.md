@@ -133,6 +133,7 @@ or throw exception.
 ### [Author](./src/model/Author.js)
 
 - name: *?string*
+- fileAs: *?string*
 - role: *string* (**Default: Author.Roles.UNDEFINED**)
 
 <a id="dateTime"></a>
@@ -412,24 +413,24 @@ CSS: [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
 
 <a id="spine_extractBody"></a>
 
-### spine.extractBody: *`boolean`*
+### spine.extractBody: *`boolean|function`*
 
 If true, extract body. Otherwise it returns a full string.
 If specify a function instead of true, use function to transform body.
 
-false:
+`false`:
 
 ```js
 '<!doctype><html>\n<head>\n</head>\n<body style="background-color: #000000;">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</body>\n</html>'
 ```
 
-true:
+`true`:
 
 ```js
 '<body style="background-color: #000000;">\n  <p>Extract style</p>\n  <img src=\"../Images/api-map.jpg\"/>\n</body>'
 ```
 
-function:
+`function`:
 
 ```js
 readOptions.spine.extractBody = (innerHTML, attrs) => {

@@ -42,6 +42,7 @@ class Author {
     } else {
       this.name = rawObj.name;
     }
+    this.fileAs = rawObj.fileAs;
     if (isExists(rawObj.role)) {
       if (stringContains(Object.values(Roles), rawObj.role)) {
         this.role = rawObj.role.toLowerCase();
@@ -57,6 +58,7 @@ class Author {
   toRaw() {
     return {
       name: this.name,
+      fileAs: this.fileAs,
       role: this.role,
     };
   }
