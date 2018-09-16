@@ -9,6 +9,7 @@ class Version {
     this.major = parseInt(result[0], 10);
     this.minor = parseInt(result[1] || 0, 10) || 0;
     this.patch = parseInt(result[2] || 0, 10) || 0;
+    Object.freeze(this);
   }
 
   toString() {

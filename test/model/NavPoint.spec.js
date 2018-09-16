@@ -49,10 +49,6 @@ describe('Model - NavPoint', () => {
     child.children.should.have.lengthOf(0);
     assert(child.spine === undefined);
 
-    const findItem = (src) => src;
-    navPoint = new NavPoint({ id: 'p1', navLabel: { text: '1.' }, content: { src: './Section0001.xhtml' }, findItem });
-    navPoint.spine.should.equal('./Section0001.xhtml');
-
     (() => {
       navPoint.id = 'c1';
       navPoint.label = 'Chapter 1';

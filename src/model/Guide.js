@@ -22,18 +22,8 @@ const Types = Object.freeze({
   TEXT: 'text', // First "real" page of content. (e.g. "Chapter 1")
 });
 
-const privateProps = new WeakMap();
-
 class Guide {
-  get item() {
-    const { findItem } = privateProps.get(this);
-    if (!isExists(findItem)) {
-      return undefined;
-    }
-    return findItem(this.href);
-  }
-
-  constructor(rawObj = {}) {
+  constructor(rawObj = {}, freeze = true) {
     this.title = rawObj.title;
     if (isExists(rawObj.type)) {
       if (stringContains(Object.values(Types), rawObj.type)) {
@@ -45,8 +35,10 @@ class Guide {
       this.type = Types.UNDEFINED;
     }
     this.href = rawObj.href;
-    privateProps.set(this, { findItem: rawObj.findItem });
-    Object.freeze(this);
+    this.item = undefined;
+    if (freeze) {
+      Object.freeze(this);
+    }
   }
 
   toRaw() {

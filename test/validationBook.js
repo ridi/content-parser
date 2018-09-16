@@ -1,4 +1,5 @@
 import { isExists } from '../src/util';
+import SpineItem from '../src/model/SpineItem';
 
 export default function validationBook(book, expectedBook, options = {}) {
   book.titles.should.have.lengthOf(expectedBook.titles.length);
@@ -111,6 +112,19 @@ export default function validationBook(book, expectedBook, options = {}) {
         const expectedStyle = expectedSpine.styles[idx];
         style.namespace.should.equal(expectedStyle.namespace);
       });
+    }
+  });
+
+  let prevSpine;
+  book.spines.forEach((spine) => {
+    if (spine.spineIndex !== SpineItem.IGNORED_INDEX) {
+      if (isExists(prevSpine)) {
+        spine.prev.should.deep.equal(prevSpine);
+      }
+      prevSpine = spine;
+    } else {
+      isExists(spine.prev).should.be.false;
+      isExists(spine.next).should.be.false;
     }
   });
 

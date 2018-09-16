@@ -8,7 +8,7 @@ should(); // Initialize should
 describe('Model - SpineItem', () => {
   it('constructor test', () => {
     let item = new SpineItem();
-    item.spineIndex.should.equal(SpineItem.UNKNOWN_INDEX);
+    item.spineIndex.should.equal(SpineItem.IGNORED_INDEX);
     item.isLinear.should.be.true;
     assert(item.styles === undefined);
     assert(item instanceof Item);
@@ -20,23 +20,11 @@ describe('Model - SpineItem', () => {
     item.isLinear.should.be.true;
     assert(item.styles === undefined);
 
+    const styles = ['./Style0001.css', './Style0002.css'];
     item = new SpineItem({
-      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, isLinear: false, styles: [
-        './Style0001.css', './Style0002.css'
-      ]
+      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, isLinear: false, styles,
     });
-    assert(item.styles === undefined);
-
-    const findItem = (href) => href;
-    item = new SpineItem({
-      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, isLinear: false, styles: [
-        './Style0001.css', './Style0002.css'
-      ], findItem
-    });
-    item.spineIndex.should.equal(SpineItem.UNKNOWN_INDEX);
-    item.isLinear.should.be.false;
-    item.styles.should.have.lengthOf(2);
-    item.styles[1].should.equal('./Style0002.css');
+    item.styles.should.deep.equal(styles);
 
     (() => {
       item.spineIndex = 100;
@@ -48,7 +36,7 @@ describe('Model - SpineItem', () => {
   it('toRaw test', () => {
     let item = new SpineItem({});
     let rawItem = item.toRaw();
-    rawItem.spineIndex.should.equal(SpineItem.UNKNOWN_INDEX);
+    rawItem.spineIndex.should.equal(SpineItem.IGNORED_INDEX);
     rawItem.isLinear.should.be.true;
     assert(rawItem.styles === undefined);
 
@@ -60,14 +48,12 @@ describe('Model - SpineItem', () => {
     rawItem.isLinear.should.be.true;
     assert(rawItem.styles === undefined);
 
-    const findItem = (href) => href;
+    const styles = [{ href: './Style0001.css' }, { href: './Style0002.css' }];
     item = new SpineItem({
-      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, isLinear: false, styles: [
-        './Style0001.css', './Style0002.css'
-      ], findItem
+      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, isLinear: false, styles: styles,
     });
     rawItem = item.toRaw();
-    rawItem.spineIndex.should.equal(SpineItem.UNKNOWN_INDEX);
+    rawItem.spineIndex.should.equal(SpineItem.IGNORED_INDEX);
     rawItem.isLinear.should.be.false;
     rawItem.styles.should.deep.equal(['./Style0001.css', './Style0002.css']);
   });

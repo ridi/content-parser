@@ -1,4 +1,4 @@
-import { isString } from '../util/typecheck';
+import { isExists, isString } from '../util/typecheck';
 import Author from './Author';
 import CssItem from './CssItem';
 import DateTime from './DateTime';
@@ -9,16 +9,64 @@ import Identifier from './Identifier';
 import ImageItem from './ImageItem';
 import InlineCssItem from './InlineCssItem';
 import Item from './Item';
-import mergeObjects from '../util/mergeObjects';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
 import Version from './Version';
 
+function itemTypeFromString(itemType) {
+  switch (itemType) {
+    case Item.name: return Item;
+    case SpineItem.name: return SpineItem;
+    case NcxItem.name: return NcxItem;
+    case FontItem.name: return FontItem;
+    case ImageItem.name: return ImageItem;
+    case CssItem.name: return CssItem;
+    case InlineCssItem.name: return InlineCssItem;
+    default: return DeadItem;
+  }
+}
+
+function postSpines(spines, styles) {
+  let prevSpine;
+  spines.forEach((spine, idx, list) => {
+    if (spine.spineIndex !== SpineItem.IGNORED_INDEX) {
+      spine.prev = prevSpine;
+      spine.next = list.slice(idx + 1).find(item => item.spineIndex !== SpineItem.IGNORED_INDEX);
+      prevSpine = spine;
+    }
+    if (isExists(spine.styles)) {
+      spine.styles = spine.styles
+        .map(href => styles.find(style => style.href === href))
+        .filter(style => isExists(style));
+    }
+    Object.freeze(spine);
+  });
+}
+
+function postNcx(ncx, spines) {
+  if (isExists(ncx)) {
+    ncx.navPoints.forEach((navPoint) => {
+      navPoint.spine = spines.find((spine) => {
+        const href = navPoint.src.replace(navPoint.anchor || '', '');
+        return spine.href === href;
+      });
+      Object.freeze(navPoint);
+    });
+    Object.freeze(ncx);
+  }
+}
+
+function postGuides(guides, spines) {
+  guides.forEach((guide) => {
+    guide.item = spines.find(spine => spine.href === guide.href);
+    Object.freeze(guide);
+  });
+}
+
 /* eslint-disable new-cap */
 class Book {
   constructor(rawBook = {}) {
-    const findItem = href => this.items.find(item => item.href === href);
     this.titles = rawBook.titles || [];
     this.creators = (rawBook.creators || []).map(rawObj => new Author(rawObj));
     this.subjects = rawBook.subjects || [];
@@ -38,35 +86,26 @@ class Book {
     this.metas = (rawBook.metas || []).map(rawObj => new Meta(rawObj));
     this.items = (rawBook.items || []).map((rawObj) => {
       let { itemType } = rawObj;
+      let freeze = true;
       if (isString(itemType)) {
-        if (itemType === Item.name) {
-          itemType = Item;
-        } else if (itemType === NcxItem.name) {
-          itemType = NcxItem;
-        } else if (itemType === SpineItem.name) {
-          itemType = SpineItem;
-        } else if (itemType === FontItem.name) {
-          itemType = FontItem;
-        } else if (itemType === ImageItem.name) {
-          itemType = ImageItem;
-        } else if (itemType === CssItem.name) {
-          itemType = CssItem;
-        } else if (itemType === InlineCssItem.name) {
-          itemType = InlineCssItem;
-        } else {
-          itemType = DeadItem;
-        }
+        itemType = itemTypeFromString(itemType);
       }
-      return new itemType(mergeObjects(rawObj, { findItem }));
+      if (itemType === SpineItem || itemType === NcxItem) {
+        freeze = false;
+      }
+      return new itemType(rawObj, freeze);
     });
-    this.ncx = this.items.find(item => item instanceof NcxItem);
     this.spines = this.items.filter(item => item instanceof SpineItem);
+    this.ncx = this.items.find(item => item instanceof NcxItem);
     this.fonts = this.items.filter(item => item instanceof FontItem);
     this.cover = this.items.find(item => item.isCover);
     this.images = this.items.filter(item => item instanceof ImageItem);
     this.styles = this.items.filter(item => item instanceof CssItem);
-    this.guides = (rawBook.guides || []).map(rawObj => new Guide(mergeObjects(rawObj, { findItem })));
+    this.guides = (rawBook.guides || []).map(rawObj => new Guide(rawObj, false));
     this.deadItems = this.items.filter(item => item instanceof DeadItem);
+    postSpines(this.spines, this.styles);
+    postNcx(this.ncx, this.spines);
+    postGuides(this.guides, this.spines);
     Object.freeze(this);
   }
 

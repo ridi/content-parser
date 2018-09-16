@@ -2,10 +2,11 @@ import Item from './Item';
 import mergeObjects from '../util/mergeObjects';
 
 class ImageItem extends Item {
-  constructor(rawObj = {}) {
-    super(rawObj);
+  constructor(rawObj = {}, freeze = true) {
+    super(rawObj, freeze);
     this.isCover = rawObj.isCover || false;
-    if (this.constructor === ImageItem) {
+    /* istanbul ignore else: untestable */
+    if (freeze && this.constructor === ImageItem) {
       Object.freeze(this);
     }
   }

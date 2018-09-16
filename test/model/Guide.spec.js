@@ -25,10 +25,6 @@ describe('Model - Guide', () => {
     guide.href.should.equal('./cover.xhtml');
     assert(guide.item === undefined);
 
-    const findItem = (href) => href;
-    guide = new Guide({ title: 'Cover', href: './cover.xhtml', findItem });
-    guide.item.should.equal('./cover.xhtml');
-
     (() => {
       guide.title = 'Title';
       guide.type = Guide.Types.TITLE_PAGE;

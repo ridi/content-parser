@@ -150,7 +150,7 @@ describe('Parsing test', () => {
           } else {
             item.size.should.not.null;
           }
-          if (item.spineIndex > SpineItem.UNKNOWN_INDEX) {
+          if (item.spineIndex > SpineItem.IGNORED_INDEX) {
             item.spineIndex.should.equal(current);
             current += 1;
           } else {

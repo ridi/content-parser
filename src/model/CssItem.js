@@ -3,12 +3,13 @@ import Item from './Item';
 import mergeObjects from '../util/mergeObjects';
 
 class CssItem extends Item {
-  constructor(rawObj = {}) {
-    super(rawObj);
+  constructor(rawObj = {}, freeze = true) {
+    super(rawObj, freeze);
     if (isExists(rawObj.namespace)) {
       this.namespace = rawObj.namespace;
     }
-    if (this.constructor === CssItem) {
+    /* istanbul ignore else: untestable */
+    if (freeze && this.constructor === CssItem) {
       Object.freeze(this);
     }
   }

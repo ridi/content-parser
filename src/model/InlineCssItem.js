@@ -2,10 +2,13 @@ import CssItem from './CssItem';
 import mergeObjects from '../util/mergeObjects';
 
 class InlineCssItem extends CssItem {
-  constructor(rawObj = {}) {
-    super(rawObj);
+  constructor(rawObj = {}, freeze = true) {
+    super(rawObj, freeze);
     this.text = rawObj.text || '';
-    Object.freeze(this);
+    /* istanbul ignore else: untestable */
+    if (freeze) {
+      Object.freeze(this);
+    }
   }
 
   toRaw() {

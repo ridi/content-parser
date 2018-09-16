@@ -1,12 +1,13 @@
 class Item {
   get isFileExists() { return this.size !== undefined; }
 
-  constructor(rawObj = {}) {
+  constructor(rawObj = {}, freeze = true) {
     this.id = rawObj.id;
     this.href = rawObj.href;
     this.mediaType = rawObj.mediaType;
     this.size = rawObj.size;
-    if (this.constructor === Item) {
+    /* istanbul ignore else: untestable */
+    if (freeze && this.constructor === Item) {
       Object.freeze(this);
     }
   }

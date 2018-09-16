@@ -3,12 +3,15 @@ import mergeObjects from '../util/mergeObjects';
 import NavPoint from './NavPoint';
 
 class NcxItem extends Item {
-  constructor(rawObj = {}) {
-    super(rawObj);
-    this.navPoints = (rawObj.navPoints || []).map((rawNavPoint) => { // eslint-disable-line arrow-body-style
-      return new NavPoint(mergeObjects(rawNavPoint, { findItem: rawObj.findItem }));
+  constructor(rawObj = {}, freeze = true) {
+    super(rawObj, freeze);
+    this.navPoints = (rawObj.navPoints || []).map((navPoint) => { // eslint-disable-line arrow-body-style
+      return new NavPoint(navPoint, freeze);
     });
-    Object.freeze(this);
+    /* istanbul ignore else: untestable */
+    if (freeze) {
+      Object.freeze(this);
+    }
   }
 
   toRaw() {

@@ -2,9 +2,12 @@ import Item from './Item';
 import mergeObjects from '../util/mergeObjects';
 
 class FontItem extends Item {
-  constructor(rawObj = {}) {
-    super(rawObj);
-    Object.freeze(this);
+  constructor(rawObj = {}, freeze = true) {
+    const _ = super(rawObj, freeze); // eslint-disable-line
+    /* istanbul ignore else: untestable */
+    if (freeze) {
+      Object.freeze(this);
+    }
   }
 
   toRaw() {

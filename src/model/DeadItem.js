@@ -13,8 +13,8 @@ const Reason = Object.freeze({
 });
 
 class DeadItem extends Item {
-  constructor(rawObj = {}) {
-    super(rawObj);
+  constructor(rawObj = {}, freeze = true) {
+    super(rawObj, freeze);
     if (isExists(rawObj.reason)) {
       if (stringContains(Object.values(Reason), rawObj.reason)) {
         this.reason = rawObj.reason.toLowerCase();
@@ -24,7 +24,10 @@ class DeadItem extends Item {
     } else {
       this.reason = Reason.UNDEFINED;
     }
-    Object.freeze(this);
+    /* istanbul ignore else: untestable */
+    if (freeze) {
+      Object.freeze(this);
+    }
   }
 
   toRaw() {

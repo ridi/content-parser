@@ -119,8 +119,8 @@ or throw exception.
 - version: *[Version](#version)*
 - metas: *[Meta](#meta)[]*
 - items: *[Item](#item)[]*
-- ncx: *[NcxItem](#ncxItem)*
 - spines: *[SpintItem](#spineItem)[]*
+- ncx: *[NcxItem](#ncxItem)*
 - fonts: *[FontItem](#fontItem)[]*
 - cover: *?[ImageItem](#imageItem)*
 - images: *[ImageItem](#imageItem)[]*
@@ -180,12 +180,6 @@ or throw exception.
 - size: *?number*
 - isFileExists: *boolean* (**size !== undefined**)
 
-<a id="ncxItem"></a>
-
-#### [NcxItem](./src/model/NcxItem.js) (extend [Item](#item))
-
-- navPoints: *[NavPoint](#navPoint)[]*
-
 <a id="spineItem"></a>
 
 #### [SpineItem](./src/model/SpineItem.js) (extend [Item](#item))
@@ -193,6 +187,14 @@ or throw exception.
 - spineIndex: *number* (**Default: -1**)
 - isLinear: *boolean* (**Default: true**)
 - styles: *?[CssItem](#cssItem)[]*
+- prev: *?SpineItem*
+- next: *?SpineItem*
+
+<a id="ncxItem"></a>
+
+#### [NcxItem](./src/model/NcxItem.js) (extend [Item](#item))
+
+- navPoints: *[NavPoint](#navPoint)[]*
 
 <a id="cssItem"></a>
 
