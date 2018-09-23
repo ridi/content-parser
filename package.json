@@ -36,6 +36,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
+    "aes-js": "^3.1.1",
     "css-tree": "^1.0.0-alpha.29",
     "fast-xml-parser": "^3.11.2",
     "he": "^1.1.1",

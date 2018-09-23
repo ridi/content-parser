@@ -6,6 +6,7 @@ export default {
   EINVAL: { code: 'EINVAL', format: 'EINVAL: invalid {0}. ({1}: {2})' },
   ENOELMT: { code: 'ENOELMT', format: 'ENOELMT: no such element. (element: {0}, path: {1})' },
   ENOATTR: { code: 'ENOATTR', format: 'ENOATTR: no such attribute. (attribute: {0}, element: {1}, path: {2})' },
+  EREQPRM: { code: 'EREQPRM', format: 'EREQPRM: required parameter missing. (name: {0})' },
 };
 
 export function createError(type, ...args) {

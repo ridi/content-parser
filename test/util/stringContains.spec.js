@@ -11,5 +11,7 @@ describe('Util - String util', () => {
     stringContains(list, 'b').should.be.true;
     stringContains(list, 'C').should.be.true;
     stringContains(list, 'd').should.be.false;
+    stringContains().should.be.false;
+    stringContains(list).should.be.false;
   });
 });
