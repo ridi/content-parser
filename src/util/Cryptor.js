@@ -122,7 +122,7 @@ class Cryptor {
 
   encrypt(bytes) {
     if (!stringContains(['Buffer', 'Uint8Array', 'Array'], getType(bytes))) {
-      throw createError(Errors.EINVAL, 'bytes type', 'required type', 'Buffer or Uint8Array or Array');
+      throw createError(Errors.EINVAL, 'bytes type', 'reason', 'require Buffer or Uint8Array or Array');
     }
     if (this.padding === Padding.PKCS7) {
       return this.operator.encrypt(pkcs7.pad(bytes));
@@ -132,7 +132,7 @@ class Cryptor {
 
   decrypt(bytes) {
     if (!stringContains(['Buffer', 'Uint8Array', 'Array'], getType(bytes))) {
-      throw createError(Errors.EINVAL, 'bytes type', 'required type', 'Buffer or Uint8Array or Array');
+      throw createError(Errors.EINVAL, 'bytes type', 'reason', 'require Buffer or Uint8Array or Array');
     }
     const decryptedBytes = this.operator.decrypt(bytes);
     if (this.padding === Padding.PKCS7) {
