@@ -89,7 +89,7 @@ export default function spineLoader(spineItem, file, options = { spine: {}, css:
     if (isExists(spineItem.styles)) {
       attrs = attrs.concat([{
         key: 'class',
-        value: spineItem.styles.map(style => ` .${style.namespace}`).join(',').trim(),
+        value: spineItem.styles.map(style => `${style.namespace}`).join(' ').trim(),
       }]);
     }
     const innerHTML = stringify(body.children, stringifyOptions);
