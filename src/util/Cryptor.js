@@ -107,7 +107,11 @@ class Cryptor {
     } = config;
     let keyBytes = key;
     if (isString(key)) {
-      keyBytes = pkcs7.pad(utf8.toBytes(key));
+      if (key.length % 16 === 0) {
+        keyBytes = utf8.toBytes(key);
+      } else {
+        keyBytes = pkcs7.pad(utf8.toBytes(key));
+      }
     }
     switch (mode.name) {
       case Modes.ECB.name: return new mode.op(keyBytes); // eslint-disable-line new-cap
