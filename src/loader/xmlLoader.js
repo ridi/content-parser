@@ -1,8 +1,6 @@
 import he from 'he';
 import XmlParser from 'fast-xml-parser';
 
-import Errors, { createError } from '../constant/errors';
-
 import {
   isArray,
   isExists,
@@ -57,11 +55,7 @@ const textNodeName = '#text';
 
 export { getValue, getValues, textNodeName };
 
-export default function xmlLoader(entry, options = {}) {
-  const file = entry.getFile('utf8');
-  if (options.validateXml && isExists(XmlParser.validate(file).err)) {
-    throw createError(Errors.EINVAL, 'xml', 'path', entry.entryName);
-  }
+export default function xmlLoader(file) {
   return XmlParser.parse(file, {
     // Text node name for identification.
     textNodeName,

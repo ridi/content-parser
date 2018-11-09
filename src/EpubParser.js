@@ -48,8 +48,6 @@ class EpubParser {
       // - mimetype file should only contain string 'application/epub+zip'.
       // - Shouldn't use extra field feature of ZIP format for mimetype file.
       validatePackage: false,
-      // If true, stop parsing when XML parsing errors occur.
-      validateXml: false,
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
       // If specified, uncompress to that path. (Only if input is EPUB file.)
@@ -78,7 +76,6 @@ class EpubParser {
   static get parseOptionTypes() {
     return {
       validatePackage: 'Boolean',
-      validateXml: 'Boolean',
       allowNcxFileMissing: 'Boolean',
       unzipPath: 'String|Undefined',
       overwrite: 'Boolean',

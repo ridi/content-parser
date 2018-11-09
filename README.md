@@ -263,7 +263,6 @@ or throw exception.
 ## Parse Options
 
 * [validatePackage](#validatePackage)
-* [validateXml](#validateXml)
 * [allowNcxFileMissing](#allowNcxFileMissing)
 * [unzipPath](#unzipPath)
 * [overwrite](#overwrite)
@@ -283,16 +282,6 @@ If true, validation package specifications in [IDPF listed](http://www.idpf.org/
 - `mimetype` file should not compressed.
 - `mimetype` file should only contain string `application/epub+zip`.
 - Should not use extra field feature of ZIP format for mimetype file.
-
-**Default:** `false`
-
----
-
-<a id="validateXml"></a>
-
-### validateXml: *`boolean`*
-
-If true, stop parsing when XML parsing errors occur.
 
 **Default:** `false`
 
