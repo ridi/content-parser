@@ -182,7 +182,7 @@ class EpubParser {
   /**
    * Validate parse options and get entries from input
    * @param {?object} options parse options
-   * @returns {Promise.<Context>} returns Context containing parse options, entries and zip if input is file
+   * @returns {Promise.<Context>} returns Context containing parse options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
@@ -198,14 +198,15 @@ class EpubParser {
   }
 
   /**
-   * Validate package spec if zip exists and validatePackage option specified
+   * Validate package spec if zip source and validatePackage option specified
    * @param {Context} context intermediate result
    * @returns {Promise.<Context>} returns Context (no change at this step)
    * @throws {Errors.EINVAL} invalid package
    * @see EpubParser.parseDefaultOptions.validatePackage
    */
   async _validatePackageIfNeeded(context) {
-    if (isExists(context.zip) && context.options.validatePackage) {
+    const { entries, options } = context;
+    if (!isString(entries.source) && options.validatePackage) {
       const firstEntry = context.entries.first; // TODO: If no first one
       const signature = await firstEntry.getFile('utf8');
       if (firstEntry.entryPath !== 'mimetype') {
@@ -611,7 +612,7 @@ class EpubParser {
   }
 
   /**
-   * Unzipping if zip exists and unzipPath option specified
+   * Unzipping if zip source and unzipPath option specified
    * @param {Context} context intermediate result
    * @returns {Promise.<Context>} returns Context (no change at this step)
    * @throws {Errors.ENOENT} no such file or directory
