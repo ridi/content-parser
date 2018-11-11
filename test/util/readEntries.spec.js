@@ -2,8 +2,8 @@ import { should } from 'chai';
 import fs from 'fs';
 import path from 'path';
 
-import { stringContains } from '../../src/util';
-import { findEntry, readEntries } from '../../src/util/readEntries';
+import { stringContains, isString } from '../../src/util';
+import readEntries from '../../src/util/readEntries';
 import Files from '../files';
 
 should(); // Initialize should
@@ -16,7 +16,7 @@ describe('Util - entry manager', () => {
   };
 
   it('readEntries from zip', () => {
-    return readEntries(Files.DEFAULT).then((result) => {
+    return readEntries(Files.DEFAULT).then((entries) => {
       const expectedList = [
         'mimetype',
         'META-INF/container.xml',
@@ -34,23 +34,22 @@ describe('Util - entry manager', () => {
         'OEBPS/toc.ncx',
         'OEBPS/Video/empty.mp4',
       ];
-      const { entries, zip } = result;
-      zip.should.not.null;
-      entries.map(entry => entry.entryName).should.deep.equal(expectedList);
+      isString(entries.source).should.be.false;
+      entries.map(entry => entry.entryPath).should.deep.equal(expectedList);
       entries.forEach((entry) => {
         const keys = Object.keys(entry);
         stringContains(keys, 'method').should.be.true;
-        stringContains(keys, 'extraLength').should.be.true;
+        stringContains(keys, 'extraFieldLength').should.be.true;
       });
 
-      const entry = findEntry(entries, 'mimetype');
-      entry.getFile().should.deep.equal(expectedFile.buffer);
-      entry.getFile('utf8').should.equal(expectedFile.string);
+      const entry = entries.find('mimetype');
+      entry.getFile().then(file => file.should.deep.equal(expectedFile.buffer));
+      entry.getFile('utf8').then(file => file.should.equal(expectedFile.string));
     });
   });
 
   it('readEntries from directory', () => {
-    return readEntries(Files.UNZIPPED_DEFAULT).then((result) => {
+    return readEntries(Files.UNZIPPED_DEFAULT).then((entries) => {
       const expectedList = [
         'META-INF/container.xml',
         'OEBPS/Fonts/NotoSans-Regular.ttf',
@@ -68,12 +67,12 @@ describe('Util - entry manager', () => {
         'OEBPS/toc.ncx',
         'mimetype',
       ];
-      const { entries } = result;
-      entries.map(entry => entry.entryName).should.deep.equal(expectedList);
+      isString(entries.source).should.be.true;
+      entries.map(entry => entry.entryPath).should.deep.equal(expectedList);
 
-      const entry = findEntry(entries, 'mimetype');
-      entry.getFile().should.deep.equal(expectedFile.buffer);
-      entry.getFile('utf8').should.equal(expectedFile.string);
+      const entry = entries.find('mimetype');
+      entry.getFile().then(file => file.should.deep.equal(expectedFile.buffer));
+      entry.getFile('utf8').then(file => file.should.equal(expectedFile.string));
     });
   });
 

@@ -16,8 +16,6 @@ import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
 import {
-  extractAll,
-  findEntry,
   getItemEncoding,
   getItemType,
   isArray,
@@ -166,19 +164,19 @@ class EpubParser {
    * @see EpubParser.parseOptionTypes
    * @example
    * const options = { validatePackage: true, unzipPath: './foo/bar' };
-   * parse.parse(options).then((book) => {
+   * parser.parse(options).then((book) => {
    *   ...
    * });
    */
-  parse(options = {}) {
-    return this._prepareParse(options)
-      .then(context => this._validatePackageIfNeeded(context))
-      .then(context => this._parseMetaInf(context))
-      .then(context => this._parseOpf(context))
-      .then(context => this._parseNcx(context))
-      .then(context => this._unzipIfNeeded(context))
-      .then(context => this._createBook(context))
-      .then(book => book);
+  async parse(options = {}) {
+    let context = await this._prepareParse(options);
+    context = await this._validatePackageIfNeeded(context);
+    context = await this._parseMetaInf(context);
+    context = await this._parseOpf(context);
+    context = await this._parseNcx(context);
+    context = await this._unzipIfNeeded(context);
+    const book = await this._createBook(context);
+    return book;
   }
 
   /**
@@ -191,20 +189,12 @@ class EpubParser {
    * @see EpubParser.parseDefaultOptions
    * @see EpubParser.parseOptionTypes
    */
-  _prepareParse(options = {}) {
-    return new Promise((resolve, reject) => {
-      validateOptions(options, EpubParser.parseOptionTypes);
-
-      const context = new Context();
-      context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
-      readEntries(this.input).then((result) => {
-        context.entries = result.entries;
-        if (isExists(result.zip)) {
-          context.zip = result.zip;
-        }
-        resolve(context);
-      }).catch(err => reject(err));
-    });
+  async _prepareParse(options = {}) {
+    validateOptions(options, EpubParser.parseOptionTypes);
+    const context = new Context();
+    context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
+    context.entries = await readEntries(this.input);
+    return context;
   }
 
   /**
@@ -214,24 +204,23 @@ class EpubParser {
    * @throws {Errors.EINVAL} invalid package
    * @see EpubParser.parseDefaultOptions.validatePackage
    */
-  _validatePackageIfNeeded(context) {
-    return new Promise((resolve) => {
-      if (isExists(context.zip) && context.options.validatePackage) {
-        const firstEntry = context.entries[0];
-        if (firstEntry.entryName !== 'mimetype') {
-          throw createError(Errors.EINVAL, 'package', 'reason', 'mimetype file must be first file in archive.');
-        } else if (firstEntry.method !== 0 /* STORED */) {
-          throw createError(Errors.EINVAL, 'package', 'reason', 'mimetype file should not compressed.');
-        } else if (firstEntry.getFile('utf8') !== 'application/epub+zip') {
-          const reason = 'mimetype file should only contain string \'application/epub+zip\'.';
-          throw createError(Errors.EINVAL, 'package', 'reason', reason);
-        } else if (firstEntry.extraLength > 0) {
-          const reason = 'shouldn\'t use extra field feature of ZIP format for mimetype file.';
-          throw createError(Errors.EINVAL, 'package', 'reason', reason);
-        }
+  async _validatePackageIfNeeded(context) {
+    if (isExists(context.zip) && context.options.validatePackage) {
+      const firstEntry = context.entries.first; // TODO: If no first one
+      const signature = await firstEntry.getFile('utf8');
+      if (firstEntry.entryPath !== 'mimetype') {
+        throw createError(Errors.EINVAL, 'package', 'reason', 'mimetype file must be first file in archive.');
+      } else if (firstEntry.method !== 0 /* STORED */) {
+        throw createError(Errors.EINVAL, 'package', 'reason', 'mimetype file should not compressed.');
+      } else if (signature !== 'application/epub+zip') {
+        const reason = 'mimetype file should only contain string \'application/epub+zip\'.';
+        throw createError(Errors.EINVAL, 'package', 'reason', reason);
+      } else if (firstEntry.extraFieldLength > 0) {
+        const reason = 'shouldn\'t use extra field feature of ZIP format for mimetype file.';
+        throw createError(Errors.EINVAL, 'package', 'reason', reason);
       }
-      resolve(context);
-    });
+    }
+    return context;
   }
 
   /**
@@ -243,50 +232,48 @@ class EpubParser {
    * @throws {Errors.ENOELMT} no such element in container.xml
    * @throws {Errors.ENOATTR} no such attribute in element
    */
-  _parseMetaInf(context) {
-    return new Promise((resolve) => {
-      const entryName = 'META-INF/container.xml';
-      const containerEntry = findEntry(context.entries, entryName);
-      if (!isExists(containerEntry)) {
-        throw createError(Errors.ENOFILE, entryName);
-      }
+  async _parseMetaInf(context) {
+    const entryPath = 'META-INF/container.xml';
+    const containerEntry = context.entries.find(entryPath);
+    if (!isExists(containerEntry)) {
+      throw createError(Errors.ENOFILE, entryPath);
+    }
 
-      // container.xml
-      // <?xml ... ?>
-      // <container ...>
-      //   <rootfiles>
-      //     <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
-      //     ...                  ^~~~~~~~~~~~~~~~~
-      //   </rootfiles>
-      // </container>
-      const { container } = xmlLoader(containerEntry, context.options);
-      if (!isExists(container)) {
-        throw createError(Errors.ENOELMT, 'container', entryName);
-      }
+    // container.xml
+    // <?xml ... ?>
+    // <container ...>
+    //   <rootfiles>
+    //     <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+    //     ...                  ^~~~~~~~~~~~~~~~~
+    //   </rootfiles>
+    // </container>
+    const { container } = xmlLoader(await containerEntry.getFile('utf8'));
+    if (!isExists(container)) {
+      throw createError(Errors.ENOELMT, 'container', entryPath);
+    }
 
-      if (!isExists(container.rootfiles)) {
-        throw createError(Errors.ENOELMT, 'rootfiles', entryName);
-      }
+    if (!isExists(container.rootfiles)) {
+      throw createError(Errors.ENOELMT, 'rootfiles', entryPath);
+    }
 
-      const { rootfiles } = container;
-      // eslint-disable-next-line arrow-body-style
-      const rootfile = (isArray(rootfiles) ? rootfiles : [rootfiles.rootfile]).find((item) => {
-        return item['media-type'] === 'application/oebps-package+xml';
-      });
-      if (!isExists(rootfile)) {
-        throw createError(Errors.ENOELMT, 'rootfile', entryName);
-      }
-
-      const opfPath = rootfile['full-path'];
-      if (!isExists(opfPath)) {
-        throw createError(Errors.ENOATTR, 'rootfile', 'full-path', entryName);
-      }
-
-      context.opfPath = safePath(opfPath);
-      context.basePath = safeDirname(opfPath);
-
-      resolve(context);
+    const { rootfiles } = container;
+    // eslint-disable-next-line arrow-body-style
+    const rootfile = (isArray(rootfiles) ? rootfiles : [rootfiles.rootfile]).find((item) => {
+      return item['media-type'] === 'application/oebps-package+xml';
     });
+    if (!isExists(rootfile)) {
+      throw createError(Errors.ENOELMT, 'rootfile', entryPath);
+    }
+
+    const opfPath = rootfile['full-path'];
+    if (!isExists(opfPath)) {
+      throw createError(Errors.ENOATTR, 'rootfile', 'full-path', entryPath);
+    }
+
+    context.opfPath = safePath(opfPath);
+    context.basePath = safeDirname(opfPath);
+
+    return context;
   }
 
   /**
@@ -297,42 +284,41 @@ class EpubParser {
    * @throws {Errors.ENOFILE} OPF not found
    * @throws {Errors.ENOELMT} no such element in OPF
    */
-  _parseOpf(context) {
-    return new Promise((resolve) => {
-      const { entries, options, opfPath } = context;
-      const opfEntry = findEntry(entries, opfPath);
-      if (!isExists(opfEntry)) {
-        throw createError(Errors.ENOFILE, opfPath);
-      }
+  async _parseOpf(context) {
+    const { entries, opfPath } = context;
+    const opfEntry = entries.find(opfPath);
+    if (!isExists(opfEntry)) {
+      throw createError(Errors.ENOFILE, opfPath);
+    }
 
-      // content.opf
-      // <?xml ... ?>
-      // <package version="2.0" ...>
-      //                   ^~~
-      //   <metadata ...>...</metadata>
-      //    ^~~~~~~~~~~~~~~~~~~~~~~~~~
-      //   <manifest>...</manifest>
-      //    ^~~~~~~~~~~~~~~~~~~~~~
-      //   <spine toc="...">...</spine>
-      //    ^~~~~~~~~~~~~~~~~~~~~~~~~~
-      //   <guide>...</guide>
-      //    ^~~~~~~~~~~~~~~~
-      // </package>
-      const { package: root } = xmlLoader(opfEntry, options);
-      if (!isExists(root)) {
-        throw createError(Errors.ENOELMT, 'package', opfPath);
-      }
+    // content.opf
+    // <?xml ... ?>
+    // <package version="2.0" ...>
+    //                   ^~~
+    //   <metadata ...>...</metadata>
+    //    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+    //   <manifest>...</manifest>
+    //    ^~~~~~~~~~~~~~~~~~~~~~
+    //   <spine toc="...">...</spine>
+    //    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+    //   <guide>...</guide>
+    //    ^~~~~~~~~~~~~~~~
+    // </package>
+    const { package: root } = xmlLoader(await opfEntry.getFile('utf8'));
+    if (!isExists(root)) {
+      throw createError(Errors.ENOELMT, 'package', opfPath);
+    }
 
-      if (!isExists(root.metadata) || !isExists(root.manifest) || !isExists(root.spine)) {
-        throw createError(Errors.ENOELMT, 'metadata or manifest or spine', opfPath);
-      }
+    if (!isExists(root.metadata) || !isExists(root.manifest) || !isExists(root.spine)) {
+      throw createError(Errors.ENOELMT, 'metadata or manifest or spine', opfPath);
+    }
 
-      context.rawBook.version = root.version;
-      this._parseMetadata(root.metadata, context)
-        .then(ctx => this._parseManifestAndSpine(root.manifest, root.spine, ctx))
-        .then(ctx => this._parseGuide(root.guide, ctx))
-        .then(ctx => resolve(ctx));
-    });
+    context.rawBook.version = root.version;
+    context = await this._parseMetadata(root.metadata, context);
+    context = await this._parseManifestAndSpine(root.manifest, root.spine, context);
+    context = await this._parseGuide(root.guide, context);
+
+    return context;
   }
 
   /**
@@ -377,114 +363,109 @@ class EpubParser {
    * @see EpubParser.parseDefaultOptions.parseStyle
    * @see EpubParser.parseDefaultOptions.styleNamespacePrefix
    */
-  _parseManifestAndSpine(manifest, spine, context) {
-    return new Promise((resolve) => {
-      const { rawBook, basePath, options } = context;
-      const { toc: tocId } = spine;
-      const items = getValues(manifest.item);
-      const itemrefs = getValues(spine.itemref);
-      const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
-      let foundCover = false;
-      let spineIndex = 0;
-      let inlineStyles = [];
-      let cssIdx = 0;
+  async _parseManifestAndSpine(manifest, spine, context) {
+    const {
+      rawBook, basePath, options, entries,
+    } = context;
+    const { toc: tocId } = spine;
+    const items = getValues(manifest.item);
+    const itemrefs = getValues(spine.itemref);
+    const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
+    let foundCover = false;
+    let spineIndex = 0;
+    let inlineStyles = [];
 
-      rawBook.items = [];
-      for (const item of items) { // eslint-disable-line no-restricted-syntax
-        const rawItem = {};
-        rawItem.id = item.id;
-        if (isExists(item.href)) {
-          // ../Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
-          rawItem.href = safePathJoin(basePath, item.href);
-        }
-        rawItem.mediaType = item['media-type'];
-        rawItem.itemType = getItemType(rawItem.mediaType);
-        if (rawItem.itemType === DeadItem) {
-          rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
-        }
-
-        const itemEntry = findEntry(context.entries, rawItem.href);
-        if (isExists(itemEntry)) {
-          rawItem.size = itemEntry.getSize();
-
-          if (rawItem.itemType === SpineItem) {
-            // Checks if item is referenced in spine list.
-            const ref = itemrefs.find(itemref => itemref.idref === rawItem.id);
-            if (isExists(ref)) {
-              // If isLinear is false, then spineIndex is not assigned.
-              // Because this spine is excluded from flow.
-              rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
-              if (options.ignoreLinear || rawItem.isLinear) {
-                rawItem.spineIndex = spineIndex;
-                spineIndex += 1;
-              }
-            } else {
-              rawItem.itemType = DeadItem;
-              rawItem.reason = DeadItem.Reason.NOT_SPINE;
-            }
-          } else if (rawItem.itemType === ImageItem) {
-            if (!foundCover) {
-              // EPUB2 spec doesn't have cover image declaration, it founding for cover image in order listed below.
-              // 1. metadata.meta[name="cover"].content === imageItem.id
-              // 2. imageItem.id === 'cover'
-              // 3. guide.reference[type="cover"].href === imageItem.href (see _parseGuide)
-              if (isExists(coverMeta) && rawItem.id === coverMeta.content) {
-                rawItem.isCover = true;
-                foundCover = true;
-              } else if (rawItem.id.toLowerCase() === 'cover') {
-                rawItem.isCover = true;
-                foundCover = true;
-              }
-            }
-          } else if (rawItem.itemType === NcxItem) {
-            // NCX is valid only if rawItem.id matches tocId.
-            if (rawItem.id !== tocId) {
-              rawItem.itemType = DeadItem;
-              rawItem.reason = DeadItem.Reason.NOT_NCX;
-            }
-          }
-
-          if (options.parseStyle) {
-            if (rawItem.itemType === CssItem) {
-              rawItem.namespace = `${options.styleNamespacePrefix}${cssIdx}`;
-              cssIdx += 1;
-            } else if (rawItem.itemType === SpineItem) {
-              const result = this._parseSpineStyle(rawItem, itemEntry.getFile('utf8'), cssIdx, options);
-              rawItem.styles = result.styles;
-              inlineStyles = inlineStyles.concat(result.inlineStyles);
-              cssIdx = result.cssIdx; // eslint-disable-line
-            }
-          }
-        } else {
-          rawItem.itemType = DeadItem;
-          rawItem.reason = DeadItem.Reason.NOT_EXISTS;
-        }
-        rawBook.items.push(rawItem);
+    rawBook.items = [];
+    await Promise.all(Object.values(items).map(async (item, idx) => {
+      const rawItem = {};
+      rawItem.id = item.id;
+      if (isExists(item.href)) {
+        // ../Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
+        rawItem.href = safePathJoin(basePath, item.href);
       }
-      inlineStyles.forEach(inlineStyle => rawBook.items.push(inlineStyle));
-      context.foundCover = foundCover;
-      resolve(context);
-    });
+      rawItem.mediaType = item['media-type'];
+      rawItem.itemType = getItemType(rawItem.mediaType);
+      if (rawItem.itemType === DeadItem) {
+        rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
+      }
+
+      const itemEntry = entries.find(rawItem.href);
+      if (isExists(itemEntry)) {
+        rawItem.size = itemEntry.size;
+
+        if (rawItem.itemType === SpineItem) {
+          // Checks if item is referenced in spine list.
+          const ref = itemrefs.find(itemref => itemref.idref === rawItem.id);
+          if (isExists(ref)) {
+            // If isLinear is false, then spineIndex is not assigned.
+            // Because this spine is excluded from flow.
+            rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
+            if (options.ignoreLinear || rawItem.isLinear) {
+              rawItem.spineIndex = spineIndex;
+              spineIndex += 1;
+            }
+          } else {
+            rawItem.itemType = DeadItem;
+            rawItem.reason = DeadItem.Reason.NOT_SPINE;
+          }
+        } else if (rawItem.itemType === ImageItem) {
+          if (!foundCover) {
+            // EPUB2 spec doesn't have cover image declaration, it founding for cover image in order listed below.
+            // 1. metadata.meta[name="cover"].content === imageItem.id
+            // 2. imageItem.id === 'cover'
+            // 3. guide.reference[type="cover"].href === imageItem.href (see _parseGuide)
+            if (isExists(coverMeta) && rawItem.id === coverMeta.content) {
+              rawItem.isCover = true;
+              foundCover = true;
+            } else if (rawItem.id.toLowerCase() === 'cover') {
+              rawItem.isCover = true;
+              foundCover = true;
+            }
+          }
+        } else if (rawItem.itemType === NcxItem) {
+          // NCX is valid only if rawItem.id matches tocId.
+          if (rawItem.id !== tocId) {
+            rawItem.itemType = DeadItem;
+            rawItem.reason = DeadItem.Reason.NOT_NCX;
+          }
+        }
+
+        if (options.parseStyle) {
+          if (rawItem.itemType === CssItem) {
+            rawItem.namespace = `${options.styleNamespacePrefix}${idx}`;
+          } else if (rawItem.itemType === SpineItem) {
+            const result = await this._parseSpineStyle(rawItem, itemEntry, options);
+            rawItem.styles = result.styles;
+            inlineStyles = inlineStyles.concat(result.inlineStyles);
+          }
+        }
+      } else {
+        rawItem.itemType = DeadItem;
+        rawItem.reason = DeadItem.Reason.NOT_EXISTS;
+      }
+      rawBook.items.push(rawItem);
+    }));
+    inlineStyles.forEach(inlineStyle => rawBook.items.push(inlineStyle));
+    context.foundCover = foundCover;
+    return context;
   }
 
   /**
    * @typedef {object} StyleParseResult
    * @property {string[]} styles path of styles linked to spine
    * @property {object[]} inlineStyles inline styles included in Spine
-   * @property {number} cssIdx current index after parsing
    */
   /**
    * @param {object} rawItem
-   * @param {string} text contents of spine
-   * @param {number} cssIdx suffix of namespace (zero-base)
+   * @param {object} entry spine entry
    * @param {object} options parse options
    * @returns {StyleParseResult} returns styles and inline style from spine
    * @see EpubParser.parseDefaultOptions.styleNamespacePrefix
    */
-  _parseSpineStyle(rawItem, text, cssIdx, options) {
+  async _parseSpineStyle(rawItem, entry, options) {
     const styles = [];
     const inlineStyles = [];
-    const document = parseHtml(text);
+    const document = parseHtml(await entry.getFile('utf8'));
     const html = document.find(child => child.tagName === 'html');
     const head = html.children.find(child => child.tagName === 'head');
 
@@ -507,14 +488,13 @@ class EpubParser {
 
     // <style ...>...</style>
     //            ^~~
-    head.children.filter(child => child.tagName === 'style').forEach((style) => {
+    head.children.filter(child => child.tagName === 'style').forEach((style, idx) => {
       const firstNode = style.children[0];
       if (isExists(firstNode)) {
-        const namespace = `${options.styleNamespacePrefix}${cssIdx}`;
+        const namespace = `${options.styleNamespacePrefix}${idx}`;
         const href = `${rawItem.href}_${namespace}`;
         const content = firstNode.content || '';
-        styles.push(href);
-        inlineStyles.push({
+        const inlineStyleItem = {
           id: `${rawItem.id}_${namespace}`,
           href,
           mediaType: 'text/css',
@@ -522,12 +502,13 @@ class EpubParser {
           itemType: InlineCssItem,
           namespace,
           text: content,
-        });
-        cssIdx += 1;
+        };
+        styles.push(inlineStyleItem.href);
+        inlineStyles.push(inlineStyleItem);
       }
     });
 
-    return { styles, inlineStyles, cssIdx };
+    return { styles, inlineStyles };
   }
 
   /**
@@ -540,7 +521,6 @@ class EpubParser {
     return new Promise((resolve) => {
       const { rawBook } = context;
       let { foundCover } = context;
-
       rawBook.guides = [];
       if (isExists(guide)) {
         getValues(guide.reference).forEach((reference) => {
@@ -569,66 +549,65 @@ class EpubParser {
    * @throws {Errors.ENOELMT} no such element in NCX
    * @see EpubParser.parseDefaultOptions.allowNcxFileMissing
    */
-  _parseNcx(context) {
-    return new Promise((resolve) => {
-      const { rawBook, entries, options } = context;
-      const { allowNcxFileMissing } = options;
-      const ncxItem = rawBook.items.find(item => item.itemType === NcxItem);
-      if (isExists(ncxItem)) {
-        const ncxEntry = findEntry(entries, ncxItem.href);
-        if (!allowNcxFileMissing && !isExists(ncxEntry)) {
-          throw createError(Errors.ENOFILE, ncxItem.href);
-        }
-
-        // toc.ncx
-        // <?xml ... ?>
-        // <!DOCTYPE ncx ... >
-        // <ncx ... >
-        //   ...
-        //   <navMap>
-        //     <navPoint id="..." playOrder="...">
-        //       <navLabel><text>...</text></navLabel>
-        //       <content src="..." />
-        //       {<navPoint>...</navPoint>}
-        //     </navPoint>
-        //     ...
-        //   </navMap>
-        //   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        //   ...
-        // </ncx>
-        const { ncx } = xmlLoader(ncxEntry, options);
-        if (!isExists(ncx)) {
-          throw createError(Errors.ENOELMT, 'ncx', ncxItem.href);
-        }
-
-        if (!isExists(ncx.navMap)) {
-          throw createError(Errors.ENOELMT, 'navMap', ncxItem.href);
-        }
-
-        ncxItem.navPoints = [];
-
-        const normalizeSrc = (np) => {
-          if (isExists(np.children)) {
-            np.children.forEach((child, idx) => {
-              np.children[idx] = normalizeSrc(child);
-            });
-          }
-          if (isExists(np.content) && isExists(np.content.src) && np.content.src.length > 0) {
-            // Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
-            np.content.src = safePathJoin(context.basePath, np.content.src);
-          }
-          return np;
-        };
-
-        const keyTranslator = key => (key === 'navPoint' ? 'children' : key);
-        getValues(ncx.navMap.navPoint, keyTranslator).forEach((navPoint) => { // eslint-disable-line arrow-body-style
-          return ncxItem.navPoints.push(normalizeSrc(navPoint));
-        });
-      } else if (!allowNcxFileMissing) {
-        throw createError(Errors.EINVAL, 'opf', 'reason', 'can not found ncx attribute');
+  async _parseNcx(context) {
+    const { rawBook, entries, options } = context;
+    const { allowNcxFileMissing } = options;
+    const ncxItem = rawBook.items.find(item => item.itemType === NcxItem);
+    if (isExists(ncxItem)) {
+      const ncxEntry = entries.find(ncxItem.href);
+      if (!allowNcxFileMissing && !isExists(ncxEntry)) {
+        throw createError(Errors.ENOFILE, ncxItem.href);
       }
-      resolve(context);
-    });
+
+      // toc.ncx
+      // <?xml ... ?>
+      // <!DOCTYPE ncx ... >
+      // <ncx ... >
+      //   ...
+      //   <navMap>
+      //     <navPoint id="..." playOrder="...">
+      //       <navLabel><text>...</text></navLabel>
+      //       <content src="..." />
+      //       {<navPoint>...</navPoint>}
+      //     </navPoint>
+      //     ...
+      //   </navMap>
+      //   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //   ...
+      // </ncx>
+      const { ncx } = xmlLoader(await ncxEntry.getFile('utf8'));
+      if (!isExists(ncx)) {
+        throw createError(Errors.ENOELMT, 'ncx', ncxItem.href);
+      }
+
+      if (!isExists(ncx.navMap)) {
+        throw createError(Errors.ENOELMT, 'navMap', ncxItem.href);
+      }
+
+      ncxItem.navPoints = [];
+
+      const normalizeSrc = (np) => {
+        if (isExists(np.children)) {
+          np.children.forEach((child, idx) => {
+            np.children[idx] = normalizeSrc(child);
+          });
+        }
+        if (isExists(np.content) && isExists(np.content.src) && np.content.src.length > 0) {
+          // Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
+          np.content.src = safePathJoin(context.basePath, np.content.src);
+        }
+        return np;
+      };
+
+      const keyTranslator = key => (key === 'navPoint' ? 'children' : key);
+      getValues(ncx.navMap.navPoint, keyTranslator).forEach((navPoint) => { // eslint-disable-line arrow-body-style
+        return ncxItem.navPoints.push(normalizeSrc(navPoint));
+      });
+    } else if (!allowNcxFileMissing) {
+      throw createError(Errors.EINVAL, 'opf', 'reason', 'can not found ncx attribute');
+    }
+
+    return context;
   }
 
   /**
@@ -639,22 +618,13 @@ class EpubParser {
    * @see EpubParser.parseDefaultOptions.unzipPath
    * @see EpubParser.parseDefaultOptions.overwrite
    */
-  _unzipIfNeeded(context) {
-    return new Promise((resolve, reject) => {
-      const { options, zip } = context;
-      const { unzipPath } = options;
-
-      if (!isExists(zip) || !isExists(unzipPath)) {
-        if (isExists(zip)) {
-          zip.close();
-        }
-        resolve(context);
-      } else {
-        extractAll(zip, unzipPath, options.overwrite, true)
-          .then(() => resolve(context))
-          .catch(err => reject(err));
-      }
-    });
+  async _unzipIfNeeded(context) {
+    const { options, entries } = context;
+    const { unzipPath, overwrite } = options;
+    if (!isString(entries.source) && isExists(unzipPath)) {
+      await entries.source.extractAll(unzipPath, overwrite);
+    }
+    return context;
   }
 
   /**
@@ -681,8 +651,9 @@ class EpubParser {
    *   ...
    * });
    */
-  readItem(item, options = {}) {
-    return this.readItems([item], options).then(results => results[0]);
+  async readItem(item, options = {}) {
+    const results = await this.readItems([item], options);
+    return results[0];
   }
 
   /**
@@ -698,12 +669,10 @@ class EpubParser {
    *   ...
    * });
    */
-  readItems(items, options = {}) {
-    return this._prepareRead(items, options)
-      .then(context => this._read(context))
-      .catch((err) => {
-        throw err;
-      });
+  async readItems(items, options = {}) {
+    const context = await this._prepareRead(items, options);
+    const results = await this._read(context);
+    return results;
   }
 
   /**
@@ -711,75 +680,60 @@ class EpubParser {
    * @property {Item[]} items targets
    * @property {object} options read options
    * @property {object} entries from input
-   * @property {?StreamZip} zip
    */
   /**
    * Validate read options and get entries from input
    * @param {Item[]} items targets
    * @param {?object} options read options
    * @returns {Promise.<ReadContext>}
-   *          returns ReadContext containing target items, read options, entries and zip if input is file
+   *          returns ReadContext containing target items, read options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
    * @see EpubParser.readDefaultOptions
    * @see EpubParser.readOptionTypes
    */
-  _prepareRead(items, options = {}) {
-    return new Promise((resolve, reject) => {
-      if (items.find(item => !(item instanceof Item))) {
-        throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
-      }
-
-      validateOptions(options, EpubParser.readOptionTypes);
-
-      readEntries(this.input).then((result) => {
-        resolve({
-          items,
-          options: mergeObjects(EpubParser.readDefaultOptions, options),
-          entries: result.entries,
-          zip: result.zip,
-        });
-      }).catch(err => reject(err));
-    });
+  async _prepareRead(items, options = {}) {
+    if (items.find(item => !(item instanceof Item))) {
+      throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
+    }
+    validateOptions(options, EpubParser.readOptionTypes);
+    const entries = await readEntries(this.input);
+    return {
+      items,
+      entries,
+      options: mergeObjects(EpubParser.readDefaultOptions, options),
+    };
   }
 
   /**
    * Contents is read using loader suitable for context
    * @param {ReadContext} context properties required for reading
-   * @returns {(string|Buffer)} reading results
+   * @returns {(string|Buffer)[]} reading results
    * @throws {Errors.ENOFILE} no such file
    */
-  _read(context) {
-    return new Promise((resolve) => {
-      const { items, options, entries } = context;
-      const results = items.map((item) => {
-        if (item instanceof InlineCssItem) {
-          return cssLoader(item, item.text, options);
-        }
-
-        const entry = findEntry(entries, item.href);
-        if (!isExists(entry)) {
-          throw createError(Errors.ENOFILE, item.href);
-        }
-
-        const file = entry.getFile(getItemEncoding(item));
-        if (item instanceof SpineItem) {
-          return spineLoader(item, file, options);
-        }
-        if (item instanceof CssItem) {
-          return cssLoader(item, file, options);
-        }
-        return file;
-      });
-
-      const { zip } = context;
-      if (isExists(zip)) {
-        zip.close();
+  async _read(context) {
+    const { items, entries, options } = context;
+    const results = await Promise.all(Object.values(items).map(async (item) => {
+      if (item instanceof InlineCssItem) {
+        return cssLoader(item, item.text, options);
       }
 
-      resolve(results);
-    });
+      const entry = entries.find(item.href);
+      if (!isExists(entry)) {
+        throw createError(Errors.ENOFILE, item.href);
+      }
+
+      const file = await entry.getFile(getItemEncoding(item));
+      if (item instanceof SpineItem) {
+        return spineLoader(item, file, options);
+      }
+      if (item instanceof CssItem) {
+        return cssLoader(item, file, options);
+      }
+      return file;
+    }));
+    return results;
   }
 }
 

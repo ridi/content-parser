@@ -94,7 +94,7 @@ describe('Parsing test', () => {
     it('_prepareParse test', () => {
       return parser._prepareParse().then((context) => {
         context.options.should.deep.equal(EpubParser.parseDefaultOptions);
-        context.zip.should.not.null;
+        context.entries.should.not.null;
         context.options.parseStyle = false;
         _context = context;
       });

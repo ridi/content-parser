@@ -1,7 +1,7 @@
 import { createDirectory, removeDirectory } from './directory';
 import { getItemEncoding, getItemType } from './itemUtil';
-import { openZip, extractAll } from './zipUtil';
-import { readEntries, findEntry } from './readEntries';
+import openZip from './zipUtil';
+import readEntries from './readEntries';
 import mergeObjects from './mergeObjects';
 import parseBool from './parseBool';
 import stringContains from './stringContains';
@@ -33,7 +33,6 @@ export {
   getItemType,
 
   readEntries,
-  findEntry,
 
   mergeObjects,
 
@@ -49,7 +48,6 @@ export {
   validateOptions,
 
   openZip,
-  extractAll,
 
   getType,
   isArray,

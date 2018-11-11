@@ -1,6 +1,6 @@
 import { should } from 'chai';
 
-import { extractAll, openZip } from '../../src/util/zipUtil';
+import openZip from '../../src/util/zipUtil';
 import Files from '../files';
 import { removeDirectory } from '../../src/util/directory';
 
@@ -10,7 +10,6 @@ describe('Util - Zip', () => {
   it('Valid zip', () => {
     return openZip(Files.DEFAULT).then((zip) => {
       zip.should.not.null;
-      zip.close();
     });
   });
 
@@ -20,10 +19,9 @@ describe('Util - Zip', () => {
     });
   });
 
-  it('extractAll test (default)', (done) => {
+  it('extractAll test', (done) => {
     openZip(Files.DEFAULT).then((zip) => {
-      extractAll(zip, './temp').then(() =>  {
-        zip.close();
+      zip.extractAll('./temp').then(() => {
         removeDirectory('./temp');
         done();
       });

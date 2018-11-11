@@ -2,47 +2,61 @@ import fs from 'fs';
 import path from 'path';
 
 import { getPathes, safePath } from './pathUtil';
-import { isExists } from './typecheck';
-import { openZip } from './zipUtil';
+import openZip from './zipUtil';
+
+function create(source, entries) {
+  return {
+    first: entries[0],
+    find: entryPath => entries.find(entry => entryPath === entry.entryPath),
+    map: callback => entries.map(callback),
+    forEach: callback => entries.forEach(callback),
+    length: entries.length,
+    source,
+  };
+}
 
 function fromZip(zip) {
-  return Object.values(zip.entries()).reduce((entries, entry) => { // eslint-disable-line arrow-body-style
+  return create(zip, Object.values(zip.files).reduce((entries, entry) => { // eslint-disable-line arrow-body-style
     return entries.concat([{
-      entryName: entry.name,
-      getFile: (encoding) => {
-        if (isExists(encoding)) {
-          return zip.entryDataSync(entry).toString(encoding);
-        }
-        return zip.entryDataSync(entry);
-      },
-      getSize: () => entry.size,
-      method: entry.method,
-      extraLength: entry.extraLen,
+      entryPath: entry.path,
+      getFile: encoding => zip.getFile(entry, encoding),
+      size: () => entry.uncompressedSize,
+      method: entry.compressionMethod,
+      extraFieldLength: entry.extraFieldLength,
     }]);
-  }, []);
+  }, []));
 }
 
 function fromDirectory(dir) {
-  return getPathes(dir).reduce((entries, fullPath) => {
+  return create(dir, getPathes(dir).reduce((entries, fullPath) => {
     const subPathOffset = path.normalize(dir).length + path.sep.length;
     return entries.concat([{
-      entryName: safePath(fullPath).substring(subPathOffset),
-      getFile: encoding => fs.readFileSync(fullPath, encoding),
-      getSize: () => fs.lstatSync(fullPath).size,
+      entryPath: safePath(fullPath).substring(subPathOffset),
+      getFile: async (encoding) => {
+        const file = await new Promise((resolve, reject) => {
+          fs.readFile(fullPath, encoding, (err, data) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(data);
+            }
+          });
+        });
+        return file;
+      },
+      size: () => fs.lstatSync(fullPath).size,
     }]);
-  }, []);
+  }, []));
 }
 
-export const findEntry = (entries, entryName) => entries.find(entry => entry.entryName === entryName);
-
-export function readEntries(input) {
+export default function readEntries(input) {
   return new Promise((resolve) => {
     if (fs.lstatSync(input).isFile()) {
       openZip(input).then((zip) => {
-        resolve({ entries: fromZip(zip), zip });
+        resolve(fromZip(zip));
       });
     } else {
-      resolve({ entries: fromDirectory(input) });
+      resolve(fromDirectory(input));
     }
   });
 }
