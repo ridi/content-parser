@@ -368,13 +368,12 @@ Prepend given string to namespace for identification.
 ## Read Options
 
 * [basePath](#basePath)
-* [spine.extractBody](#spine_extractBody)
-* [spine.useCssOptions](#spine_useCssOptions)
-* [spine.serializedAnchor](#spine_serializedAnchor)
-* [css.removeAtrules](#css_removeAtrules)
-* [css.removeTags](#css_removeTags)
-* [css.removeIds](#css_removeIds)
-* [css.removeClasses](#css_removeClasses)
+* [extractBody](#extractBody)
+* [serializedAnchor](#serializedAnchor)
+* [removeAtrules](#removeAtrules)
+* [removeTags](#removeTags)
+* [removeIds](#removeIds)
+* [removeClasses](#removeClasses)
 
 ---
 
@@ -418,9 +417,9 @@ CSS: [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
 
 ---
 
-<a id="spine_extractBody"></a>
+<a id="extractBody"></a>
 
-### spine.extractBody: *`boolean|function`*
+### extractBody: *`boolean|function`*
 
 If true, extract body. Otherwise it returns a full string.
 If specify a function instead of true, use function to transform body.
@@ -455,19 +454,9 @@ readOptions.spine.extractBody = (innerHTML, attrs) => {
 
 ---
 
-<a id="spine_useCssOptions"></a>
+<a id="serializedAnchor"></a>
 
-### spine.useCssOptions: *`boolean`*
-
-If true, applies readOptions.css to inline styles and style attributes.
-
-**Default:** `false`
-
----
-
-<a id="spine_serializedAnchor"></a>
-
-### spine.serializedAnchor: *`Boolean`*
+### serializedAnchor: *`Boolean`*
 
 If true, replace file path of anchor in spine with spine index.
 
@@ -475,9 +464,9 @@ If true, replace file path of anchor in spine with spine index.
 
 ---
 
-<a id="css_removeAtrules"></a>
+<a id="removeAtrules"></a>
 
-### css.removeAtrules: *`string[]`*
+### removeAtrules: *`string[]`*
 
 Remove at-rules.
 
@@ -485,9 +474,9 @@ Remove at-rules.
 
 ---
 
-<a id="css_removeTags"></a>
+<a id="removeTags"></a>
 
-### css.removeTags: *`string[]`*
+### removeTags: *`string[]`*
 
 Remove selector that point to specified tags.
 
@@ -495,9 +484,9 @@ Remove selector that point to specified tags.
 
 ---
 
-<a id="css_removeIds"></a>
+<a id="removeIds"></a>
 
-### css.removeIds: *`string[]`*
+### removeIds: *`string[]`*
 
 Remove selector that point to specified ids.
 
@@ -505,9 +494,9 @@ Remove selector that point to specified ids.
 
 ---
 
-<a id="css_removeClasses"></a>
+<a id="removeClasses"></a>
 
-### css.removeClasses: *`string[]`*
+### removeClasses: *`string[]`*
 
 Remove selector that point to specified classes.
 

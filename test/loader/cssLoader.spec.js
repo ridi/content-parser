@@ -19,31 +19,31 @@ describe('Loader - CSS', () => {
   });
 
   it('removeAtrules option test', () => {
-    const options = { css: { removeAtrules: ['import', 'charset'] } };
+    const options = { removeAtrules: ['import', 'charset'] };
     cssLoader({}, '@charset "utf8"; p { color: black; } @import "style.css";', options).should.equal('p{color:black}');
   });
 
   it('removeTags option test', () => {
-    const options = { css: { removeTags: ['span'] } };
+    const options = { removeTags: ['span'] };
     cssLoader({}, 'p > span { color: red; } span .bold { font-weight: 700; } span { }', options).should.equal('');
   });
 
   it('removeIds option test', () => {
-    const options = { css: { removeIds: ['ridi'] } };
+    const options = { removeIds: ['ridi'] };
     cssLoader({}, '#ridi { color: blue; } body #ridi { font-weight: 700; } :matches(#ridi) h1 { color: red; }', options).should.equal('');
   });
 
   it('removeClasses option test', () => {
-    const options = { css: { removeClasses: ['ch'] } };
+    const options = { removeClasses: ['ch'] };
     cssLoader({}, '.ch { color: blue; } p > .ch { font-weight: 700; } .ch[at="ch"] { color: red; }', options).should.equal('');
   });
 
   it('basePath option test', () => {
     const cssItem = { href: 'OEBPS/Styles/Style0001.css' };
-    let options = { basePath: 'a/b/c', css: {} };
+    let options = { basePath: 'a/b/c' };
     cssLoader(cssItem, '@font-face { font-family: NotoSans; src: url(\"../Fonts/NotoSans-Regular.ttf\"); }', options)
       .should.equal('@font-face{font-family:NotoSans;src:url(\"a/b/c/OEBPS/Fonts/NotoSans-Regular.ttf\")}');
-    options = { basePath: './a/b/c', css: {} };
+    options = { basePath: './a/b/c' };
     cssLoader(cssItem, '@font-face { font-family: NotoSans; src: url(\"../Fonts/NotoSans-Regular.ttf\"); }', options)
       .should.equal('@font-face{font-family:NotoSans;src:url(\"a/b/c/OEBPS/Fonts/NotoSans-Regular.ttf\")}');
   });

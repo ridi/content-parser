@@ -40,17 +40,17 @@ function formatAttributes(attributes, options) {
     if (value === null) {
       return `${attrs} ${key}`;
     }
-    if (options.spine.useCssOptions && key === Names.Attrs.STYLE) {
+    if (options.usingCssOptions && key === Names.Attrs.STYLE) {
       const dummyItem = new CssItem({ href: '' });
       // css-tree does not work unless style value is wrapped in a block.
       const text = cssLoader(dummyItem, `tmp{${value}}`, options).replace(/'|"/gm, '');
       return `${attrs} ${key}="${text.substring(4, text.length - 1)}"`;
     }
     if (!isUrl(value) && stringContains([Names.Attrs.HREF, Names.Attrs.SRC], key)) {
-      const { basePath, spine } = options;
-      if (spine.serializedAnchor && key === Names.Attrs.HREF) {
+      const { basePath, serializedAnchor } = options;
+      if (serializedAnchor && key === Names.Attrs.HREF) {
         const components = value.split('#');
-        const spineIndex = spine.serializedAnchor[path.basename(components[0])];
+        const spineIndex = serializedAnchor[path.basename(components[0])];
         if (isExists(spineIndex)) {
           // href="#title" => href="#title"
           // href="./Section00001" => href="0"
@@ -78,7 +78,7 @@ function stringify(tree, options) {
     }
     const { tagName, attributes, children } = node;
     const isSelfClosing = arrayIncludes(options.voidTags, tagName);
-    if (options.spine.useCssOptions && tagName === Names.Tags.STYLE && children.length === 1) {
+    if (options.usingCssOptions && tagName === Names.Tags.STYLE && children.length === 1) {
       const dummyItem = new CssItem({ href: '' });
       const inlineStyle = children[0].content;
       const text = cssLoader(dummyItem, inlineStyle, options);
@@ -90,20 +90,19 @@ function stringify(tree, options) {
   }).join('');
 }
 
-export default function spineLoader(spineItem, file, options = { spine: {}, css: {} }) {
+export default function spineLoader(spineItem, file, options = {}) {
   const document = parse(file);
   const stringifyOptions = mergeObjects(parseDefaults, mergeObjects(options, {
     basePath: isExists(options.basePath)
       ? safePathJoin(options.basePath, safeDirname(spineItem.href))
       : undefined,
-    spine: {
-      serializedAnchor: options.spine.serializedAnchor === true
-        ? spineItem.list.reduce((map, item) => { map[path.basename(item.href)] = item.spineIndex; return map; }, {})
-        : false,
-    },
+    serializedAnchor: options.serializedAnchor === true
+      ? spineItem.list.reduce((map, item) => { map[path.basename(item.href)] = item.spineIndex; return map; }, {})
+      : false,
+    usingCssOptions: Object.keys(options).find(key => key.startsWith('remove')) !== undefined,
   }));
 
-  if (options.spine.extractBody) {
+  if (options.extractBody) {
     const html = document.find(child => child.tagName === 'html');
     const body = html.children.find(child => child.tagName === 'body');
     let attrs = body.attributes;
@@ -114,8 +113,8 @@ export default function spineLoader(spineItem, file, options = { spine: {}, css:
       }]);
     }
     const innerHTML = stringify(body.children, stringifyOptions);
-    if (isFunc(options.spine.extractBody)) {
-      return options.spine.extractBody(innerHTML, attrs);
+    if (isFunc(options.extractBody)) {
+      return options.extractBody(innerHTML, attrs);
     }
     return `<body ${attrs.map(attr => `${attr.key}="${attr.value}"`).join(' ')}>${innerHTML}</body>`;
   }

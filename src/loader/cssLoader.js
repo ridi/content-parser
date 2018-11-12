@@ -37,15 +37,15 @@ function handleRulePrelude(selectorList, options, cssItem) {
             }
           }
         } else if (type === Types.TYPE_SELECTOR) {
-          if (stringContains(options.css.removeTags || [], name)) {
+          if (stringContains(options.removeTags || [], name)) {
             shouldRemove = true;
           }
         } else if (type === Types.ID_SELECTOR) {
-          if (stringContains(options.css.removeIds || [], name)) {
+          if (stringContains(options.removeIds || [], name)) {
             shouldRemove = true;
           }
         } else if (type === Types.CLASS_SELECTOR) {
-          if (stringContains(options.css.removeClasses || [], name)) {
+          if (stringContains(options.removeClasses || [], name)) {
             shouldRemove = true;
           }
         }
@@ -109,7 +109,7 @@ function handleAtrule(node, item, list, options, cssItem) {
       return;
     }
   }
-  if (stringContains(options.css.removeAtrules || [], node.name)) {
+  if (stringContains(options.removeAtrules || [], node.name)) {
     list.remove(item);
   } else if (node.name.toLowerCase() === 'font-face') {
     handleRuleBlock(node.block, options, cssItem);
@@ -121,7 +121,7 @@ const handlers = {
   Rule: handleRuleset,
 };
 
-export default function cssLoader(cssItem, file, options = { css: {} }) {
+export default function cssLoader(cssItem, file, options = {}) {
   const ast = csstree.parse(file);
   csstree.walk(ast, {
     leave: function(node, item, list) { // eslint-disable-line

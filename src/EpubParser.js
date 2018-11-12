@@ -91,28 +91,20 @@ class EpubParser {
       // If specified, change base path of paths used by spine and css.
       // e.g. '../Images/cover.jpg' -> '{basePath}/OEBPS/Images/cover.jpg'
       basePath: undefined,
-      // SpineItem.
-      spine: {
-        // If true, extract body. Otherwise it returns a full string.
-        // If specify a function instead of true, use function to transform body.
-        // e.g. extractBody: (innerHTML, attrs) => `<body>${innerHTML}</body>`
-        extractBody: false,
-        // If true, applies readOptions.css to inline styles and style attributes.
-        useCssOptions: true,
-        // If true, replace file path of anchor in spine with spine index.
-        serializedAnchor: false,
-      },
-      // CssItem or InlineCssItem.
-      css: {
-        // Remove at-rules.
-        removeAtrules: [],
-        // Remove selector that point to specified tags.
-        removeTags: [],
-        // Remove selector that point to specified ids.
-        removeIds: [],
-        // Remove selector that point to specified classes.
-        removeClasses: [],
-      },
+      // If true, extract body. Otherwise it returns a full string.
+      // If specify a function instead of true, use function to transform body.
+      // e.g. extractBody: (innerHTML, attrs) => `<body>${innerHTML}</body>`
+      extractBody: false,
+      // If true, replace file path of anchor in spine with spine index.
+      serializedAnchor: false,
+      // Remove at-rules.
+      removeAtrules: [],
+      // Remove selector that point to specified tags.
+      removeTags: [],
+      // Remove selector that point to specified ids.
+      removeIds: [],
+      // Remove selector that point to specified classes.
+      removeClasses: [],
     };
   }
 
@@ -122,16 +114,12 @@ class EpubParser {
   static get readOptionTypes() {
     return {
       basePath: 'String|Undefined',
-      spine: {
-        extractBody: 'Boolean|Function',
-        useCssOptions: 'Boolean',
-      },
-      css: {
-        removeAtrules: 'Array',
-        removeTags: 'Array',
-        removeIds: 'Array',
-        removeClasses: 'Array',
-      },
+      extractBody: 'Boolean|Function',
+      serializedAnchor: 'Boolean',
+      removeAtrules: 'Array',
+      removeTags: 'Array',
+      removeIds: 'Array',
+      removeClasses: 'Array',
     };
   }
 
