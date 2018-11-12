@@ -4,7 +4,7 @@ import mergeObjects from '../util/mergeObjects';
 class InlineCssItem extends CssItem {
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
-    this.text = rawObj.text || '';
+    this.style = rawObj.style || '';
     /* istanbul ignore else: untestable */
     if (freeze) {
       Object.freeze(this);
@@ -13,7 +13,7 @@ class InlineCssItem extends CssItem {
 
   toRaw() {
     return mergeObjects(super.toRaw(), {
-      text: this.text,
+      style: this.style,
       itemType: InlineCssItem.name,
     });
   }

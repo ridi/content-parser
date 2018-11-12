@@ -8,25 +8,25 @@ should(); // Initialize should
 describe('Model - InlineCssItem', () => {
   it('constructor test', () => {
     let item = new InlineCssItem();
-    assert(item.text === '');
+    assert(item.style === '');
     assert(item instanceof CssItem);
 
     item = new InlineCssItem({
-      id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', text: 'body { color: black; }', size: 22, namespace: 'css_1'
+      id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', style: 'body { color: black; }', size: 22, namespace: 'css_1'
     });
-    item.text.should.equal('body { color: black; }');
+    item.style.should.equal('body { color: black; }');
 
     (() => {
-      item.text = '';
+      item.style = '';
     }).should.throw(/read only property/gi);
   });
 
   it('toRaw test', () => {
     let item = new InlineCssItem({
-      id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', text: 'body { color: black; }', size: 22, namespace: 'css_1'
+      id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', style: 'body { color: black; }', size: 22, namespace: 'css_1'
     });
     item.toRaw().should.deep.equal({
-      id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', text: 'body { color: black; }', size: 22, namespace: 'css_1', itemType: InlineCssItem.name
+      id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', style: 'body { color: black; }', size: 22, namespace: 'css_1', itemType: InlineCssItem.name
     });
   });
 });

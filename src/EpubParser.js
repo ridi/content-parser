@@ -39,7 +39,7 @@ class EpubParser {
    */
   static get parseDefaultOptions() {
     return {
-      // If true, validation package specifications in IDPF listed below.
+      // If true, validation package specifications in IDPF listed below. (only using if input is EPUB file.)
       // - Zip header should not corrupt.
       // - mimetype file must be first file in archive.
       // - mimetype file should not compressed.
@@ -48,22 +48,22 @@ class EpubParser {
       validatePackage: false,
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
-      // If specified, uncompress to that path. (Only if input is EPUB file.)
+      // If specified, uncompress to that path. (only using if input is EPUB file.)
       unzipPath: undefined,
-      // If true, overwrite to unzipPath when uncompress.
+      // If true, overwrite to unzipPath when uncompress. (only using if unzipPath specified.)
       overwrite: true,
       // If true, ignore spineIndex difference caused by isLinear property of SpineItem.
-      // e.g. If left is false, right is true.
+      // e.g. If left is true, right is false.
       //  [{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
       //   { spineIndex: 1, isLinear: true, ... },        { spineIndex: 1, isLinear: true, ... },
-      //   { spineIndex: -1, isLinear: false, ... },      { spineIndex: 2, isLinear: false, ... },
-      //   { spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
+      //   { spineIndex: 2, isLinear: false, ... },       { spineIndex: -1, isLinear: false, ... },
+      //   { spineIndex: 3, isLinear: true, ... }]        { spineIndex: 2, isLinear: true, ... }]
       ignoreLinear: false,
       // If true, styles used for spine is described, and one namespace is given per CSS file or inline style.
       // Otherwise it CssItem.namespace, SpineItem.styles is undefined.
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
       parseStyle: true,
-      // Prepend given string to namespace for identification. (Only using if parseStyle is true.)
+      // Prepend given string to namespace for identification. (only using if parseStyle is true.)
       styleNamespacePrefix: 'ridi_style',
     };
   }
@@ -159,7 +159,7 @@ class EpubParser {
   /**
    * EPUB Parsing
    * @param {?object} options parse options
-   * @returns {Promise.<Book>} returns Book
+   * @returns {Promise.<Book>} return Book
    * @see EpubParser.parseDefaultOptions
    * @see EpubParser.parseOptionTypes
    * @example
@@ -182,7 +182,7 @@ class EpubParser {
   /**
    * Validate parse options and get entries from input
    * @param {?object} options parse options
-   * @returns {Promise.<Context>} returns Context containing parse options, entries
+   * @returns {Promise.<Context>} return Context containing parse options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
@@ -200,7 +200,7 @@ class EpubParser {
   /**
    * Validate package spec if zip source and validatePackage option specified
    * @param {Context} context intermediate result
-   * @returns {Promise.<Context>} returns Context (no change at this step)
+   * @returns {Promise.<Context>} return Context (no change at this step)
    * @throws {Errors.EINVAL} invalid package
    * @see EpubParser.parseDefaultOptions.validatePackage
    */
@@ -227,7 +227,7 @@ class EpubParser {
   /**
    * Locate OPF and base path in container.xml
    * @param {Context} context intermediate result
-   * @returns {Promise.<Context>} returns Context containing OPF and base path
+   * @return {Promise.<Context>} return Context containing OPF and base path
    * @throws {Errors.ENOFILE} container.xml not found
    * @throws {Errors.EINVAL} invalid XML
    * @throws {Errors.ENOELMT} no such element in container.xml
@@ -280,7 +280,7 @@ class EpubParser {
   /**
    * OPF parsing
    * @param {Context} context intermediate result
-   * @returns {Promise.<Context>} returns Context containing OPF parsing result
+   * @returns {Promise.<Context>} return Context containing OPF parsing result
    * @throws {Errors.EINVAL} invalid xml
    * @throws {Errors.ENOFILE} OPF not found
    * @throws {Errors.ENOELMT} no such element in OPF
@@ -326,7 +326,7 @@ class EpubParser {
    * Metadata parsing in OPF
    * @param {object} metadata metadata AST
    * @param {Context} context intermediate result
-   * @returns {Promise.<Context>} returns Context containing metadata
+   * @returns {Promise.<Context>} return Context containing metadata
    */
   _parseMetadata(metadata, context) {
     return new Promise((resolve) => {
@@ -360,7 +360,7 @@ class EpubParser {
    * @param {object} manifest manifest AST
    * @param {object} spine spine AST
    * @param {Context} context intermediate result
-   * @returns {Promise.<Context>} returns Context containing manifest and spine
+   * @returns {Promise.<Context>} return Context containing manifest and spine
    * @see EpubParser.parseDefaultOptions.parseStyle
    * @see EpubParser.parseDefaultOptions.styleNamespacePrefix
    */
@@ -370,7 +370,7 @@ class EpubParser {
     } = context;
     const { toc: tocId } = spine;
     const items = getValues(manifest.item);
-    const itemrefs = getValues(spine.itemref);
+    const itemRefs = getValues(spine.itemref);
     const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
     let foundCover = false;
     let spineIndex = 0;
@@ -396,7 +396,7 @@ class EpubParser {
 
         if (rawItem.itemType === SpineItem) {
           // Checks if item is referenced in spine list.
-          const ref = itemrefs.find(itemref => itemref.idref === rawItem.id);
+          const ref = itemRefs.find(itemRef => itemRef.idref === rawItem.id);
           if (isExists(ref)) {
             // If isLinear is false, then spineIndex is not assigned.
             // Because this spine is excluded from flow.
@@ -466,19 +466,23 @@ class EpubParser {
   async _parseSpineStyle(rawItem, entry, options) {
     const styles = [];
     const inlineStyles = [];
+
+    const find = (list, property, value) => list.find(item => item[property] === value);
+    const filter = (list, property, value) => list.filter(item => item[property] === value);
+
     const document = parseHtml(await entry.getFile('utf8'));
-    const html = document.find(child => child.tagName === 'html');
-    const head = html.children.find(child => child.tagName === 'head');
+    const html = find(document, 'tagName', 'html');
+    const head = find(html.children, 'tagName', 'head');
 
     // <link rel="stylesheet" type="text/css" href="..." ... />
     //                                              ^~~
-    head.children.filter(child => child.tagName === 'link').forEach((link) => {
+    filter(head.children, 'tagName', 'link').forEach((link) => {
       const { attributes: attrs } = link;
       if (isExists(attrs)) {
-        const rel = attrs.find(property => property.key === 'rel');
-        const type = attrs.find(property => property.key === 'type');
+        const rel = find(attrs, 'key', 'rel');
+        const type = find(attrs, 'key', 'type');
         if ((isExists(rel) && rel.value === 'stylesheet') || (isExists(type) && type.value === 'text/css')) {
-          const href = attrs.find(property => property.key === 'href');
+          const href = find(attrs, 'key', 'href');
           if (isExists(href) && isExists(href.value) && !isUrl(href.value)) {
             // href="../Styles/Style0001.css" => href="OEBPS/Styles/Style0001.css"
             styles.push(safePathJoin(safeDirname(rawItem.href), href.value));
@@ -489,7 +493,7 @@ class EpubParser {
 
     // <style ...>...</style>
     //            ^~~
-    head.children.filter(child => child.tagName === 'style').forEach((style, idx) => {
+    filter(head.children, 'tagName', 'style').forEach((style, idx) => {
       const firstNode = style.children[0];
       if (isExists(firstNode)) {
         const namespace = `${options.styleNamespacePrefix}${idx}`;
@@ -502,7 +506,7 @@ class EpubParser {
           size: content.length,
           itemType: InlineCssItem,
           namespace,
-          text: content,
+          style: content,
         };
         styles.push(inlineStyleItem.href);
         inlineStyles.push(inlineStyleItem);
@@ -516,7 +520,7 @@ class EpubParser {
    * Guide parsing in OPF
    * @param {object} guide guide AST
    * @param {Context} context intermediate result
-   * @returns {Promise.<Context>} returns Context containing guide
+   * @returns {Promise.<Context>} return Context containing guide
    */
   _parseGuide(guide, context) {
     return new Promise((resolve) => {
@@ -543,10 +547,10 @@ class EpubParser {
   /**
    * NCX parsing
    * @param {Context} context intermediate result
-   * @returns {Promise.<Context>} returns Context containing ncx if exists
+   * @returns {Promise.<Context>} return Context containing ncx if exists
    * @throws {Errors.EINVAL} invalid XML
    * @throws {Errors.EINVAL} can not found ncx attribute OPF
-   * @throws {Errors.ENOFILE} NCX not found (only if allowNcxFileMissing option is false)
+   * @throws {Errors.ENOFILE} NCX not found
    * @throws {Errors.ENOELMT} no such element in NCX
    * @see EpubParser.parseDefaultOptions.allowNcxFileMissing
    */
@@ -614,7 +618,7 @@ class EpubParser {
   /**
    * Unzipping if zip source and unzipPath option specified
    * @param {Context} context intermediate result
-   * @returns {Promise.<Context>} returns Context (no change at this step)
+   * @returns {Promise.<Context>} return Context (no change at this step)
    * @throws {Errors.ENOENT} no such file or directory
    * @see EpubParser.parseDefaultOptions.unzipPath
    * @see EpubParser.parseDefaultOptions.overwrite
@@ -631,7 +635,7 @@ class EpubParser {
   /**
    * Create new Book from context
    * @param {Context} context intermediate result
-   * @returns {Promise.<Book>} returns Book
+   * @returns {Promise.<Book>} return Book
    */
   _createBook(context) {
     return new Promise((resolve) => {
@@ -661,7 +665,7 @@ class EpubParser {
    * Reading contents of Items
    * @param {Item[]} items targets
    * @param {?object} options read options
-   * @returns {(string|Buffer)} reading results
+   * @returns {(string|Buffer)[]} reading results
    * @see EpubParser.readDefaultOptions
    * @see EpubParser.readOptionTypes
    * @example
@@ -679,8 +683,8 @@ class EpubParser {
   /**
    * @typedef ReadContext
    * @property {Item[]} items targets
-   * @property {object} options read options
    * @property {object} entries from input
+   * @property {object} options read options
    */
   /**
    * Validate read options and get entries from input

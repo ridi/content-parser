@@ -216,7 +216,7 @@ or throw exception.
 <a id="inlineCssItem"></a>
 
 #### [InlineCssItem](./src/model/InlineCssItem.js) (extend [CssItem](#cssItem))
-- text: *string* (**Default: ''**)
+- style: *string* (**Default: ''**)
 
 <a id="imageItem"></a>
 
@@ -277,6 +277,7 @@ or throw exception.
 ### validatePackage: *`boolean`*
 
 If true, validation package specifications in [IDPF listed](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) below.
+> only using if input is EPUB file.
 - Zip header should not corrupt.
 - `mimetype` file must be first file in archive.
 - `mimetype` file should not compressed.
@@ -302,7 +303,7 @@ If false, stop parsing when NCX file not exists.
 ### unzipPath: *`?string`*
 
 If specified, uncompress to that path.
-> Only if input is EPUB file.
+> only using if input is EPUB file.
 
 **Default:** `undefined`
 
@@ -313,6 +314,7 @@ If specified, uncompress to that path.
 ### overwrite: *`boolean`*
 
 If true, overwrite to [unzipPath](#unzipPath) when uncompress.
+> only using if unzipPath specified.
 
 **Default:** `true`
 
@@ -354,7 +356,8 @@ In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem
 
 ### styleNamespacePrefix: *`string`*
 
-Prepend given string to namespace for identification. (Only using if parseStyle is true.)
+Prepend given string to namespace for identification.
+> only using if parseStyle is true.
 
 **Default:** `'ridi_style'`
 
