@@ -18,6 +18,7 @@ const Files = {
   SPINE_LOADER_ADAPTER: './test/res/spineLoader/adapter.json',
   SPINE_LOADER_CSS_OPTIONS: './test/res/spineLoader/cssOptions.xhtml',
   SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH: './test/res/spineLoader/cssOptionsAndBasePath.xhtml',
+  SPINE_LOADER_SERIALIZED_ANCHOR: './test/res/spineLoader/serializedAnchor.xhtml',
 };
 
 export default Files;

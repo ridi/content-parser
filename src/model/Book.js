@@ -33,6 +33,7 @@ function postSpines(spines, styles) {
     if (spine.spineIndex !== SpineItem.IGNORED_INDEX) {
       spine.prev = prevSpine;
       spine.next = list.slice(idx + 1).find(item => item.spineIndex !== SpineItem.IGNORED_INDEX);
+      spine.list = list;
       prevSpine = spine;
     }
     if (isExists(spine.styles)) {

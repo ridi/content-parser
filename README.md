@@ -13,12 +13,12 @@
 - [x] Package validation with option
 - [x] Unzip epub file when parsing with options
 - [x] Read files
-  - [x] Extract inner HTML of body in Spien with option
+  - [x] Extract inner HTML of body in Spine with option
   - [x] Change base path of Spine, CSS and Inline style with option
   - [x] Customize CSS, Inline Style with options
 - [ ] Encryption and decryption function
 - [ ] More options
-  - [ ] `readOptions.spine.serializedAnchor`
+  - [x] `readOptions.spine.serializedAnchor`
   - [ ] `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength`
   - [ ] `readOptions.spine.minify` and `readOptions.css.minify`
   - [ ] `readOptions.removeExternalRefs` and `readOptions.removeNonexistentRefs`
@@ -370,6 +370,7 @@ Prepend given string to namespace for identification.
 * [basePath](#basePath)
 * [spine.extractBody](#spine_extractBody)
 * [spine.useCssOptions](#spine_useCssOptions)
+* [spine.serializedAnchor](#spine_serializedAnchor)
 * [css.removeAtrules](#css_removeAtrules)
 * [css.removeTags](#css_removeTags)
 * [css.removeIds](#css_removeIds)
@@ -459,6 +460,16 @@ readOptions.spine.extractBody = (innerHTML, attrs) => {
 ### spine.useCssOptions: *`boolean`*
 
 If true, applies readOptions.css to inline styles and style attributes.
+
+**Default:** `false`
+
+---
+
+<a id="spine_serializedAnchor"></a>
+
+### spine.serializedAnchor: *`Boolean`*
+
+If true, replace file path of anchor in spine with spine index.
 
 **Default:** `false`
 

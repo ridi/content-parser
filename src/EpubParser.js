@@ -99,6 +99,8 @@ class EpubParser {
         extractBody: false,
         // If true, applies readOptions.css to inline styles and style attributes.
         useCssOptions: true,
+        // If true, replace file path of anchor in spine with spine index.
+        serializedAnchor: false,
       },
       // CssItem or InlineCssItem.
       css: {

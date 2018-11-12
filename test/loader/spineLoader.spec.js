@@ -60,4 +60,17 @@ describe('Loader - Spine', () => {
     const options = mergeObjects(EpubParser.readDefaultOptions, { basePath: 'a/b/c', spine: { useCssOptions: true }, css: { removeTags: ['body'] } });
     spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, html, options).should.equal(read(Files.SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH));
   });
+
+  it('serializedAnchor option test', () => {
+    const spineItem = {
+      href: '../Text/Section0001.xhtml',
+      list: [
+        { spineIndex: 0, href: '../Text/Section0001.xhtml' },
+        { spineIndex: 1, href: '../Text/Section0002.xhtml' },
+        { spineIndex: 2, href: '../Text/Footnote/Section0003.xhtml' },
+      ]
+    };
+    const options = { spine: { serializedAnchor: true } };
+    spineLoader(spineItem, html, options).should.equal(read(Files.SPINE_LOADER_SERIALIZED_ANCHOR));
+  });
 });
