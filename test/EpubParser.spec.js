@@ -262,9 +262,9 @@ describe('Book serialization test', () => {
   });
 });
 
-const parser = new EpubParser(Files.UNZIPPED_EXTRACT_STYLE);
-parser.parse({ parseStyle: true }).then((book) => {
-  describe('Reading test', () => {
+describe('Reading test', () => {
+  const parser = new EpubParser(Files.UNZIPPED_EXTRACT_STYLE);
+  parser.parse({ parseStyle: true }).then((book) => {
     describe('Options validation', () => {
       it('Invalid options (Unknown option)', () => {
         return parser.readItem(book.spines[0], { i_am_invalid_option: true }).catch((err) => {
@@ -308,13 +308,22 @@ parser.parse({ parseStyle: true }).then((book) => {
 });
 
 describe('Cryption test', () => {
-  it('Using TestCryptoProvider', () => {
-    const unzipPath = path.join('.', 'decryptedDefault');
-    const provider = new TestCryptoProvider('epub-parser');
-    return new EpubParser(Files.ENCRYPTED_DEFAULT, provider).parse({ unzipPath, parseStyle: false }).then((book) => {
-      book.should.be.an.instanceOf(Book);
-      validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
-      removeDirectory(unzipPath);
+  const unzipPath = path.join('.', 'decryptedDefault');
+  const provider = new TestCryptoProvider('epub-parser');
+  const parser = new EpubParser(Files.ENCRYPTED_DEFAULT, provider);
+  parser.parse({ unzipPath, parseStyle: false }).then((book) => {
+    describe('', () => {
+      it('EPUB file decryption', () => {
+        book.should.be.an.instanceOf(Book);
+        validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
+      });
+  
+      it('Item file decryption', () => {
+        return parser.readItem(book.spines[0]).then((result) => {
+          result.should.equal(fs.readFileSync(Files.DEFAULT_COVER, 'utf8'));
+          removeDirectory(unzipPath);
+        });
+      });
     });
   });
 });

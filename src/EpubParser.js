@@ -709,10 +709,10 @@ class EpubParser {
       throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
     }
     validateOptions(options, EpubParser.readOptionTypes);
+    const entries = await readEntries(this.input, this.cryptoProvider);
     if (this.cryptoProvider) {
       this.cryptoProvider.status = CryptoProvider.Status.READ;
     }
-    const entries = await readEntries(this.input, this.cryptoProvider);
     return {
       items,
       entries,

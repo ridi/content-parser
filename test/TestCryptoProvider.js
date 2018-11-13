@@ -14,19 +14,21 @@ class TestCryptoProvider extends CryptoProvider {
   run(data, filename) {
     if (this.status === CryptoProvider.Status.PARSE) {
       if (filename.endsWith('.epub')) {
-        return this.decrypt(data, filename);
+        return this.decrypt(data);
       }
     } else if (this.status === CryptoProvider.Status.UNZIP) {
-      return this.encrypt(data, filename);
+      return this.encrypt(data);
+    } else if (this.status === CryptoProvider.Status.READ) {
+      return Buffer(this.decrypt(data));
     }
     return data;
   }
 
-  encrypt(data, filename) {
+  encrypt(data) {
     return this.cryptor.encrypt(data);
   }
 
-  decrypt(data, filename) {
+  decrypt(data) {
     return this.cryptor.decrypt(data);
   }
 }

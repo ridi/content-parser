@@ -35,11 +35,13 @@ function fromDirectory(dir, cryptoProvider) {
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (encoding) => {
         const file = await new Promise((resolve, reject) => {
-          fs.readFile(fullPath, encoding, (err, data) => {
+          fs.readFile(fullPath, (err, data) => {
             if (err) {
               reject(err);
-            } else if (isExists(cryptoProvider)) {
-              resolve(cryptoProvider.run(data, path.basename(fullPath)));
+            }
+            data = isExists(cryptoProvider) ? cryptoProvider.run(data, path.basename(fullPath)) : data;
+            if (isExists(encoding)) {
+              resolve(data.toString(encoding));
             } else {
               resolve(data);
             }
