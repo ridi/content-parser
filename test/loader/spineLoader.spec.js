@@ -37,7 +37,7 @@ describe('Loader - Spine', () => {
     };
     result = spineLoader({ styles }, html, { extractBody });
     result.attrs.find(attr => attr.key === 'class').should.deep.equal({
-      key: 'class', value: '.ridi_style1, .ridi_style2',
+      key: 'class', value: 'ridi_style1 ridi_style2',
     });
   });
 
