@@ -19,7 +19,7 @@ class TestCryptoProvider extends CryptoProvider {
     } else if (this.status === CryptoProvider.Status.UNZIP) {
       return this.encrypt(data);
     } else if (this.status === CryptoProvider.Status.READ) {
-      return Buffer(this.decrypt(data));
+      return Buffer.from(this.decrypt(data));
     }
     return data;
   }
