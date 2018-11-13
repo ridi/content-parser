@@ -633,6 +633,7 @@ class EpubParser {
         this.cryptoProvider.status = CryptoProvider.Status.UNZIP;
       }
       await entries.source.extractAll(unzipPath, overwrite);
+      privateProps.set(this, { ...privateProps.get(this), input: unzipPath });
     }
     return context;
   }
