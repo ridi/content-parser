@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { getPathes, safePath } from './pathUtil';
+import { isExists } from './typecheck';
 import openZip from './zipUtil';
 
 function create(source, entries) {
@@ -20,14 +21,14 @@ function fromZip(zip) {
     return entries.concat([{
       entryPath: entry.path,
       getFile: encoding => zip.getFile(entry, encoding),
-      size: () => entry.uncompressedSize,
+      size: entry.uncompressedSize,
       method: entry.compressionMethod,
       extraFieldLength: entry.extraFieldLength,
     }]);
   }, []));
 }
 
-function fromDirectory(dir) {
+function fromDirectory(dir, cryptoProvider) {
   return create(dir, getPathes(dir).reduce((entries, fullPath) => {
     const subPathOffset = path.normalize(dir).length + path.sep.length;
     return entries.concat([{
@@ -37,6 +38,8 @@ function fromDirectory(dir) {
           fs.readFile(fullPath, encoding, (err, data) => {
             if (err) {
               reject(err);
+            } else if (isExists(cryptoProvider)) {
+              resolve(cryptoProvider.run(data, path.basename(fullPath)));
             } else {
               resolve(data);
             }
@@ -44,19 +47,18 @@ function fromDirectory(dir) {
         });
         return file;
       },
-      size: () => fs.lstatSync(fullPath).size,
+      size: fs.lstatSync(fullPath).size,
     }]);
   }, []));
 }
 
-export default function readEntries(input) {
-  return new Promise((resolve) => {
-    if (fs.lstatSync(input).isFile()) {
-      openZip(input).then((zip) => {
-        resolve(fromZip(zip));
-      });
-    } else {
-      resolve(fromDirectory(input));
+export default async function readEntries(input, cryptoProvider) {
+  if (fs.lstatSync(input).isFile()) {
+    if (isExists(cryptoProvider)) {
+      input = cryptoProvider.run(fs.readFileSync(input), path.basename(input));
     }
-  });
+    const zip = await openZip(input, cryptoProvider);
+    return fromZip(zip);
+  }
+  return fromDirectory(input, cryptoProvider);
 }

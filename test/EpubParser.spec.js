@@ -9,9 +9,10 @@ import Book from '../src/model/Book';
 import DeadItem from '../src/model/DeadItem';
 import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
-import { isExists, isString } from '../src/util';
+import { isExists, isString, removeDirectory } from '../src/util';
 import Files from './files';
 import validationBook from './validationBook';
+import TestCryptoProvider from './TestCryptoProvider';
 
 chai.use(chaiAsPromised);
 should(); // Initialize should
@@ -302,6 +303,18 @@ parser.parse({ parseStyle: true }).then((book) => {
           results.map(result => isString(result)).should.deep.equal(items.map(_ => true));
         });
       });
+    });
+  });
+});
+
+describe('Cryption test', () => {
+  it('Using TestCryptoProvider', () => {
+    const unzipPath = path.join('.', 'decryptedDefault');
+    const provider = new TestCryptoProvider('epub-parser');
+    return new EpubParser(Files.ENCRYPTED_DEFAULT, provider).parse({ unzipPath, parseStyle: false }).then((book) => {
+      book.should.be.an.instanceOf(Book);
+      validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
+      removeDirectory(unzipPath);
     });
   });
 });

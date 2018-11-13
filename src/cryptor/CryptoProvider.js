@@ -2,6 +2,7 @@ import Errors, { createError, mustOverride } from '../constant/errors';
 
 const Status = Object.freeze({
   PARSE: 'parse',
+  UNZIP: 'unzip',
   READ: 'read',
 });
 
@@ -17,13 +18,17 @@ class CryptoProvider {
    */
   set status(newStatus) {
     const oldStatus = this.status;
-    this.status = newStatus;
+    this._status = newStatus;
     this.onStatusChanged(oldStatus, newStatus);
   }
 
   /**
-   * Should initialize cryptor by status if meeded
-   * Invoked when parser.parse or parser.readItem(s) is called
+   * Get status
+   */
+  get status() { return this._status; }
+
+  /**
+   * Invoked when parser.parse or parser.readItem(s) or parser._unzip is called
    * @param {string} oldStatus
    * @param {string} newStatus
    */
@@ -34,7 +39,6 @@ class CryptoProvider {
     //   const iv = ...;
     //   this.cryptor = new Cryptor(Modes.CFB, { key, iv });
     // }
-    mustOverride();
   }
 
   /**

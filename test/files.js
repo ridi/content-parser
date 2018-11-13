@@ -1,6 +1,7 @@
 const Files = {
   DEFAULT: './test/res/default.epub',
   UNZIPPED_DEFAULT: './test/res/default',
+  ENCRYPTED_DEFAULT: './test/res/encryptedDefault.epub',
   EXPECTED_DEFAULT_CONTEXT: './test/res/expectedDefaultContext.json',
   EXPECTED_DEFAULT_BOOK: './test/res/expectedDefaultBook.json',
   INVALID_PACKAGE: './test/res/invalidPackage.epub',

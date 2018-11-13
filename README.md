@@ -16,7 +16,7 @@
   - [x] Extract inner HTML of body in Spine with option
   - [x] Change base path of Spine, CSS and Inline style with option
   - [x] Customize CSS, Inline Style with options
-- [ ] Encryption and decryption function
+- [x] Encrypt and decrypt function when parsing or reading or unzipping
 - [ ] More options
   - [x] `readOptions.spine.serializedAnchor`
   - [ ] `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength`
