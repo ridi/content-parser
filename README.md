@@ -201,6 +201,7 @@ or throw exception.
 - styles: *?[CssItem](#cssItem)[]*
 - prev: *?SpineItem*
 - next: *?SpineItem*
+- list: *SpineItem[]*
 
 <a id="ncxItem"></a>
 
@@ -439,7 +440,7 @@ If specify a function instead of true, use function to transform body.
 `function`:
 
 ```js
-readOptions.spine.extractBody = (innerHTML, attrs) => {
+readOptions.extractBody = (innerHTML, attrs) => {
   const string = attrs.map((attr) => {
     return ` ${attr.key}=\"${attr.value}\"`;
   }).join(' ');
@@ -459,6 +460,23 @@ readOptions.spine.extractBody = (innerHTML, attrs) => {
 ### serializedAnchor: *`Boolean`*
 
 If true, replace file path of anchor in spine with spine index.
+
+```xml
+...
+<spine toc="ncx">
+  <itemref idref="Section0001.xhtml"/> <!-- spineIndex: 0 -->
+  <itemref idref="Section0002.xhtml"/> <!-- spineIndex: 1 -->
+  <itemref idref="Section0003.xhtml"/> <!-- spineIndex: 2 -->
+  ...
+</spine>
+...
+```
+```html
+<!-- Before -->
+<a href="./Text/Section0002.xhtml#title">Chapter 2</a>
+<!-- After -->
+<a href="1#title">Chapter 2</a>
+```
 
 **Default:** `false`
 
