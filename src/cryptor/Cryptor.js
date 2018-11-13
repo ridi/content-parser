@@ -6,10 +6,10 @@ import {
   isObject,
   isString,
   getType,
-} from './typecheck';
-import mergeObjects from './mergeObjects';
-import stringContains from './stringContains';
-import validateOptions from './validateOptions';
+} from '../util/typecheck';
+import mergeObjects from '../util/mergeObjects';
+import stringContains from '../util/stringContains';
+import validateOptions from '../util/validateOptions';
 
 const { hex, utf8 } = aes.utils;
 

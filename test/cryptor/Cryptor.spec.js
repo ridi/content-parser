@@ -6,7 +6,7 @@ import Cryptor, {
   Modes,
   Counter,
   Padding,
-} from '../../src/util/Cryptor';
+} from '../../src/cryptor/Cryptor';
 import Errors from '../../src/constant/errors';
 
 should(); // Initialize should
