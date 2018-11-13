@@ -31,7 +31,7 @@
     "build": "yarn lint && yarn clean && cross-env BABEL_ENV=production babel src --out-dir lib",
     "watch": "yarn build -- --watch",
     "test": "cross-env BABEL_ENV=production && yarn lint && yarn cover",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --require babel-polyfill --recursive",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
     "lint": "eslint src",
     "prepublish": "yarn build"
   },
@@ -51,7 +51,7 @@
     "babel-eslint": "^8.2.6",
     "babel-plugin-add-module-exports": "^0.3.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
