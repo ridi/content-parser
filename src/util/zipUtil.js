@@ -27,6 +27,30 @@ async function extractAll(unzipPath, overwrite = true) {
   }
   createDirectory(unzipPath);
 
+  const writeFile = (entry, output) => { // eslint-disable-line arrow-body-style
+    return new Promise((resolve, reject) => {
+      const writeStream = fs.createWriteStream(output);
+      const onError = () => {
+        reject();
+        writeStream.close();
+      };
+      entry.stream()
+        .on('data', (data) => {
+          if (isExists(this.cryptoProvider)) {
+            writeStream.write(this.cryptoProvider.run(data, path.basename(entry.path)));
+          } else {
+            writeStream.write(data);
+          }
+        })
+        .on('error', onError)
+        .on('finish', () => writeStream.close());
+      writeStream.on('error', onError);
+      writeStream.on('close', () => {
+        resolve();
+      });
+    });
+  };
+
   await this.files.reduce((prevPromise, entry) => { // eslint-disable-line arrow-body-style
     return prevPromise.then(async () => {
       const output = safePathJoin(unzipPath, entry.path);
@@ -36,21 +60,7 @@ async function extractAll(unzipPath, overwrite = true) {
           createDirectory(dir);
         }
       }
-      const writeStream = fs.createWriteStream(output);
-      await entry.stream()
-        .on('data', (data) => {
-          if (isExists(this.cryptoProvider)) {
-            writeStream.write(this.cryptoProvider.run(data, path.basename(entry.path)));
-          } else {
-            writeStream.write(data);
-          }
-        })
-        .on('error', () => {
-          writeStream.close();
-        })
-        .on('finish', () => {
-          writeStream.close();
-        });
+      await writeFile(entry, output);
     });
   }, Promise.resolve());
 }
