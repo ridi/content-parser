@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 
 import { getPathes, safePath } from './pathUtil';
@@ -34,19 +34,11 @@ function fromDirectory(dir, cryptoProvider) {
     return entries.concat([{
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (encoding) => {
-        const file = await new Promise((resolve, reject) => {
-          fs.readFile(fullPath, (err, data) => {
-            if (err) {
-              reject(err);
-            }
-            data = isExists(cryptoProvider) ? cryptoProvider.run(data, path.basename(fullPath)) : data;
-            if (isExists(encoding)) {
-              resolve(data.toString(encoding));
-            } else {
-              resolve(data);
-            }
-          });
-        });
+        let file = await fs.readFile(fullPath);
+        file = isExists(cryptoProvider) ? cryptoProvider.run(file, path.basename(fullPath)) : file;
+        if (isExists(encoding)) {
+          return file.toString(encoding);
+        }
         return file;
       },
       size: fs.lstatSync(fullPath).size,
