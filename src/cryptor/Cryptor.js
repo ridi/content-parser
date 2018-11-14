@@ -146,12 +146,10 @@ class Cryptor {
   }
 }
 
-export {
-  hex,
-  utf8,
-  Modes,
-  Counter,
-  Padding,
-};
+Cryptor.hex = hex;
+Cryptor.utf8 = utf8;
+Cryptor.Modes = Modes;
+Cryptor.Counter = Counter;
+Cryptor.Padding = Padding;
 
 export default Cryptor;
