@@ -290,17 +290,17 @@ describe('Reading test', () => {
     describe('Read test', () => {
       it('Read single item', () => {
         return parser.readItem(book.spines[0]).then((result) => {
-          assert(isString(result));
+          assert(isString(result) && result.length > 0);
         });
         return parser.readItem(book.cover).then((result) => {
-          assert(Buffer.isBuffer(result));
+          assert(Buffer.isBuffer(result) && result.length > 0);
         });
       });
 
       it('Read multiple items', () => {
-        const items = book.styles.concat(book.spines);
+        const items = book.spines;
         return parser.readItems(items).then((results) => {
-          results.map(result => isString(result)).should.deep.equal(items.map(_ => true));
+          results.map(result => isString(result) && result.length > 0).should.deep.equal(items.map(_ => true));
         });
       });
     });
