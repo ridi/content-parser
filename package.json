@@ -20,7 +20,8 @@
     "serialize",
     "deserialize",
     "unzip",
-    "read"
+    "read",
+    "crypto"
   ],
   "files": [
     "lib"
