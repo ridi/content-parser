@@ -1,6 +1,6 @@
 import chai, { assert, should } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 
 import Errors from '../src/constant/errors';
@@ -9,7 +9,7 @@ import Book from '../src/model/Book';
 import DeadItem from '../src/model/DeadItem';
 import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
-import { isExists, isString, removeDirectory } from '../src/util';
+import { isExists, isString } from '../src/util';
 import Files from './files';
 import validationBook from './validationBook';
 import TestCryptoProvider from './TestCryptoProvider';
@@ -313,6 +313,10 @@ describe('Cryption test', () => {
   const parser = new EpubParser(Files.ENCRYPTED_DEFAULT, provider);
   parser.parse({ unzipPath, parseStyle: false }).then((book) => {
     describe('', () => {
+      after(() => {
+        fs.removeSync(unzipPath);
+      });
+
       it('EPUB file decryption', () => {
         book.should.be.an.instanceOf(Book);
         validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
@@ -321,7 +325,6 @@ describe('Cryption test', () => {
       it('Item file decryption', () => {
         return parser.readItem(book.spines[0]).then((result) => {
           result.should.equal(fs.readFileSync(Files.DEFAULT_COVER, 'utf8'));
-          removeDirectory(unzipPath);
         });
       });
     });

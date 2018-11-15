@@ -1,4 +1,3 @@
-import { createDirectory, removeDirectory } from './directory';
 import { getItemEncoding, getItemType } from './itemUtil';
 import openZip from './zipUtil';
 import readEntries from './readEntries';
@@ -26,9 +25,6 @@ import {
 } from './typecheck';
 
 export {
-  createDirectory,
-  removeDirectory,
-
   getItemEncoding,
   getItemType,
 

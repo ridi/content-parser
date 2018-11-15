@@ -1,8 +1,7 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import unzipper from 'unzipper';
 
-import { createDirectory, removeDirectory } from './directory';
 import { safePathJoin } from './pathUtil';
 import { isExists, isString } from './typecheck';
 
@@ -23,9 +22,9 @@ async function getFile(entry, encoding) {
 
 async function extractAll(unzipPath, overwrite = true) {
   if (overwrite) {
-    removeDirectory(unzipPath);
+    fs.removeSync(unzipPath);
   }
-  createDirectory(unzipPath);
+  fs.mkdirpSync(unzipPath);
 
   const writeFile = (entry, output) => { // eslint-disable-line arrow-body-style
     return new Promise((resolve, reject) => {
@@ -57,7 +56,7 @@ async function extractAll(unzipPath, overwrite = true) {
       if (entry.path.split('/').length > 1) {
         const dir = path.dirname(output);
         if (!fs.existsSync(dir)) {
-          createDirectory(dir);
+          fs.mkdirpSync(dir);
         }
       }
       await writeFile(entry, output);

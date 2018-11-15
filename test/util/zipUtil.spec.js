@@ -1,12 +1,16 @@
 import { should } from 'chai';
+import fs from 'fs-extra';
 
 import openZip from '../../src/util/zipUtil';
 import Files from '../files';
-import { removeDirectory } from '../../src/util/directory';
 
 should(); // Initialize should
 
 describe('Util - Zip', () => {
+  after(() => {
+    fs.removeSync('./temp');
+  });
+
   it('Valid zip', () => {
     return openZip(Files.DEFAULT).then((zip) => {
       zip.should.not.null;
@@ -22,7 +26,6 @@ describe('Util - Zip', () => {
   it('extractAll test', (done) => {
     openZip(Files.DEFAULT).then((zip) => {
       zip.extractAll('./temp').then(() => {
-        removeDirectory('./temp');
         done();
       });
     });
