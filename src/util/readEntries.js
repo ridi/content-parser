@@ -35,7 +35,7 @@ function fromDirectory(dir, cryptoProvider) {
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (encoding) => {
         let file = await fs.readFile(fullPath);
-        file = isExists(cryptoProvider) ? cryptoProvider.run(file, path.basename(fullPath)) : file;
+        file = isExists(cryptoProvider) ? cryptoProvider.run(file, fullPath) : file;
         if (isExists(encoding)) {
           return file.toString(encoding);
         }
@@ -49,7 +49,7 @@ function fromDirectory(dir, cryptoProvider) {
 export default async function readEntries(input, cryptoProvider) {
   if (fs.lstatSync(input).isFile()) {
     if (isExists(cryptoProvider)) {
-      input = cryptoProvider.run(fs.readFileSync(input), path.basename(input));
+      input = cryptoProvider.run(fs.readFileSync(input), input);
     }
     const zip = await openZip(input, cryptoProvider);
     return fromZip(zip);

@@ -10,7 +10,7 @@ import DeadItem from '../src/model/DeadItem';
 import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
 import { isExists, isString } from '../src/util';
-import Files from './files';
+import Paths from './paths';
 import validationBook from './validationBook';
 import TestCryptoProvider from './TestCryptoProvider';
 
@@ -19,11 +19,11 @@ should(); // Initialize should
 
 describe('Input test', () => {
   it('Input is epub path', () => {
-    new EpubParser(Files.DEFAULT).should.be.an.instanceOf(EpubParser);
+    new EpubParser(Paths.DEFAULT).should.be.an.instanceOf(EpubParser);
   });
 
   it('Input is unzipped epub path', () => {
-    new EpubParser(Files.UNZIPPED_DEFAULT).should.be.an.instanceOf(EpubParser);
+    new EpubParser(Paths.UNZIPPED_DEFAULT).should.be.an.instanceOf(EpubParser);
   });
 
   describe('Error Situation', () => {
@@ -48,13 +48,13 @@ describe('Input test', () => {
 describe('Parsing test', () => {
   describe('Options validation', () => {
     it('Invalid options (Unknown option)', () => {
-      return new EpubParser(Files.DEFAULT).parse({ i_am_invalid_option: true }).catch((err) => {
+      return new EpubParser(Paths.DEFAULT).parse({ i_am_invalid_option: true }).catch((err) => {
         err.code.should.equal(Errors.EINVAL.code);
       });
     });
   
     it('Invalid option value (Type mismatch)', () => {
-      return new EpubParser(Files.DEFAULT).parse({ validatePackage: 'true' }).catch((err) => {
+      return new EpubParser(Paths.DEFAULT).parse({ validatePackage: 'true' }).catch((err) => {
         err.code.should.equal(Errors.EINVAL.code);
       });
     });
@@ -62,34 +62,34 @@ describe('Parsing test', () => {
 
   describe('Error Situation', () => {
     it('META-INF not found', () => {
-      return new EpubParser(Files.META_INF_MISSING).parse().catch((err) => {
+      return new EpubParser(Paths.META_INF_MISSING).parse().catch((err) => {
         err.code.should.equal(Errors.ENOFILE.code);
       });
     });
 
     it('OPF file not found', () => {
-      return new EpubParser(Files.OPF_MISSING).parse().catch((err) => {
+      return new EpubParser(Paths.OPF_MISSING).parse().catch((err) => {
         err.code.should.equal(Errors.ENOFILE.code);
       });
     });
 
     it('NCX not found', () => {
-      return new EpubParser(Files.NCX_MISSING).parse({ allowNcxFileMissing: false }).catch((err) => {
+      return new EpubParser(Paths.NCX_MISSING).parse({ allowNcxFileMissing: false }).catch((err) => {
         err.code.should.equal(Errors.EINVAL.code);
       });
     });
 
     // TODO: Add more cases.
     it('Invalid package', () => {
-      return new EpubParser(Files.INVALID_PACKAGE).parse({ validatePackage: true }).catch((err) => {
+      return new EpubParser(Paths.INVALID_PACKAGE).parse({ validatePackage: true }).catch((err) => {
         err.code.should.equal(Errors.EINVAL.code);
       });
     });
   });
 
   describe('Check context by step', () => {
-    const expectedContext = JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_CONTEXT));
-    let parser = new EpubParser(Files.DEFAULT);
+    const expectedContext = JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_CONTEXT));
+    let parser = new EpubParser(Paths.DEFAULT);
     let _context;
   
     it('_prepareParse test', () => {
@@ -197,37 +197,37 @@ describe('Parsing test', () => {
   
     it('_createBook test', () => {
       return parser._createBook(_context).then((book) => {
-        validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
+        validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
     });
   });
 
   describe('Parsing test by input', () => {
     it('Input is epub path', () => {
-      return new EpubParser(Files.DEFAULT).parse({ parseStyle: false }).then((book) => {
+      return new EpubParser(Paths.DEFAULT).parse({ parseStyle: false }).then((book) => {
         book.should.be.an.instanceOf(Book);
-        validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
+        validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
     });
   
     it('Input is unzipped epub path', () => {
-      return new EpubParser(Files.UNZIPPED_DEFAULT).parse({ parseStyle: false }).then((book) => {
+      return new EpubParser(Paths.UNZIPPED_DEFAULT).parse({ parseStyle: false }).then((book) => {
         book.should.be.an.instanceOf(Book);
-        validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
+        validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
     });
   });
 
   describe('Parsing test by options', () => {
     it('Ignore linear property', () => {
-      return new EpubParser(Files.DEFAULT).parse({ ignoreLinear: true }).then((book) => {
+      return new EpubParser(Paths.DEFAULT).parse({ ignoreLinear: true }).then((book) => {
         book.spines.filter(spine => spine.spineIndex === SpineItem.IGNORED_INDEX).should.have.lengthOf(0);
       });
     });
 
     it('Parse style', () => {
-      return new EpubParser(Files.EXTRACT_STYLE).parse({ parseStyle: true }).then((book) => {
-        const expectedBook = JSON.parse(fs.readFileSync(Files.EXPECTED_EXTRACT_STYLE_BOOK));
+      return new EpubParser(Paths.EXTRACT_STYLE).parse({ parseStyle: true }).then((book) => {
+        const expectedBook = JSON.parse(fs.readFileSync(Paths.EXPECTED_EXTRACT_STYLE_BOOK));
         book.styles.forEach((style, idx) => {
           const expectedStyle = expectedBook.styles[idx];
           style.id.should.equal(expectedStyle.id);
@@ -253,17 +253,17 @@ describe('Parsing test', () => {
 
 describe('Book serialization test', () => {
   it('Book -> RawBook -> Book', () => {
-    return new EpubParser(Files.DEFAULT).parse({ parseStyle: false }).then((book) => {
+    return new EpubParser(Paths.DEFAULT).parse({ parseStyle: false }).then((book) => {
       book.should.be.an.instanceOf(Book);
       const rawBook = book.toRaw();
       const newBook = new Book(rawBook);
-      validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
+      validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
     });
   });
 });
 
 describe('Reading test', () => {
-  const parser = new EpubParser(Files.UNZIPPED_EXTRACT_STYLE);
+  const parser = new EpubParser(Paths.UNZIPPED_EXTRACT_STYLE);
   parser.parse({ parseStyle: true }).then((book) => {
     describe('Options validation', () => {
       it('Invalid options (Unknown option)', () => {
@@ -310,7 +310,7 @@ describe('Reading test', () => {
 describe('Cryption test', () => {
   const unzipPath = path.join('.', 'decryptedDefault');
   const provider = new TestCryptoProvider('epub-parser');
-  const parser = new EpubParser(Files.ENCRYPTED_DEFAULT, provider);
+  const parser = new EpubParser(Paths.ENCRYPTED_DEFAULT, provider);
   parser.parse({ unzipPath, parseStyle: false }).then((book) => {
     describe('', () => {
       after(() => {
@@ -319,12 +319,12 @@ describe('Cryption test', () => {
 
       it('EPUB file decryption', () => {
         book.should.be.an.instanceOf(Book);
-        validationBook(book, JSON.parse(fs.readFileSync(Files.EXPECTED_DEFAULT_BOOK)));
+        validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
   
       it('Item file decryption', () => {
         return parser.readItem(book.spines[0]).then((result) => {
-          result.should.equal(fs.readFileSync(Files.DEFAULT_COVER, 'utf8'));
+          result.should.equal(fs.readFileSync(Paths.DEFAULT_COVER, 'utf8'));
         });
       });
     });

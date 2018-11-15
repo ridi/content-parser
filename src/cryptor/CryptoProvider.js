@@ -11,6 +11,9 @@ class CryptoProvider {
     if (this.constructor === CryptoProvider) {
       throw createError(Errors.EINTR, 'You must use subclasses.');
     }
+    // ex)
+    // const key = ...;
+    // this.cryptor = new Cryptor(Modes.ECB, { key });
   }
 
   /**
@@ -44,14 +47,14 @@ class CryptoProvider {
   /**
    * Should execute encrypt or decrypt by condition if needed
    * @param {Buffer} data
-   * @param {string} filename
+   * @param {string} filePath
    */
-  run(data, filename) { // eslint-disable-line
+  run(data, filePath) { // eslint-disable-line
     // ex)
     // if (condition1) {
-    //   return this.encrypt(data, filename)
+    //   return this.encrypt(data, filePath)
     // } else if (condition2) {
-    //   return this.decrypt(data, filename)
+    //   return this.decrypt(data, filePath)
     // }
     // return data;
     mustOverride();
@@ -60,9 +63,9 @@ class CryptoProvider {
   /**
    * Should encrypt data
    * @param {Buffer} data
-   * @param {string} filename
+   * @param {string} filePath
    */
-  encrypt(data, filename) { // eslint-disable-line
+  encrypt(data, filePath) { // eslint-disable-line
     // ex)
     // if (condition) {
     //   return cryptor1.encrypt(data);
@@ -75,9 +78,9 @@ class CryptoProvider {
   /**
    * Should decrypt data
    * @param {Buffer} data
-   * @param {string} filename
+   * @param {string} filePath
    */
-  decrypt(data, filename) { // eslint-disable-line
+  decrypt(data, filePath) { // eslint-disable-line
     // ex)
     // if (condition) {
     //   return cryptor1.decrypt(data);

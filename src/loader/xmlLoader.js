@@ -55,8 +55,8 @@ const textNodeName = '#text';
 
 export { getValue, getValues, textNodeName };
 
-export default function xmlLoader(file) {
-  return XmlParser.parse(file, {
+export default function xmlLoader(string) {
+  return XmlParser.parse(string, {
     // Text node name for identification.
     textNodeName,
     // Prepend given string to attribute name for identification.

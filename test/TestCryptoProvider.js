@@ -1,8 +1,5 @@
-import CryptoProvider from '../src/cryptor/CryptoProvider';
-import Cryptor, {
-  Modes,
-  Padding,
-} from '../src/cryptor/Cryptor';
+import CryptoProvider, { Status } from '../src/cryptor/CryptoProvider';
+import Cryptor, { Modes, Padding } from '../src/cryptor/Cryptor';
 
 class TestCryptoProvider extends CryptoProvider {
   constructor(key) {
@@ -11,14 +8,14 @@ class TestCryptoProvider extends CryptoProvider {
   }
 
   // decrypt -> parse -> unzip with encrypt
-  run(data, filename) {
-    if (this.status === CryptoProvider.Status.PARSE) {
-      if (filename.endsWith('.epub')) {
+  run(data, filePath) {
+    if (this.status === Status.PARSE) {
+      if (filePath.endsWith('.epub')) {
         return this.decrypt(data);
       }
-    } else if (this.status === CryptoProvider.Status.UNZIP) {
+    } else if (this.status === Status.UNZIP) {
       return this.encrypt(data);
-    } else if (this.status === CryptoProvider.Status.READ) {
+    } else if (this.status === Status.READ) {
       return Buffer.from(this.decrypt(data));
     }
     return data;

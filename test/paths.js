@@ -1,4 +1,4 @@
-const Files = {
+const Paths = {
   DEFAULT: './test/res/default.epub',
   UNZIPPED_DEFAULT: './test/res/default',
   ENCRYPTED_DEFAULT: './test/res/encryptedDefault.epub',
@@ -23,4 +23,4 @@ const Files = {
   SPINE_LOADER_SERIALIZED_ANCHOR: './test/res/spineLoader/serializedAnchor.xhtml',
 };
 
-export default Files;
+export default Paths;

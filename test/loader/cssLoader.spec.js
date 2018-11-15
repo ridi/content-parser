@@ -2,7 +2,6 @@ import { assert, should } from 'chai';
 import fs from 'fs';
 
 import cssLoader from '../../src/loader/cssLoader';
-import Files from '../files';
 
 should(); // Initialize should
 

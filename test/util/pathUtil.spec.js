@@ -2,7 +2,7 @@ import { should } from 'chai';
 import path from 'path';
 
 import { getPathes, safeDirname, safePathJoin } from '../../src/util/pathUtil';
-import Files from '../files';
+import Paths from '../paths';
 
 should(); // Initialize should
 
@@ -19,7 +19,7 @@ describe('Util - Path utils', () => {
   });
 
   it('getPathes test', () => {
-    const expectedPathes = [
+    const expectedList = [
       path.join('META-INF', 'container.xml'),
       path.join('OEBPS', 'Fonts', 'NotoSans-Regular.ttf'),
       path.join('OEBPS', 'Images', 'ridibooks.png'),
@@ -36,8 +36,7 @@ describe('Util - Path utils', () => {
       path.join('OEBPS', 'toc.ncx'),
       path.join('mimetype'),
     ];
-    const offset = path.normalize(Files.UNZIPPED_DEFAULT).length + path.sep.length;
-    const pathes = getPathes(Files.UNZIPPED_DEFAULT).map(subpath => subpath.substring(offset));
-    pathes.should.deep.equal(expectedPathes);
+    const offset = path.normalize(Paths.UNZIPPED_DEFAULT).length + path.sep.length;
+    getPathes(Paths.UNZIPPED_DEFAULT).map(subpath => subpath.substring(offset)).should.deep.equal(expectedList);
   });
 });

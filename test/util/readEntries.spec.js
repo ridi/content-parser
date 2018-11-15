@@ -4,19 +4,19 @@ import path from 'path';
 
 import { stringContains, isString } from '../../src/util';
 import readEntries from '../../src/util/readEntries';
-import Files from '../files';
+import Paths from '../paths';
 
 should(); // Initialize should
 
 describe('Util - entry manager', () => {
-  const file = path.join(Files.UNZIPPED_DEFAULT, 'mimetype');
+  const filePath = path.join(Paths.UNZIPPED_DEFAULT, 'mimetype');
   const expectedFile = {
-    buffer: fs.readFileSync(file),
-    string: fs.readFileSync(file, 'utf8'),
+    buffer: fs.readFileSync(filePath),
+    string: fs.readFileSync(filePath, 'utf8'),
   };
 
   it('readEntries from zip', () => {
-    return readEntries(Files.DEFAULT).then((entries) => {
+    return readEntries(Paths.DEFAULT).then((entries) => {
       const expectedList = [
         'mimetype',
         'META-INF/container.xml',
@@ -49,7 +49,7 @@ describe('Util - entry manager', () => {
   });
 
   it('readEntries from directory', () => {
-    return readEntries(Files.UNZIPPED_DEFAULT).then((entries) => {
+    return readEntries(Paths.UNZIPPED_DEFAULT).then((entries) => {
       const expectedList = [
         'META-INF/container.xml',
         'OEBPS/Fonts/NotoSans-Regular.ttf',

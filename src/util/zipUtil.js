@@ -12,7 +12,7 @@ function find(entryPath) {
 async function getFile(entry, encoding) {
   let buffer = await entry.buffer();
   if (isExists(this.cryptoProvider)) {
-    buffer = this.cryptoProvider.run(buffer, path.basename(entry.path));
+    buffer = this.cryptoProvider.run(buffer, entry.path);
   }
   if (isExists(encoding)) {
     return buffer.toString(encoding);
@@ -36,7 +36,7 @@ async function extractAll(unzipPath, overwrite = true) {
       entry.stream()
         .on('data', (data) => {
           if (isExists(this.cryptoProvider)) {
-            writeStream.write(this.cryptoProvider.run(data, path.basename(entry.path)));
+            writeStream.write(this.cryptoProvider.run(data, entry.path));
           } else {
             writeStream.write(data);
           }

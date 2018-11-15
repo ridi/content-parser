@@ -2,7 +2,7 @@ import { should } from 'chai';
 import fs from 'fs-extra';
 
 import openZip from '../../src/util/zipUtil';
-import Files from '../files';
+import Paths from '../paths';
 
 should(); // Initialize should
 
@@ -12,7 +12,7 @@ describe('Util - Zip', () => {
   });
 
   it('Valid zip', () => {
-    return openZip(Files.DEFAULT).then((zip) => {
+    return openZip(Paths.DEFAULT).then((zip) => {
       zip.should.not.null;
     });
   });
@@ -24,7 +24,7 @@ describe('Util - Zip', () => {
   });
 
   it('extractAll test', (done) => {
-    openZip(Files.DEFAULT).then((zip) => {
+    openZip(Paths.DEFAULT).then((zip) => {
       zip.extractAll('./temp').then(() => {
         done();
       });

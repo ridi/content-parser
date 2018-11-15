@@ -68,8 +68,8 @@ function formatAttributes(attributes, options) {
   }, '');
 }
 
-function stringify(tree, options) {
-  return tree.map((node) => {
+function stringify(ast, options) {
+  return ast.map((node) => {
     if (node.type === Types.TEXT) {
       return node.content;
     }
@@ -90,8 +90,8 @@ function stringify(tree, options) {
   }).join('');
 }
 
-export default function spineLoader(spineItem, file, options = {}) {
-  const document = parse(file);
+export default function spineLoader(spineItem, string, options = {}) {
+  const ast = parse(string);
   const stringifyOptions = mergeObjects(parseDefaults, mergeObjects(options, {
     basePath: isExists(options.basePath)
       ? safePathJoin(options.basePath, safeDirname(spineItem.href))
@@ -103,7 +103,7 @@ export default function spineLoader(spineItem, file, options = {}) {
   }));
 
   if (options.extractBody) {
-    const html = document.find(child => child.tagName === 'html');
+    const html = ast.find(child => child.tagName === 'html');
     const body = html.children.find(child => child.tagName === 'body');
     let attrs = body.attributes;
     if (isExists(spineItem.styles)) {
@@ -119,5 +119,5 @@ export default function spineLoader(spineItem, file, options = {}) {
     return `<body ${attrs.map(attr => `${attr.key}="${attr.value}"`).join(' ')}>${innerHTML}</body>`;
   }
 
-  return stringify(document, stringifyOptions);
+  return stringify(ast, stringifyOptions);
 }

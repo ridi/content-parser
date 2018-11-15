@@ -121,8 +121,8 @@ const handlers = {
   Rule: handleRuleset,
 };
 
-export default function cssLoader(cssItem, file, options = {}) {
-  const ast = csstree.parse(file);
+export default function cssLoader(cssItem, string, options = {}) {
+  const ast = csstree.parse(string);
   csstree.walk(ast, {
     leave: function(node, item, list) { // eslint-disable-line
       const context = this;
