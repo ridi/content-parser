@@ -151,11 +151,11 @@ describe('Parsing test', () => {
           } else {
             item.size.should.not.null;
           }
-          if (item.spineIndex > SpineItem.IGNORED_INDEX) {
-            item.spineIndex.should.equal(current);
+          if (item.index > SpineItem.IGNORED_INDEX) {
+            item.index.should.equal(current);
             current += 1;
           } else {
-            isExists(item.spineIndex).should.be.false;
+            isExists(item.index).should.be.false;
           }
         });
         rawBook.guides.should.deep.equal(expectedRawBook.guides);
@@ -221,7 +221,7 @@ describe('Parsing test', () => {
   describe('Parsing test by options', () => {
     it('Ignore linear property', () => {
       return new EpubParser(Paths.DEFAULT).parse({ ignoreLinear: true }).then((book) => {
-        book.spines.filter(spine => spine.spineIndex === SpineItem.IGNORED_INDEX).should.have.lengthOf(0);
+        book.spines.filter(spine => spine.index === SpineItem.IGNORED_INDEX).should.have.lengthOf(0);
       });
     });
 
@@ -263,7 +263,7 @@ describe('Book serialization test', () => {
 
   it('Never build a cycle structure in a Book', () => {
     return new EpubParser(Paths.DEFAULT).parse().then((book) => {
-      isExists(JSON.stringify(book))).should.be.true;
+      isExists(JSON.stringify(book)).should.be.true;
       // because following errors may occur in case of ipc communication in Electron.
       // Uncaught Exception:
       // TypeError: Converting circular structure to JSON

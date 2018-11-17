@@ -87,7 +87,7 @@
             "href": "OEBPS/Text/Cover.xhtml",
             "mediaType": "application/xhtml+xml",
             "size": 1,
-            "spineIndex": 0,
+            "index": 0,
             "isLinear": true
           }
         },
@@ -116,7 +116,7 @@
                     "href": "OEBPS/Text/Section0001.xhtml",
                     "mediaType": "application/xhtml+xml",
                     "size": 1,
-                    "spineIndex": 1,
+                    "index": 1,
                     "isLinear": true
                   }
                 },
@@ -132,7 +132,7 @@
                     "href": "OEBPS/Text/Section0001.xhtml",
                     "mediaType": "application/xhtml+xml",
                     "size": 1,
-                    "spineIndex": 1,
+                    "index": 1,
                     "isLinear": true
                   }
                 }
@@ -142,7 +142,7 @@
                 "href": "OEBPS/Text/Section0001.xhtml",
                 "mediaType": "application/xhtml+xml",
                 "size": 1,
-                "spineIndex": 1,
+                "index": 1,
                 "isLinear": true
               }
             },
@@ -165,7 +165,7 @@
                     "href": "OEBPS/Text/Section0001.xhtml",
                     "mediaType": "application/xhtml+xml",
                     "size": 1,
-                    "spineIndex": 1,
+                    "index": 1,
                     "isLinear": true
                   }
                 },
@@ -181,7 +181,7 @@
                     "href": "OEBPS/Text/Section0001.xhtml",
                     "mediaType": "application/xhtml+xml",
                     "size": 1,
-                    "spineIndex": 1,
+                    "index": 1,
                     "isLinear": true
                   }
                 }
@@ -191,7 +191,7 @@
                 "href": "OEBPS/Text/Section0001.xhtml",
                 "mediaType": "application/xhtml+xml",
                 "size": 1,
-                "spineIndex": 1,
+                "index": 1,
                 "isLinear": true
               }
             }
@@ -201,7 +201,7 @@
             "href": "OEBPS/Text/Section0001.xhtml",
             "mediaType": "application/xhtml+xml",
             "size": 1,
-            "spineIndex": 1,
+            "index": 1,
             "isLinear": true
           }
         },
@@ -230,7 +230,7 @@
                     "href": "OEBPS/Text/Section0002.xhtml",
                     "mediaType": "application/xhtml+xml",
                     "size": 1,
-                    "spineIndex": 2,
+                    "index": 2,
                     "isLinear": true
                   }
                 },
@@ -246,7 +246,7 @@
                     "href": "OEBPS/Text/Section0002.xhtml",
                     "mediaType": "application/xhtml+xml",
                     "size": 1,
-                    "spineIndex": 2,
+                    "index": 2,
                     "isLinear": true
                   }
                 },
@@ -269,7 +269,7 @@
                         "href": "OEBPS/Text/Section0002.xhtml",
                         "mediaType": "application/xhtml+xml",
                         "size": 1,
-                        "spineIndex": 2,
+                        "index": 2,
                         "isLinear": true
                       }
                     }
@@ -279,7 +279,7 @@
                     "href": "OEBPS/Text/Section0002.xhtml",
                     "mediaType": "application/xhtml+xml",
                     "size": 1,
-                    "spineIndex": 2,
+                    "index": 2,
                     "isLinear": true
                   }
                 }
@@ -289,7 +289,7 @@
                 "href": "OEBPS/Text/Section0002.xhtml",
                 "mediaType": "application/xhtml+xml",
                 "size": 1,
-                "spineIndex": 2,
+                "index": 2,
                 "isLinear": true
               }
             },
@@ -305,7 +305,7 @@
                 "href": "OEBPS/Text/Section0002.xhtml",
                 "mediaType": "application/xhtml+xml",
                 "size": 1,
-                "spineIndex": 2,
+                "index": 2,
                 "isLinear": true
               }
             }
@@ -315,7 +315,7 @@
             "href": "OEBPS/Text/Section0002.xhtml",
             "mediaType": "application/xhtml+xml",
             "size": 1,
-            "spineIndex": 2,
+            "index": 2,
             "isLinear": true
           }
         },
@@ -333,7 +333,7 @@
       "href": "OEBPS/Text/Cover.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 0,
+      "index": 0,
       "isLinear": true
     },
     {
@@ -341,7 +341,7 @@
       "href": "OEBPS/Text/Section0001.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 1,
+      "index": 1,
       "isLinear": true
     },
     {
@@ -349,7 +349,7 @@
       "href": "OEBPS/Text/Section0002.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 2,
+      "index": 2,
       "isLinear": true
     },
     {
@@ -388,7 +388,7 @@
       "href": "OEBPS/Text/Section0004.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 3,
+      "index": 3,
       "isLinear": false
     },
     {
@@ -396,7 +396,7 @@
       "href": "OEBPS/Text/Section0005.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 4,
+      "index": 4,
       "isLinear": true
     },
     {
@@ -431,7 +431,7 @@
           "href": "OEBPS/Text/Cover.xhtml",
           "mediaType": "application/xhtml+xml",
           "size": 1,
-          "spineIndex": 0,
+          "index": 0,
           "isLinear": true
         }
       },
@@ -460,7 +460,7 @@
                   "href": "OEBPS/Text/Section0001.xhtml",
                   "mediaType": "application/xhtml+xml",
                   "size": 1,
-                  "spineIndex": 1,
+                  "index": 1,
                   "isLinear": true
                 }
               },
@@ -476,7 +476,7 @@
                   "href": "OEBPS/Text/Section0001.xhtml",
                   "mediaType": "application/xhtml+xml",
                   "size": 1,
-                  "spineIndex": 1,
+                  "index": 1,
                   "isLinear": true
                 }
               }
@@ -486,7 +486,7 @@
               "href": "OEBPS/Text/Section0001.xhtml",
               "mediaType": "application/xhtml+xml",
               "size": 1,
-              "spineIndex": 1,
+              "index": 1,
               "isLinear": true
             }
           },
@@ -509,7 +509,7 @@
                   "href": "OEBPS/Text/Section0001.xhtml",
                   "mediaType": "application/xhtml+xml",
                   "size": 1,
-                  "spineIndex": 1,
+                  "index": 1,
                   "isLinear": true
                 }
               },
@@ -525,7 +525,7 @@
                   "href": "OEBPS/Text/Section0001.xhtml",
                   "mediaType": "application/xhtml+xml",
                   "size": 1,
-                  "spineIndex": 1,
+                  "index": 1,
                   "isLinear": true
                 }
               }
@@ -535,7 +535,7 @@
               "href": "OEBPS/Text/Section0001.xhtml",
               "mediaType": "application/xhtml+xml",
               "size": 1,
-              "spineIndex": 1,
+              "index": 1,
               "isLinear": true
             }
           }
@@ -545,7 +545,7 @@
           "href": "OEBPS/Text/Section0001.xhtml",
           "mediaType": "application/xhtml+xml",
           "size": 1,
-          "spineIndex": 1,
+          "index": 1,
           "isLinear": true
         }
       },
@@ -574,7 +574,7 @@
                   "href": "OEBPS/Text/Section0002.xhtml",
                   "mediaType": "application/xhtml+xml",
                   "size": 1,
-                  "spineIndex": 2,
+                  "index": 2,
                   "isLinear": true
                 }
               },
@@ -590,7 +590,7 @@
                   "href": "OEBPS/Text/Section0002.xhtml",
                   "mediaType": "application/xhtml+xml",
                   "size": 1,
-                  "spineIndex": 2,
+                  "index": 2,
                   "isLinear": true
                 }
               },
@@ -613,7 +613,7 @@
                       "href": "OEBPS/Text/Section0002.xhtml",
                       "mediaType": "application/xhtml+xml",
                       "size": 1,
-                      "spineIndex": 2,
+                      "index": 2,
                       "isLinear": true
                     }
                   }
@@ -623,7 +623,7 @@
                   "href": "OEBPS/Text/Section0002.xhtml",
                   "mediaType": "application/xhtml+xml",
                   "size": 1,
-                  "spineIndex": 2,
+                  "index": 2,
                   "isLinear": true
                 }
               }
@@ -633,7 +633,7 @@
               "href": "OEBPS/Text/Section0002.xhtml",
               "mediaType": "application/xhtml+xml",
               "size": 1,
-              "spineIndex": 2,
+              "index": 2,
               "isLinear": true
             }
           },
@@ -649,7 +649,7 @@
               "href": "OEBPS/Text/Section0002.xhtml",
               "mediaType": "application/xhtml+xml",
               "size": 1,
-              "spineIndex": 2,
+              "index": 2,
               "isLinear": true
             }
           }
@@ -659,7 +659,7 @@
           "href": "OEBPS/Text/Section0002.xhtml",
           "mediaType": "application/xhtml+xml",
           "size": 1,
-          "spineIndex": 2,
+          "index": 2,
           "isLinear": true
         }
       },
@@ -678,7 +678,7 @@
       "href": "OEBPS/Text/Cover.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 0,
+      "index": 0,
       "isLinear": true
     },
     {
@@ -686,7 +686,7 @@
       "href": "OEBPS/Text/Section0001.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 1,
+      "index": 1,
       "isLinear": true
     },
     {
@@ -694,7 +694,7 @@
       "href": "OEBPS/Text/Section0002.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 2,
+      "index": 2,
       "isLinear": true
     },
     {
@@ -702,7 +702,7 @@
       "href": "OEBPS/Text/Section0004.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": -1,
+      "index": -1,
       "isLinear": false
     },
     {
@@ -710,7 +710,7 @@
       "href": "OEBPS/Text/Section0005.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 3,
+      "index": 3,
       "isLinear": true
     }
   ],
@@ -785,7 +785,7 @@
         "href": "OEBPS/Text/Cover.xhtml",
         "mediaType": "application/xhtml+xml",
         "size": 1,
-        "spineIndex": 0,
+        "index": 0,
         "isLinear": true
       }
     }

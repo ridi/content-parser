@@ -103,7 +103,7 @@ export default function validationBook(book, expectedBook, options = {}) {
   book.spines.forEach((spine, idx) => {
     const expectedSpine = expectedBook.spines[idx];
     spine.id.should.equal(expectedSpine.id);
-    spine.spineIndex.should.equal(expectedSpine.spineIndex);
+    spine.index.should.equal(expectedSpine.index);
     spine.isLinear.should.equal(expectedSpine.isLinear);
     if (!options.parseStyle) {
       isExists(spine.styles).should.be.false;

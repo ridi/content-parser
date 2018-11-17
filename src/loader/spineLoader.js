@@ -94,7 +94,7 @@ function getSpineIndexMap(spineItem) {
   const map = {};
   let spine = spineItem;
   do {
-    map[path.basename(spine.href)] = spine.spineIndex;
+    map[path.basename(spine.href)] = spine.index;
     spine = spine.next();
   } while (spine);
   return map;

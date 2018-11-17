@@ -12,7 +12,7 @@
       "href": "OEBPS/Text/Section0001.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 0,
+      "index": 0,
       "isLinear": true,
       "styles": [
         {
@@ -98,7 +98,7 @@
       "href": "OEBPS/Text/Section0001.xhtml",
       "mediaType": "application/xhtml+xml",
       "size": 1,
-      "spineIndex": 0,
+      "index": 0,
       "isLinear": true,
       "styles": [
         {

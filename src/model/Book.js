@@ -31,7 +31,7 @@ function postSpines(spines, styles) {
   const firstSpine = spines[0];
   let prevSpine;
   spines.forEach((spine, idx, list) => {
-    const nextSpine = list.slice(idx + 1).find(item => item.spineIndex !== SpineItem.IGNORED_INDEX);
+    const nextSpine = list.slice(idx + 1).find(item => item.index !== SpineItem.IGNORED_INDEX);
     spine.prev = () => prevSpine;
     spine.next = () => nextSpine;
     spine.first = () => firstSpine;

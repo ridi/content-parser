@@ -66,15 +66,15 @@ describe('Loader - Spine', () => {
       href: '../Text/Section0001.xhtml',
       first: () =>  {
         return {
-          spineIndex: 0,
+          index: 0,
           href: '../Text/Section0001.xhtml',
           next: () => {
             return {
-              spineIndex: 1,
+              index: 1,
               href: '../Text/Section0002.xhtml',
               next: () => {
                 return {
-                  spineIndex: 2,
+                  index: 2,
                   href: '../Text/Footnote/Section0003.xhtml',
                   next: () => undefined,
                 };

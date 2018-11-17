@@ -14,7 +14,7 @@
       "mediaType": "application/xhtml+xml",
       "size": 1,
       "itemType": "SpineItem",
-      "spineIndex": 0,
+      "index": 0,
       "isLinear": true,
       "styles": [
         "OEBPS/Styles/Style0001.css",

@@ -53,12 +53,12 @@ class EpubParser {
       unzipPath: undefined,
       // If true, overwrite to unzipPath when uncompress. (only using if unzipPath specified.)
       overwrite: true,
-      // If true, ignore spineIndex difference caused by isLinear property of SpineItem.
+      // If true, ignore index difference caused by isLinear property of SpineItem.
       // e.g. If left is true, right is false.
-      //  [{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
-      //   { spineIndex: 1, isLinear: true, ... },        { spineIndex: 1, isLinear: true, ... },
-      //   { spineIndex: 2, isLinear: false, ... },       { spineIndex: -1, isLinear: false, ... },
-      //   { spineIndex: 3, isLinear: true, ... }]        { spineIndex: 2, isLinear: true, ... }]
+      //  [{ index: 0, isLinear: true, ... },       [{ index: 0, isLinear: true, ... },
+      //   { index: 1, isLinear: true, ... },        { index: 1, isLinear: true, ... },
+      //   { index: 2, isLinear: false, ... },       { index: -1, isLinear: false, ... },
+      //   { index: 3, isLinear: true, ... }]        { index: 2, isLinear: true, ... }]
       ignoreLinear: false,
       // If true, styles used for spine is described, and one namespace is given per CSS file or inline style.
       // Otherwise it CssItem.namespace, SpineItem.styles is undefined.
@@ -398,11 +398,11 @@ class EpubParser {
             // Checks if item is referenced in spine list.
             const ref = itemRefs.find(itemRef => itemRef.idref === rawItem.id);
             if (isExists(ref)) {
-              // If isLinear is false, then spineIndex is not assigned.
+              // If isLinear is false, then index is not assigned.
               // Because this spine is excluded from flow.
               rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
               if (options.ignoreLinear || rawItem.isLinear) {
-                rawItem.spineIndex = spineIndex;
+                rawItem.index = spineIndex;
                 spineIndex += 1;
               }
             } else {

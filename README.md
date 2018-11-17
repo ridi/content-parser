@@ -191,7 +191,7 @@ or throw exception.
 
 #### [SpineItem](./src/model/SpineItem.js) (extend [Item](#item))
 
-- spineIndex: *number* (**Default: -1**)
+- index: *number* (**Default: -1**)
 - isLinear: *boolean* (**Default: true**)
 - styles: *?[CssItem](#cssItem)[]*
 
@@ -317,14 +317,14 @@ If true, overwrite to [unzipPath](#unzipPath) when uncompress.
 
 ### ignoreLinear: *`boolean`*
 
-If true, ignore `spineIndex` difference caused by `isLinear` property of [SpineItem](#spineItem).
+If true, ignore `index` difference caused by `isLinear` property of [SpineItem](#spineItem).
 
 ```js
 // e.g. If left is false, right is true.
-[{ spineIndex: 0, isLinear: true, ... },       [{ spineIndex: 0, isLinear: true, ... },
-{ spineIndex: 1, isLinear: true, ... },        { spineIndex: 1, isLinear: true, ... },
-{ spineIndex: -1, isLinear: false, ... },      { spineIndex: 2, isLinear: false, ... },
-{ spineIndex: 2, isLinear: true, ... }]        { spineIndex: 3, isLinear: true, ... }]
+[{ index: 0, isLinear: true, ... },       [{ index: 0, isLinear: true, ... },
+{ index: 1, isLinear: true, ... },        { index: 1, isLinear: true, ... },
+{ index: -1, isLinear: false, ... },      { index: 2, isLinear: false, ... },
+{ index: 2, isLinear: true, ... }]        { index: 3, isLinear: true, ... }]
 ```
 
 **Default:** `false`
@@ -456,9 +456,9 @@ If true, replace file path of anchor in spine with spine index.
 ```xml
 ...
 <spine toc="ncx">
-  <itemref idref="Section0001.xhtml"/> <!-- spineIndex: 0 -->
-  <itemref idref="Section0002.xhtml"/> <!-- spineIndex: 1 -->
-  <itemref idref="Section0003.xhtml"/> <!-- spineIndex: 2 -->
+  <itemref idref="Section0001.xhtml"/> <!-- index: 0 -->
+  <itemref idref="Section0002.xhtml"/> <!-- index: 1 -->
+  <itemref idref="Section0003.xhtml"/> <!-- index: 2 -->
   ...
 </spine>
 ...
