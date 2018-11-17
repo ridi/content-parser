@@ -28,14 +28,14 @@ function itemTypeFromString(itemType) {
 }
 
 function postSpines(spines, styles) {
+  const firstSpine = spines[0];
   let prevSpine;
   spines.forEach((spine, idx, list) => {
-    if (spine.spineIndex !== SpineItem.IGNORED_INDEX) {
-      spine.prev = prevSpine;
-      spine.next = list.slice(idx + 1).find(item => item.spineIndex !== SpineItem.IGNORED_INDEX);
-      spine.list = list;
-      prevSpine = spine;
-    }
+    const nextSpine = list.slice(idx + 1).find(item => item.spineIndex !== SpineItem.IGNORED_INDEX);
+    spine.prev = () => prevSpine;
+    spine.next = () => nextSpine;
+    spine.first = () => firstSpine;
+    prevSpine = spine;
     if (isExists(spine.styles)) {
       spine.styles = spine.styles
         .map(href => styles.find(style => style.href === href))

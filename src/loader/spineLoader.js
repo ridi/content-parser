@@ -90,19 +90,34 @@ function stringify(ast, options) {
   }).join('');
 }
 
-export default function spineLoader(spineItem, string, options = {}) {
-  const ast = parse(string);
-  const stringifyOptions = mergeObjects(parseDefaults, mergeObjects(options, {
+function getSpineIndexMap(spineItem) {
+  const map = {};
+  let spine = spineItem;
+  do {
+    map[path.basename(spine.href)] = spine.spineIndex;
+    spine = spine.next();
+  } while (spine);
+  return map;
+}
+
+function getStringifyOptions(spineItem, options) {
+  const additional = {
     basePath: isExists(options.basePath)
       ? safePathJoin(options.basePath, safeDirname(spineItem.href))
       : undefined,
     serializedAnchor: options.serializedAnchor === true
-      ? spineItem.list.reduce((map, item) => { map[path.basename(item.href)] = item.spineIndex; return map; }, {})
+      ? getSpineIndexMap(spineItem.first())
       : false,
     usingCssOptions: Object.keys(options).find(key => key.startsWith('remove')) !== undefined,
-  }));
+  };
+  return mergeObjects(parseDefaults, mergeObjects(options, additional));
+}
 
-  if (options.extractBody) {
+export default function spineLoader(spineItem, string, options = {}) {
+  const ast = parse(string);
+  const stringifyOptions = getStringifyOptions(spineItem, options);
+
+  if (stringifyOptions.extractBody) {
     const html = ast.find(child => child.tagName === 'html');
     const body = html.children.find(child => child.tagName === 'body');
     let attrs = body.attributes;

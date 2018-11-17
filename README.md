@@ -17,11 +17,6 @@
   - [x] Change base path of Spine, CSS and Inline style with option
   - [x] Customize CSS, Inline Style with options
 - [x] Encrypt and decrypt function when parsing or reading or unzipping
-- [ ] More options
-  - [x] `readOptions.spine.serializedAnchor`
-  - [ ] `readOptions.spine.truncate` and `readOption.spine.truncateMaxLength`
-  - [ ] `readOptions.spine.minify` and `readOptions.css.minify`
-  - [ ] `readOptions.removeExternalRefs` and `readOptions.removeNonexistentRefs`
 - [ ] More [spec](http://www.idpf.org/epub/30/spec/epub30-ocf.html#sec-container-metainf)
   - [ ] encryption.xml
   - [ ] manifest.xml
@@ -199,9 +194,6 @@ or throw exception.
 - spineIndex: *number* (**Default: -1**)
 - isLinear: *boolean* (**Default: true**)
 - styles: *?[CssItem](#cssItem)[]*
-- prev: *?SpineItem*
-- next: *?SpineItem*
-- list: *SpineItem[]*
 
 <a id="ncxItem"></a>
 

@@ -260,6 +260,19 @@ describe('Book serialization test', () => {
       validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
     });
   });
+
+  it('Never build a cycle structure in a Book', () => {
+    return new EpubParser(Paths.DEFAULT).parse().then((book) => {
+      isExists(JSON.stringify(book))).should.be.true;
+      // because following errors may occur in case of ipc communication in Electron.
+      // Uncaught Exception:
+      // TypeError: Converting circular structure to JSON
+      //   at JSON,stringify (<anonymous>)
+      //   at Event.set (...)
+      //   at EventEmitter.n.ipcMain.on (...)
+      //   ...
+    });
+  });
 });
 
 describe('Reading test', () => {

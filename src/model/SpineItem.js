@@ -12,9 +12,9 @@ class SpineItem extends Item {
     if (isExists(rawObj.styles)) {
       this.styles = rawObj.styles;
     }
-    this.prev = undefined;
-    this.next = undefined;
-    this.list = undefined;
+    this.first = () => undefined;
+    this.prev = () => undefined;
+    this.next = () => undefined;
     /* istanbul ignore else: untestable */
     if (freeze) {
       Object.freeze(this);

@@ -115,19 +115,6 @@ export default function validationBook(book, expectedBook, options = {}) {
     }
   });
 
-  let prevSpine;
-  book.spines.forEach((spine) => {
-    if (spine.spineIndex !== SpineItem.IGNORED_INDEX) {
-      if (isExists(prevSpine)) {
-        spine.prev.should.deep.equal(prevSpine);
-      }
-      prevSpine = spine;
-    } else {
-      isExists(spine.prev).should.be.false;
-      isExists(spine.next).should.be.false;
-    }
-  });
-
   book.fonts.should.have.lengthOf(expectedBook.fonts.length);
   book.fonts.forEach((font, idx) => {
     font.id.should.equal(expectedBook.fonts[idx].id);

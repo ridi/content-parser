@@ -64,11 +64,25 @@ describe('Loader - Spine', () => {
   it('serializedAnchor option test', () => {
     const spineItem = {
       href: '../Text/Section0001.xhtml',
-      list: [
-        { spineIndex: 0, href: '../Text/Section0001.xhtml' },
-        { spineIndex: 1, href: '../Text/Section0002.xhtml' },
-        { spineIndex: 2, href: '../Text/Footnote/Section0003.xhtml' },
-      ]
+      first: () =>  {
+        return {
+          spineIndex: 0,
+          href: '../Text/Section0001.xhtml',
+          next: () => {
+            return {
+              spineIndex: 1,
+              href: '../Text/Section0002.xhtml',
+              next: () => {
+                return {
+                  spineIndex: 2,
+                  href: '../Text/Footnote/Section0003.xhtml',
+                  next: () => undefined,
+                };
+              },
+            };
+          },
+        };
+      },
     };
     const options = { serializedAnchor: true };
     spineLoader(spineItem, html, options).should.equal(read(Paths.SPINE_LOADER_SERIALIZED_ANCHOR));
