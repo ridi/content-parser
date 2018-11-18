@@ -4,7 +4,7 @@ const Paths = {
   ENCRYPTED_DEFAULT: './test/res/encryptedDefault.epub',
   EXPECTED_DEFAULT_CONTEXT: './test/res/expectedDefaultContext.json',
   EXPECTED_DEFAULT_BOOK: './test/res/expectedDefaultBook.json',
-  DEFAULT_COVER: './test/res/cryptor/Test',
+  DEFAULT_COVER: './test/res/cryptor/Cover.xhtml',
   INVALID_PACKAGE: './test/res/invalidPackage.epub',
   NCX_MISSING: './test/res/ncxMissing.epub',
   META_INF_MISSING: './test/res/metainfMissing.epub',
@@ -21,7 +21,6 @@ const Paths = {
   SPINE_LOADER_CSS_OPTIONS: './test/res/spineLoader/cssOptions.xhtml',
   SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH: './test/res/spineLoader/cssOptionsAndBasePath.xhtml',
   SPINE_LOADER_SERIALIZED_ANCHOR: './test/res/spineLoader/serializedAnchor.xhtml',
-  TEST: './test/res/949000031.epub',
 };
 
 export default Paths;

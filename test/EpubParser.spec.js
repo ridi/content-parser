@@ -333,7 +333,9 @@ describe('Cryption test', () => {
   
       it('Item file decryption', () => {
         return parser.readItem(book.spines[0]).then((result) => {
-          result.should.equal(fs.readFileSync(Paths.DEFAULT_COVER, 'utf8'));
+          const actual = result.replace(/\r/g, '');
+          const expected = fs.readFileSync(Paths.DEFAULT_COVER, 'utf8');
+          actual.should.equal(expected);
         });
       });
     });
