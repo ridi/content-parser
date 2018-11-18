@@ -5,6 +5,8 @@ import mergeObjects from '../util/mergeObjects';
 const ignoredIndex = -1;
 
 class SpineItem extends Item {
+  get defaultEncoding() { return 'utf8'; }
+
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     this.index = isExists(rawObj.index) ? rawObj.index : ignoredIndex;

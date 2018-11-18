@@ -3,6 +3,8 @@ import Item from './Item';
 import mergeObjects from '../util/mergeObjects';
 
 class CssItem extends Item {
+  get defaultEncoding() { return 'utf8'; }
+
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     if (isExists(rawObj.namespace)) {

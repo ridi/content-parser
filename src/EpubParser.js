@@ -10,15 +10,15 @@ import Book from './model/Book';
 import Context from './model/Context';
 import CssItem from './model/CssItem';
 import DeadItem from './model/DeadItem';
+import FontItem from './model/FontItem';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
 import InlineCssItem from './model/InlineCssItem';
 import Item from './model/Item';
 import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
+import SvgItem from './model/SvgItem';
 import {
-  getItemEncoding,
-  getItemTypeFromMediaType,
   isArray,
   isExists,
   isString,
@@ -385,7 +385,7 @@ class EpubParser {
           rawItem.href = safePathJoin(basePath, item.href);
         }
         rawItem.mediaType = item['media-type'];
-        rawItem.itemType = getItemTypeFromMediaType(rawItem.mediaType);
+        rawItem.itemType = this.getItemTypeFromMediaType(rawItem.mediaType);
         if (rawItem.itemType === DeadItem) {
           rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
         }
@@ -741,7 +741,7 @@ class EpubParser {
           throw createError(Errors.ENOFILE, item.href);
         }
 
-        const file = await entry.getFile(getItemEncoding(item));
+        const file = await entry.getFile(item.defaultEncoding);
         if (item instanceof SpineItem) {
           results.push(spineLoader(item, file, options));
         } else if (item instanceof CssItem) {
@@ -752,6 +752,43 @@ class EpubParser {
       });
     }, Promise.resolve());
     return results;
+  }
+
+  /**
+   * @param {string} mediaType
+   * @return {*} item type by media-type
+   */
+  getItemTypeFromMediaType(mediaType) {
+    // See: http://www.idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7
+    const types = {
+      'application/font': FontItem,
+      'application/font-otf': FontItem,
+      'application/font-sfnt': FontItem,
+      'application/font-woff': FontItem,
+      'application/vnd.ms-opentype': FontItem,
+      'application/x-font-ttf': FontItem,
+      'application/x-font-truetype': FontItem,
+      'application/x-font-opentype': FontItem,
+      'font/opentype': FontItem,
+      'font/otf': FontItem,
+      'font/woff2': FontItem,
+
+      'application/x-dtbncx+xml': NcxItem,
+
+      'application/xhtml+xml': SpineItem,
+
+      'text/css': CssItem,
+
+      'image/gif': ImageItem,
+      'image/jpeg': ImageItem,
+      'image/png': ImageItem,
+      'image/bmp': ImageItem, // Not recommended in EPUB spec.
+
+      'image/svg+xml': SvgItem,
+    };
+
+    const type = types[mediaType.toLowerCase()];
+    return isExists(type) ? type : DeadItem;
   }
 }
 

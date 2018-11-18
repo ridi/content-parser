@@ -1,6 +1,8 @@
 class Item {
   get isFileExists() { return this.size !== undefined; }
 
+  get defaultEncoding() { return undefined; }
+
   constructor(rawObj = {}, freeze = true) {
     this.id = rawObj.id;
     this.href = rawObj.href;

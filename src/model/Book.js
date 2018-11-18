@@ -1,13 +1,14 @@
-import { getItemTypeFromString } from '../util/itemUtil';
 import { isExists, isString } from '../util/typecheck';
 import Author from './Author';
 import CssItem from './CssItem';
 import DateTime from './DateTime';
 import DeadItem from './DeadItem';
 import FontItem from './FontItem';
+import Item from './Item';
 import Guide from './Guide';
 import Identifier from './Identifier';
 import ImageItem from './ImageItem';
+import InlineCssItem from './InlineCssItem';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
@@ -48,6 +49,19 @@ function postGuides(guides, spines) {
     guide.item = spines.find(spine => spine.href === guide.href);
     Object.freeze(guide);
   });
+}
+
+function getItemTypeFromString(string) {
+  switch (string) {
+    case Item.name: return Item;
+    case SpineItem.name: return SpineItem;
+    case NcxItem.name: return NcxItem;
+    case FontItem.name: return FontItem;
+    case ImageItem.name: return ImageItem;
+    case CssItem.name: return CssItem;
+    case InlineCssItem.name: return InlineCssItem;
+    default: return DeadItem;
+  }
 }
 
 /* eslint-disable new-cap */

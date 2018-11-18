@@ -3,6 +3,8 @@ import mergeObjects from '../util/mergeObjects';
 import NavPoint from './NavPoint';
 
 class NcxItem extends Item {
+  get defaultEncoding() { return 'utf8'; }
+
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     this.navPoints = (rawObj.navPoints || []).map((navPoint) => { // eslint-disable-line arrow-body-style

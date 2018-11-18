@@ -1,4 +1,3 @@
-import { getItemEncoding, getItemTypeFromMediaType, getItemTypeFromString } from './itemUtil';
 import openZip from './zipUtil';
 import readEntries from './readEntries';
 import mergeObjects from './mergeObjects';
@@ -25,10 +24,6 @@ import {
 } from './typecheck';
 
 export {
-  getItemEncoding,
-  getItemTypeFromMediaType,
-  getItemTypeFromString,
-
   readEntries,
 
   mergeObjects,

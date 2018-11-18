@@ -2,6 +2,8 @@ import ImageItem from './ImageItem';
 import mergeObjects from '../util/mergeObjects';
 
 class SvgItem extends ImageItem {
+  get defaultEncoding() { return 'utf8'; }
+
   constructor(rawObj = {}, freeze = true) /* istanbul ignore next: untestable */ {
     const _ = super(rawObj, freeze); // eslint-disable-line
     /* istanbul ignore else: untestable */
