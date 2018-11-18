@@ -373,7 +373,6 @@ class EpubParser {
     const items = getValues(manifest.item);
     const itemRefs = getValues(spine.itemref);
     const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
-    let spineIndex = 0;
     let inlineStyles = [];
 
     rawBook.items = [];
@@ -397,14 +396,14 @@ class EpubParser {
 
           if (rawItem.itemType === SpineItem) {
             // Checks if item is referenced in spine list.
-            const ref = itemRefs.find(itemRef => itemRef.idref === rawItem.id);
-            if (isExists(ref)) {
+            const refIndex = itemRefs.findIndex(itemRef => itemRef.idref === rawItem.id);
+            if (refIndex >= 0) {
               // If isLinear is false, then index is not assigned.
               // Because this spine is excluded from flow.
+              const ref = itemRefs[refIndex];
               rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
               if (options.ignoreLinear || rawItem.isLinear) {
-                rawItem.index = spineIndex;
-                spineIndex += 1;
+                rawItem.index = refIndex;
               }
             } else {
               rawItem.itemType = DeadItem;

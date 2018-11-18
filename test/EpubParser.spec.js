@@ -135,7 +135,6 @@ describe('Parsing test', () => {
         rawBook.version.should.equal(expectedRawBook.version);
         rawBook.metas.should.deep.equal(expectedRawBook.metas);
   
-        let current = 0;
         rawBook.items.forEach((item, idx) => {
           const expectedItem = expectedRawBook.items[idx];
           item.id.should.equal(expectedItem.id);
@@ -149,12 +148,6 @@ describe('Parsing test', () => {
             }
           } else {
             item.size.should.not.null;
-          }
-          if (item.index > SpineItem.IGNORED_INDEX) {
-            item.index.should.equal(current);
-            current += 1;
-          } else {
-            isExists(item.index).should.be.false;
           }
         });
         rawBook.guides.should.deep.equal(expectedRawBook.guides);
