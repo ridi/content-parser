@@ -228,7 +228,7 @@ describe('Cryptor', () => {
   });
 
   describe('cryption with string key', () => {
-    it('string key test', () => {
+    it('length is not divisible by 16', () => {
       // An example string key
       const key = 'i_am_key';
 
@@ -249,5 +249,27 @@ describe('Cryptor', () => {
       const decryptedText = utf8.fromBytes(decryptBytes);
       decryptedText.should.equal(text);
     });
+  });
+
+  it('length is divisible by 16', () => {
+    // An example string key
+    const key = '1234567890123456';
+
+    // Convert text to bytes
+    const text = 'TextMustBe16Byte';
+    const textBytes = utf8.toBytes(text);
+
+    // Create cryptor
+    const cryptor = new Cryptor(Modes.ECB, { key });
+
+    // Encryption
+    const encryptedBytes = cryptor.encrypt(textBytes);
+    const encryptedHex = hex.fromBytes(encryptedBytes);
+    encryptedHex.should.equal('3ba6941b0b398d96e87e34660ecd435f');
+
+    // Decryption
+    const decryptBytes = cryptor.decrypt(encryptedBytes);
+    const decryptedText = utf8.fromBytes(decryptBytes);
+    decryptedText.should.equal(text);
   });
 });

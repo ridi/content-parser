@@ -1,7 +1,8 @@
+import EpubParser from '../src/EpubParser';
 import { isExists } from '../src/util';
 import SpineItem from '../src/model/SpineItem';
 
-export default function validationBook(book, expectedBook, options = {}) {
+export default function validationBook(book, expectedBook, options = EpubParser.parseDefaultOptions) {
   book.titles.should.have.lengthOf(expectedBook.titles.length);
   book.titles.forEach((title, idx) => {
     title.should.equal(expectedBook.titles[idx]);
@@ -112,6 +113,20 @@ export default function validationBook(book, expectedBook, options = {}) {
         const expectedStyle = expectedSpine.styles[idx];
         style.namespace.should.equal(expectedStyle.namespace);
       });
+    }
+  });
+
+  book.spines.forEach((spine, idx, list) => {
+    spine.first().should.deep.equal(list[0]);
+    if (isExists(spine.prev())) {
+      spine.prev().should.deep.equal(list[idx - 1]);
+    } else {
+      idx.should.equal(0);
+    }
+    if (isExists(spine.next())) {
+      spine.next().should.deep.equal(list[idx + 1]);
+    } else {
+      idx.should.equal(list.length - 1);
     }
   });
 

@@ -11,7 +11,16 @@ import mergeObjects from '../util/mergeObjects';
 import stringContains from '../util/stringContains';
 import validateOptions from '../util/validateOptions';
 
+const { ModeOfOperation, Counter } = aes;
+
 const { hex, utf8 } = aes.utils;
+
+const { pkcs7 } = aes.padding;
+
+const Padding = Object.freeze({
+  PKCS7: 'pkcs7',
+  NONE: 'none',
+});
 
 const defaultConfigTypes = {
   key: 'String|Buffer|Uint8Array|Array',
@@ -21,19 +30,19 @@ const defaultConfigTypes = {
 const Modes = Object.freeze({
   ECB: { // Electronic Codebook (key)
     name: 'ECB',
-    op: aes.ModeOfOperation.ecb,
+    op: ModeOfOperation.ecb,
     configTypes: defaultConfigTypes,
   },
   CBC: { // Cipher-Block Chaining (key + iv)
     name: 'CBC',
-    op: aes.ModeOfOperation.cbc,
+    op: ModeOfOperation.cbc,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
     }),
   },
   CFB: { // Cipher Feedback (key + IV + segmentSize)
     name: 'CFB',
-    op: aes.ModeOfOperation.cfb,
+    op: ModeOfOperation.cfb,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
       segmentSize: 'Number',
@@ -41,27 +50,18 @@ const Modes = Object.freeze({
   },
   OFB: { // Output Feedback (key + IV)
     name: 'OFB',
-    op: aes.ModeOfOperation.ofb,
+    op: ModeOfOperation.ofb,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
     }),
   },
   CTR: { // Counter (key + Counter)
     name: 'CTR',
-    op: aes.ModeOfOperation.ctr,
+    op: ModeOfOperation.ctr,
     configTypes: mergeObjects(defaultConfigTypes, {
       counter: 'Counter',
     }),
   },
-});
-
-const { Counter } = aes;
-
-const { pkcs7 } = aes.padding;
-
-const Padding = Object.freeze({
-  PKCS7: 'pkcs7',
-  NONE: 'none',
 });
 
 class Cryptor {

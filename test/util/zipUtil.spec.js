@@ -11,15 +11,14 @@ describe('Util - Zip', () => {
     fs.removeSync('./temp');
   });
 
-  it('Valid zip', () => {
-    return openZip(Paths.DEFAULT).then((zip) => {
-      zip.should.not.null;
-    });
-  });
-
-  it('Invalid zip', () => {
-    return openZip('?!').catch((err) => {
-      err.code.should.equal('ENOENT');
+  it('openZip test', () => {
+    return openZip(Paths.DEFAULT).then(async (zip) => {
+      const entry = zip.find('mimetype')
+      entry.should.not.null;
+      const buffer = await zip.getFile(entry);
+      Buffer.isBuffer(buffer).should.be.true;
+      const string = await zip.getFile(entry, 'utf8');
+      string.should.equal('application/epub+zip');
     });
   });
 
@@ -27,6 +26,14 @@ describe('Util - Zip', () => {
     openZip(Paths.DEFAULT).then((zip) => {
       zip.extractAll('./temp').then(() => {
         done();
+      });
+    });
+  });
+
+  describe('Error Situation', () => {
+    it('Invalid zip', () => {
+      return openZip('?!').catch((err) => {
+        err.code.should.equal('ENOENT');
       });
     });
   });

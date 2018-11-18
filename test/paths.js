@@ -21,6 +21,7 @@ const Paths = {
   SPINE_LOADER_CSS_OPTIONS: './test/res/spineLoader/cssOptions.xhtml',
   SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH: './test/res/spineLoader/cssOptionsAndBasePath.xhtml',
   SPINE_LOADER_SERIALIZED_ANCHOR: './test/res/spineLoader/serializedAnchor.xhtml',
+  TEST: './test/res/949000031.epub',
 };
 
 export default Paths;

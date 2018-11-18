@@ -9,7 +9,7 @@ import NcxItem from '../../src/model/NcxItem';
 import SpineItem from '../../src/model/SpineItem';
 import SvgItem from '../../src/model/SvgItem';
 import { isExists } from '../../src/util';
-import { getItemEncoding, getItemType } from '../../src/util/itemUtil';
+import { getItemEncoding, getItemTypeFromMediaType } from '../../src/util/itemUtil';
 
 should(); // Initialize should
 
@@ -23,9 +23,9 @@ describe('Util - Item utils', () => {
     getItemEncoding(new NcxItem({})).should.equal('utf8');
   });
 
-  it('getItemType test', () => {
-    getItemType('application/vnd.ms-opentype').should.equal(FontItem);
-    getItemType('APPLICATION/XHTML+XML').should.equal(SpineItem);
-    getItemType('text/plain').should.equal(DeadItem);
+  it('getItemTypeFromMediaType test', () => {
+    getItemTypeFromMediaType('application/vnd.ms-opentype').should.equal(FontItem);
+    getItemTypeFromMediaType('APPLICATION/XHTML+XML').should.equal(SpineItem);
+    getItemTypeFromMediaType('text/plain').should.equal(DeadItem);
   });
 });

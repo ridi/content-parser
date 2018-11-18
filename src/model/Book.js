@@ -1,3 +1,4 @@
+import { getItemTypeFromString } from '../util/itemUtil';
 import { isExists, isString } from '../util/typecheck';
 import Author from './Author';
 import CssItem from './CssItem';
@@ -7,35 +8,19 @@ import FontItem from './FontItem';
 import Guide from './Guide';
 import Identifier from './Identifier';
 import ImageItem from './ImageItem';
-import InlineCssItem from './InlineCssItem';
-import Item from './Item';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
 import Version from './Version';
 
-function itemTypeFromString(itemType) {
-  switch (itemType) {
-    case Item.name: return Item;
-    case SpineItem.name: return SpineItem;
-    case NcxItem.name: return NcxItem;
-    case FontItem.name: return FontItem;
-    case ImageItem.name: return ImageItem;
-    case CssItem.name: return CssItem;
-    case InlineCssItem.name: return InlineCssItem;
-    default: return DeadItem;
-  }
-}
-
 function postSpines(spines, styles) {
   const firstSpine = spines[0];
-  let prevSpine;
   spines.forEach((spine, idx, list) => {
-    const nextSpine = list.slice(idx + 1).find(item => item.index !== SpineItem.IGNORED_INDEX);
+    const prevSpine = list[idx - 1];
+    const nextSpine = list[idx + 1];
     spine.prev = () => prevSpine;
     spine.next = () => nextSpine;
     spine.first = () => firstSpine;
-    prevSpine = spine;
     if (isExists(spine.styles)) {
       spine.styles = spine.styles
         .map(href => styles.find(style => style.href === href))
@@ -89,7 +74,7 @@ class Book {
       let { itemType } = rawObj;
       let freeze = true;
       if (isString(itemType)) {
-        itemType = itemTypeFromString(itemType);
+        itemType = getItemTypeFromString(itemType);
       }
       if (itemType === SpineItem || itemType === NcxItem) {
         freeze = false;

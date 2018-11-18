@@ -18,7 +18,7 @@ import NcxItem from './model/NcxItem';
 import SpineItem from './model/SpineItem';
 import {
   getItemEncoding,
-  getItemType,
+  getItemTypeFromMediaType,
   isArray,
   isExists,
   isString,
@@ -385,7 +385,7 @@ class EpubParser {
           rawItem.href = safePathJoin(basePath, item.href);
         }
         rawItem.mediaType = item['media-type'];
-        rawItem.itemType = getItemType(rawItem.mediaType);
+        rawItem.itemType = getItemTypeFromMediaType(rawItem.mediaType);
         if (rawItem.itemType === DeadItem) {
           rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
         }

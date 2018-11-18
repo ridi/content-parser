@@ -99,11 +99,8 @@ function handleRuleset(node, item, list, options, cssItem) {
 
 function handleAtrule(node, item, list, options, cssItem) {
   if (node.block) {
-    const context = this;
-    if (context.stylesheet !== null) {
-      // Otherwise removed at-rule don't prevent @import for removal
-      context.stylesheet.firstAtrulesAllowed = false;
-    }
+    // Otherwise removed at-rule don't prevent @import for removal
+    this.stylesheet.firstAtrulesAllowed = false;
     if (node.block.children.isEmpty()) {
       list.remove(item);
       return;

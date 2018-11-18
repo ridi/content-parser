@@ -7,6 +7,7 @@ should(); // Initialize should
 
 describe('Loader - CSS', () => {  
   it('No option test', () => {
+    cssLoader({}, '').should.equal('');
     cssLoader({}, '@namespace url(http://www.w3.org/2000/svg); body {  background-color: #fff; }')
       .should.equal('@namespace url(http://www.w3.org/2000/svg);body{background-color:#fff}');
     cssLoader({}, '@font-face { font-family: NotoSansRegular, sans serif; src: url(../Fonts/NotoSans-Regular.ttf); }')
@@ -45,5 +46,11 @@ describe('Loader - CSS', () => {
     options = { basePath: './a/b/c' };
     cssLoader(cssItem, '@font-face { font-family: NotoSans; src: url(\"../Fonts/NotoSans-Regular.ttf\"); }', options)
       .should.equal('@font-face{font-family:NotoSans;src:url(\"a/b/c/OEBPS/Fonts/NotoSans-Regular.ttf\")}');
+  });
+
+  it('parseStyle option test', () => {
+    const cssItem = { namespace: 'namespace' };
+    cssLoader(cssItem, '#id { color: red; } .class { font-size: 1em; } p { line-length: 0.9em; }')
+      .should.equal('.namespace #id{color:red}.namespace .class{font-size:1em}.namespace p{line-length:0.9em}');
   });
 });

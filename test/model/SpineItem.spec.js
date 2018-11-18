@@ -10,6 +10,9 @@ describe('Model - SpineItem', () => {
     let item = new SpineItem();
     item.index.should.equal(SpineItem.IGNORED_INDEX);
     item.isLinear.should.be.true;
+    assert(item.first() === undefined);
+    assert(item.prev() === undefined);
+    assert(item.next() === undefined);
     assert(item.styles === undefined);
     assert(item instanceof Item);
 

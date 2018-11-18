@@ -2,6 +2,7 @@ import CssItem from '../model/CssItem';
 import DeadItem from '../model/DeadItem';
 import FontItem from '../model/FontItem';
 import ImageItem from '../model/ImageItem';
+import Item from '../model/Item';
 import InlineCssItem from '../model/InlineCssItem';
 import NcxItem from '../model/NcxItem';
 import SpineItem from '../model/SpineItem';
@@ -21,7 +22,7 @@ export function getItemEncoding(item) {
   }
 }
 
-export function getItemType(mediaType) {
+export function getItemTypeFromMediaType(mediaType) {
   // See: http://www.idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7
   const types = {
     'application/font': FontItem,
@@ -52,4 +53,17 @@ export function getItemType(mediaType) {
 
   const type = types[mediaType.toLowerCase()];
   return isExists(type) ? type : DeadItem;
+}
+
+export function getItemTypeFromString(string) {
+  switch (string) {
+    case Item.name: return Item;
+    case SpineItem.name: return SpineItem;
+    case NcxItem.name: return NcxItem;
+    case FontItem.name: return FontItem;
+    case ImageItem.name: return ImageItem;
+    case CssItem.name: return CssItem;
+    case InlineCssItem.name: return InlineCssItem;
+    default: return DeadItem;
+  }
 }
