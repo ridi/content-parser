@@ -1,5 +1,5 @@
-import fs from 'fs';
 import { orderBy } from 'natural-orderby';
+import fs from 'fs';
 import path from 'path';
 
 import { isString } from './typecheck';

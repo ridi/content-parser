@@ -1,5 +1,5 @@
-import Errors, { createError } from '../constant/errors';
 import { getType, isExists, isString } from './typecheck';
+import Errors, { createError } from '../constant/errors';
 
 export default function validateOptions(options, types, strict = false) {
   // eslint-disable-next-line no-restricted-syntax

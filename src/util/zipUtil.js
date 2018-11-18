@@ -2,8 +2,8 @@ import fs from 'fs-extra';
 import path from 'path';
 import unzipper from 'unzipper';
 
-import { safePathJoin } from './pathUtil';
 import { isExists, isString } from './typecheck';
+import { safePathJoin } from './pathUtil';
 
 function find(entryPath) {
   return this.files.find(entry => entryPath === entry.path);

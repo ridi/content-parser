@@ -2,8 +2,9 @@ import { arrayIncludes } from 'himalaya/lib/compat';
 import { parse, parseDefaults } from 'himalaya';
 import path from 'path';
 
-import cssLoader from './cssLoader';
 import CssItem from '../model/CssItem';
+import cssLoader from './cssLoader';
+
 import {
   isExists,
   isFunc,

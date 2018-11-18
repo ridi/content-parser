@@ -1,15 +1,16 @@
 import aes from 'aes-js';
 
 import Errors, { createError } from '../constant/errors';
+import mergeObjects from '../util/mergeObjects';
+import stringContains from '../util/stringContains';
+import validateOptions from '../util/validateOptions';
+
 import {
   isExists,
   isObject,
   isString,
   getType,
 } from '../util/typecheck';
-import mergeObjects from '../util/mergeObjects';
-import stringContains from '../util/stringContains';
-import validateOptions from '../util/validateOptions';
 
 const { ModeOfOperation, Counter } = aes;
 

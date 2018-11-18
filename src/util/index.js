@@ -1,7 +1,7 @@
-import openZip from './zipUtil';
-import readEntries from './readEntries';
 import mergeObjects from './mergeObjects';
+import openZip from './zipUtil';
 import parseBool from './parseBool';
+import readEntries from './readEntries';
 import stringContains from './stringContains';
 import validateOptions from './validateOptions';
 
