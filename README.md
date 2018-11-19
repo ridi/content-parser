@@ -53,10 +53,11 @@ parser.parse(/* { parseOptions } */).then((book) => {
 });
 ```
 
-with Cryptor:
+with [Cryptor](https://github.com/ridi/epub-parser/blob/master/src/cryptor/Cryptor.js):
 
 ```js
 import { CryptoProvider, Cryptor } from '@ridi/epub-parser';
+// or const { CryptoProvider, Cryptor } = require('@ridi/epub-parser');
 
 const { Status } = CryptoProvider;
 const { Modes, Padding } = Cryptor;
@@ -77,11 +78,11 @@ class ContentCryptoProvider extends CryptoProvider {
     return data;
   }
 
-  encrypt(data) {
+  encrypt(data, filePath) {
     return this.cryptor.encrypt(data);
   }
 
-  decrypt(data) {
+  decrypt(data, filePath) {
     return this.cryptor.decrypt(data);
   }
 }
