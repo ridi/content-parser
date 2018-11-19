@@ -38,6 +38,8 @@ npm install @ridi/epub-parser
 
 ## Usage
 
+Basic:
+
 ```js
 import { EpubParser } from '@ridi/epub-parser';
 // or const { EpubParser } = require('@ridi/epub-parser');
@@ -49,6 +51,43 @@ parser.parse(/* { parseOptions } */).then((book) => {
   });
   ...
 });
+```
+
+with Cryptor:
+
+```js
+import { CryptoProvider, Cryptor } from '@ridi/epub-parser';
+
+const { Status } = CryptoProvider;
+const { Modes, Padding } = Cryptor;
+
+class ContentCryptoProvider extends CryptoProvider {
+  constructor(key) {
+    super();
+    this.cryptor = new Cryptor(Modes.ECB, { key, padding: Padding.PKCS7 });
+  }
+
+  // Encrypt all content when unzipping and decrypt it when read.
+  run(data, filePath) {
+    if (this.status === Status.UNZIP) {
+      return this.encrypt(data);
+    } else if (this.status === Status.READ) {
+      return Buffer.from(this.decrypt(data));
+    }
+    return data;
+  }
+
+  encrypt(data) {
+    return this.cryptor.encrypt(data);
+  }
+
+  decrypt(data) {
+    return this.cryptor.decrypt(data);
+  }
+}
+
+const cryptoProvider = new ContentCryptoProvider(key);
+const parser = new EpubParser('./foo/bar.epub' or './unzippedPath', cryptoProvider);
 ```
 
 ## API
