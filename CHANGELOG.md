@@ -67,9 +67,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/epub-parser/compare/0.2.0...HEAD
-[0.2.0 (2018-11-19)]: https://github.com/ridi/epub-parser/compare/0.1.1...0.2.0
-[0.1.1 (2018-10-08)]: https://github.com/ridi/epub-parser/compare/0.1.0...0.1.1
-[0.1.0 (2018-09-12)]: https://github.com/ridi/epub-parser/compare/0.0.2...0.1.0
-[0.0.2 (2018-09-11)]: https://github.com/ridi/epub-parser/compare/0.0.1...0.0.2
-[0.0.1 (2018-08-30)]: https://github.com/ridi/epub-parser/compare/0e4d3b3...0.0.1
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.2.0...HEAD
+[0.2.0 (2018-11-19)]: https://github.com/ridi/content-parser/compare/0.1.1...0.2.0
+[0.1.1 (2018-10-08)]: https://github.com/ridi/content-parser/compare/0.1.0...0.1.1
+[0.1.0 (2018-09-12)]: https://github.com/ridi/content-parser/compare/0.0.2...0.1.0
+[0.0.2 (2018-09-11)]: https://github.com/ridi/content-parser/compare/0.0.1...0.0.2
+[0.0.1 (2018-08-30)]: https://github.com/ridi/content-parser/compare/0e4d3b3...0.0.1
