@@ -2,7 +2,7 @@
   "scripts": {
     "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
     "build": "lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
-    "test": "lerna exec --parallel -- istanbul cover --root . -x **/lib/** ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
+    "test": "lerna exec --stream -- istanbul cover -x \"**/lib/**\" ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
     "lint": "eslint --ignore-path .gitignore ./packages",
     "postinstall": "yarn build && lerna bootstrap"
   },
