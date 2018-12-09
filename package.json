@@ -14,7 +14,7 @@
     "clean": "lerna run clean",
     "build": "lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
     "test": "lerna exec --parallel -- istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
-    "lint": "eslint --cache --ignore-path .gitignore ./packages/*/src"
+    "lint": "eslint --ignore-path .gitignore ./packages"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",
