@@ -11,6 +11,7 @@ before_script:
   - yarn
 
 script:
+  - yarn lint
   - yarn test
 
 after_success:
