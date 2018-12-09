@@ -3,8 +3,8 @@
 > Common EPUB2 data parser for Ridibooks services written in ES6
 
 [![npm version](https://badge.fury.io/js/%40ridi%2Fepub-parser.svg)](https://badge.fury.io/js/%40ridi%2Fepub-parser)
-[![Build Status](https://travis-ci.org/ridi/epub-parser.svg?branch=master)](https://travis-ci.org/ridi/epub-parser)
-[![codecov](https://codecov.io/gh/ridi/epub-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/epub-parser)
+[![Build Status](https://travis-ci.org/ridi/content-parser.svg?branch=master)](https://travis-ci.org/ridi/content-parser)
+[![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 
 ## Features
 
