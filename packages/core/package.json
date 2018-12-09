@@ -1,7 +1,7 @@
 {
   "name": "@ridi/parser-core",
   "version": "0.3.0-alpha.1",
-  "description": "Utilities for parsers written in ES6",
+  "description": "Utilities for parsers",
   "author": {
     "name": "Ridibooks Viewer Team",
     "mail": "viewer.team@ridi.com"
