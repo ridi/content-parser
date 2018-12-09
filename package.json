@@ -1,7 +1,4 @@
 {
-  "name": "@ridi/epub-parser",
-  "version": "0.2.0",
-  "description": "Common EPUB2 data parser for Ridibooks services written in ES6",
   "author": {
     "name": "Ridibooks Viewer Team",
     "mail": "viewer.team@ridi.com"
@@ -13,39 +10,11 @@
   },
   "bugs": "https://github.com/ridi/content-parser/issues",
   "homepage": "https://github.com/ridi/content-parser",
-  "keywords": [
-    "EPUB",
-    "EPUB2",
-    "parser",
-    "serialize",
-    "deserialize",
-    "unzip",
-    "read",
-    "crypto"
-  ],
-  "files": [
-    "lib"
-  ],
-  "main": "./lib/index.js",
   "scripts": {
-    "clean": "rimraf coverage lib/* temp",
-    "build": "yarn lint && yarn clean && cross-env BABEL_ENV=production babel src --out-dir lib",
-    "watch": "yarn build -- --watch",
-    "test": "cross-env BABEL_ENV=production && yarn lint && yarn cover",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
-    "lint": "eslint src",
-    "prepublish": "yarn build"
-  },
-  "dependencies": {
-    "aes-js": "^3.1.1",
-    "css-tree": "^1.0.0-alpha.29",
-    "fast-xml-parser": "^3.11.2",
-    "fs-extra": "^7.0.1",
-    "he": "^1.1.1",
-    "himalaya": "^1.1.0",
-    "natural-orderby": "^1.0.2",
-    "string-format": "^2.0.0",
-    "unzipper": "^0.9.4"
+    "clean": "lerna run clean",
+    "build": "lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
+    "test": "lerna exec --parallel -- istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
+    "lint": "eslint --cache --ignore-path .gitignore ./packages/*/src"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",
@@ -57,7 +26,6 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.13.0",

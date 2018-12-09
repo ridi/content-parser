@@ -1,8 +1,21 @@
+# Builds
+packages/**/lib
+packages/**/temp
+*.js.map
+
+# Editor
 .idea
 .vscode
+
+# Logs
+logs
 *.log
-*.js.map
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage directory used by tools like istanbul
 coverage
-lib
+
+# Dependency directories
 node_modules
-temp
