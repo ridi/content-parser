@@ -13,7 +13,7 @@
   "scripts": {
     "clean": "rimraf ./*.log && lerna run clean",
     "build": "lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
-    "test": "lerna exec --parallel -- istanbul cover ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
+    "test": "lerna exec --parallel -- istanbul cover --root src ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
     "lint": "eslint --ignore-path .gitignore ./packages",
     "postinstall": "yarn build"
   },
