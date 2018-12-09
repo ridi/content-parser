@@ -11,10 +11,11 @@
   "bugs": "https://github.com/ridi/content-parser/issues",
   "homepage": "https://github.com/ridi/content-parser",
   "scripts": {
-    "clean": "lerna run clean",
+    "clean": "rimraf ./*.log && lerna run clean",
     "build": "lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
     "test": "lerna exec --parallel -- istanbul cover ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
-    "lint": "eslint --ignore-path .gitignore ./packages"
+    "lint": "eslint --ignore-path .gitignore ./packages",
+    "postinstall": "yarn build"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",
