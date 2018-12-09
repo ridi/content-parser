@@ -27,9 +27,6 @@
     "lib"
   ],
   "main": "lib/index.js",
-  "scripts": {
-    "clean": "rimraf coverage lib/* temp"
-  },
   "dependencies": {
     "@ridi/parser-core": "^0.3.0-alpha.1",
     "css-tree": "^1.0.0-alpha.29",

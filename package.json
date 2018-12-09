@@ -11,7 +11,7 @@
   "bugs": "https://github.com/ridi/content-parser/issues",
   "homepage": "https://github.com/ridi/content-parser",
   "scripts": {
-    "clean": "rimraf ./*.log && lerna run clean",
+    "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
     "build": "lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
     "test": "lerna exec --parallel -- istanbul cover --root src ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
     "lint": "eslint --ignore-path .gitignore ./packages",
