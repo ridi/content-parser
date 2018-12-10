@@ -1,0 +1,25 @@
+{
+  "name": "@ridi/comic-parser",
+  "version": "0.3.0-alpha.1",
+  "description": "Common comic data parser for Ridibooks services",
+  "author": {
+    "name": "Ridibooks Viewer Team",
+    "mail": "viewer.team@ridi.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ridi/content-parser/packages/comic-parser"
+  },
+  "bugs": "https://github.com/ridi/content-parser/issues",
+  "homepage": "https://github.com/ridi/content-parser/packages/comic-parser",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "dependencies": {
+    "@ridi/parser-core": "^0.3.0-alpha.1",
+    "fs-extra": "^7.0.1",
+    "natural-orderby":  "^1.0.2"
+  }
+}

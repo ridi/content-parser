@@ -53,7 +53,7 @@ parser.parse(/* { parseOptions } */).then((book) => {
 });
 ```
 
-with [Cryptor](https://github.com/ridi/epub-parser/blob/master/src/cryptor/Cryptor.js):
+with [Cryptor](https://github.com/ridi/content-parser/blob/master/src/cryptor/Cryptor.js):
 
 ```js
 import { CryptoProvider, Cryptor } from '@ridi/epub-parser';
@@ -221,7 +221,7 @@ or throw exception.
 
 #### [Item](./src/model/Item.js)
 
-- id: *?id*
+- id: *?string*
 - href: *?string*
 - mediaType: *?string*
 - size: *?number*

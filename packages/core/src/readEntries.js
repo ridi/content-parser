@@ -11,6 +11,7 @@ function create(source, entries) {
     find: entryPath => entries.find(entry => entryPath === entry.entryPath),
     map: callback => entries.map(callback),
     forEach: callback => entries.forEach(callback),
+    reduce: (callback, initial) => entries.reduce(callback, initial),
     length: entries.length,
     source,
   };

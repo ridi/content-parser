@@ -21,6 +21,10 @@ const Paths = {
   SPINE_LOADER_CSS_OPTIONS: '../../test/res/spineLoader/cssOptions.xhtml',
   SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH: '../../test/res/spineLoader/cssOptionsAndBasePath.xhtml',
   SPINE_LOADER_SERIALIZED_ANCHOR: '../../test/res/spineLoader/serializedAnchor.xhtml',
+  COMIC: '../../test/res/comic.zip',
+  UNZIPPED_COMIC: '../../test/res/comic',
+  EXPECTED_COMIC_BOOK: '../../test/res/expectedComicBook.json',
+  COMIC_BASE64: '../../test/res/comicBase64.txt',
 };
 
 export default Paths;

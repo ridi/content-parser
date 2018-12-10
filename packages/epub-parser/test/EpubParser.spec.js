@@ -196,14 +196,12 @@ describe('Parsing test', () => {
   describe('Parsing test by input', () => {
     it('Input is epub path', () => {
       return new EpubParser(Paths.DEFAULT).parse().then((book) => {
-        book.should.be.an.instanceOf(Book);
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
     });
   
     it('Input is unzipped epub path', () => {
       return new EpubParser(Paths.UNZIPPED_DEFAULT).parse().then((book) => {
-        book.should.be.an.instanceOf(Book);
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
     });
@@ -245,7 +243,6 @@ describe('Parsing test', () => {
 describe('Book serialization test', () => {
   it('Book -> RawBook -> Book', () => {
     return new EpubParser(Paths.DEFAULT).parse().then((book) => {
-      book.should.be.an.instanceOf(Book);
       const rawBook = book.toRaw();
       const newBook = new Book(rawBook);
       validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
@@ -319,7 +316,6 @@ describe('Cryption test', () => {
       });
 
       it('EPUB file decryption', () => {
-        book.should.be.an.instanceOf(Book);
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
   
