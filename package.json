@@ -6,7 +6,7 @@
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
-    "bump": "lerna version"
+    "bump": "lerna version --amend -m \"Bump version to %v\""
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",
