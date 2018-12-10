@@ -202,7 +202,7 @@ File extension to allow when extracting lists.
 
 <a id="base64"></a>
 
-### base64: *`?boolean`*
+### base64: *`boolean`*
 
 If false, reads image into a buffer.
 
