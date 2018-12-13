@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
+import { defaultBufferSize } from './CryptoProvider';
 import { getPathes, safePath } from './pathUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
@@ -36,21 +37,17 @@ function fromDirectory(dir, cryptoProvider) {
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (encoding) => {
         let file = await new Promise((resolve, reject) => {
-          const stream = fs.createReadStream(fullPath);
+          const bufferSize = isExists(cryptoProvider) ? cryptoProvider.bufferSize : defaultBufferSize;
+          const stream = fs.createReadStream(fullPath, { highWaterMark: bufferSize, encoding: 'binary' });
           let buffer = Buffer.from([]);
           stream.on('data', (chunk) => {
+            chunk = Buffer.from(chunk, 'binary');
             if (isExists(cryptoProvider)) {
               buffer = Buffer.concat([buffer, cryptoProvider.run(chunk, fullPath)]);
             } else {
               buffer = Buffer.concat([buffer, chunk]);
             }
-          }).on('error', (e) => {
-            stream.close();
-            reject(e);
-          }).on('end', () => {
-            stream.close();
-            resolve(buffer);
-          });
+          }).on('error', e => reject(e)).on('end', () => resolve(buffer));
         });
         if (isExists(encoding)) {
           file = file.toString(encoding);

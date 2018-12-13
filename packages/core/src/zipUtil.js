@@ -14,14 +14,16 @@ async function getFile(entry, encoding) {
   let file = await new Promise((resolve, reject) => {
     let buffer = Buffer.from([]);
     entry.stream()
+      .setEncoding('binary')
       .on('data', (chunk) => {
+        chunk = Buffer.from(chunk, 'binary');
         if (isExists(this.cryptoProvider)) {
           buffer = Buffer.concat([buffer, this.cryptoProvider.run(chunk, entry.path)]);
         } else {
           buffer = Buffer.concat([buffer, chunk]);
         }
       })
-      .on('error', e => {
+      .on('error', (e) => {
         Logger.error(e);
         reject(e);
       })
@@ -41,7 +43,7 @@ async function extractAll(unzipPath, overwrite = true) {
 
   const writeFile = (entry, output) => { // eslint-disable-line arrow-body-style
     return new Promise((resolve, reject) => {
-      const writeStream = fs.createWriteStream(output);
+      const writeStream = fs.createWriteStream(output, { encoding: 'binary' });
       const onError = (e) => {
         Logger.error(e);
         reject(e);

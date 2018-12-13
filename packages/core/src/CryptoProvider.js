@@ -6,6 +6,9 @@ const Status = Object.freeze({
   READ: 'read',
 });
 
+// https://nodejs.org/api/stream.html#stream_new_stream_readable_options
+export const defaultBufferSize = 16384;
+
 class CryptoProvider {
   constructor() {
     if (this.constructor === CryptoProvider) {
@@ -15,6 +18,11 @@ class CryptoProvider {
     // const key = ...;
     // this.cryptor = new Cryptor(Modes.ECB, { key });
   }
+
+  /**
+   * Prefer buffer size
+   */
+  get bufferSize() { return defaultBufferSize; }
 
   /**
    * Update status by parser
