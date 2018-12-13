@@ -10,14 +10,23 @@ function find(entryPath) {
 }
 
 async function getFile(entry, encoding) {
-  let buffer = await entry.buffer();
-  if (isExists(this.cryptoProvider)) {
-    buffer = this.cryptoProvider.run(buffer, entry.path);
-  }
+  let file = await new Promise((resolve, reject) => {
+    let buffer = Buffer.from([]);
+    entry.stream()
+      .on('data', (chunk) => {
+        if (isExists(this.cryptoProvider)) {
+          buffer = Buffer.concat([buffer, this.cryptoProvider.run(chunk, entry.path)]);
+        } else {
+          buffer = Buffer.concat([buffer, chunk]);
+        }
+      })
+      .on('error', e => reject(e))
+      .on('finish', () => resolve(buffer));
+  });
   if (isExists(encoding)) {
-    return buffer.toString(encoding);
+    file = file.toString(encoding);
   }
-  return buffer;
+  return file;
 }
 
 async function extractAll(unzipPath, overwrite = true) {
@@ -29,24 +38,22 @@ async function extractAll(unzipPath, overwrite = true) {
   const writeFile = (entry, output) => { // eslint-disable-line arrow-body-style
     return new Promise((resolve, reject) => {
       const writeStream = fs.createWriteStream(output);
-      const onError = () => {
-        reject();
+      const onError = (e) => {
+        reject(e);
         writeStream.close();
       };
       entry.stream()
-        .on('data', (data) => {
+        .on('data', (chunk) => {
           if (isExists(this.cryptoProvider)) {
-            writeStream.write(this.cryptoProvider.run(data, entry.path));
+            writeStream.write(this.cryptoProvider.run(chunk, entry.path));
           } else {
-            writeStream.write(data);
+            writeStream.write(chunk);
           }
         })
         .on('error', onError)
         .on('finish', () => writeStream.close());
       writeStream.on('error', onError);
-      writeStream.on('close', () => {
-        resolve();
-      });
+      writeStream.on('close', () => resolve());
     });
   };
 

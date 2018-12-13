@@ -35,10 +35,25 @@ function fromDirectory(dir, cryptoProvider) {
     return entries.concat([{
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (encoding) => {
-        let file = await fs.readFile(fullPath);
-        file = isExists(cryptoProvider) ? cryptoProvider.run(file, fullPath) : file;
+        let file = await new Promise((resolve, reject) => {
+          const stream = fs.createReadStream(fullPath);
+          let buffer = Buffer.from([]);
+          stream.on('data', (chunk) => {
+            if (isExists(cryptoProvider)) {
+              buffer = Buffer.concat([buffer, cryptoProvider.run(chunk, fullPath)]);
+            } else {
+              buffer = Buffer.concat([buffer, chunk]);
+            }
+          }).on('error', (e) => {
+            stream.close();
+            reject(e);
+          }).on('end', () => {
+            stream.close();
+            resolve(buffer);
+          });
+        });
         if (isExists(encoding)) {
-          return file.toString(encoding);
+          file = file.toString(encoding);
         }
         return file;
       },
