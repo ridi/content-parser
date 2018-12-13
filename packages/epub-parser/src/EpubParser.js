@@ -1,6 +1,7 @@
 import {
   CryptoProvider,
   Errors, createError,
+  Logger,
   isArray, isExists, isString, isUrl,
   mergeObjects,
   parseBool,
@@ -168,6 +169,7 @@ class EpubParser {
     context = await this._parseOpf(context);
     context = await this._parseNcx(context);
     context = await this._unzipIfNeeded(context);
+    Logger.warn('Cover image not found in EPUB.');
     const book = await this._createBook(context);
     return book;
   }
@@ -383,6 +385,7 @@ class EpubParser {
         rawItem.itemType = this.getItemTypeFromMediaType(rawItem.mediaType);
         if (rawItem.itemType === DeadItem) {
           rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
+          Logger.warn(`Referenced resource '${rawItem.id}' ignored. (reason: ${rawItem.reason})`);
         }
 
         const itemEntry = entries.find(rawItem.href);
@@ -403,6 +406,7 @@ class EpubParser {
             } else {
               rawItem.itemType = DeadItem;
               rawItem.reason = DeadItem.Reason.NOT_SPINE;
+              Logger.warn(`Referenced resource '${rawItem.id}' ignored. (reason: ${rawItem.reason})`);
             }
           } else if (rawItem.itemType === ImageItem) {
             if (!context.foundCover) {
@@ -423,6 +427,7 @@ class EpubParser {
             if (rawItem.id !== tocId) {
               rawItem.itemType = DeadItem;
               rawItem.reason = DeadItem.Reason.NOT_NCX;
+              Logger.warn(`Referenced resource '${rawItem.id}' ignored. (reason: ${rawItem.reason})`);
             }
           }
 
@@ -438,6 +443,7 @@ class EpubParser {
         } else {
           rawItem.itemType = DeadItem;
           rawItem.reason = DeadItem.Reason.NOT_EXISTS;
+          Logger.warn(`Referenced resource '${rawItem.id}' ignored. (reason: ${rawItem.reason})`);
         }
         rawBook.items.push(rawItem);
       });

@@ -1,6 +1,7 @@
 import Cryptor from './Cryptor';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
+import Logger from './Logger';
 import mergeObjects from './mergeObjects';
 import parseBool from './parseBool';
 
@@ -31,6 +32,7 @@ import openZip from './zipUtil';
 export {
   Cryptor, CryptoProvider,
   Errors, createError, mustOverride,
+  Logger,
   mergeObjects,
   parseBool,
   safeDirname, safePath, safePathJoin, getPathes,

@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import unzipper from 'unzipper';
 
+import Logger from './Logger';
 import { isExists, isString } from './typecheck';
 import { safePathJoin } from './pathUtil';
 
@@ -20,7 +21,10 @@ async function getFile(entry, encoding) {
           buffer = Buffer.concat([buffer, chunk]);
         }
       })
-      .on('error', e => reject(e))
+      .on('error', e => {
+        Logger.error(e);
+        reject(e);
+      })
       .on('finish', () => resolve(buffer));
   });
   if (isExists(encoding)) {
@@ -39,6 +43,7 @@ async function extractAll(unzipPath, overwrite = true) {
     return new Promise((resolve, reject) => {
       const writeStream = fs.createWriteStream(output);
       const onError = (e) => {
+        Logger.error(e);
         reject(e);
         writeStream.close();
       };
