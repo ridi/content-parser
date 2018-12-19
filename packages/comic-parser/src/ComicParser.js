@@ -269,7 +269,7 @@ class ComicParser {
         }
         const file = await entry.getFile();
         if (options.base64) {
-          results.push(file.toString('base64'));
+          results.push(`data:${item.mimeType};base64,${file.toString('base64')}`);
         } else {
           results.push(file);
         }

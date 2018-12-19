@@ -1,4 +1,19 @@
+import path from 'path';
+
 class Item {
+  get mimeType() {
+    const ext = path.extname(this.path).toLocaleLowerCase();
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'bmp':
+      case 'gif':
+        return `image/${ext}`;
+      default: return '';
+    }
+  }
+
   constructor(rawObj = {}, freeze = true) {
     this.index = rawObj.index;
     this.path = rawObj.path;
