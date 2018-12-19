@@ -2,7 +2,7 @@ import path from 'path';
 
 class Item {
   get mimeType() {
-    const ext = path.extname(this.path).toLocaleLowerCase();
+    const ext = path.extname(this.path).toLocaleLowerCase().replace('.', '');
     switch (ext) {
       case 'jpg':
       case 'jpeg':
