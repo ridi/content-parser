@@ -50,36 +50,47 @@ with [Cryptor](https://github.com/ridi/content-parser/blob/master/src/cryptor/Cr
 import { CryptoProvider, Cryptor } from '@ridi/comic-parser';
 // or const { CryptoProvider, Cryptor } = require('@ridi/comic-parser');
 
-const { Status } = CryptoProvider;
+const { Purpose } = CryptoProvider;
 const { Modes, Padding } = Cryptor;
 
 class ContentCryptoProvider extends CryptoProvider {
   constructor(key) {
     super();
-    this.cryptor = new Cryptor(Modes.ECB, { key, padding: Padding.PKCS7 });
+    this.cryptor = new Cryptor(Modes.ECB, { key });
   }
 
-  // Encrypt all content when unzipping and decrypt it when read.
-  run(data, filePath) {
-    if (this.status === Status.UNZIP) {
-      return this.encrypt(data);
-    } else if (this.status === Status.READ) {
-      return Buffer.from(this.decrypt(data));
+  getCryptor(filePath, purpose) {
+    return this.cryptor;
+  }
+
+  // If use as follows:
+  // const provider = new ContentCryptoProvider(...);
+  // const parser = new ComicParser('encrypted.zip', provider);
+  // const book = await parser.parse({ unzipPath: ... });
+  // const firstImage = await parser.readItem(book.items[0]);
+  //
+  // It will be called as follows:
+  // 1. run(data, 'encrypted.zip', Purpose.READ_IN_DIR)
+  // 2. run(data, '0001.jpg', Purpose.READ_IN_ZIP)
+  // ...
+  // 4. run(data, '0001.jpg', Purpose.WRITE)
+  // ...
+  // 5. run(data, '0001.jpg', Purpose.READ_IN_DIR)
+  //
+  run(data, filePath, purpose) {
+    const cryptor = this.getCryptor(filePath, purpose);
+    const padding = Padding.AUTO;
+    if (purpose === Purpose.READ_IN_DIR) {
+      return cryptor.decrypt(data, padding);
+    } else if (purpose === Purpose.WRITE) {
+      return cryptor.encrypt(data, padding);
     }
     return data;
-  }
-
-  encrypt(data, filePath) {
-    return this.cryptor.encrypt(data);
-  }
-
-  decrypt(data, filePath) {
-    return this.cryptor.decrypt(data);
   }
 }
 
 const cryptoProvider = new ContentCryptoProvider(key);
-const parser = new ComicParser('./foo/bar.zip' or './unzippedPath', cryptoProvider);
+const parser = new ComicParser('./encrypted.zip' or './unzippedPath', cryptoProvider);
 ```
 
 ## API

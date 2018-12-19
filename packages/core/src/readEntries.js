@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-import { defaultBufferSize } from './CryptoProvider';
+import CryptoProvider from './CryptoProvider';
 import { getPathes, safePath } from './pathUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
@@ -37,17 +37,16 @@ function fromDirectory(dir, cryptoProvider) {
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (encoding) => {
         let file = await new Promise((resolve, reject) => {
-          const bufferSize = isExists(cryptoProvider) ? cryptoProvider.bufferSize : defaultBufferSize;
-          const stream = fs.createReadStream(fullPath, { highWaterMark: bufferSize, encoding: 'binary' });
+          const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
           let buffer = Buffer.from([]);
           stream.on('data', (chunk) => {
             chunk = Buffer.from(chunk, 'binary');
             if (isExists(cryptoProvider)) {
-              buffer = Buffer.concat([buffer, cryptoProvider.run(chunk, fullPath)]);
-            } else {
-              buffer = Buffer.concat([buffer, chunk]);
+              chunk = cryptoProvider.run(chunk, fullPath, CryptoProvider.Purpose.READ_IN_DIR);
             }
-          }).on('error', e => reject(e)).on('end', () => resolve(buffer));
+            buffer = Buffer.concat([buffer, chunk]);
+          }).on('error', e => reject(e))
+            .on('end', () => resolve(buffer));
         });
         if (isExists(encoding)) {
           file = file.toString(encoding);
@@ -60,9 +59,9 @@ function fromDirectory(dir, cryptoProvider) {
 }
 
 export default async function readEntries(input, cryptoProvider) {
-  if (fs.lstatSync(input).isFile()) {
+  if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     if (isExists(cryptoProvider)) {
-      input = cryptoProvider.run(fs.readFileSync(input), input);
+      input = cryptoProvider.run(fs.readFileSync(input), input, CryptoProvider.Purpose.READ_IN_DIR);
     }
     const zip = await openZip(input, cryptoProvider);
     return fromZip(zip);

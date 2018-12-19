@@ -1,34 +1,32 @@
 import { CryptoProvider, Cryptor } from '@ridi/parser-core';
 
-const { Status } = CryptoProvider;
+const { Purpose } = CryptoProvider;
 const { Modes, Padding } = Cryptor;
 
 class TestCryptoProvider extends CryptoProvider {
   constructor(key) {
     super();
-    this.cryptor = new Cryptor(Modes.ECB, { key, padding: Padding.PKCS7 });
+    this.cryptor = new Cryptor(Modes.ECB, { key });
+  }
+
+  getCryptor(filePath, purpose) {
+    return this.cryptor;
   }
 
   // decrypt -> parse -> unzip with encrypt
-  run(data, filePath) {
-    if (this.status === Status.PARSE) {
+  run(data, filePath, purpose) {
+    const cryptor = this.getCryptor(filePath, purpose);
+    const padding = Padding.AUTO;
+    if (purpose === Purpose.READ_IN_DIR) {
       if (filePath.endsWith('.epub')) {
-        return this.decrypt(data);
+        return cryptor.decrypt(data, padding);
+      } else {
+        return cryptor.decrypt(data, padding);
       }
-    } else if (this.status === Status.UNZIP) {
-      return this.encrypt(data);
-    } else if (this.status === Status.READ) {
-      return Buffer.from(this.decrypt(data));
+    } else if (purpose === Purpose.WRITE) {
+      return cryptor.encrypt(data, padding);
     }
     return data;
-  }
-
-  encrypt(data) {
-    return this.cryptor.encrypt(data);
-  }
-
-  decrypt(data) {
-    return this.cryptor.decrypt(data);
   }
 }
 

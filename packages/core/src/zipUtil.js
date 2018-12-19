@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import unzipper from 'unzipper';
 
+import CryptoProvider from './CryptoProvider';
 import Logger from './Logger';
 import { isExists, isString } from './typecheck';
 import { safePathJoin } from './pathUtil';
@@ -13,19 +14,18 @@ function find(entryPath) {
 async function getFile(entry, encoding) {
   let file = await new Promise((resolve, reject) => {
     let buffer = Buffer.from([]);
-    entry.stream()
+    entry.stream() // is DuplexStream.
+      .on('error', (e) => {
+        Logger.error(e);
+        reject(e);
+      })
       .setEncoding('binary')
       .on('data', (chunk) => {
         chunk = Buffer.from(chunk, 'binary');
         if (isExists(this.cryptoProvider)) {
-          buffer = Buffer.concat([buffer, this.cryptoProvider.run(chunk, entry.path)]);
-        } else {
-          buffer = Buffer.concat([buffer, chunk]);
+          chunk = this.cryptoProvider.run(chunk, entry.path, CryptoProvider.Purpose.READ_IN_ZIP);
         }
-      })
-      .on('error', (e) => {
-        Logger.error(e);
-        reject(e);
+        buffer = Buffer.concat([buffer, chunk]);
       })
       .on('finish', () => resolve(buffer));
   });
@@ -49,18 +49,17 @@ async function extractAll(unzipPath, overwrite = true) {
         reject(e);
         writeStream.close();
       };
-      entry.stream()
-        .on('data', (chunk) => {
-          if (isExists(this.cryptoProvider)) {
-            writeStream.write(this.cryptoProvider.run(chunk, entry.path));
-          } else {
-            writeStream.write(chunk);
-          }
-        })
-        .on('error', onError)
-        .on('finish', () => writeStream.close());
       writeStream.on('error', onError);
       writeStream.on('close', () => resolve());
+      entry.stream() // is DuplexStream.
+        .on('error', onError)
+        .on('data', (chunk) => {
+          if (isExists(this.cryptoProvider)) {
+            chunk = this.cryptoProvider.run(chunk, entry.path, CryptoProvider.Purpose.WRITE);
+          }
+          writeStream.write(chunk);
+        })
+        .on('finish', () => writeStream.close());
     });
   };
 

@@ -1,104 +1,54 @@
 import Errors, { createError, mustOverride } from './errors';
 
-const Status = Object.freeze({
-  PARSE: 'parse',
-  UNZIP: 'unzip',
-  READ: 'read',
+const Purpose = Object.freeze({
+  READ_IN_ZIP: 'read_in_zip',
+  READ_IN_DIR: 'read_in_dir',
+  WRITE: 'write',
 });
-
-// https://nodejs.org/api/stream.html#stream_new_stream_readable_options
-export const defaultBufferSize = 16384;
 
 class CryptoProvider {
   constructor() {
     if (this.constructor === CryptoProvider) {
       throw createError(Errors.EINTR, 'You must use subclasses.');
     }
-    // ex)
-    // const key = ...;
-    // this.cryptor = new Cryptor(Modes.ECB, { key });
   }
 
   /**
-   * Prefer buffer size
+   * Create or reuse Cryptor by condition
+   * @param {string} filePath
+   * @param {string} purpose
+   * @returns {Cryptor}
    */
-  get bufferSize() { return defaultBufferSize; }
-
-  /**
-   * Update status by parser
-   */
-  set status(newStatus) {
-    const oldStatus = this.status;
-    this._status = newStatus;
-    this.onStatusChanged(oldStatus, newStatus);
-  }
-
-  /**
-   * Get status
-   */
-  get status() { return this._status; }
-
-  /**
-   * Invoked when parser.parse or parser.readItem(s) or parser._unzip is called
-   * @param {string} oldStatus
-   * @param {string} newStatus
-   */
-  onStatusChanged(oldStatus, newStatus) { // eslint-disable-line
+  getCryptor(filePath, purpose) { // eslint-disable-line
     // ex)
-    // if (oldStatus !== newStatus) {
-    //   const key = ...;
-    //   const iv = ...;
-    //   this.cryptor = new Cryptor(Modes.CFB, { key, iv });
+    // if (condition) {
+    //   return new Cryptor(...);
+    // } else {
+    //   return new Cryptor(...);
     // }
+    mustOverride();
   }
 
   /**
    * Should execute encrypt or decrypt by condition if needed
    * @param {Buffer} data
    * @param {string} filePath
+   * @param {string} purpose
    */
-  run(data, filePath) { // eslint-disable-line
+  run(data, filePath, purpose) { // eslint-disable-line
     // ex)
+    // const cryptor = this.getCryptor(filePath, status);
+    // const padding = Cryptor.Padding.PKCS7
     // if (condition1) {
-    //   return this.encrypt(data, filePath)
+    //   return cryptor.encrypt(data, padding)
     // } else if (condition2) {
-    //   return this.decrypt(data, filePath)
+    //   return cryptor.decrypt(data, padding)
     // }
     // return data;
     mustOverride();
   }
-
-  /**
-   * Should encrypt data
-   * @param {Buffer} data
-   * @param {string} filePath
-   */
-  encrypt(data, filePath) { // eslint-disable-line
-    // ex)
-    // if (condition) {
-    //   return cryptor1.encrypt(data);
-    // } else {
-    //   return cryptor2.encrypt(data);
-    // }
-    mustOverride();
-  }
-
-  /**
-   * Should decrypt data
-   * @param {Buffer} data
-   * @param {string} filePath
-   */
-  decrypt(data, filePath) { // eslint-disable-line
-    // ex)
-    // if (condition) {
-    //   return cryptor1.decrypt(data);
-    // } else {
-    //   return cryptor2.decrypt(data);
-    // }
-    mustOverride();
-  }
 }
 
-CryptoProvider.Status = Status;
+CryptoProvider.Purpose = Purpose;
 
 export default CryptoProvider;

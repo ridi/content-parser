@@ -59,36 +59,48 @@ with [Cryptor](https://github.com/ridi/content-parser/blob/master/src/cryptor/Cr
 import { CryptoProvider, Cryptor } from '@ridi/epub-parser';
 // or const { CryptoProvider, Cryptor } = require('@ridi/epub-parser');
 
-const { Status } = CryptoProvider;
+const { Purpose } = CryptoProvider;
 const { Modes, Padding } = Cryptor;
 
 class ContentCryptoProvider extends CryptoProvider {
   constructor(key) {
     super();
-    this.cryptor = new Cryptor(Modes.ECB, { key, padding: Padding.PKCS7 });
+    this.cryptor = new Cryptor(Modes.ECB, { key });
   }
 
-  // Encrypt all content when unzipping and decrypt it when read.
-  run(data, filePath) {
-    if (this.status === Status.UNZIP) {
-      return this.encrypt(data);
-    } else if (this.status === Status.READ) {
-      return Buffer.from(this.decrypt(data));
+  getCryptor(filePath, purpose) {
+    return this.cryptor;
+  }
+
+  // If use as follows:
+  // const provider = new ContentCryptoProvider(...);
+  // const parser = new EpubParser('encrypted.epub', provider);
+  // const book = await parser.parse({ unzipPath: ... });
+  // const firstSpine = await parser.readItem(book.spines[0]);
+  //
+  // It will be called as follows:
+  // 1. run(data, 'encrypted.epub', Purpose.READ_IN_DIR)
+  // 2. run(data, 'META-INF/container.xml', Purpose.READ_IN_ZIP)
+  // 3. run(data, 'OEBPS/content.opf', Purpose.READ_IN_ZIP)
+  // ...
+  // 4. run(data, 'mimetype', Purpose.WRITE)
+  // ...
+  // 5. run(data, 'OEBPS/Text/Section0001.xhtml', Purpose.READ_IN_DIR)
+  //
+  run(data, filePath, purpose) {
+    const cryptor = this.getCryptor(filePath, purpose);
+    const padding = Padding.AUTO;
+    if (purpose === Purpose.READ_IN_DIR) {
+      return cryptor.decrypt(data, padding);
+    } else if (purpose === Purpose.WRITE) {
+      return cryptor.encrypt(data, padding);
     }
     return data;
-  }
-
-  encrypt(data, filePath) {
-    return this.cryptor.encrypt(data);
-  }
-
-  decrypt(data, filePath) {
-    return this.cryptor.decrypt(data);
   }
 }
 
 const cryptoProvider = new ContentCryptoProvider(key);
-const parser = new EpubParser('./foo/bar.epub' or './unzippedPath', cryptoProvider);
+const parser = new EpubParser('./encrypted.epub' or './unzippedPath', cryptoProvider);
 ```
 
 ## API

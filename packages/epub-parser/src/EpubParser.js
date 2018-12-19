@@ -1,5 +1,4 @@
 import {
-  CryptoProvider,
   Errors, createError,
   Logger,
   isArray, isExists, isString, isUrl,
@@ -186,9 +185,6 @@ class EpubParser {
    */
   async _prepareParse(options = {}) {
     validateOptions(options, EpubParser.parseOptionTypes);
-    if (this.cryptoProvider) {
-      this.cryptoProvider.status = CryptoProvider.Status.PARSE;
-    }
     const context = new Context();
     context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
     context.entries = await readEntries(this.input, this.cryptoProvider);
@@ -630,9 +626,6 @@ class EpubParser {
     const { options, entries } = context;
     const { unzipPath, overwrite } = options;
     if (!isString(entries.source) && isExists(unzipPath)) {
-      if (this.cryptoProvider) {
-        this.cryptoProvider.status = CryptoProvider.Status.UNZIP;
-      }
       await entries.source.extractAll(unzipPath, overwrite);
       privateProps.set(this, { ...privateProps.get(this), input: unzipPath });
     }
@@ -711,9 +704,6 @@ class EpubParser {
     }
     validateOptions(options, EpubParser.readOptionTypes);
     const entries = await readEntries(this.input, this.cryptoProvider);
-    if (this.cryptoProvider) {
-      this.cryptoProvider.status = CryptoProvider.Status.READ;
-    }
     return {
       items,
       entries,

@@ -19,6 +19,7 @@ const { hex, utf8 } = aes.utils;
 const { pkcs7 } = aes.padding;
 
 const Padding = Object.freeze({
+  AUTO: 'auto',
   PKCS7: 'pkcs7',
   NONE: 'none',
 });
@@ -65,6 +66,12 @@ const Modes = Object.freeze({
   },
 });
 
+const checkDataType = (data) => {
+  if (!stringContains(['Buffer', 'Uint8Array', 'Array'], getType(data))) {
+    throw createError(Errors.EINVAL, 'bytes type', 'reason', 'require Buffer or Uint8Array or Array');
+  }
+};
+
 class Cryptor {
   constructor(mode, config) {
     if (!isExists(mode)) {
@@ -97,7 +104,6 @@ class Cryptor {
       default: break;
     }
     validateOptions(config, mode.configTypes, true);
-    this.padding = config.padding || Padding.NONE;
     this.operator = this.makeOperator(mode, config);
     Object.freeze(this);
   }
@@ -125,23 +131,25 @@ class Cryptor {
     }
   }
 
-  encrypt(bytes) {
-    if (!stringContains(['Buffer', 'Uint8Array', 'Array'], getType(bytes))) {
-      throw createError(Errors.EINVAL, 'bytes type', 'reason', 'require Buffer or Uint8Array or Array');
-    }
-    if (this.padding === Padding.PKCS7) {
+  encrypt(bytes, padding = Padding.NONE) {
+    checkDataType(bytes);
+    if (padding === Padding.PKCS7 || (padding === Padding.AUTO && bytes.length % 16 !== 0)) {
       return this.operator.encrypt(pkcs7.pad(bytes));
     }
     return this.operator.encrypt(bytes);
   }
 
-  decrypt(bytes) {
-    if (!stringContains(['Buffer', 'Uint8Array', 'Array'], getType(bytes))) {
-      throw createError(Errors.EINVAL, 'bytes type', 'reason', 'require Buffer or Uint8Array or Array');
-    }
-    const decryptedBytes = this.operator.decrypt(bytes);
-    if (this.padding === Padding.PKCS7) {
-      return pkcs7.strip(decryptedBytes);
+  decrypt(bytes, padding = Padding.NONE) {
+    checkDataType(bytes);
+    const decryptedBytes = Buffer.from(this.operator.decrypt(bytes));
+    if (padding === Padding.PKCS7 || padding === Padding.AUTO) {
+      try {
+        return pkcs7.strip(decryptedBytes);
+      } catch (e) {
+        if (padding !== Padding.AUTO) {
+          throw e;
+        }
+      }
     }
     return decryptedBytes;
   }

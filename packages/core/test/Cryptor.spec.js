@@ -213,15 +213,15 @@ describe('Cryptor', () => {
 
       // Create cryptor
       const padding = Padding.PKCS7;
-      const cryptor = new Cryptor(Modes.ECB, { key, padding });
+      const cryptor = new Cryptor(Modes.ECB, { key });
 
       // Encryption
-      const encryptedBytes = cryptor.encrypt(textBytes);
+      const encryptedBytes = cryptor.encrypt(textBytes, padding);
       const encryptedHex = hex.fromBytes(encryptedBytes);
       encryptedHex.should.equal('23b4f080a310770e93def2ddfee44817');
 
       // Decryption
-      const decryptBytes = cryptor.decrypt(encryptedBytes);
+      const decryptBytes = cryptor.decrypt(encryptedBytes, padding);
       const decryptedText = utf8.fromBytes(decryptBytes);
       decryptedText.should.equal(text);
     });

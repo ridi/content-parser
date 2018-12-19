@@ -1,5 +1,4 @@
 import {
-  CryptoProvider,
   Errors, createError,
   isExists, isString,
   mergeObjects,
@@ -124,9 +123,6 @@ class ComicParser {
    */
   async _prepareParse(options = {}) {
     validateOptions(options, ComicParser.parseOptionTypes);
-    if (this.cryptoProvider) {
-      this.cryptoProvider.status = CryptoProvider.Status.PARSE;
-    }
     const context = new Context();
     context.options = mergeObjects(ComicParser.parseDefaultOptions, options);
     context.entries = await readEntries(this.input, this.cryptoProvider);
@@ -171,9 +167,6 @@ class ComicParser {
     const { options, entries } = context;
     const { unzipPath, overwrite } = options;
     if (!isString(entries.source) && isExists(unzipPath)) {
-      if (this.cryptoProvider) {
-        this.cryptoProvider.status = CryptoProvider.Status.UNZIP;
-      }
       await entries.source.extractAll(unzipPath, overwrite);
       privateProps.set(this, { ...privateProps.get(this), input: unzipPath });
     }
@@ -252,9 +245,6 @@ class ComicParser {
     }
     validateOptions(options, ComicParser.readOptionTypes);
     const entries = await readEntries(this.input, this.cryptoProvider);
-    if (this.cryptoProvider) {
-      this.cryptoProvider.status = CryptoProvider.Status.READ;
-    }
     return {
       items,
       entries,
