@@ -47,7 +47,7 @@ async function extractAll(unzipPath, overwrite = true) {
       const onError = (e) => {
         Logger.error(e);
         reject(e);
-        writeStream.close();
+        writeStream.end();
       };
       writeStream.on('error', onError);
       writeStream.on('close', () => resolve());
@@ -59,7 +59,7 @@ async function extractAll(unzipPath, overwrite = true) {
           }
           writeStream.write(chunk);
         })
-        .on('finish', () => writeStream.close());
+        .on('finish', () => writeStream.end());
     });
   };
 
