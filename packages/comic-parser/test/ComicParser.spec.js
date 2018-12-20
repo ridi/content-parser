@@ -154,7 +154,9 @@ describe('Reading test', () => {
 
       it('Read single item with base64', () => {
         return parser.readItem(book.items[0], { base64: true }).then((result) => {
-          result.should.equal(fs.readFileSync(Paths.COMIC_BASE64, 'utf8'));
+          const expected = fs.readFileSync(Paths.COMIC_BASE64, 'utf-8');
+          result.length.should.equal(expected.length);
+          result.substr(0, 500).should.equal(expected.substr(0, 500));
         });
       });
 
