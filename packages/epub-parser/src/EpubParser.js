@@ -168,7 +168,9 @@ class EpubParser {
     context = await this._parseOpf(context);
     context = await this._parseNcx(context);
     context = await this._unzipIfNeeded(context);
-    Logger.warn('Cover image not found in EPUB.');
+    if (!context.foundCover) {
+      Logger.warn('Cover image not found in EPUB.');
+    }
     const book = await this._createBook(context);
     return book;
   }
