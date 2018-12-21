@@ -44,6 +44,9 @@ class Logger {
   measureSync(func, thisArg, argsArray, message, ...optionalParams) {
     if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
       const startTime = new Date().getTime();
+      if (!isExists(this._firstTime)) {
+        this._firstTime = startTime;
+      }
       const result = func.apply(thisArg, argsArray);
       console.log(`[${this.namespace}] ${message} (${new Date().getTime() - startTime}ms)`, ...optionalParams);
       return result;
