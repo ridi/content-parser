@@ -30,6 +30,8 @@ import xmlLoader, { getValue, getValues, textNodeName } from './loader/xmlLoader
 
 const privateProps = new WeakMap();
 
+const logger = new Logger('EpubParser');
+
 class EpubParser {
   /**
    * Get default values of parse options
@@ -131,6 +133,11 @@ class EpubParser {
   get cryptoProvider() { return privateProps.get(this).cryptoProvider; }
 
   /**
+   * Get logger
+   */
+  get logger() { return logger; }
+
+  /**
    * Create new EpubParser
    * @param {string} input file or directory
    * @param {CryptoProvider} cryptoProvider en/decrypto provider
@@ -162,17 +169,26 @@ class EpubParser {
    * });
    */
   async parse(options = {}) {
-    let context = await this._prepareParse(options);
-    context = await this._validatePackageIfNeeded(context);
-    context = await this._parseMetaInf(context);
-    context = await this._parseOpf(context);
-    context = await this._parseNcx(context);
-    context = await this._unzipIfNeeded(context);
-    if (!context.foundCover) {
-      Logger.warn('Cover image not found in EPUB.');
+    const tasks = [
+      { func: this._prepareParse, name: 'prepareParse' },
+      { func: this._validatePackageIfNeeded, name: 'validatePackageIfNeeded' },
+      { func: this._parseMetaInf, name: 'parseMetaInf' },
+      { func: this._parseOpf, name: 'parseOpf' },
+      { func: this._parseNcx, name: 'parseNcx' },
+      { func: this._unzipIfNeeded, name: 'unzipIfNeeded' },
+      { func: this._createBook, name: 'createBook' },
+    ];
+    let context = options;
+    await tasks.reduce((prevPromise, task) => { // eslint-disable-line arrow-body-style
+      return prevPromise.then(async () => {
+        const { func, name } = task;
+        context = await logger.measure(func, this, [context], name);
+      });
+    }, Promise.resolve());
+    if (!isExists(context.cover)) {
+      logger.warn('Cover image not found in EPUB.');
     }
-    const book = await this._createBook(context);
-    return book;
+    return context;
   }
 
   /**
@@ -189,7 +205,7 @@ class EpubParser {
     validateOptions(options, EpubParser.parseOptionTypes);
     const context = new Context();
     context.options = mergeObjects(EpubParser.parseDefaultOptions, options);
-    context.entries = await readEntries(this.input, this.cryptoProvider);
+    context.entries = await readEntries(this.input, this.cryptoProvider, logger);
     return context;
   }
 
@@ -383,7 +399,7 @@ class EpubParser {
         rawItem.itemType = this.getItemTypeFromMediaType(rawItem.mediaType);
         if (rawItem.itemType === DeadItem) {
           rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
-          Logger.warn(`Referenced resource '${rawItem.id}' ignored. (reason: ${rawItem.reason})`);
+          logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
         }
 
         const itemEntry = entries.find(rawItem.href);
@@ -404,7 +420,7 @@ class EpubParser {
             } else {
               rawItem.itemType = DeadItem;
               rawItem.reason = DeadItem.Reason.NOT_SPINE;
-              Logger.warn(`Referenced resource '${rawItem.id}' ignored. (reason: ${rawItem.reason})`);
+              logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
             }
           } else if (rawItem.itemType === ImageItem) {
             if (!context.foundCover) {
@@ -425,7 +441,7 @@ class EpubParser {
             if (rawItem.id !== tocId) {
               rawItem.itemType = DeadItem;
               rawItem.reason = DeadItem.Reason.NOT_NCX;
-              Logger.warn(`Referenced resource '${rawItem.id}' ignored. (reason: ${rawItem.reason})`);
+              logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
             }
           }
 
@@ -441,7 +457,7 @@ class EpubParser {
         } else {
           rawItem.itemType = DeadItem;
           rawItem.reason = DeadItem.Reason.NOT_EXISTS;
-          Logger.warn(`Referenced resource '${rawItem.id}' ignored. (reason: ${rawItem.reason})`);
+          logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
         }
         rawBook.items.push(rawItem);
       });
@@ -677,9 +693,18 @@ class EpubParser {
    * });
    */
   async readItems(items, options = {}) {
-    const context = await this._prepareRead(items, options);
-    const results = await this._read(context);
-    return results;
+    const tasks = [
+      { func: this._prepareRead, name: 'prepareRead' },
+      { func: this._read, name: 'read' },
+    ];
+    let context = [items, options];
+    await tasks.reduce((prevPromise, task) => { // eslint-disable-line arrow-body-style
+      return prevPromise.then(async () => {
+        const { func, name } = task;
+        context = await logger.measure(func, this, isArray(context) ? context : [context], name);
+      });
+    }, Promise.resolve());
+    return context;
   }
 
   /**
@@ -705,7 +730,7 @@ class EpubParser {
       throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
     }
     validateOptions(options, EpubParser.readOptionTypes);
-    const entries = await readEntries(this.input, this.cryptoProvider);
+    const entries = await readEntries(this.input, this.cryptoProvider, logger);
     return {
       items,
       entries,

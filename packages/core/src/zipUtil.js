@@ -3,7 +3,6 @@ import path from 'path';
 import unzipper from 'unzipper';
 
 import CryptoProvider from './CryptoProvider';
-import Logger from './Logger';
 import { isExists, isString } from './typecheck';
 import { safePathJoin } from './pathUtil';
 
@@ -70,13 +69,13 @@ async function extractAll(unzipPath, overwrite = true) {
       }
       const error = await writeFile(entry, output);
       if (error) {
-        Logger.error(error);
+        this.logger.error(error);
       }
     });
   }, Promise.resolve());
 }
 
-export default async function openZip(file, cryptoProvider) {
+export default async function openZip(file, cryptoProvider, logger) {
   let open = unzipper.Open.file;
   if (!isString(file)) {
     open = unzipper.Open.buffer;
@@ -88,5 +87,6 @@ export default async function openZip(file, cryptoProvider) {
     find,
     getFile,
     extractAll,
+    logger,
   };
 }

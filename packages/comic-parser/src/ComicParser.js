@@ -1,6 +1,7 @@
 import {
   Errors, createError,
-  isExists, isString,
+  Logger,
+  isArray, isExists, isString,
   mergeObjects,
   readEntries,
   stringContains,
@@ -16,6 +17,8 @@ import Book from './model/Book';
 import Item from './model/Item';
 
 const privateProps = new WeakMap();
+
+const logger = new Logger('ComicParser');
 
 class ComicParser {
   /**
@@ -73,6 +76,11 @@ class ComicParser {
   get cryptoProvider() { return privateProps.get(this).cryptoProvider; }
 
   /**
+   * Get logger
+   */
+  get logger() { return logger; }
+
+  /**
    * Create new ComicParser
    * @param {string} input file or directory
    * @param {CryptoProvider} cryptoProvider en/decrypto provider
@@ -104,11 +112,20 @@ class ComicParser {
    * });
    */
   async parse(options = {}) {
-    let context = await this._prepareParse(options);
-    context = await this._parse(context);
-    context = await this._unzipIfNeeded(context);
-    const list = await this._createBook(context);
-    return list;
+    const tasks = [
+      { func: this._prepareParse, name: 'prepareParse' },
+      { func: this._parse, name: 'parse' },
+      { func: this._unzipIfNeeded, name: 'unzipIfNeeded' },
+      { func: this._createBook, name: 'createBook' },
+    ];
+    let context = options;
+    await tasks.reduce((prevPromise, task) => { // eslint-disable-line arrow-body-style
+      return prevPromise.then(async () => {
+        const { func, name } = task;
+        context = await logger.measure(func, this, [context], name);
+      });
+    }, Promise.resolve());
+    return context;
   }
 
   /**
@@ -125,7 +142,7 @@ class ComicParser {
     validateOptions(options, ComicParser.parseOptionTypes);
     const context = new Context();
     context.options = mergeObjects(ComicParser.parseDefaultOptions, options);
-    context.entries = await readEntries(this.input, this.cryptoProvider);
+    context.entries = await readEntries(this.input, this.cryptoProvider, logger);
     return context;
   }
 
@@ -216,9 +233,18 @@ class ComicParser {
    * });
    */
   async readItems(items, options = {}) {
-    const context = await this._prepareRead(items, options);
-    const results = await this._read(context);
-    return results;
+    const tasks = [
+      { func: this._prepareRead, name: 'prepareRead' },
+      { func: this._read, name: 'read' },
+    ];
+    let context = [items, options];
+    await tasks.reduce((prevPromise, task) => { // eslint-disable-line arrow-body-style
+      return prevPromise.then(async () => {
+        const { func, name } = task;
+        context = await logger.measure(func, this, isArray(context) ? context : [context], name);
+      });
+    }, Promise.resolve());
+    return context;
   }
 
   /**
@@ -244,7 +270,7 @@ class ComicParser {
       throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
     }
     validateOptions(options, ComicParser.readOptionTypes);
-    const entries = await readEntries(this.input, this.cryptoProvider);
+    const entries = await readEntries(this.input, this.cryptoProvider, logger);
     return {
       items,
       entries,

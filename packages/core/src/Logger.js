@@ -9,56 +9,56 @@ const LogLevel = Object.freeze({
   VERBOSE: 'verbose',
 });
 
-let logLevel = LogLevel.ERROR;
-
 class Logger {
-  static setLogLevel(level) {
-    logLevel = stringContains(Object.values(LogLevel), level) ? level : logLevel;
+  get logLevel() { return this._logLevel; }
+
+  set logLevel(level) { this._logLevel = stringContains(Object.values(LogLevel), level) ? level : this.logLevel; }
+
+  constructor(namespace, logLevel = '') {
+    this.namespace = namespace || 'Logger';
+    this._logLevel = stringContains(Object.values(LogLevel), logLevel) ? logLevel : LogLevel.ERROR;
   }
 
-  static getLogLevel() {
-    return logLevel;
-  }
-
-  static info(message, ...optionalParams) {
-    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], logLevel)) {
-      console.log(message, ...optionalParams);
+  info(message, ...optionalParams) {
+    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
+      console.log(`[${this.namespace}] ${message}`, ...optionalParams);
     }
   }
 
-  static async measure(func, message, ...optionalParams) {
-    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], logLevel)) {
+  async measure(func, thisArg, argsArray, message, ...optionalParams) {
+    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
       const startTime = new Date().getTime();
-      const result = await func();
-      console.log(`${message} (${new Date().getTime() - startTime}ms)`, ...optionalParams);
+      const result = await func.apply(thisArg, argsArray);
+      console.log(`[${this.namespace}] ${message} (${new Date().getTime() - startTime}ms)`, ...optionalParams);
       return result;
     }
-    return func();
+    const result = await func.apply(thisArg, argsArray);
+    return result;
   }
 
-  static measureSync(func, message, ...optionalParams) {
-    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], logLevel)) {
+  measureSync(func, thisArg, argsArray, message, ...optionalParams) {
+    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
       const startTime = new Date().getTime();
-      const result = func();
-      console.log(`${message} (${new Date().getTime() - startTime}ms)`, ...optionalParams);
+      const result = func.apply(thisArg, argsArray);
+      console.log(`[${this.namespace}] ${message} (${new Date().getTime() - startTime}ms)`, ...optionalParams);
       return result;
     }
-    return func();
+    return func.apply(thisArg, argsArray);
   }
 
-  static warn(message, ...optionalParams) {
-    if (stringContains([LogLevel.WARNING, LogLevel.VERBOSE], logLevel)) {
-      console.warn(message, ...optionalParams);
+  warn(message, ...optionalParams) {
+    if (stringContains([LogLevel.WARNING, LogLevel.VERBOSE], this.logLevel)) {
+      console.warn(`[${this.namespace}] ${message}`, ...optionalParams);
     }
   }
 
-  static error(message, ...optionalParams) {
-    if (stringContains([LogLevel.ERROR, LogLevel.VERBOSE], logLevel)) {
-      console.error(message, ...optionalParams);
+  error(message, ...optionalParams) {
+    if (stringContains([LogLevel.ERROR, LogLevel.VERBOSE], this.logLevel)) {
+      console.error(`[${this.namespace}] ${message}`, ...optionalParams);
     }
   }
 }
 
-Logger.LogLevel = LogLevel;
-
 export default Logger;
+
+export { LogLevel };

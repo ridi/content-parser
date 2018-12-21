@@ -1,7 +1,7 @@
 import Cryptor from './Cryptor';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
-import Logger from './Logger';
+import Logger, { LogLevel } from './Logger';
 import mergeObjects from './mergeObjects';
 import parseBool from './parseBool';
 
@@ -33,6 +33,7 @@ export {
   Cryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Logger,
+  LogLevel,
   mergeObjects,
   parseBool,
   safeDirname, safePath, safePathJoin, getPathes,

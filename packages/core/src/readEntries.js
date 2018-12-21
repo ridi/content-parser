@@ -58,12 +58,12 @@ function fromDirectory(dir, cryptoProvider) {
   }, []));
 }
 
-export default async function readEntries(input, cryptoProvider) {
+export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     if (isExists(cryptoProvider)) {
       input = cryptoProvider.run(fs.readFileSync(input), input, CryptoProvider.Purpose.READ_IN_DIR);
     }
-    const zip = await openZip(input, cryptoProvider);
+    const zip = await openZip(input, cryptoProvider, logger);
     return fromZip(zip);
   }
   return fromDirectory(input, cryptoProvider);

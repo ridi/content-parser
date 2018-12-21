@@ -1,7 +1,7 @@
 import {
   CryptoProvider, Cryptor,
   Errors,
-  Logger,
+  LogLevel,
 } from '@ridi/parser-core';
 
 import ComicParser from './ComicParser';
@@ -9,7 +9,7 @@ import ComicParser from './ComicParser';
 export default {
   ComicParser,
   Errors,
-  Logger,
+  LogLevel,
   CryptoProvider,
   Cryptor,
 };

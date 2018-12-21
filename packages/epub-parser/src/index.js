@@ -1,7 +1,7 @@
 import {
   CryptoProvider, Cryptor,
   Errors,
-  Logger,
+  LogLevel,
 } from '@ridi/parser-core';
 
 import EpubParser from './EpubParser';
@@ -9,7 +9,7 @@ import EpubParser from './EpubParser';
 export default {
   EpubParser,
   Errors,
-  Logger,
+  LogLevel,
   CryptoProvider,
   Cryptor,
 };
