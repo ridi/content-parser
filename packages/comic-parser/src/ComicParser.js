@@ -122,9 +122,11 @@ class ComicParser {
     await tasks.reduce((prevPromise, task) => { // eslint-disable-line arrow-body-style
       return prevPromise.then(async () => {
         const { func, name } = task;
-        context = await logger.measure(func, this, [context], name);
+        const message = `parse - ${name}`;
+        context = await logger.measure(func, this, [context], message);
       });
     }, Promise.resolve());
+    logger.result('parse');
     return context;
   }
 
@@ -241,9 +243,11 @@ class ComicParser {
     await tasks.reduce((prevPromise, task) => { // eslint-disable-line arrow-body-style
       return prevPromise.then(async () => {
         const { func, name } = task;
-        context = await logger.measure(func, this, isArray(context) ? context : [context], name);
+        const message = `readItems(${items.length}) - ${name}`;
+        context = await logger.measure(func, this, isArray(context) ? context : [context], message);
       });
     }, Promise.resolve());
+    logger.result(`readItems(${items.length})`);
     return context;
   }
 

@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { isExists } from './typecheck';
 import stringContains from './stringContains';
 
 const LogLevel = Object.freeze({
@@ -17,6 +18,7 @@ class Logger {
   constructor(namespace, logLevel = '') {
     this.namespace = namespace || 'Logger';
     this._logLevel = stringContains(Object.values(LogLevel), logLevel) ? logLevel : LogLevel.ERROR;
+    this._firstTime = null;
   }
 
   info(message, ...optionalParams) {
@@ -28,6 +30,9 @@ class Logger {
   async measure(func, thisArg, argsArray, message, ...optionalParams) {
     if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
       const startTime = new Date().getTime();
+      if (!isExists(this._firstTime)) {
+        this._firstTime = startTime;
+      }
       const result = await func.apply(thisArg, argsArray);
       console.log(`[${this.namespace}] ${message} (${new Date().getTime() - startTime}ms)`, ...optionalParams);
       return result;
@@ -44,6 +49,14 @@ class Logger {
       return result;
     }
     return func.apply(thisArg, argsArray);
+  }
+
+  result(message, ...optionalParams) {
+    const time = this._firstTime || new Date().getTime();
+    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
+      console.log(`[${this.namespace}] ${message} (${new Date().getTime() - time}ms)`, ...optionalParams);
+    }
+    this._firstTime = null;
   }
 
   warn(message, ...optionalParams) {
