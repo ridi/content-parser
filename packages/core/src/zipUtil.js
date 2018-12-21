@@ -15,11 +15,8 @@ async function getFile(entry, encoding) {
   let file = await new Promise((resolve, reject) => {
     let buffer = Buffer.from([]);
     entry.stream() // is DuplexStream.
-      .on('error', (e) => {
-        Logger.error(e);
-        reject(e);
-      })
       .setEncoding('binary')
+      .on('error', error => reject(error))
       .on('data', (chunk) => {
         chunk = Buffer.from(chunk, 'binary');
         if (isExists(this.cryptoProvider)) {
@@ -42,11 +39,10 @@ async function extractAll(unzipPath, overwrite = true) {
   fs.mkdirpSync(unzipPath);
 
   const writeFile = (entry, output) => { // eslint-disable-line arrow-body-style
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const writeStream = fs.createWriteStream(output, { encoding: 'binary' });
-      const onError = (e) => {
-        Logger.error(e);
-        reject(e);
+      const onError = (error) => {
+        resolve(error);
         writeStream.end();
       };
       writeStream.on('error', onError);
@@ -72,7 +68,10 @@ async function extractAll(unzipPath, overwrite = true) {
           fs.mkdirpSync(dir);
         }
       }
-      await writeFile(entry, output);
+      const error = await writeFile(entry, output);
+      if (error) {
+        Logger.error(error);
+      }
     });
   }, Promise.resolve());
 }
