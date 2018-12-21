@@ -1,12 +1,15 @@
 {
   "scripts": {
     "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
-    "build": "lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
-    "test": "lerna exec --parallel -- istanbul cover -x \"**/lib/**\" ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
+    "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
+    "test": "yarn build && yarn lint && lerna exec --parallel -- istanbul cover -x \"**/lib/**\" ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
-    "bump": "lerna version --amend -m \"Bump version to %v\""
+    "bump": "lerna publish"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",
