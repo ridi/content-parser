@@ -4,6 +4,7 @@ import Errors, { createError, mustOverride } from './errors';
 import Logger, { LogLevel } from './Logger';
 import mergeObjects from './mergeObjects';
 import parseBool from './parseBool';
+import Parser from './Parser';
 
 import {
   safeDirname,
@@ -36,6 +37,7 @@ export {
   LogLevel,
   mergeObjects,
   parseBool,
+  Parser,
   safeDirname, safePath, safePathJoin, getPathes,
   readEntries,
   stringContains,

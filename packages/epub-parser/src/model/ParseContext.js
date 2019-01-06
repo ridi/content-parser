@@ -1,6 +1,6 @@
 import Book from './Book';
 
-class Context {
+class ParseContext {
   constructor() {
     this.options = undefined;
     this.opfPath = undefined;
@@ -12,4 +12,4 @@ class Context {
   }
 }
 
-export default Context;
+export default ParseContext;
