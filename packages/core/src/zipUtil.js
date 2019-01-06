@@ -67,9 +67,11 @@ async function extractAll(unzipPath, overwrite = true) {
           fs.mkdirpSync(dir);
         }
       }
-      const error = await writeFile(entry, output);
-      if (error) {
-        this.logger.error(error);
+      if (!entry.path.endsWith('/')) {
+        const error = await writeFile(entry, output);
+        if (error) {
+          this.logger.error(error);
+        }
       }
     });
   }, Promise.resolve());
