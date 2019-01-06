@@ -8,7 +8,7 @@ should(); // Initialize should
 describe('Model - SpineItem', () => {
   it('constructor test', () => {
     let item = new SpineItem();
-    item.index.should.equal(SpineItem.IGNORED_INDEX);
+    assert(item.index === undefined);
     item.isLinear.should.be.true;
     assert(item.first() === undefined);
     assert(item.prev() === undefined);
@@ -39,7 +39,7 @@ describe('Model - SpineItem', () => {
   it('toRaw test', () => {
     let item = new SpineItem({});
     let rawItem = item.toRaw();
-    rawItem.index.should.equal(SpineItem.IGNORED_INDEX);
+    assert(item.index === undefined);
     rawItem.isLinear.should.be.true;
     assert(rawItem.styles === undefined);
 
@@ -56,7 +56,7 @@ describe('Model - SpineItem', () => {
       id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, isLinear: false, styles: styles,
     });
     rawItem = item.toRaw();
-    rawItem.index.should.equal(SpineItem.IGNORED_INDEX);
+    assert(item.index === undefined);
     rawItem.isLinear.should.be.false;
     rawItem.styles.should.deep.equal(['./Style0001.css', './Style0002.css']);
   });

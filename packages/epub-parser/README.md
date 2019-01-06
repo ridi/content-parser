@@ -311,7 +311,6 @@ or throw exception.
 * [allowNcxFileMissing](#allowNcxFileMissing)
 * [unzipPath](#unzipPath)
 * [overwrite](#overwrite)
-* [ignoreLinear](#ignoreLinear)
 * [parseStyle](#parseStyle)
 * [styleNamespacePrefix](#styleNamespacePrefix)
 
@@ -362,24 +361,6 @@ If true, overwrite to [unzipPath](#unzipPath) when uncompress.
 > only using if unzipPath specified.
 
 **Default:** `true`
-
----
-
-<a id="ignoreLinear"></a>
-
-### ignoreLinear: *`boolean`*
-
-If true, ignore `index` difference caused by `isLinear` property of [SpineItem](#spineItem).
-
-```js
-// e.g. If left is false, right is true.
-[{ index: 0, isLinear: true, ... },       [{ index: 0, isLinear: true, ... },
-{ index: 1, isLinear: true, ... },        { index: 1, isLinear: true, ... },
-{ index: -2, isLinear: false, ... },      { index: 2, isLinear: false, ... },
-{ index: 3, isLinear: true, ... }]        { index: 3, isLinear: true, ... }]
-```
-
-**Default:** `false`
 
 ---
 

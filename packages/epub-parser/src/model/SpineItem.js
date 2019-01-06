@@ -2,14 +2,12 @@ import { isExists, mergeObjects } from '@ridi/parser-core';
 
 import Item from './Item';
 
-const ignoredIndex = -1;
-
 class SpineItem extends Item {
   get defaultEncoding() { return 'utf8'; }
 
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
-    this.index = isExists(rawObj.index) ? rawObj.index : ignoredIndex;
+    this.index = rawObj.index;
     this.isLinear = isExists(rawObj.isLinear) ? rawObj.isLinear : true;
     if (isExists(rawObj.styles)) {
       this.styles = rawObj.styles;
@@ -37,7 +35,5 @@ class SpineItem extends Item {
     return rawObject;
   }
 }
-
-SpineItem.IGNORED_INDEX = ignoredIndex;
 
 export default SpineItem;

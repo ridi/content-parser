@@ -17,7 +17,7 @@ import Version from './Version';
 
 function postSpines(spines, styles) {
   const firstSpine = spines[0];
-  spines.sort((s1, s2) => (s1.index < 0 || s2.index < 0 ? 0 : s1.index - s2.index))
+  spines.sort((s1, s2) => s1.index - s2.index)
     .forEach((spine, idx, list) => {
       const prevSpine = list[idx - 1];
       const nextSpine = list[idx + 1];

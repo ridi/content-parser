@@ -211,12 +211,6 @@ describe('Parsing test', () => {
   });
 
   describe('Parsing test by options', () => {
-    it('Ignore linear property', () => {
-      return new EpubParser(Paths.DEFAULT).parse({ ignoreLinear: true }).then((book) => {
-        book.spines.filter(spine => spine.index === SpineItem.IGNORED_INDEX).should.have.lengthOf(0);
-      });
-    });
-
     it('Parse style', () => {
       return new EpubParser(Paths.EXTRACT_STYLE).parse().then((book) => {
         const expectedBook = JSON.parse(fs.readFileSync(Paths.EXPECTED_EXTRACT_STYLE_BOOK));

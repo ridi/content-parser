@@ -42,13 +42,6 @@ class EpubParser extends Parser {
       validatePackage: false,
       // If false, stop parsing when NCX file not exists.
       allowNcxFileMissing: true,
-      // If true, ignore index difference caused by isLinear property of SpineItem.
-      // e.g. If left is true, right is false.
-      //  [{ index: 0, isLinear: true, ... },       [{ index: 0, isLinear: true, ... },
-      //   { index: 1, isLinear: true, ... },        { index: 1, isLinear: true, ... },
-      //   { index: 2, isLinear: false, ... },       { index: -1, isLinear: false, ... },
-      //   { index: 3, isLinear: true, ... }]        { index: 2, isLinear: true, ... }]
-      ignoreLinear: false,
       // If true, styles used for spine is described, and one namespace is given per CSS file or inline style.
       // Otherwise it CssItem.namespace, SpineItem.styles is undefined.
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
@@ -66,7 +59,6 @@ class EpubParser extends Parser {
       ...super.parseOptionTypes,
       validatePackage: 'Boolean',
       allowNcxFileMissing: 'Boolean',
-      ignoreLinear: 'Boolean',
       parseStyle: 'Boolean',
       styleNamespacePrefix: 'String',
     };
@@ -382,9 +374,7 @@ class EpubParser extends Parser {
               // Because this spine is excluded from flow.
               const ref = itemRefs[refIndex];
               rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
-              if (options.ignoreLinear || rawItem.isLinear) {
-                rawItem.index = refIndex;
-              }
+              rawItem.index = refIndex;
             } else {
               rawItem.itemType = DeadItem;
               rawItem.reason = DeadItem.Reason.NOT_SPINE;
