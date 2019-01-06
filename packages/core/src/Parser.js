@@ -3,9 +3,21 @@ import fs from 'fs';
 import Errors, { createError, mustOverride } from './errors';
 import Logger from './Logger';
 import mergeObjects from './mergeObjects';
-import { isArray, isExists, isString } from './typecheck';
+
+import {
+  isArray,
+  isExists,
+  isFunc,
+  isString,
+} from './typecheck';
+
 import readEntries from './readEntries';
 import validateOptions from './validateOptions';
+
+const Action = Object.freeze({
+  PARSE: 'parse',
+  READ_ITEMS: 'readItems',
+});
 
 const privateProps = new WeakMap();
 
@@ -60,6 +72,26 @@ class Parser {
    * Get logger
    */
   get logger() { return privateProps.get(this).logger; }
+
+  /**
+   * Get onProgress callback
+   */
+  get onProgress() { return privateProps.get(this).onProgress || (() => {}); }
+
+  /**
+   * Set callback that tells progress of parse and readItems.
+   * @example
+   * parser.onProgress = (step, totalStep, action) => {
+   *   console.log(`[${action}] ${step} / ${totalStep}`);
+   * }
+   * @see Parser.Action
+   */
+  set onProgress(onProgress) {
+    if (!isFunc(onProgress)) {
+      throw createError(Errors.EINVAL, 'onProgress', 'onProgress', onProgress);
+    }
+    privateProps.set({ ...privateProps.get(this), onProgress });
+  }
 
   /**
    * Create new Parser
@@ -159,14 +191,17 @@ class Parser {
       this._parseAfterTasks(),
     );
     let context = options;
-    await tasks.reduce((prevPromise, task) => { // eslint-disable-line arrow-body-style
-      return prevPromise.then(async () => {
+    this.onProgress(0, tasks.length, Action.PARSE);
+    await tasks.reduce((prevPromise, task, index) => { // eslint-disable-line arrow-body-style
+      const result = prevPromise.then(async () => {
         const { func, name } = task;
-        const message = `parse - ${name}`;
+        const message = `${Action.PARSE} - ${name}`;
         context = await this.logger.measure(func, this, [context], message);
       });
+      this.onProgress(index + 1, tasks.length, Action.PARSE);
+      return result;
     }, Promise.resolve());
-    this.logger.result('parse');
+    this.logger.result(Action.PARSE);
     return context;
   }
 
@@ -278,14 +313,17 @@ class Parser {
       this._readAfterTasks(),
     );
     let context = [items, options];
-    await tasks.reduce((prevPromise, task) => { // eslint-disable-line arrow-body-style
-      return prevPromise.then(async () => {
+    this.onProgress(0, tasks.length, Action.READ_ITEMS);
+    await tasks.reduce((prevPromise, task, index) => { // eslint-disable-line arrow-body-style
+      const result = prevPromise.then(async () => {
         const { func, name } = task;
-        const message = `readItems(${items.length}) - ${name}`;
+        const message = `${Action.READ_ITEMS}(${items.length}) - ${name}`;
         context = await this.logger.measure(func, this, isArray(context) ? context : [context], message);
       });
+      this.onProgress(index + 1, tasks.length, Action.READ_ITEMS);
+      return result;
     }, Promise.resolve());
-    this.logger.result(`readItems(${items.length})`);
+    this.logger.result(`${Action.READ_ITEMS}(${items.length})`);
     return context;
   }
 
@@ -325,5 +363,7 @@ class Parser {
     return mustOverride();
   }
 }
+
+Parser.Action = Action;
 
 export default Parser;
