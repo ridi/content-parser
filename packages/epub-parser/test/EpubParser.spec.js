@@ -10,6 +10,8 @@ import DeadItem from '../src/model/DeadItem';
 import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
 import Paths from '../../../test/paths';
+import ReadContext from '../src/model/ReadContext';
+import ParseContext from '../src/model/ParseContext';
 import validationBook from './validationBook';
 import TestCryptoProvider from './TestCryptoProvider';
 
@@ -93,6 +95,7 @@ describe('Parsing test', () => {
   
     it('_prepareParse test', () => {
       return parser._prepareParse().then((context) => {
+        context.should.be.an.instanceOf(ParseContext);
         context.options.should.deep.equal(EpubParser.parseDefaultOptions);
         context.entries.should.not.null;
         _context = context;

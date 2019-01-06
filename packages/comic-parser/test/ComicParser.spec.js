@@ -7,6 +7,8 @@ import path from 'path';
 import Book from '../src/model/Book';
 import ComicParser from '../src/ComicParser';
 import Item from '../src/model/Item';
+import ReadContext from '../src/model/ReadContext';
+import ParseContext from '../src/model/ParseContext';
 import Paths from '../../../test/paths';
 import validationBook from './validationBook';
 
@@ -64,6 +66,7 @@ describe('Parsing test', () => {
   
     it('_prepareParse test', () => {
       return parser._prepareParse().then((context) => {
+        context.should.be.an.instanceOf(ParseContext);
         context.options.should.deep.equal(ComicParser.parseDefaultOptions);
         context.entries.should.not.null;
         _context = context;

@@ -307,8 +307,8 @@ class Parser {
     const { readOptionTypes, readDefaultOptions } = this.constructor;
     validateOptions(options, readOptionTypes);
     const entries = await readEntries(this.input, this.cryptoProvider, this.logger);
-    const ParseContext = this._getParseContextClass();
-    const context = new ParseContext();
+    const ReadContext = this._getReadContextClass();
+    const context = new ReadContext();
     context.items = items;
     context.entries = entries;
     context.options = mergeObjects(readDefaultOptions, options);

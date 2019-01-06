@@ -25,6 +25,11 @@ describe('Model - Item', () => {
     }).should.throw(/read only property/gi);
   });
 
+  it('mimeType test', () => {
+    new Item({ path: 'img.jPg' }).mimeType.should.equal('image/jpg');
+    new Item({ path: 'img.unsupportType' }).mimeType.should.equal('');
+  });
+
   it('toRaw test', () => {
     let item = new Item({});
     item.toRaw().should.deep.equal({ index: undefined, path: undefined, size: undefined });

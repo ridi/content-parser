@@ -202,7 +202,7 @@ describe('Cryptor', () => {
     });
   });
 
-  describe('cryption with padding', () => {
+  describe('cryption with padding (pkcs7)', () => {
     it('padding test', () => {
       // An example 128-bit key
       const key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -213,6 +213,31 @@ describe('Cryptor', () => {
 
       // Create cryptor
       const padding = Padding.PKCS7;
+      const cryptor = new Cryptor(Modes.ECB, { key });
+
+      // Encryption
+      const encryptedBytes = cryptor.encrypt(textBytes, padding);
+      const encryptedHex = hex.fromBytes(encryptedBytes);
+      encryptedHex.should.equal('23b4f080a310770e93def2ddfee44817');
+
+      // Decryption
+      const decryptBytes = cryptor.decrypt(encryptedBytes, padding);
+      const decryptedText = utf8.fromBytes(decryptBytes);
+      decryptedText.should.equal(text);
+    });
+  });
+
+  describe('cryption with padding (auto)', () => {
+    it('padding test', () => {
+      // An example 128-bit key
+      const key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+      // Convert text to bytes
+      const text = 'LessThan16Bytes';
+      const textBytes = utf8.toBytes(text);
+
+      // Create cryptor
+      const padding = Padding.AUTO;
       const cryptor = new Cryptor(Modes.ECB, { key });
 
       // Encryption
