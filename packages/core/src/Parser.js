@@ -227,7 +227,7 @@ class Parser {
 
   /**
    * Unzipping if zip source and unzipPath option specified
-   * @param {Context} context intermediate result
+   * @param {ParseContext} context intermediate result
    * @returns {Promise.<ParseContext>} return Context (no change at this step)
    * @throws {Errors.ENOENT} no such file or directory
    * @see Parser.parseDefaultOptions.unzipPath

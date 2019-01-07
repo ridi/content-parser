@@ -346,7 +346,7 @@ If false, stop parsing when NCX file not exists.
 
 ### unzipPath: *`?string`*
 
-If specified, uncompress to that path.
+If specified, unzip to that path.
 > only using if input is EPUB file.
 
 **Default:** `undefined`
@@ -357,7 +357,7 @@ If specified, uncompress to that path.
 
 ### overwrite: *`boolean`*
 
-If true, overwrite to [unzipPath](#unzipPath) when uncompress.
+If true, overwrite to [unzipPath](#unzipPath) when unzip.
 > only using if unzipPath specified.
 
 **Default:** `true`
