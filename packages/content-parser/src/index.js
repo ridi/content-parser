@@ -4,12 +4,14 @@ import {
   LogLevel,
 } from '@ridi/parser-core';
 
-import { EpubParser } from '@ridi/epub-parser';
-import { ComicParser } from '@ridi/comic-parser';
+import { EpubParser, EpubBook } from '@ridi/epub-parser';
+import { ComicParser, ComicBook } from '@ridi/comic-parser';
 
 export default {
   EpubParser,
+  EpubBook,
   ComicParser,
+  ComicBook,
   Errors,
   LogLevel,
   CryptoProvider,
