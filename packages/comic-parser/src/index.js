@@ -5,6 +5,7 @@ import {
 } from '@ridi/parser-core';
 
 import ComicParser from './ComicParser';
+import * as ComicBook from './model/Book';
 
 export default {
   ComicParser,
@@ -12,4 +13,5 @@ export default {
   LogLevel,
   CryptoProvider,
   Cryptor,
+  ComicBook,
 };
