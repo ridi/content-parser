@@ -7,7 +7,9 @@ class NavPoint {
     this.src = (rawObj.content || {}).src;
     this.anchor = ((src = '') => src.split('#')[1])(this.src);
     this.depth = rawObj.depth || 0;
-    this.children = (rawObj.children || []).map(child => new NavPoint(mergeObjects(child, { depth: this.depth + 1 })));
+    this.children = (rawObj.children || []).map(child => { // eslint-disable-line
+      return new NavPoint(mergeObjects(child, { depth: this.depth + 1 }), freeze);
+    });
     this.spine = undefined;
     /* istanbul ignore else: untestable */
     if (freeze) {

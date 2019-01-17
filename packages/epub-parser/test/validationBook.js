@@ -1,4 +1,5 @@
 import { isExists } from '@ridi/parser-core';
+import { assert } from 'chai';
 
 import Book from '../src/model/Book';
 import EpubParser from '../src/EpubParser';
@@ -79,30 +80,22 @@ export default function validationBook(book, expectedBook, options = EpubParser.
     }
   });
 
+  const navPointEquals = (actual, expected) => {
+    actual.id.should.equal(expected.id);
+    actual.label.should.equal(expected.label);
+    actual.src.should.equal(expected.src);
+    assert(actual.anchor === expected.anchor);
+    actual.depth.should.equal(expected.depth);
+    actual.children.should.have.lengthOf(expected.children.length);
+    actual.children.forEach((navPoint, idx) => navPointEquals(navPoint, expected.children[idx]));
+    if (isExists(actual.spine)) {
+      actual.spine.id.should.equal(expected.spine.id);
+    } else {
+      assert(actual.spine === expected.spine);
+    }
+  };
   book.ncx.navPoints.should.have.lengthOf(expectedBook.ncx.navPoints.length);
-  book.ncx.navPoints.forEach((navPoint, idx) => {
-    const expectedNavPoint = expectedBook.ncx.navPoints[idx];
-    navPoint.id.should.equal(expectedNavPoint.id);
-    navPoint.label.should.equal(expectedNavPoint.label);
-    navPoint.src.should.equal(expectedNavPoint.src);
-    if (isExists(navPoint.anchor)) {
-      navPoint.anchor.should.equal(expectedNavPoint.anchor);
-    } else {
-      isExists(navPoint.anchor).should.be.false;
-    }
-    navPoint.depth.should.equal(expectedNavPoint.depth);
-    navPoint.children.should.have.lengthOf(expectedNavPoint.children.length);
-    navPoint.children.forEach((childNavPoint, idx) => {
-      const expectedChildNavPoint = expectedNavPoint.children[idx];
-      childNavPoint.id.should.equal(expectedChildNavPoint.id);
-      childNavPoint.children.should.have.lengthOf(expectedChildNavPoint.children.length);
-    });
-    if (navPoint.spine) {
-      navPoint.spine.id.should.equal(expectedNavPoint.spine.id);
-    } else {
-      isExists(navPoint.spine).should.be.false;
-    }
-  });
+  book.ncx.navPoints.forEach((navPoint, idx) => navPointEquals(navPoint, expectedBook.ncx.navPoints[idx]));
 
   book.spines.should.have.lengthOf(expectedBook.spines.length);
   book.spines.forEach((spine, idx) => {

@@ -35,13 +35,15 @@ function postSpines(spines, styles) {
 
 function postNcx(ncx, spines) {
   if (isExists(ncx)) {
-    ncx.navPoints.forEach((navPoint) => {
+    const spineMapping = (navPoint) => {
       navPoint.spine = spines.find((spine) => {
-        const href = navPoint.src.replace(navPoint.anchor || '', '');
+        const href = navPoint.src.replace(`#${navPoint.anchor || ''}`, '');
         return spine.href === href;
       });
+      navPoint.children.forEach(child => spineMapping(child));
       Object.freeze(navPoint);
-    });
+    };
+    ncx.navPoints.forEach(navPoint => spineMapping(navPoint));
     Object.freeze(ncx);
   }
 }
@@ -88,13 +90,10 @@ class Book {
     this.metas = (rawBook.metas || []).map(rawObj => new Meta(rawObj));
     this.items = (rawBook.items || []).map((rawObj) => {
       let { itemType } = rawObj;
-      let freeze = true;
       if (isString(itemType)) {
         itemType = getItemTypeFromString(itemType);
       }
-      if (itemType === SpineItem || itemType === NcxItem) {
-        freeze = false;
-      }
+      const freeze = !(itemType === SpineItem || itemType === NcxItem);
       return new itemType(rawObj, freeze);
     });
     this.spines = this.items.filter(item => item instanceof SpineItem);
