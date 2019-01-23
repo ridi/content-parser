@@ -1,6 +1,6 @@
 {
   "name": "@ridi/content-parser",
-  "version": "0.3.0-alpha.12",
+  "version": "0.3.0-alpha.13",
   "description": "Content data parser for Ridibooks services",
   "author": {
     "name": "Ridibooks Viewer Team",
@@ -18,8 +18,8 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
-    "@ridi/comic-parser": "^0.3.0-alpha.12",
-    "@ridi/epub-parser": "^0.3.0-alpha.12",
-    "@ridi/parser-core": "^0.3.0-alpha.12"
+    "@ridi/comic-parser": "^0.3.0-alpha.13",
+    "@ridi/epub-parser": "^0.3.0-alpha.13",
+    "@ridi/parser-core": "^0.3.0-alpha.13"
   }
 }
