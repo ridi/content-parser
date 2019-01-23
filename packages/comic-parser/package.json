@@ -1,6 +1,6 @@
 {
   "name": "@ridi/comic-parser",
-  "version": "0.3.0-alpha-11",
+  "version": "0.3.0-alpha.12",
   "description": "Common comic data parser for Ridibooks services",
   "author": {
     "name": "Ridibooks Viewer Team",
@@ -18,7 +18,7 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
-    "@ridi/parser-core": "^0.3.0-alpha-11",
+    "@ridi/parser-core": "^0.3.0-alpha.12",
     "fs-extra": "^7.0.1",
     "natural-orderby": "^1.0.2"
   }
