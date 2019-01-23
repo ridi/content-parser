@@ -207,7 +207,18 @@ File extension to allow when extracting lists.
 
 ## Read Options
 
+* [force](#force)
 * [base64](#base64)
+
+---
+
+<a id="force"></a>
+
+### force: *boolean*
+
+If true, ignore any exceptions that occur within parser.
+
+**Default:** `false`
 
 ---
 

@@ -48,14 +48,19 @@ class Parser {
    * Get default values of read options
    */
   static get readDefaultOptions() {
-    return {};
+    return {
+      // If true, ignore any exceptions that occur within parser.
+      force: false,
+    };
   }
 
   /**
    * Get types of read option
    */
   static get readOptionTypes() {
-    return {};
+    return {
+      force: 'Boolean',
+    };
   }
 
   /**
@@ -339,7 +344,7 @@ class Parser {
    * @see Parser.readOptionTypes
    */
   async _prepareRead(items, options = {}) {
-    if (items.find(item => !(item instanceof this._getReadItemClass()))) {
+    if (!options.force && items.find(item => !(item instanceof this._getReadItemClass()))) {
       throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
     }
     const { readOptionTypes, readDefaultOptions } = this.constructor;

@@ -393,6 +393,7 @@ Prepend given string to namespace for identification.
 
 ## Read Options
 
+* [force](#force)
 * [basePath](#basePath)
 * [extractBody](#extractBody)
 * [serializedAnchor](#serializedAnchor)
@@ -400,6 +401,16 @@ Prepend given string to namespace for identification.
 * [removeTags](#removeTags)
 * [removeIds](#removeIds)
 * [removeClasses](#removeClasses)
+
+---
+
+<a id="force"></a>
+
+### force: *boolean*
+
+If true, ignore any exceptions that occur within parser.
+
+**Default:** `false`
 
 ---
 

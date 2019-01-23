@@ -605,6 +605,7 @@ class EpubParser extends Parser {
    * @param {ReadContext} context properties required for reading
    * @returns {(string|Buffer)[]} reading results
    * @throws {Errors.ENOFILE} no such file
+   * @see EpubParser.readDefaultOptions.force
    */
   async _read(context) {
     const { items, entries, options } = context;
@@ -617,7 +618,7 @@ class EpubParser extends Parser {
         }
 
         const entry = entries.find(item.href);
-        if (!isExists(entry)) {
+        if (!options.force && !isExists(entry)) {
           throw createError(Errors.ENOFILE, item.href);
         }
 
