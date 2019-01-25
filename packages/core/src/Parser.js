@@ -226,7 +226,7 @@ class Parser {
     const ParseContext = this._getParseContextClass();
     const context = new ParseContext();
     context.options = mergeObjects(parseDefaultOptions, options);
-    context.entries = await readEntries(this.input, this.cryptoProvider, this.logger);
+    context.entries = await readEntries(this.input, this.cryptoProvider, this.logger, true);
     return context;
   }
 

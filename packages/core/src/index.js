@@ -1,3 +1,10 @@
+import {
+  getCachePath,
+  removeCacheFile,
+  readCacheFile,
+  writeCacheFile,
+} from './cacheFile';
+
 import Cryptor from './Cryptor';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
@@ -31,6 +38,7 @@ import validateOptions from './validateOptions';
 import openZip from './zipUtil';
 
 export {
+  getCachePath, removeCacheFile, readCacheFile, writeCacheFile,
   Cryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Logger,

@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
+import { readCacheFile, writeCacheFile } from './cacheFile';
 import CryptoProvider from './CryptoProvider';
 import { getPathes, safePath } from './pathUtil';
 import { isExists } from './typecheck';
@@ -30,8 +31,13 @@ function fromZip(zip) {
   }, []));
 }
 
-function fromDirectory(dir, cryptoProvider) {
-  return create(dir, getPathes(dir).reduce((entries, fullPath) => {
+function fromDirectory(dir, cryptoProvider, resetCache) {
+  let pathes = JSON.parse(readCacheFile(dir) || '[]');
+  if (resetCache || pathes.length === 0) {
+    pathes = getPathes(dir);
+    writeCacheFile(dir, JSON.stringify(pathes), resetCache);
+  }
+  return create(dir, pathes.reduce((entries, fullPath) => {
     const subPathOffset = path.normalize(dir).length + path.sep.length;
     return entries.concat([{
       entryPath: safePath(fullPath).substring(subPathOffset),
@@ -58,7 +64,7 @@ function fromDirectory(dir, cryptoProvider) {
   }, []));
 }
 
-export default async function readEntries(input, cryptoProvider, logger) {
+export default async function readEntries(input, cryptoProvider, logger, resetCache = false) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     if (isExists(cryptoProvider)) {
       input = cryptoProvider.run(fs.readFileSync(input), input, CryptoProvider.Purpose.READ_IN_DIR);
@@ -66,5 +72,5 @@ export default async function readEntries(input, cryptoProvider, logger) {
     const zip = await openZip(input, cryptoProvider, logger);
     return fromZip(zip);
   }
-  return fromDirectory(input, cryptoProvider);
+  return fromDirectory(input, cryptoProvider, resetCache);
 }
