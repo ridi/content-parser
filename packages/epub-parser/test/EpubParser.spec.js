@@ -29,19 +29,16 @@ describe('Input test', () => {
 
   describe('Error Situation', () => {
     it('Invalid file path', () => {
-      try {
-        new EpubParser('./test/res/test.epub');
-      } catch (err) {
-        err.code.should.equal(Errors.ENOENT.code);
-      }
+      try { new EpubParser('./test/res/test.epub'); } catch (err) { err.code.should.equal(Errors.ENOENT.code); }
     });
   
     it('Invalid input', () => {
-      try {
-        new EpubParser([]);
-      } catch (err) {
-        err.code.should.equal(Errors.EINVAL.code);
-      }
+      try { new EpubParser([]); } catch (err) { err.code.should.equal(Errors.EINVAL.code); }
+    });
+
+    it('Invalid onProgress', () => {
+      const parser = new EpubParser(Paths.DEFAULT);
+      try { parser.onProgress = 5; } catch (err) { err.code.should.equal(Errors.EINVAL.code); }
     });
   });
 });
@@ -324,5 +321,17 @@ describe('Cryption test', () => {
         });
       });
     });
+  });
+});
+
+describe('onProgress test', () => {
+  it('test', () => {
+    const parser = new EpubParser(Paths.DEFAULT);
+    parser.onProgress = (step, totalStep, action) => {
+      Number.isInteger(step).should.be.true;
+      Number.isInteger(totalStep).should.be.true;
+      isString(action).should.be.true;
+    };
+    return parser.parse();
   });
 });

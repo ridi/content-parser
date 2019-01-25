@@ -26,19 +26,16 @@ describe('Input test', () => {
 
   describe('Error Situation', () => {
     it('Invalid file path', () => {
-      try {
-        new ComicParser('./test/res/test.zip');
-      } catch (err) {
-        err.code.should.equal(Errors.ENOENT.code);
-      }
+      try { new ComicParser('./test/res/test.zip'); } catch (err) { err.code.should.equal(Errors.ENOENT.code); }
     });
   
     it('Invalid input', () => {
-      try {
-        new ComicParser([]);
-      } catch (err) {
-        err.code.should.equal(Errors.EINVAL.code);
-      }
+      try { new ComicParser([]); } catch (err) { err.code.should.equal(Errors.EINVAL.code); }
+    });
+
+    it('Invalid onProgress', () => {
+      const parser = new ComicParser(Paths.COMIC);
+      try { parser.onProgress = 5; } catch (err) { err.code.should.equal(Errors.EINVAL.code); }
     });
   });
 });
@@ -170,5 +167,17 @@ describe('Reading test', () => {
         });
       });
     });
+  });
+});
+
+describe('onProgress test', () => {
+  it('test', () => {
+    const parser = new ComicParser(Paths.COMIC);
+    parser.onProgress = (step, totalStep, action) => {
+      Number.isInteger(step).should.be.true;
+      Number.isInteger(totalStep).should.be.true;
+      isString(action).should.be.true;
+    };
+    return parser.parse();
   });
 });

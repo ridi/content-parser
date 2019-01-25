@@ -95,7 +95,7 @@ class Parser {
     if (!isFunc(onProgress)) {
       throw createError(Errors.EINVAL, 'onProgress', 'onProgress', onProgress);
     }
-    privateProps.set({ ...privateProps.get(this), onProgress });
+    privateProps.set(this, { ...privateProps.get(this), onProgress });
   }
 
   /**
