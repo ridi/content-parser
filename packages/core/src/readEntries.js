@@ -59,7 +59,9 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
         }
         return file;
       },
-      size: fs.lstatSync(fullPath).size,
+      size: (() => {
+        try { return fs.lstatSync(fullPath).size; } catch (e) { return 0; }
+      })(),
     }]);
   }, []));
 }
