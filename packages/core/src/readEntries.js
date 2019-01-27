@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import { readCacheFile, writeCacheFile } from './cacheFile';
+import createCryptoStream from './createCryptoStream';
 import CryptoProvider from './CryptoProvider';
 import { getPathes, safePath } from './pathUtil';
 import { isExists } from './typecheck';
@@ -39,29 +40,27 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
   }
   return create(dir, pathes.reduce((entries, fullPath) => {
     const subPathOffset = path.normalize(dir).length + path.sep.length;
+    const size = (() => {
+      try { return fs.lstatSync(fullPath).size; } catch (e) { return 0; }
+    })();
     return entries.concat([{
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (encoding) => {
         let file = await new Promise((resolve, reject) => {
           const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
-          let buffer = Buffer.from([]);
-          stream.on('data', (chunk) => {
-            chunk = Buffer.from(chunk, 'binary');
-            if (isExists(cryptoProvider)) {
-              chunk = cryptoProvider.run(chunk, fullPath, CryptoProvider.Purpose.READ_IN_DIR);
-            }
-            buffer = Buffer.concat([buffer, chunk]);
-          }).on('error', e => reject(e))
-            .on('end', () => resolve(buffer));
+          let data = Buffer.from([]);
+          stream
+            .pipe(createCryptoStream(cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR, fullPath, size))
+            .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+            .on('error', e => reject(e))
+            .on('end', () => resolve(data));
         });
         if (isExists(encoding)) {
           file = file.toString(encoding);
         }
         return file;
       },
-      size: (() => {
-        try { return fs.lstatSync(fullPath).size; } catch (e) { return 0; }
-      })(),
+      size,
     }]);
   }, []));
 }
