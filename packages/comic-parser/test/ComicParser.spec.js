@@ -83,7 +83,8 @@ describe('Parsing test', () => {
       });
     });
   
-    it('_unzipIfNeeded test', () => {
+    it('_unzipIfNeeded test', function () {
+      this.timeout(5 * 1000);
       _context.options.unzipPath = path.join('.', 'temp');
       return parser._unzipIfNeeded(_context).should.be.fulfilled;
     });
