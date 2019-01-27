@@ -2,7 +2,9 @@ import { assert } from 'chai';
 
 import {
   EpubParser,
+  EpubBook,
   ComicParser,
+  ComicBook,
   Errors,
   LogLevel,
   CryptoProvider,
@@ -12,7 +14,9 @@ import {
 describe('content-parser', () => {
   it('check imports', () => {
     assert(EpubParser.constructor !== null);
+    assert(EpubBook.constructor !== null);
     assert(ComicParser.constructor !== null);
+    assert(ComicBook.constructor !== null);
     assert(Errors !== null);
     assert(LogLevel !== null);
     assert(CryptoProvider.constructor !== null);

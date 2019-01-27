@@ -16,7 +16,7 @@ async function getFile(entry, encoding) {
     const size = entry.uncompressedSize;
     let data = Buffer.from([]);
     entry.stream() // is DuplexStream.
-      .pipe(createCryptoStream(this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP, entry.path, size))
+      .pipe(createCryptoStream(entry.path, size, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
       .on('end', () => resolve(data));

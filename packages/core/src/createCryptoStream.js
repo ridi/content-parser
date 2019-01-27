@@ -2,7 +2,7 @@ import es from 'event-stream';
 
 import { isExists } from './typecheck';
 
-const createCryptoStream = (cryptoProvider, purpose, filePath, totalSize) => {
+const createCryptoStream = (filePath, totalSize, cryptoProvider, purpose) => {
   let tmpChunk = Buffer.from([]);
   let pushedSize = 0;
   return es.map((chunk, callback) => { // eslint-disable-line

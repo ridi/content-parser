@@ -50,7 +50,7 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
           const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
           let data = Buffer.from([]);
           stream
-            .pipe(createCryptoStream(cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR, fullPath, size))
+            .pipe(createCryptoStream(fullPath, size, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))
             .on('end', () => resolve(data));
