@@ -155,6 +155,18 @@ or throw exception.
 
 #### [readOptions](#readOptions): `?object`
 
+---
+
+### onProgress = callback
+
+Tells the progress of parser through `callback`.
+
+```js
+parser.onProgress = (step, totalStep, action) => {
+  console.log(`[${action}] ${step} / ${totalStep}`);
+}
+```
+
 ## Model
 
 <a id="book"></a>
