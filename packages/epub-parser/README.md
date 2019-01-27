@@ -103,6 +103,13 @@ const cryptoProvider = new ContentCryptoProvider(key);
 const parser = new EpubParser('./encrypted.epub' or './unzippedPath', cryptoProvider);
 ```
 
+Log level setting:
+
+```js
+import { LogLevel, ... } from '@ridi/epub-parser';
+parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR(default), WARNING, INFO, VERBOSE
+```
+
 ## API
 
 ### parse(parseOptions)

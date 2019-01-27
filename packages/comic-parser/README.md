@@ -93,6 +93,13 @@ const cryptoProvider = new ContentCryptoProvider(key);
 const parser = new ComicParser('./encrypted.zip' or './unzippedPath', cryptoProvider);
 ```
 
+Log level setting:
+
+```js
+import { LogLevel, ... } from '@ridi/comic-parser';
+parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR(default), WARNING, INFO, VERBOSE
+```
+
 ## API
 
 ### parse(parseOptions)
