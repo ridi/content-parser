@@ -1,0 +1,25 @@
+{
+  "name": "@ridi/content-parser",
+  "version": "0.3.0-alpha.15",
+  "description": "Content data parser for Ridibooks services",
+  "author": {
+    "name": "Ridibooks Viewer Team",
+    "mail": "viewer.team@ridi.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ridi/content-parser/packages/content-parser"
+  },
+  "bugs": "https://github.com/ridi/content-parser/issues",
+  "homepage": "https://github.com/ridi/content-parser/packages/content-parser",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "dependencies": {
+    "@ridi/comic-parser": "^0.3.0-alpha.15",
+    "@ridi/epub-parser": "^0.3.0-alpha.15",
+    "@ridi/parser-core": "^0.3.0-alpha.15"
+  }
+}

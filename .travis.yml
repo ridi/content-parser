@@ -11,10 +11,11 @@ before_script:
   - yarn
 
 script:
+  - yarn lint
   - yarn test
 
 after_success:
-  - codecov --file coverage/lcov.info --disable search
+  - codecov
 
 notifications:
   email: false
