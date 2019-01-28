@@ -9,10 +9,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ridi/content-parser/packages/core"
+    "url": "https://github.com/ridi/content-parser"
   },
   "bugs": "https://github.com/ridi/content-parser/issues",
-  "homepage": "https://github.com/ridi/content-parser/packages/core",
+  "homepage": "https://github.com/ridi/content-parser",
   "files": [
     "lib"
   ],
