@@ -17,7 +17,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Add `Logger` that can control all console logs and log execution time for each method in `Parser`.
 * Add `Parser.onProgress` property.
 * Add `Parser.readOptions.force` option.
-* Add cache to readEntries.fromDirectory.
 
 ### Changed
 
