@@ -16,7 +16,7 @@
 - [x] Encrypt and decrypt function when parsing or reading or unzipping
 - [ ] Debug mode
 - [ ] Environment
-  - [x] Node 
+  - [x] Node
   - [ ] CLI
   - [ ] Browser
 - [ ] Online demo
@@ -154,11 +154,12 @@ or throw exception.
 
 ---
 
-### onProgress = callback
+### onProgress = callback(step, totalStep, action)
 
 Tells the progress of parser through `callback`.
 
 ```js
+const { Action } = ComicParser;
 parser.onProgress = (step, totalStep, action) => {
   console.log(`[${action}] ${step} / ${totalStep}`);
 }
