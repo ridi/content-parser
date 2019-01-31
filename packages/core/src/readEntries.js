@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-import { readCacheFile, writeCacheFile } from './cacheFile';
+import { removeAllCacheFiles, readCacheFile, writeCacheFile } from './cacheFile';
 import createCryptoStream from './createCryptoStream';
 import CryptoProvider from './CryptoProvider';
 import { getPathes, safePath } from './pathUtil';
@@ -32,10 +32,15 @@ function fromZip(zip) {
 }
 
 function fromDirectory(dir, cryptoProvider, resetCache) {
-  let pathes = JSON.parse(readCacheFile(dir) || '[]');
+  let pathes = (() => {
+    try { return JSON.parse(readCacheFile(dir) || '[]'); } catch (e) { return []; }
+  })();
   if (resetCache || pathes.length === 0) {
     pathes = getPathes(dir);
-    writeCacheFile(dir, JSON.stringify(pathes), resetCache);
+    if (resetCache) {
+      removeAllCacheFiles();
+    }
+    writeCacheFile(dir, JSON.stringify(pathes));
   }
   return create(dir, pathes.reduce((entries, fullPath) => {
     const subPathOffset = path.normalize(dir).length + path.sep.length;

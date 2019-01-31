@@ -1,6 +1,7 @@
 import {
   getCachePath,
   removeCacheFile,
+  removeAllCacheFiles,
   readCacheFile,
   writeCacheFile,
 } from './cacheFile';
@@ -38,7 +39,7 @@ import validateOptions from './validateOptions';
 import openZip from './zipUtil';
 
 export {
-  getCachePath, removeCacheFile, readCacheFile, writeCacheFile,
+  getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile,
   Cryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Logger,

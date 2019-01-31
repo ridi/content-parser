@@ -24,6 +24,13 @@ export function removeCacheFile(key) {
   }
 }
 
+export function removeAllCacheFiles() {
+  const cachePath = getCachePath();
+  if (fs.existsSync(cachePath)) {
+    fs.removeSync(cachePath);
+  }
+}
+
 export function readCacheFile(key) {
   const filePath = getCacheFilePath(key);
   if (!fs.existsSync(filePath)) {
@@ -32,14 +39,11 @@ export function readCacheFile(key) {
   return fs.readFileSync(filePath, { encoding: 'utf8' });
 }
 
-export function writeCacheFile(key, message, reset = false) {
+export function writeCacheFile(key, message, overwrite = false) {
   const filePath = getCacheFilePath(key);
   const cachePath = path.dirname(filePath);
-  if (reset) {
-    removeCacheFile(key);
-  }
   if (!fs.existsSync(cachePath)) {
     fs.mkdirpSync(cachePath);
   }
-  fs.writeFileSync(filePath, message, { flag: 'a', encoding: 'binary' });
+  fs.writeFileSync(filePath, message, { flag: overwrite ? 'w' : 'a', encoding: 'binary' });
 }

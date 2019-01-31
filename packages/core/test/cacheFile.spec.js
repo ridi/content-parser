@@ -1,6 +1,14 @@
 import { assert, should } from 'chai';
+import fs from 'fs';
 
-import { removeCacheFile, readCacheFile, writeCacheFile } from '../src/cacheFile';
+import {
+  getCachePath,
+  removeCacheFile,
+  removeAllCacheFiles,
+  readCacheFile,
+  writeCacheFile,
+} from '../src/cacheFile';
+
 import Errors from '../src/errors';
 
 should(); // Initialize should
@@ -8,10 +16,6 @@ should(); // Initialize should
 describe('Util - read/write cache file', () => {
   const key = 'key';
   const value = 'value';
-
-  before(() => {
-    removeCacheFile(key);
-  });
 
   it('cache test', () => {
     assert(readCacheFile(key) === null);
@@ -26,5 +30,8 @@ describe('Util - read/write cache file', () => {
     readCacheFile(key).should.equal(value);
 
     try { writeCacheFile(undefined, value); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+
+    removeAllCacheFiles();
+    fs.existsSync(getCachePath()).should.be.false;
   });
 });

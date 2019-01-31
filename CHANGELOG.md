@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None
+### Fixed
+
+* Fix an issue where JSON parsing errors in directory cache data when attempting to read items from same Book on multiple processes.
 
 ## [0.3.0 (2019-01-27)]
 
