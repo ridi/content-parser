@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+* None
+
+## [0.3.1 (2019-01-31)]
+
 ### Fixed
 
 * Fix an issue where JSON parsing errors in directory cache data when attempting to read items from same Book on multiple processes.
@@ -92,7 +96,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.3.0...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.3.1...HEAD
+[0.3.1 (2019-01-31)]: https://github.com/ridi/content-parser/compare/0.3.0...0.3.1
 [0.3.0 (2019-01-27)]: https://github.com/ridi/content-parser/compare/0.2.0...0.3.0
 [0.2.0 (2018-11-19)]: https://github.com/ridi/content-parser/compare/0.1.1...0.2.0
 [0.1.1 (2018-10-08)]: https://github.com/ridi/content-parser/compare/0.1.0...0.1.1
