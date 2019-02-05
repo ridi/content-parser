@@ -16,6 +16,8 @@
   - [x] Extract inner HTML of body in Spine with option
   - [x] Change base path of Spine, CSS and Inline style with option
   - [x] Customize CSS, Inline Style with options
+  - [ ] Truncate inner HTML of body in Spine with options
+  - [ ] Minify HTML, CSS, Inline Style with options
 - [x] Encrypt and decrypt function when parsing or reading or unzipping
 - [ ] More [spec](http://www.idpf.org/epub/30/spec/epub30-ocf.html#sec-container-metainf)
   - [ ] encryption.xml
@@ -169,7 +171,7 @@ or throw exception.
 Tells the progress of parser through `callback`.
 
 ```js
-const { Action } = EpubParser;
+const { Action } = EpubParser; // PARSE, READ_ITEMS
 parser.onProgress = (step, totalStep, action) => {
   console.log(`[${action}] ${step} / ${totalStep}`);
 }
@@ -215,6 +217,42 @@ parser.onProgress = (step, totalStep, action) => {
 - fileAs: *?string*
 - role: *string* (**Default: Author.Roles.UNDEFINED**)
 
+#### [Author.Roles](./src/model/Author.js#L4)
+
+Type | Value
+---|---
+UNDEFINED | undefined
+UNKNOWN | unknown
+ADAPTER | adp
+ANNOTATOR | ann
+ARRANGER | arr
+ARTIST | art
+ASSOCIATEDNAME | asn
+AUTHOR | aut
+AUTHOR_IN_QUOTATIONS_OR_TEXT_EXTRACTS | aqt
+AUTHOR_OF_AFTER_WORD_OR_COLOPHON_OR_ETC | aft
+AUTHOR_OF_INTRODUCTIONOR_ETC | aui
+BIBLIOGRAPHIC_ANTECEDENT | ant
+BOOK_PRODUCER | bkp
+COLLABORATOR | clb
+COMMENTATOR | cmm
+DESIGNER | dsr
+EDITOR | edt
+ILLUSTRATOR | ill
+LYRICIST | lyr
+METADATA_CONTACT | mdc
+MUSICIAN | mus
+NARRATOR | nrt
+OTHER | oth
+PHOTOGRAPHER | pht
+PRINTER | prt
+REDACTOR | red
+REVIEWER | rev
+SPONSOR | spn
+THESIS_ADVISOR | ths
+TRANSCRIBER | trc
+TRANSLATOR | trl
+
 <a id="dateTime"></a>
 
 ### [DateTime](./src/model/DateTime.js)
@@ -222,12 +260,36 @@ parser.onProgress = (step, totalStep, action) => {
 - value: *?string*
 - event: *string* (**Default: DateTime.Events.UNDEFINED**)
 
+#### [DateTime.Events](./src/model/DateTime.js#L3)
+
+Type | Value
+---|---
+UNDEFINED | undefined
+UNKNOWN | unknown
+CREATION | creation
+MODIFICATION | modification
+PUBLICATION | publication
+
 <a id="identifier"></a>
 
 ### [Identifier](./src/model/Identifier.js)
 
 - value: *?string*
 - scheme: *string* (**Default: Identifier.Schemes.UNDEFINED**)
+
+#### [Identifier.Schemes](./src/model/Identifier.js#L3)
+
+Type | Value
+---|---
+UNDEFINED | undefined
+UNKNOWN | unknown
+DOI | doi
+ISBN | isbn
+ISBN13 | isbn13
+ISBN10 | isbn10
+ISSN | issn
+UUID | uuid
+URI | uri
 
 <a id="meta"></a>
 
@@ -244,6 +306,30 @@ parser.onProgress = (step, totalStep, action) => {
 - type: *string* (**Default: Guide.Types.UNDEFINED**)
 - href: *?string*
 - item: *?[Item](#item)*
+
+#### [Guide.Types](./src/model/Guide.js#L3)
+
+Type | Value
+---|---
+UNDEFINED | undefined
+UNKNOWN | unknown
+COVER | doi
+TITLE_PAGE | title-page
+TOC | cover
+INDEX | index
+GLOSSARY | glossary
+ACKNOWLEDGEMENTS | acknowledgements
+BIBLIOGRAPHY | bibliography
+COLOPHON | colophon
+COPYRIGHT_PAGE | copyright-page
+DEDICATION | dedication
+EPIGRAPH | epigraph
+FOREWORD | foreword
+LOI | loi
+LOT | lot
+NOTES | notes
+PREFACE | preface
+TEXT | text
 
 <a id="itemTypes"></a>
 
@@ -263,7 +349,7 @@ parser.onProgress = (step, totalStep, action) => {
 
 #### [SpineItem](./src/model/SpineItem.js) (extend [Item](#item))
 
-- index: *number* (**Default: -1**)
+- index: *number* (**Default: undefined**)
 - isLinear: *boolean* (**Default: true**)
 - styles: *?[CssItem](#cssItem)[]*
 
@@ -300,6 +386,17 @@ parser.onProgress = (step, totalStep, action) => {
 
 #### [DeadItem](./src/model/DeadItem.js) (extend [Item](#item))
 - reason: *string* (**Default: DeadItem.Reason.UNDEFINED**)
+
+#### [DeadItem.Reason](./src/model/DeadItem.js#L3)
+
+Type | Value
+---|---
+UNDEFINED | undefined
+UNKNOWN | unknown
+NOT_EXISTS | not_exists
+NOT_SPINE | not_spine
+NOT_NCX | not_ncx
+NOT_SUPPORT_TYPE | not_support_type
 
 <a id="navPoint"></a>
 

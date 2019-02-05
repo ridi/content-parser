@@ -159,7 +159,7 @@ or throw exception.
 Tells the progress of parser through `callback`.
 
 ```js
-const { Action } = ComicParser;
+const { Action } = ComicParser; // PARSE, READ_ITEMS
 parser.onProgress = (step, totalStep, action) => {
   console.log(`[${action}] ${step} / ${totalStep}`);
 }
