@@ -105,9 +105,9 @@ parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR(default), WARNING, I
 
 ### parse(parseOptions)
 
-Returns `Promise<Book>` with:
+Returns `Promise<ComicBook>` with:
 
-- [Book](#book): Instance with image path, size, etc.
+- [ComicBook](#book): Instance with image path, size, etc.
 
 Or throw exception.
 
@@ -170,7 +170,7 @@ parser.onProgress = (step, totalStep, action) => {
 
 <a id="book"></a>
 
-### [Book](./src/model/Book.js)
+### [ComicBook](./src/model/Book.js)
 
 - items: *[Item](#item)[]*
 
@@ -222,8 +222,6 @@ File extension to allow when extracting lists.
 
 **Default:** `['jpg', 'jpeg', 'png', 'bmp', 'gif']`
 
----
-
 <a id="readOptions"></a>
 
 ## Read Options
@@ -250,8 +248,6 @@ If true, ignore any exceptions that occur within parser.
 If false, reads image into a buffer.
 
 **Default:** `false`
-
----
 
 ## License
 

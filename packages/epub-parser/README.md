@@ -117,9 +117,9 @@ parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR(default), WARNING, I
 
 ### parse(parseOptions)
 
-Returns `Promise<Book>` with:
+Returns `Promise<EpubBook>` with:
 
-- [Book](#book): Instance with metadata, spine list, table of contents, etc.
+- [EpubBook](#book): Instance with metadata, spine list, table of contents, etc.
 
 Or throw exception.
 
@@ -182,7 +182,7 @@ parser.onProgress = (step, totalStep, action) => {
 
 <a id="book"></a>
 
-### [Book](./src/model/Book.js)
+### [EpubBook](./src/model/Book.js)
 
 - titles: *string[]*
 - creators: *[Author](#author)[]*
@@ -314,9 +314,9 @@ Type | Value
 ---|---
 UNDEFINED | undefined
 UNKNOWN | unknown
-COVER | doi
+COVER | cover
 TITLE_PAGE | title-page
-TOC | cover
+TOC | toc
 INDEX | index
 GLOSSARY | glossary
 ACKNOWLEDGEMENTS | acknowledgements
@@ -490,7 +490,7 @@ If true, styles used for spine is described, and one namespace is given per CSS 
 
 Otherwise it [CssItem](#cssItem)`.namespace`, [SpineItem](#spineItem)`.styles` is `undefined`.
 
-In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem](#CssItem). ([Book](#book)`.styles`, [Book](#book)`.items`, [SpineItem](#spineItem)`.styles`, ...)
+In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem](#CssItem). ([EpubBook](#book)`.styles`, [EpubBook](#book)`.items`, [SpineItem](#spineItem)`.styles`, ...)
 
 **Default:** `true`
 
@@ -504,8 +504,6 @@ Prepend given string to namespace for identification.
 > only using if parseStyle is true.
 
 **Default:** `'ridi_style'`
-
----
 
 <a id="readOptions"></a>
 
@@ -673,8 +671,6 @@ Remove selector that point to specified ids.
 Remove selector that point to specified classes.
 
 **Default:** `[]`
-
----
 
 ## License
 
