@@ -9,5 +9,9 @@
         "packages/epub-parser/package.json"
       ]
     }
-  }
+  },
+  "ignore": [
+    "event-stream",
+    "natural-orderby"
+  ]
 }
