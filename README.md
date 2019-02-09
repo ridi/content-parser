@@ -1,4 +1,4 @@
-## [@ridi/parser-core](packages/core) 
+## [@ridi/parser-core](packages/parser-core) 
 
 > Utilities for parsers
 
