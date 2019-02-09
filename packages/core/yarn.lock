@@ -169,7 +169,7 @@ minimist@0.0.8:
   dependencies:
     minimist "0.0.8"
 
-natural-orderby@^1.0.2:
+natural-orderby@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/natural-orderby/-/natural-orderby-1.1.1.tgz#26a0d6bab64595297cfeaf7c2fc3e055f882b481"
 
