@@ -19,9 +19,9 @@
   "main": "lib/index.js",
   "dependencies": {
     "aes-js": "^3.1.1",
-    "event-stream": "4.0.1",
+    "event-stream": "3.3.4",
     "fs-extra": "^7.0.1",
-    "natural-orderby": "^2.0.0",
+    "natural-orderby": "^1.0.2",
     "sha1": "^1.1.1",
     "string-format": "^2.0.0",
     "unzipper": "^0.9.4"
