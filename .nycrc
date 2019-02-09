@@ -1,0 +1,19 @@
+{
+  "require": [
+    "babel-register"
+  ],
+  "temp-directory": "coverage/.nyc_output",
+  "report-dir": "coverage",
+  "reporter": [
+    "lcov",
+    "text-summary"
+  ],
+  "cache": false,
+  "all": true,
+  "include": [
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "lib/**/*.js"
+  ]
+}

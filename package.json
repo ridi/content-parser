@@ -2,7 +2,7 @@
   "scripts": {
     "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
     "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
-    "test": "yarn build && yarn lint && lerna exec --parallel -- istanbul cover -x \"**/lib/**\" ../../node_modules/mocha/bin/_mocha -- --require babel-core/register --recursive",
+    "test": "yarn build && yarn lint && lerna exec --parallel -- nyc ../../node_modules/.bin/mocha test/**/*.spec.js",
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
@@ -26,9 +26,9 @@
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.10.0",
-    "istanbul": "^1.0.0-alpha",
     "lerna": "^3.6.0",
     "mocha": "^5.2.0",
+    "nyc": "^13.2.0",
     "rimraf": "^2.6.2"
   }
 }
