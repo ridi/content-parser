@@ -20,6 +20,6 @@
   "dependencies": {
     "@ridi/parser-core": "^0.3.1",
     "fs-extra": "^7.0.1",
-    "natural-orderby": "^2.0.0"
+    "natural-orderby": "^1.0.2"
   }
 }
