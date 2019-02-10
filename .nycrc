@@ -10,11 +10,11 @@
     "json"
   ],
   "cache": false,
-  "all": true,
   "include": [
     "src/**/*.js"
   ],
   "exclude": [
-    "lib/**/*.js"
+    "lib/**/*.js",
+    "test/**/*.js"
   ]
 }
