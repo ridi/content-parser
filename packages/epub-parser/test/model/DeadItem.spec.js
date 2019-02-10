@@ -6,7 +6,7 @@ import Item from '../../src/model/Item';
 should(); // Initialize should
 
 describe('Model - DeadItem', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let item = new DeadItem();
     assert(item.reason === DeadItem.Reason.UNDEFINED);
     assert(item instanceof Item);
@@ -24,6 +24,8 @@ describe('Model - DeadItem', () => {
     (() => {
       item.reason = DeadItem.Reason.NOT_EXISTS;
     }).should.throw(/read only property/gi);
+
+    assert(item.defaultEncoding === undefined);
   });
 
   it('toRaw test', () => {

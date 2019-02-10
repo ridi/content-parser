@@ -8,10 +8,10 @@ class NcxItem extends Item {
 
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
-    this.navPoints = (rawObj.navPoints || []).map((navPoint) => { // eslint-disable-line arrow-body-style
+    this.navPoints = (rawObj.navPoints || []).map((navPoint) => {
       return new NavPoint(navPoint, freeze);
     });
-    /* istanbul ignore else: untestable */
+    /* istanbul ignore else */
     if (freeze) {
       Object.freeze(this);
     }

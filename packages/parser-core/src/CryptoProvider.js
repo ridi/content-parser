@@ -19,7 +19,7 @@ class CryptoProvider {
    * @param {string} purpose
    * @returns {Cryptor}
    */
-  getCryptor(filePath, purpose) { // eslint-disable-line
+  getCryptor(filePath, purpose) { // eslint-disable-line no-unused-vars
     // ex)
     // if (condition) {
     //   return new Cryptor(...);
@@ -35,7 +35,7 @@ class CryptoProvider {
    * @param {string} filePath
    * @param {string} purpose
    */
-  run(data, filePath, purpose) { // eslint-disable-line
+  run(data, filePath, purpose) { // eslint-disable-line no-unused-vars
     // ex)
     // const cryptor = this.getCryptor(filePath, status);
     // const padding = Cryptor.Padding.PKCS7

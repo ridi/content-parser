@@ -23,7 +23,7 @@ class DeadItem extends Item {
     } else {
       this.reason = Reason.UNDEFINED;
     }
-    /* istanbul ignore else: untestable */
+    /* istanbul ignore else */
     if (freeze) {
       Object.freeze(this);
     }

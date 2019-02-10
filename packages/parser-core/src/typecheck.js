@@ -40,5 +40,5 @@ export function isString(any) {
 }
 
 export function isUrl(string) {
-  return isString(string) && isExists(string.match(/(http|https):\/\//i));
+  return isString(string) && isExists(string.match(/[a-z].*?:\/\//i));
 }

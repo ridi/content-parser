@@ -5,7 +5,7 @@ import Meta from '../../src/model/Meta';
 should(); // Initialize should
 
 describe('Model - Meta', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let meta = new Meta();
     assert(meta.name === undefined);
     assert(meta.content === undefined);

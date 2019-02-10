@@ -111,6 +111,9 @@ describe('Util - Type check', () => {
   it('isUrl test', () => {
     isUrl('http://...').should.be.true;
     isUrl('https://...').should.be.true;
+    isUrl('ftp://...').should.be.true;
+    isUrl('nas://...').should.be.true;
     isUrl('foo').should.be.false;
+    isUrl('./foo/bar').should.be.false;
   });
 });

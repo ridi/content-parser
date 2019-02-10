@@ -6,7 +6,7 @@ class ImageItem extends Item {
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     this.isCover = rawObj.isCover || false;
-    /* istanbul ignore else: untestable */
+    /* istanbul ignore else */
     if (freeze && this.constructor === ImageItem) {
       Object.freeze(this);
     }

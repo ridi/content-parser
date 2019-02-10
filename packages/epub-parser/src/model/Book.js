@@ -24,6 +24,7 @@ function postSpines(spines, styles) {
       spine.prev = () => prevSpine;
       spine.next = () => nextSpine;
       spine.first = () => firstSpine;
+      /* istanbul ignore else */
       if (isExists(spine.styles)) {
         spine.styles = spine.styles
           .map(href => styles.find(style => style.href === href))
@@ -55,6 +56,7 @@ function postGuides(guides, spines) {
   });
 }
 
+/* istanbul ignore next */
 function getItemTypeFromString(string) {
   switch (string) {
     case Item.name: return Item;

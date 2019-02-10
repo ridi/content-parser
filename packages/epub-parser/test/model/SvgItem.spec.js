@@ -6,9 +6,10 @@ import SvgItem from '../../src/model/SvgItem';
 should(); // Initialize should
 
 describe('Model - SvgItem', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     const item = new SvgItem();
     assert(item instanceof ImageItem);
+    assert(item.defaultEncoding === 'utf8');
   });
 
   it('toRaw test', () => {

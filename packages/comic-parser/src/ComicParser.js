@@ -59,7 +59,7 @@ class ComicParser extends Parser {
   /**
    * Create new ComicParser
    * @param {string} input file or directory
-   * @param {CryptoProvider} cryptoProvider en/decrypto provider
+   * @param {?CryptoProvider} cryptoProvider en/decrypto provider
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example new ComicParser('./foo/bar.zip' or './foo/bar');
@@ -102,7 +102,7 @@ class ComicParser extends Parser {
   _parseTasks() {
     return [
       ...super._parseTasks(),
-      { func: this._parse, name: 'parse' },
+      { fun: this._parse, name: 'parse' },
     ];
   }
 
@@ -120,7 +120,7 @@ class ComicParser extends Parser {
         return ext.length > 0 && stringContains(options.ext.map(e => `.${e}`), ext);
       });
     rawBook.items = [];
-    await items.reduce((prevPromise, entry, index) => { // eslint-disable-line arrow-body-style
+    await items.reduce((prevPromise, entry, index) => {
       return prevPromise.then(async () => {
         rawBook.items.push({
           index,
@@ -142,9 +142,10 @@ class ComicParser extends Parser {
   async _read(context) {
     const { items, entries, options } = context;
     const results = [];
-    await items.reduce((prevPromise, item) => { // eslint-disable-line arrow-body-style
+    await items.reduce((prevPromise, item) => {
       return prevPromise.then(async () => {
         const entry = entries.find(item.path);
+        /* istanbul ignore else */
         if (!options.force && !isExists(entry)) {
           throw createError(Errors.ENOFILE, item.path);
         }

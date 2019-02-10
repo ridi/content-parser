@@ -5,9 +5,10 @@ import ImageItem from './ImageItem';
 class SvgItem extends ImageItem {
   get defaultEncoding() { return 'utf8'; }
 
-  constructor(rawObj = {}, freeze = true) /* istanbul ignore next: untestable */ {
-    const _ = super(rawObj, freeze); // eslint-disable-line
-    /* istanbul ignore else: untestable */
+  /* istanbul ignore next */
+  constructor(rawObj = {}, freeze = true) {
+    super(rawObj, freeze);
+    /* istanbul ignore else */
     if (freeze) {
       Object.freeze(this);
     }

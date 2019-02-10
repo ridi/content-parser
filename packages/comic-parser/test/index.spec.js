@@ -1,8 +1,6 @@
 import { assert } from 'chai';
 
 import {
-  EpubParser,
-  EpubBook,
   ComicParser,
   ComicBook,
   Errors,
@@ -11,10 +9,8 @@ import {
   Cryptor,
 } from '../src/index';
 
-describe('content-parser', () => {
+describe('comic-parser', () => {
   it('Check imports', () => {
-    assert(EpubParser.constructor !== null);
-    assert(EpubBook.constructor !== null);
     assert(ComicParser.constructor !== null);
     assert(ComicBook.constructor !== null);
     assert(Errors !== null);

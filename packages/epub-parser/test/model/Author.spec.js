@@ -5,7 +5,7 @@ import Author from '../../src/model/Author';
 should(); // Initialize should
 
 describe('Model - Author', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let author = new Author();
     assert(author.name === undefined);
     assert(author.fileAs === undefined);

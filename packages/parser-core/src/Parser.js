@@ -1,5 +1,6 @@
 import fs from 'fs';
 
+import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
 import Logger from './Logger';
 import mergeObjects from './mergeObjects';
@@ -85,6 +86,7 @@ class Parser {
 
   /**
    * Set callback that tells progress of parse and readItems.
+   * @param {function} onProgress
    * @example
    * parser.onProgress = (step, totalStep, action) => {
    *   console.log(`[${action}] ${step} / ${totalStep}`);
@@ -93,7 +95,7 @@ class Parser {
    */
   set onProgress(onProgress) {
     if (!isFunc(onProgress)) {
-      throw createError(Errors.EINVAL, 'onProgress', 'onProgress', onProgress);
+      throw createError(Errors.EINVAL, 'onProgress', 'reason', 'must be function type');
     }
     privateProps.set(this, { ...privateProps.get(this), onProgress });
   }
@@ -101,8 +103,8 @@ class Parser {
   /**
    * Create new Parser
    * @param {string} input file or directory
-   * @param {CryptoProvider} cryptoProvider en/decrypto provider
-   * @param {string} loggerName logger namespace
+   * @param {?CryptoProvider} cryptoProvider en/decrypto provider
+   * @param {?string} loggerNamespace logger namespace
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example
@@ -111,15 +113,18 @@ class Parser {
    * }
    * new FooParser('./foo/bar.zip' or './foo/bar');
    */
-  constructor(input, cryptoProvider, loggerName) {
+  constructor(input, cryptoProvider, loggerNamespace) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
         throw createError(Errors.ENOENT, input);
       }
     } else {
-      throw createError(Errors.EINVAL, 'input', 'input', input);
+      throw createError(Errors.EINVAL, 'input', 'reason', 'must be String type');
     }
-    const logger = new Logger(loggerName);
+    if (isExists(cryptoProvider) && !(cryptoProvider instanceof CryptoProvider)) {
+      throw createError(Errors.EINVAL, 'cryptoProvider', 'reason', 'must be CryptoProvider subclassing type');
+    }
+    const logger = new Logger(loggerNamespace || Parser.name);
     privateProps.set(this, { input, cryptoProvider, logger });
   }
 
@@ -153,7 +158,7 @@ class Parser {
 
   /**
    * @typedef ParseTask
-   * @property {function} func Action executor
+   * @property {function} fun Action executor
    * @property {string} name Action name
    */
   /**
@@ -161,7 +166,7 @@ class Parser {
    */
   _parseBeforeTasks() {
     return [
-      { func: this._prepareParse, name: 'prepareParse' },
+      { fun: this._prepareParse, name: 'prepareParse' },
     ];
   }
 
@@ -177,8 +182,8 @@ class Parser {
    */
   _parseAfterTasks() {
     return [
-      { func: this._unzipIfNeeded, name: 'unzipIfNeeded' },
-      { func: this._createBook, name: 'createBook' },
+      { fun: this._unzipIfNeeded, name: 'unzipIfNeeded' },
+      { fun: this._createBook, name: 'createBook' },
     ];
   }
 
@@ -197,11 +202,11 @@ class Parser {
     );
     let context = options;
     this.onProgress(0, tasks.length, Action.PARSE);
-    await tasks.reduce((prevPromise, task, index) => { // eslint-disable-line arrow-body-style
+    await tasks.reduce((prevPromise, task, index) => {
       const result = prevPromise.then(async () => {
-        const { func, name } = task;
+        const { fun, name } = task;
         const message = `${Action.PARSE} - ${name}`;
-        context = await this.logger.measure(func, this, [context], message);
+        context = await this.logger.measure(fun, this, [context], message);
       });
       this.onProgress(index + 1, tasks.length, Action.PARSE);
       return result;
@@ -262,7 +267,7 @@ class Parser {
 
   /**
    * @typedef ReadTask
-   * @property {function} func Action executor
+   * @property {function} fun Action executor
    * @property {string} name Action name
    */
   /**
@@ -270,7 +275,7 @@ class Parser {
    */
   _readBeforeTasks() {
     return [
-      { func: this._prepareRead, name: 'prepareRead' },
+      { fun: this._prepareRead, name: 'prepareRead' },
     ];
   }
 
@@ -279,7 +284,7 @@ class Parser {
    */
   _readTasks() {
     return [
-      { func: this._read, name: 'read' },
+      { fun: this._read, name: 'read' },
     ];
   }
 
@@ -319,11 +324,11 @@ class Parser {
     );
     let context = [items, options];
     this.onProgress(0, tasks.length, Action.READ_ITEMS);
-    await tasks.reduce((prevPromise, task, index) => { // eslint-disable-line arrow-body-style
+    await tasks.reduce((prevPromise, task, index) => {
       const result = prevPromise.then(async () => {
-        const { func, name } = task;
+        const { fun, name } = task;
         const message = `${Action.READ_ITEMS}(${items.length}) - ${name}`;
-        context = await this.logger.measure(func, this, isArray(context) ? context : [context], message);
+        context = await this.logger.measure(fun, this, isArray(context) ? context : [context], message);
       });
       this.onProgress(index + 1, tasks.length, Action.READ_ITEMS);
       return result;
@@ -345,7 +350,7 @@ class Parser {
    */
   async _prepareRead(items, options = {}) {
     if (!options.force && items.find(item => !(item instanceof this._getReadItemClass()))) {
-      throw createError(Errors.EINVAL, 'item', 'reason', 'item must be Item type');
+      throw createError(Errors.EINVAL, 'item', 'reason', 'must be Parser._getReadItemClass type');
     }
     const { readOptionTypes, readDefaultOptions } = this.constructor;
     validateOptions(options, readOptionTypes);

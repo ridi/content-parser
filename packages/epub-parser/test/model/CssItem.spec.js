@@ -6,7 +6,7 @@ import Item from '../../src/model/Item';
 should(); // Initialize should
 
 describe('Model - CssItem', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let item = new CssItem();
     assert(item.namespace === undefined);
     assert(item instanceof Item);
@@ -17,6 +17,8 @@ describe('Model - CssItem', () => {
     (() => {
       item.namespace = 'css_2';
     }).should.throw(/read only property/gi);
+
+    assert(item.defaultEncoding === 'utf8');
   });
 
   it('toRaw test', () => {

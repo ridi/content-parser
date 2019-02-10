@@ -6,7 +6,7 @@ import SpineItem from '../../src/model/SpineItem';
 should(); // Initialize should
 
 describe('Model - SpineItem', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let item = new SpineItem();
     assert(item.index === undefined);
     item.isLinear.should.be.true;
@@ -34,6 +34,8 @@ describe('Model - SpineItem', () => {
       item.isLinear = true;
       item.styles = [];
     }).should.throw(/read only property/gi);
+
+    assert(item.defaultEncoding === 'utf8');
   });
 
   it('toRaw test', () => {

@@ -10,68 +10,87 @@ const LogLevel = Object.freeze({
   VERBOSE: 'verbose',
 });
 
+const getOrder = (logLevel) => {
+  switch (logLevel) {
+    case LogLevel.ERROR: return 1;
+    case LogLevel.WARNING: return 2;
+    case LogLevel.INFO: return 3;
+    case LogLevel.VERBOSE: return 4;
+    default: return 0;
+  }
+};
+
+const touchTime = time => new Date().getTime() - time;
+
 class Logger {
   get logLevel() { return this._logLevel; }
 
   set logLevel(level) { this._logLevel = stringContains(Object.values(LogLevel), level) ? level : this.logLevel; }
 
   constructor(namespace, logLevel = '') {
-    this.namespace = namespace || 'Logger';
+    this.namespace = namespace || Logger.name;
     this._logLevel = stringContains(Object.values(LogLevel), logLevel) ? logLevel : LogLevel.ERROR;
     this._firstTime = null;
   }
 
+  static confirm(current, target) {
+    return getOrder(current) >= getOrder(target);
+  }
+
   info(message, ...optionalParams) {
-    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
-      console.log(`[${this.namespace}] ${message}`, ...optionalParams);
+    /* istanbul ignore else */
+    if (Logger.confirm(this.logLevel, LogLevel.INFO)) {
+      console.info(`[${this.namespace}] ${message}`, ...optionalParams);
     }
-  }
-
-  async measure(func, thisArg, argsArray, message, ...optionalParams) {
-    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
-      const startTime = new Date().getTime();
-      if (!isExists(this._firstTime)) {
-        this._firstTime = startTime;
-      }
-      const result = await func.apply(thisArg, argsArray);
-      console.log(`[${this.namespace}] ${message} (${new Date().getTime() - startTime}ms)`, ...optionalParams);
-      return result;
-    }
-    const result = await func.apply(thisArg, argsArray);
-    return result;
-  }
-
-  measureSync(func, thisArg, argsArray, message, ...optionalParams) {
-    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
-      const startTime = new Date().getTime();
-      if (!isExists(this._firstTime)) {
-        this._firstTime = startTime;
-      }
-      const result = func.apply(thisArg, argsArray);
-      console.log(`[${this.namespace}] ${message} (${new Date().getTime() - startTime}ms)`, ...optionalParams);
-      return result;
-    }
-    return func.apply(thisArg, argsArray);
-  }
-
-  result(message, ...optionalParams) {
-    const time = this._firstTime || new Date().getTime();
-    if (stringContains([LogLevel.INFO, LogLevel.VERBOSE], this.logLevel)) {
-      console.log(`[${this.namespace}] ${message} (${new Date().getTime() - time}ms)`, ...optionalParams);
-    }
-    this._firstTime = null;
   }
 
   warn(message, ...optionalParams) {
-    if (stringContains([LogLevel.WARNING, LogLevel.VERBOSE], this.logLevel)) {
+    /* istanbul ignore else */
+    if (Logger.confirm(this.logLevel, LogLevel.WARNING)) {
       console.warn(`[${this.namespace}] ${message}`, ...optionalParams);
     }
   }
 
   error(message, ...optionalParams) {
-    if (stringContains([LogLevel.ERROR, LogLevel.VERBOSE], this.logLevel)) {
+    /* istanbul ignore else */
+    if (Logger.confirm(this.logLevel, LogLevel.ERROR)) {
       console.error(`[${this.namespace}] ${message}`, ...optionalParams);
     }
+  }
+
+  async measure(run, thisArg, argsArray, message, ...optionalParams) {
+    if (Logger.confirm(this.logLevel, LogLevel.INFO)) {
+      const startTime = new Date().getTime();
+      if (!isExists(this._firstTime)) {
+        this._firstTime = startTime;
+      }
+      const result = await run.apply(thisArg, argsArray);
+      console.log(`[${this.namespace}] ${message}`, ...optionalParams, `(${touchTime(startTime)}ms)`);
+      return result;
+    }
+    const result = await run.apply(thisArg, argsArray);
+    return result;
+  }
+
+  measureSync(run, thisArg, argsArray, message, ...optionalParams) {
+    if (Logger.confirm(this.logLevel, LogLevel.INFO)) {
+      const startTime = new Date().getTime();
+      if (!isExists(this._firstTime)) {
+        this._firstTime = startTime;
+      }
+      const result = run.apply(thisArg, argsArray);
+      console.log(`[${this.namespace}] ${message}`, ...optionalParams, `(${touchTime(startTime)}ms)`);
+      return result;
+    }
+    return run.apply(thisArg, argsArray);
+  }
+
+  result(message, ...optionalParams) {
+    const startTime = this._firstTime || new Date().getTime();
+    if (Logger.confirm(this.logLevel, LogLevel.INFO)) {
+      console.log(`[${this.namespace}] ${message}`, ...optionalParams, `(${touchTime(startTime)}ms)`);
+    }
+    this._firstTime = null;
   }
 }
 

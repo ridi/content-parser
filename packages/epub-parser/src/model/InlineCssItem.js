@@ -6,7 +6,7 @@ class InlineCssItem extends CssItem {
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     this.style = rawObj.style || '';
-    /* istanbul ignore else: untestable */
+    /* istanbul ignore else */
     if (freeze) {
       Object.freeze(this);
     }

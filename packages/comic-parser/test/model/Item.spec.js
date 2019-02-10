@@ -5,7 +5,7 @@ import Item from '../../src/model/Item';
 should(); // Initialize should
 
 describe('Model - Item', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let item = new Item();
     assert(item.index === undefined);
     assert(item.path === undefined);
