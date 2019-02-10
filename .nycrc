@@ -9,6 +9,12 @@
     "text-summary",
     "json"
   ],
+  "check-coverage": true,
+  "per-file": false,
+  "lines": 90,
+  "statements": 90,
+  "functions": 90,
+  "branches": 90,
   "cache": false,
   "include": [
     "**/src/**/*.js"
