@@ -11,10 +11,10 @@
   ],
   "cache": false,
   "include": [
-    "src/**/*.js"
+    "**/src/**/*.js"
   ],
   "exclude": [
-    "lib/**/*.js",
-    "test/**/*.js"
+    "**/lib/**/*.js",
+    "**/test/**/*.js"
   ]
 }
