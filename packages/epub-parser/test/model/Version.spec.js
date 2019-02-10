@@ -5,7 +5,7 @@ import Version from '../../src/model/Version';
 should(); // Initialize should
 
 describe('Model - Version', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let version = new Version('2');
     version.toString().should.equal('2.0.0');
 

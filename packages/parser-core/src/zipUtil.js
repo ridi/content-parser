@@ -33,7 +33,7 @@ async function extractAll(unzipPath, overwrite = true) {
   }
   fs.mkdirpSync(unzipPath);
 
-  const writeFile = (entry, output) => { // eslint-disable-line arrow-body-style
+  const writeFile = (entry, output) => {
     return new Promise((resolve) => {
       const writeStream = fs.createWriteStream(output, { encoding: 'binary' });
       const onError = (error) => {
@@ -45,7 +45,9 @@ async function extractAll(unzipPath, overwrite = true) {
       entry.stream() // is DuplexStream.
         .on('error', onError)
         .on('data', (chunk) => {
+          /* istanbul ignore if */
           if (isExists(this.cryptoProvider)) {
+            /* istanbul ignore next */
             chunk = this.cryptoProvider.run(chunk, entry.path, CryptoProvider.Purpose.WRITE);
           }
           writeStream.write(chunk);
@@ -54,7 +56,7 @@ async function extractAll(unzipPath, overwrite = true) {
     });
   };
 
-  await this.files.reduce((prevPromise, entry) => { // eslint-disable-line arrow-body-style
+  await this.files.reduce((prevPromise, entry) => {
     return prevPromise.then(async () => {
       const output = safePathJoin(unzipPath, entry.path);
       if (entry.path.split('/').length > 1) {

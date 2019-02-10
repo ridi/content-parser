@@ -6,7 +6,7 @@ import Item from '../../src/model/Item';
 should(); // Initialize should
 
 describe('Model - ImageItem', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let item = new ImageItem();
     item.isCover.should.be.false;
     assert(item instanceof Item);
@@ -17,6 +17,8 @@ describe('Model - ImageItem', () => {
     (() => {
       item.isCover = false;
     }).should.throw(/read only property/gi);
+
+    assert(item.defaultEncoding === undefined);
   });
 
   it('toRaw test', () => {

@@ -15,7 +15,7 @@ class SpineItem extends Item {
     this.first = () => undefined;
     this.prev = () => undefined;
     this.next = () => undefined;
-    /* istanbul ignore else: untestable */
+    /* istanbul ignore else */
     if (freeze) {
       Object.freeze(this);
     }

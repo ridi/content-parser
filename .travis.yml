@@ -3,9 +3,6 @@ node_js: node
 
 cache: yarn
 
-before_install:
-  - pip install --user codecov
-
 before_script:
   - npm install -g yarn
   - yarn
@@ -14,7 +11,7 @@ script:
   - yarn test
 
 after_success:
-  - codecov
+  - yarn coverage
 
 notifications:
   email: false

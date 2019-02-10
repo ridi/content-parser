@@ -5,7 +5,7 @@ import Identifier from '../../src/model/Identifier';
 should(); // Initialize should
 
 describe('Model - Identifier', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let identifier = new Identifier();
     assert(identifier.value === undefined);
     assert(identifier.scheme === Identifier.Schemes.UNDEFINED);

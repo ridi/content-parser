@@ -5,7 +5,7 @@ import Item from '../../src/model/Item';
 should(); // Initialize should
 
 describe('Model - Item', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let item = new Item();
     assert(item.id === undefined);
     assert(item.href === undefined);
@@ -28,6 +28,8 @@ describe('Model - Item', () => {
       item.mediaType = 'application/xhtml+xml';
       item.size = 59;
     }).should.throw(/read only property/gi);
+
+    assert(item.defaultEncoding === undefined);
   });
 
   it('toRaw test', () => {

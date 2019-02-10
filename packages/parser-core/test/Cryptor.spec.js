@@ -12,7 +12,7 @@ import Errors from '../src/errors';
 should(); // Initialize should
 
 describe('Cryptor', () => {
-  describe('Parameters validation', () => {
+  describe('Initialize test', () => {
     it('Required parameter missing', () => {
       // mode missing
       try { new Cryptor(); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
@@ -66,7 +66,7 @@ describe('Cryptor', () => {
     });
   });
 
-  describe('cryption by mode', () => {
+  describe('Cryption by mode', () => {
     it('ECB test', () => {
       // An example 128-bit key
       const key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -202,8 +202,8 @@ describe('Cryptor', () => {
     });
   });
 
-  describe('cryption with padding (pkcs7)', () => {
-    it('padding test', () => {
+  describe('Cryption with padding', () => {
+    it('PKCS7 test', () => {
       // An example 128-bit key
       const key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
@@ -225,10 +225,8 @@ describe('Cryptor', () => {
       const decryptedText = utf8.fromBytes(decryptBytes);
       decryptedText.should.equal(text);
     });
-  });
 
-  describe('cryption with padding (auto)', () => {
-    it('padding test', () => {
+    it('AUTO test', () => {
       // An example 128-bit key
       const key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
@@ -250,10 +248,22 @@ describe('Cryptor', () => {
       const decryptedText = utf8.fromBytes(decryptBytes);
       decryptedText.should.equal(text);
     });
+
+    it('Handling damaged padding', () => {
+      const key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+      let cryptor = new Cryptor(Modes.ECB, { key });
+
+      const encryptedBytes = hex.toBytes('23b4f080a310770e93def2ddfee44817');
+      encryptedBytes[encryptedBytes.length - 1] = 24;
+      try { cryptor.decrypt(encryptedBytes, Padding.PKCS7); } catch (e) { e.toString().startsWith('Error: PKCS#7').should.be.true; }
+
+      cryptor.decrypt(encryptedBytes, Padding.AUTO);
+    });
   });
 
-  describe('cryption with string key', () => {
-    it('length is not divisible by 16', () => {
+  describe('Cryption with string key', () => {
+    it('Length is not divisible by 16', () => {
       // An example string key
       const key = 'i_am_key';
 
@@ -274,27 +284,27 @@ describe('Cryptor', () => {
       const decryptedText = utf8.fromBytes(decryptBytes);
       decryptedText.should.equal(text);
     });
-  });
 
-  it('length is divisible by 16', () => {
-    // An example string key
-    const key = '1234567890123456';
-
-    // Convert text to bytes
-    const text = 'TextMustBe16Byte';
-    const textBytes = utf8.toBytes(text);
-
-    // Create cryptor
-    const cryptor = new Cryptor(Modes.ECB, { key });
-
-    // Encryption
-    const encryptedBytes = cryptor.encrypt(textBytes);
-    const encryptedHex = hex.fromBytes(encryptedBytes);
-    encryptedHex.should.equal('3ba6941b0b398d96e87e34660ecd435f');
-
-    // Decryption
-    const decryptBytes = cryptor.decrypt(encryptedBytes);
-    const decryptedText = utf8.fromBytes(decryptBytes);
-    decryptedText.should.equal(text);
+    it('Length is divisible by 16', () => {
+      // An example string key
+      const key = '1234567890123456';
+  
+      // Convert text to bytes
+      const text = 'TextMustBe16Byte';
+      const textBytes = utf8.toBytes(text);
+  
+      // Create cryptor
+      const cryptor = new Cryptor(Modes.ECB, { key });
+  
+      // Encryption
+      const encryptedBytes = cryptor.encrypt(textBytes);
+      const encryptedHex = hex.fromBytes(encryptedBytes);
+      encryptedHex.should.equal('3ba6941b0b398d96e87e34660ecd435f');
+  
+      // Decryption
+      const decryptBytes = cryptor.decrypt(encryptedBytes);
+      const decryptedText = utf8.fromBytes(decryptBytes);
+      decryptedText.should.equal(text);
+    });
   });
 });

@@ -126,7 +126,7 @@ class Cryptor {
       case Modes.CFB.name: return new mode.op(keyBytes, iv, segmentSize); // eslint-disable-line new-cap
       case Modes.OFB.name: return new mode.op(keyBytes, iv); // eslint-disable-line new-cap
       case Modes.CTR.name: return new mode.op(keyBytes, counter); // eslint-disable-line new-cap
-      /* istanbul ignore next: untestable */
+      /* istanbul ignore next */
       default: return undefined;
     }
   }

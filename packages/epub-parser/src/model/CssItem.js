@@ -10,7 +10,7 @@ class CssItem extends Item {
     if (isExists(rawObj.namespace)) {
       this.namespace = rawObj.namespace;
     }
-    /* istanbul ignore else: untestable */
+    /* istanbul ignore else */
     if (freeze && this.constructor === CssItem) {
       Object.freeze(this);
     }

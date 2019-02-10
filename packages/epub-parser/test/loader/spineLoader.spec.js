@@ -13,11 +13,11 @@ const read = file => fs.readFileSync(file, 'utf8');
 const html = read(Paths.SPINE_LOADER_ORIGIN);
 
 describe('Loader - Spine', () => {  
-  it('No option test', () => {
+  it('No option', () => {
     spineLoader({}, html).should.equal(read(Paths.SPINE_LOADER_NO_OPTIONS));
   });
 
-  it('extractBody option test', () => {
+  it('Use extractBody option', () => {
     let result = spineLoader({}, html, { extractBody: true });
     result.should.equal(JSON.parse(read(Paths.SPINE_LOADER_NO_ADAPTER)).value);
 
@@ -27,7 +27,7 @@ describe('Loader - Spine', () => {
     result = spineLoader({ styles }, html, { extractBody });
     result.should.equal(JSON.parse(read(Paths.SPINE_LOADER_ADAPTER)).value);
 
-    // used parseOptions.parseStyle option.
+    // with parseOptions.parseStyle option.
     const styles = [
       { namespace: 'ridi_style1' },
       { namespace: 'ridi_style2' },
@@ -41,7 +41,7 @@ describe('Loader - Spine', () => {
     });
   });
 
-  it('basePath option test', () => {
+  it('Use basePath option', () => {
     const expected = read(Paths.SPINE_LOADER_BASE_PATH);
 
     let result = spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, html, { basePath: 'a/b/c' });
@@ -51,17 +51,17 @@ describe('Loader - Spine', () => {
     result.should.deep.equal(expected);
   });
 
-  it('cssOptions test', () => {
+  it('Use css options', () => {
     const options = mergeObjects(EpubParser.readDefaultOptions, { removeTags: ['body'] });
     spineLoader({}, html, options).should.equal(read(Paths.SPINE_LOADER_CSS_OPTIONS));
   });
 
-  it('cssOptions + basePath test', () => {
+  it('Use css options + basePath', () => {
     const options = mergeObjects(EpubParser.readDefaultOptions, { basePath: 'a/b/c', removeTags: ['body'] });
     spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, html, options).should.equal(read(Paths.SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH));
   });
 
-  it('serializedAnchor option test', () => {
+  it('Use serializedAnchor option', () => {
     const spineItem = {
       href: '../Text/Section0001.xhtml',
       first: () =>  {

@@ -10,7 +10,8 @@ class Item {
       case 'bmp':
       case 'gif':
         return `image/${ext}`;
-      default: return '';
+      default:
+        return '';
     }
   }
 
@@ -18,7 +19,7 @@ class Item {
     this.index = rawObj.index;
     this.path = rawObj.path;
     this.size = rawObj.size;
-    /* istanbul ignore else: untestable */
+    /* istanbul ignore else */
     if (freeze && this.constructor === Item) {
       Object.freeze(this);
     }

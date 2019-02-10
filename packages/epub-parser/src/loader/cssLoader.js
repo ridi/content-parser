@@ -23,9 +23,9 @@ const Types = {
 };
 
 function handleRulePrelude(selectorList, options, cssItem) {
-  selectorList.children.each(function(selector, item, list) { // eslint-disable-line
+  selectorList.children.each(function (selector, item, list) { // eslint-disable-line
     let shouldRemove = false;
-    csstree.walk(selector, function(node) { // eslint-disable-line
+    csstree.walk(selector, function (node) { // eslint-disable-line
       const context = this;
       // Ignore nodes in nested selectors
       if (!isExists(context.selector) || context.selector === selectorList) {
@@ -122,7 +122,7 @@ const handlers = {
 export default function cssLoader(cssItem, string, options = {}) {
   const ast = csstree.parse(string);
   csstree.walk(ast, {
-    leave: function(node, item, list) { // eslint-disable-line
+    leave: function (node, item, list) { // eslint-disable-line
       const context = this;
       if (isExists(handlers[node.type])) {
         handlers[node.type].call(context, node, item, list, options, cssItem);

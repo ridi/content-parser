@@ -6,7 +6,7 @@ import InlineCssItem from '../../src/model/InlineCssItem';
 should(); // Initialize should
 
 describe('Model - InlineCssItem', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let item = new InlineCssItem();
     assert(item.style === '');
     assert(item instanceof CssItem);
@@ -19,6 +19,8 @@ describe('Model - InlineCssItem', () => {
     (() => {
       item.style = '';
     }).should.throw(/read only property/gi);
+
+    assert(item.defaultEncoding === 'utf8');
   });
 
   it('toRaw test', () => {

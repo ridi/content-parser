@@ -6,7 +6,7 @@ import Item from '../../src/model/Item';
 should(); // Initialize should
 
 describe('Model - Guide', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let guide = new Guide();
     assert(guide.title === undefined);
     assert(guide.type === Guide.Types.UNDEFINED);

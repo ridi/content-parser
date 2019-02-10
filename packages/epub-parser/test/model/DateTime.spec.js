@@ -5,7 +5,7 @@ import DateTime from '../../src/model/DateTime';
 should(); // Initialize should
 
 describe('Model - DateTime', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let date = new DateTime();
     assert(date.value === undefined);
     assert(date.event === DateTime.Events.UNDEFINED);

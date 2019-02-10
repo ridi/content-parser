@@ -6,7 +6,7 @@ import NcxItem from '../../src/model/NcxItem';
 should(); // Initialize should
 
 describe('Model - NcxItem', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let item = new NcxItem();
     item.navPoints.should.have.lengthOf(0);
     assert(item instanceof Item);
@@ -17,6 +17,8 @@ describe('Model - NcxItem', () => {
     (() => {
       item.navPoints = [];
     }).should.throw(/read only property/gi);
+
+    assert(item.defaultEncoding === 'utf8');
   });
 
   it('toRaw test', () => {

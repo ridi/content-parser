@@ -16,8 +16,8 @@ describe('Util - entry manager', () => {
     string: fs.readFileSync(filePath, 'utf8'),
   };
 
-  it('readEntries from zip', () => {
-    return readEntries(Paths.DEFAULT).then((entries) => {
+  it('Read entries from zip', () => {
+    return readEntries(Paths.DEFAULT).then(entries => {
       const expectedList = [
         'mimetype',
         'META-INF/container.xml',
@@ -37,7 +37,7 @@ describe('Util - entry manager', () => {
       ];
       isString(entries.source).should.be.false;
       entries.map(entry => entry.entryPath).should.deep.equal(expectedList);
-      entries.forEach((entry) => {
+      entries.forEach(entry => {
         const keys = Object.keys(entry);
         stringContains(keys, 'method').should.be.true;
         stringContains(keys, 'extraFieldLength').should.be.true;
@@ -49,8 +49,8 @@ describe('Util - entry manager', () => {
     });
   });
 
-  it('readEntries from directory', () => {
-    return readEntries(Paths.UNZIPPED_DEFAULT).then((entries) => {
+  it('Read entries from directory', () => {
+    return readEntries(Paths.UNZIPPED_DEFAULT).then(entries => {
       const expectedList = [
         'META-INF/container.xml',
         'OEBPS/Fonts/NotoSans-Regular.ttf',

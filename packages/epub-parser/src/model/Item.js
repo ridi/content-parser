@@ -8,7 +8,7 @@ class Item {
     this.href = rawObj.href;
     this.mediaType = rawObj.mediaType;
     this.size = rawObj.size;
-    /* istanbul ignore else: untestable */
+    /* istanbul ignore else */
     if (freeze && this.constructor === Item) {
       Object.freeze(this);
     }

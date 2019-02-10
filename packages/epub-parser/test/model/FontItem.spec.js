@@ -6,9 +6,10 @@ import Item from '../../src/model/Item';
 should(); // Initialize should
 
 describe('Model - FontItem', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     const item = new FontItem();
     assert(item instanceof Item);
+    assert(item.defaultEncoding === undefined);
   });
 
   it('toRaw test', () => {

@@ -7,7 +7,7 @@ import SpineItem from '../../src/model/SpineItem';
 should(); // Initialize should
 
 describe('Model - NavPoint', () => {
-  it('constructor test', () => {
+  it('Initialize test', () => {
     let navPoint = new NavPoint();
     assert(navPoint.id === undefined);
     assert(navPoint.label === undefined);

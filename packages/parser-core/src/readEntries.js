@@ -20,7 +20,7 @@ function create(source, entries) {
 }
 
 function fromZip(zip) {
-  return create(zip, Object.values(zip.files).reduce((entries, entry) => { // eslint-disable-line arrow-body-style
+  return create(zip, Object.values(zip.files).reduce((entries, entry) => {
     return entries.concat([{
       entryPath: entry.path,
       getFile: encoding => zip.getFile(entry, encoding),
@@ -33,10 +33,12 @@ function fromZip(zip) {
 
 function fromDirectory(dir, cryptoProvider, resetCache) {
   let pathes = (() => {
+    /* istanbul ignore next */
     try { return JSON.parse(readCacheFile(dir) || '[]'); } catch (e) { return []; }
   })();
   if (resetCache || pathes.length === 0) {
     pathes = getPathes(dir);
+    /* istanbul ignore else */
     if (resetCache) {
       removeAllCacheFiles();
     }
@@ -45,6 +47,7 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
   return create(dir, pathes.reduce((entries, fullPath) => {
     const subPathOffset = path.normalize(dir).length + path.sep.length;
     const size = (() => {
+      /* istanbul ignore next */
       try { return fs.lstatSync(fullPath).size; } catch (e) { return 0; }
     })();
     return entries.concat([{
@@ -71,7 +74,9 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
 
 export default async function readEntries(input, cryptoProvider, logger, resetCache = false) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
+    /* istanbul ignore if */
     if (isExists(cryptoProvider)) {
+      /* istanbul ignore next */
       input = cryptoProvider.run(fs.readFileSync(input), input, CryptoProvider.Purpose.READ_IN_DIR);
     }
     const zip = await openZip(input, cryptoProvider, logger);

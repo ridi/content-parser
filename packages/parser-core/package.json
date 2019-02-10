@@ -24,6 +24,6 @@
     "natural-orderby": "1.1.1",
     "sha1": "^1.1.1",
     "string-format": "^2.0.0",
-    "unzipper": "^0.9.4"
+    "unzipper": "^0.9.10"
   }
 }
