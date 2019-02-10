@@ -3,6 +3,7 @@
     "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
     "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
     "test": "yarn build && yarn lint && lerna exec --parallel -- nyc ../../node_modules/.bin/mocha test/**/*.spec.js",
+    "coverage": "codecov",
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
@@ -13,6 +14,7 @@
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.0",
+    "codecov": "^3.1.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.0.1",
     "babel-plugin-add-module-exports": "^1.0.0",

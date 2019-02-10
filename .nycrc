@@ -6,7 +6,8 @@
   "report-dir": "coverage",
   "reporter": [
     "lcov",
-    "text-summary"
+    "text-summary",
+    "json"
   ],
   "cache": false,
   "all": true,
