@@ -354,6 +354,9 @@ TEXT | text
 - index: *number* (**Default: undefined**)
 - isLinear: *boolean* (**Default: true**)
 - styles: *?[CssItem](#cssItem)[]*
+- first: *?[SpineItem](#spineItem)*
+- prev: *?[SpineItem](#spineItem)*
+- next: *?[SpineItem](#spineItem)*
 
 <a id="ncxItem"></a>
 

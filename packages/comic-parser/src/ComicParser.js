@@ -5,6 +5,7 @@ import {
   stringContains,
 } from '@ridi/parser-core';
 
+import sizeOf from 'image-size';
 import { orderBy } from 'natural-orderby';
 import path from 'path';
 
@@ -22,6 +23,8 @@ class ComicParser extends Parser {
       ...super.parseDefaultOptions,
       // File extension to allow when extracting lists.
       ext: ['jpg', 'jpeg', 'png', 'bmp', 'gif'],
+      // If true, image size parse. (parse may be slower.)
+      parseImageSize: false,
     };
   }
 
@@ -32,6 +35,7 @@ class ComicParser extends Parser {
     return {
       ...super.parseOptionTypes,
       ext: 'Array',
+      parseImageSize: 'Boolean|Number',
     };
   }
 
@@ -110,7 +114,8 @@ class ComicParser extends Parser {
    * extracts only necessary metadata from entries and create item list
    * @param {ReadContext} context intermediate result
    * @returns {Promise.<ReadContext>} return Context containing item list
-   * @see ComicParser.parseDefaultOptions.filter
+   * @see ComicParser.parseDefaultOptions.ext
+   * @see ComicParser.parseDefaultOptions.parseImageSize
    */
   async _parse(context) {
     const { entries, rawBook, options } = context;
@@ -120,16 +125,39 @@ class ComicParser extends Parser {
         return ext.length > 0 && stringContains(options.ext.map(e => `.${e}`), ext);
       });
     rawBook.items = [];
-    await items.reduce((prevPromise, entry, index) => {
+    await items.reduce((prevPromise, item, index) => {
       return prevPromise.then(async () => {
         rawBook.items.push({
           index,
-          path: entry.entryPath,
-          size: entry.size,
+          path: item.entryPath,
+          fileSize: item.size,
+          ...await this._parseImageSize(item, options),
         });
       });
     }, Promise.resolve());
     return context;
+  }
+
+  /**
+   * parse image size from entry
+   * @param {object} entry image entry
+   * @param {object} options parse options
+   * @returns {Promise.<object>} return image size
+   */
+  async _parseImageSize(entry, options) {
+    const { parseImageSize } = options;
+    if (parseImageSize === false) {
+      return {};
+    }
+    const readOptions = Number.isInteger(parseImageSize) ? { end: parseImageSize } : {};
+    const buffer = await entry.getFile(readOptions);
+    try {
+      const size = sizeOf(buffer);
+      return { width: size.width, height: size.height };
+    } catch (e) {
+      this.logger.error(e);
+      return { width: undefined, height: undefined };
+    }
   }
 
   /**

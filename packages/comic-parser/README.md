@@ -181,7 +181,9 @@ parser.onProgress = (step, totalStep, action) => {
 
 - index: *?string*
 - path: *?string*
-- size: *?number*
+- fileSize: *?number*
+- width: *?number*
+- height: *?number*
 
 <a id="parseOptions"></a>
 
@@ -190,6 +192,7 @@ parser.onProgress = (step, totalStep, action) => {
 * [unzipPath](#unzipPath)
 * [overwrite](#overwrite)
 * [ext](#ext)
+* [parseImageSize](#parseImageSize)
 
 ---
 
@@ -222,6 +225,16 @@ If true, overwrite to [unzipPath](#unzipPath) when unzip.
 File extension to allow when extracting lists.
 
 **Default:** `['jpg', 'jpeg', 'png', 'bmp', 'gif']`
+
+---
+
+<a id="parseImageSize"></a>
+
+### parseImageSize: *`boolean|number`*
+
+If true, image size parse. (parse may be slower.)
+
+**Default:** `false`
 
 <a id="readOptions"></a>
 

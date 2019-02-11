@@ -3,6 +3,7 @@ import path from 'path';
 import unzipper from 'unzipper';
 
 import createCryptoStream from './createCryptoStream';
+import createRangeStream from './createRangeStream';
 import CryptoProvider from './CryptoProvider';
 import { isExists, isString } from './typecheck';
 import { safePathJoin } from './pathUtil';
@@ -11,11 +12,14 @@ function find(entryPath) {
   return this.files.find(entry => entryPath === entry.path);
 }
 
-async function getFile(entry, encoding) {
+async function getFile(entry, options = {}) {
+  const { encoding, end } = options;
   let file = await new Promise((resolve, reject) => {
     const size = entry.uncompressedSize;
     let data = Buffer.from([]);
-    entry.stream() // is DuplexStream.
+    const stream = entry.stream();
+    stream // is DuplexStream.
+      .pipe(createRangeStream(0, end))
       .pipe(createCryptoStream(entry.path, size, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))

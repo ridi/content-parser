@@ -180,7 +180,7 @@ class EpubParser extends Parser {
     const { entries, options } = context;
     if (!isString(entries.source) && options.validatePackage) {
       const firstEntry = context.entries.first;
-      const signature = await firstEntry.getFile('utf8');
+      const signature = await firstEntry.getFile({ encoding: 'utf8' });
       if (firstEntry.entryPath !== 'mimetype') {
         throw createError(Errors.EINVAL, 'package', 'reason', 'mimetype file must be first file in archive.');
       } else if (firstEntry.method !== 0 /* STORED */) {
@@ -220,7 +220,7 @@ class EpubParser extends Parser {
     //     ...                  ^~~~~~~~~~~~~~~~~
     //   </rootfiles>
     // </container>
-    const { container } = xmlLoader(await containerEntry.getFile('utf8'));
+    const { container } = xmlLoader(await containerEntry.getFile({ encoding: 'utf8' }));
     if (!isExists(container)) {
       throw createError(Errors.ENOELMT, 'container', entryPath);
     }
@@ -276,7 +276,7 @@ class EpubParser extends Parser {
     //   <guide>...</guide>
     //    ^~~~~~~~~~~~~~~~
     // </package>
-    const { package: root } = xmlLoader(await opfEntry.getFile('utf8'));
+    const { package: root } = xmlLoader(await opfEntry.getFile({ encoding: 'utf8' }));
     if (!isExists(root)) {
       throw createError(Errors.ENOELMT, 'package', opfPath);
     }
@@ -444,7 +444,7 @@ class EpubParser extends Parser {
     const find = (list, property, value) => list.find(item => item[property] === value);
     const filter = (list, property, value) => list.filter(item => item[property] === value);
 
-    const document = parseHtml(await entry.getFile('utf8'));
+    const document = parseHtml(await entry.getFile({ encoding: 'utf8' }));
     const html = find(document, 'tagName', 'html');
     if (!isExists(html)) {
       this.logger.error(`Can not analyze style in '${rawItem.href}'. (reason: no html tag)`);
@@ -564,7 +564,7 @@ class EpubParser extends Parser {
       //   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       //   ...
       // </ncx>
-      const { ncx } = xmlLoader(await ncxEntry.getFile('utf8'));
+      const { ncx } = xmlLoader(await ncxEntry.getFile({ encoding: 'utf8' }));
       if (!isExists(ncx)) {
         throw createError(Errors.ENOELMT, 'ncx', ncxItem.href);
       }
@@ -640,7 +640,7 @@ class EpubParser extends Parser {
           throw createError(Errors.ENOFILE, item.href);
         }
 
-        const file = await entry.getFile(item.defaultEncoding);
+        const file = await entry.getFile({ encoding: item.defaultEncoding });
         if (item instanceof SpineItem) {
           results.push(spineLoader(item, file, options));
         } else if (item instanceof CssItem) {

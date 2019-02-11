@@ -14,7 +14,9 @@
   "bugs": "https://github.com/ridi/content-parser/issues",
   "homepage": "https://github.com/ridi/content-parser",
   "files": [
-    "lib"
+    "lib",
+    "../../CHANGELOG.md",
+    "../../LICENSE"
   ],
   "main": "lib/index.js",
   "dependencies": {

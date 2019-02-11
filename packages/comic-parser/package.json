@@ -14,12 +14,15 @@
   "bugs": "https://github.com/ridi/content-parser/issues",
   "homepage": "https://github.com/ridi/content-parser",
   "files": [
-    "lib"
+    "lib",
+    "../../CHANGELOG.md",
+    "../../LICENSE"
   ],
   "main": "lib/index.js",
   "dependencies": {
     "@ridi/parser-core": "^0.3.1",
     "fs-extra": "^7.0.1",
+    "image-size": "^0.7.1",
     "natural-orderby": "1.1.1"
   }
 }
