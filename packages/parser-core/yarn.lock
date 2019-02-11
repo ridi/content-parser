@@ -260,7 +260,7 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
-unzipper@^0.9.4:
+unzipper@^0.9.10:
   version "0.9.10"
   resolved "https://registry.yarnpkg.com/unzipper/-/unzipper-0.9.10.tgz#1954ed60f69d102d4416f92825588f2916ba503e"
   dependencies:
