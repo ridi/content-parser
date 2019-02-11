@@ -11,6 +11,6 @@ export default function validationBook(book, expectedBook) {
     const expectedItem = expectedBook.items[idx];
     item.index.should.equal(expectedItem.index);
     item.path.should.equal(expectedItem.path);
-    item.size.should.equal(expectedItem.size);
+    item.fileSize.should.equal(expectedItem.fileSize);
   });
 }

@@ -38,7 +38,7 @@ describe('ComicParser', () => {
           items.forEach((item) => {
             item.index.should.not.null;
             item.path.should.not.null;
-            item.size.should.not.null;
+            item.fileSize.should.not.null;
           });
           _context = context;
         });

@@ -181,7 +181,7 @@ parser.onProgress = (step, totalStep, action) => {
 
 - index: *?string*
 - path: *?string*
-- size: *?number*
+- fileSize: *?number*
 
 <a id="parseOptions"></a>
 

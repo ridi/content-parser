@@ -18,7 +18,7 @@ class Item {
   constructor(rawObj = {}, freeze = true) {
     this.index = rawObj.index;
     this.path = rawObj.path;
-    this.size = rawObj.size;
+    this.fileSize = rawObj.fileSize;
     /* istanbul ignore else */
     if (freeze && this.constructor === Item) {
       Object.freeze(this);
@@ -29,7 +29,7 @@ class Item {
     return {
       index: this.index,
       path: this.path,
-      size: this.size,
+      fileSize: this.fileSize,
     };
   }
 }

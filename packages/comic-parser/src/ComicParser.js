@@ -120,12 +120,12 @@ class ComicParser extends Parser {
         return ext.length > 0 && stringContains(options.ext.map(e => `.${e}`), ext);
       });
     rawBook.items = [];
-    await items.reduce((prevPromise, entry, index) => {
+    await items.reduce((prevPromise, item, index) => {
       return prevPromise.then(async () => {
         rawBook.items.push({
           index,
-          path: entry.entryPath,
-          size: entry.size,
+          path: item.entryPath,
+          fileSize: item.size,
         });
       });
     }, Promise.resolve());
