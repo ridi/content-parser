@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None
+### Added
+
+* Add `ComicParser.parseOptions.parseImageSize` option.
+* Add `ComicBook.Item.width` and `ComicBook.Item.height`.
+
+### Changed
+
+* Rename `ComicBook.Item.size` to `ComicBook.Item.fileSize`.
 
 ## [0.3.1 (2019-01-31)]
 
