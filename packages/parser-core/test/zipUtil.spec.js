@@ -17,7 +17,7 @@ describe('Util - Zip', () => {
       entry.should.not.null;
       const buffer = await zip.getFile(entry);
       Buffer.isBuffer(buffer).should.be.true;
-      const string = await zip.getFile(entry, 'utf8');
+      const string = await zip.getFile(entry, { encoding: 'utf8' });
       string.should.equal('application/epub+zip');
     });
   });

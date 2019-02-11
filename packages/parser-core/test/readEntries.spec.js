@@ -45,7 +45,9 @@ describe('Util - entry manager', () => {
 
       const entry = entries.find('mimetype');
       entry.getFile().then(file => file.should.deep.equal(expectedFile.buffer));
-      entry.getFile('utf8').then(file => file.should.equal(expectedFile.string));
+      entry.getFile({ encoding: 'utf8' }).then(file => file.should.equal(expectedFile.string));
+      entry.getFile({ end: 100000 }).then(file => file.should.deep.equal(expectedFile.buffer));
+      entry.getFile({ encoding: 'utf8', end: 11 }).then(file => file.should.deep.equal(expectedFile.string.substr(0, 11)));
     });
   });
 
@@ -73,7 +75,9 @@ describe('Util - entry manager', () => {
 
       const entry = entries.find('mimetype');
       entry.getFile().then(file => file.should.deep.equal(expectedFile.buffer));
-      entry.getFile('utf8').then(file => file.should.equal(expectedFile.string));
+      entry.getFile({ encoding: 'utf8' }).then(file => file.should.equal(expectedFile.string));
+      entry.getFile({ end: 100000 }).then(file => file.should.deep.equal(expectedFile.buffer));
+      entry.getFile({ encoding: 'utf8', end: 11 }).then(file => file.should.deep.equal(expectedFile.string.substr(0, 11)));
     });
   });
 

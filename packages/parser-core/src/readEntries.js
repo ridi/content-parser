@@ -23,7 +23,7 @@ function fromZip(zip) {
   return create(zip, Object.values(zip.files).reduce((entries, entry) => {
     return entries.concat([{
       entryPath: entry.path,
-      getFile: encoding => zip.getFile(entry, encoding),
+      getFile: options => zip.getFile(entry, options),
       size: entry.uncompressedSize,
       method: entry.compressionMethod,
       extraFieldLength: entry.extraFieldLength,
@@ -52,9 +52,10 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
     })();
     return entries.concat([{
       entryPath: safePath(fullPath).substring(subPathOffset),
-      getFile: async (encoding) => {
+      getFile: async (options = {}) => {
         let file = await new Promise((resolve, reject) => {
-          const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
+          const end = isExists(options.end) ? Math.max(options.end, size) : Infinity;
+          const stream = fs.createReadStream(fullPath, { encoding: 'binary', start: 0, end });
           let data = Buffer.from([]);
           stream
             .pipe(createCryptoStream(fullPath, size, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
@@ -62,6 +63,7 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
             .on('error', e => reject(e))
             .on('end', () => resolve(data));
         });
+        const { encoding } = options;
         if (isExists(encoding)) {
           file = file.toString(encoding);
         }
