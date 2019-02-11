@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+* None
+
+## [0.4.0 (2019-02-12)]
+
 ### Added
 
 * Add `ComicParser.parseOptions.parseImageSize` option.
@@ -103,7 +107,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.3.1...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.4.0...HEAD
+[0.4.0 (2019-02-12)]: https://github.com/ridi/content-parser/compare/0.3.1...0.4.0
 [0.3.1 (2019-01-31)]: https://github.com/ridi/content-parser/compare/0.3.0...0.3.1
 [0.3.0 (2019-01-27)]: https://github.com/ridi/content-parser/compare/0.2.0...0.3.0
 [0.2.0 (2018-11-19)]: https://github.com/ridi/content-parser/compare/0.1.1...0.2.0
