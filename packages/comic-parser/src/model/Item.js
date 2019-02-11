@@ -1,3 +1,4 @@
+import { isExists } from '@ridi/parser-core';
 import path from 'path';
 
 class Item {
@@ -19,6 +20,12 @@ class Item {
     this.index = rawObj.index;
     this.path = rawObj.path;
     this.fileSize = rawObj.fileSize;
+    if (isExists(rawObj.width)) {
+      this.width = rawObj.width;
+    }
+    if (isExists(rawObj.height)) {
+      this.height = rawObj.height;
+    }
     /* istanbul ignore else */
     if (freeze && this.constructor === Item) {
       Object.freeze(this);
@@ -30,6 +37,8 @@ class Item {
       index: this.index,
       path: this.path,
       fileSize: this.fileSize,
+      ...(isExists(this.width) ? { width: this.width } : {}),
+      ...(isExists(this.height) ? { height: this.height } : {}),
     };
   }
 }
