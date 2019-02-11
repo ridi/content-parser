@@ -3,6 +3,7 @@ import path from 'path';
 
 import { removeAllCacheFiles, readCacheFile, writeCacheFile } from './cacheFile';
 import createCryptoStream from './createCryptoStream';
+import createRangeStream from './createRangeStream';
 import CryptoProvider from './CryptoProvider';
 import { getPathes, safePath } from './pathUtil';
 import { isExists } from './typecheck';
@@ -53,17 +54,17 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
     return entries.concat([{
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (options = {}) => {
+        const { encoding, end } = options;
         let file = await new Promise((resolve, reject) => {
-          const end = isExists(options.end) ? Math.max(options.end, size) : Infinity;
-          const stream = fs.createReadStream(fullPath, { encoding: 'binary', start: 0, end });
+          const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
           let data = Buffer.from([]);
           stream
+            .pipe(createRangeStream(0, end))
             .pipe(createCryptoStream(fullPath, size, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))
             .on('end', () => resolve(data));
         });
-        const { encoding } = options;
         if (isExists(encoding)) {
           file = file.toString(encoding);
         }
