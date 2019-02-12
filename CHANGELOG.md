@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None
+### Changed
+
+* Improve performance of parsing.
 
 ## [0.4.0 (2019-02-12)]
 

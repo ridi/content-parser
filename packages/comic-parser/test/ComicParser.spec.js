@@ -30,7 +30,13 @@ describe('ComicParser', () => {
           _context = context;
         });
       });
-    
+
+      it('_unzipIfNeeded test', function () {
+        this.timeout(5 * 1000);
+        _context.options.unzipPath = path.join('.', 'temp');
+        return parser._unzipIfNeeded(_context).should.be.fulfilled;
+      });
+
       it('_parse test', () => {
         return parser._parse(_context).then((context) => {
           const { items } = context.rawBook;
@@ -45,13 +51,7 @@ describe('ComicParser', () => {
           _context = context;
         });
       });
-    
-      it('_unzipIfNeeded test', function () {
-        this.timeout(5 * 1000);
-        _context.options.unzipPath = path.join('.', 'temp');
-        return parser._unzipIfNeeded(_context).should.be.fulfilled;
-      });
-    
+
       it('_createBook test', () => {
         return parser._createBook(_context).then(book => {
           validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_COMIC_BOOK)));
