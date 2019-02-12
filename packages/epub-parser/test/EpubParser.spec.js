@@ -88,6 +88,11 @@ describe('EpubParser', () => {
         _context.options.validatePackage = true;
         return parser._validatePackageIfNeeded(_context).should.be.fulfilled;
       });
+
+      it('_unzipIfNeeded test', () => {
+        _context.options.unzipPath = path.join('.', 'temp');
+        return parser._unzipIfNeeded(_context).should.be.fulfilled;
+      });
     
       it('_parseMetaInf test', () => {
         return parser._parseMetaInf(_context).then(context => {
@@ -164,11 +169,6 @@ describe('EpubParser', () => {
           shouldEqual(ncxItem.navPoints, expectedNcxItem.navPoints);
           _context = context;
         });
-      });
-    
-      it('_unzipIfNeeded test', () => {
-        _context.options.unzipPath = path.join('.', 'temp');
-        return parser._unzipIfNeeded(_context).should.be.fulfilled;
       });
     
       it('_createBook test', () => {

@@ -24,9 +24,7 @@
     "crypto"
   ],
   "files": [
-    "lib",
-    "../../CHANGELOG.md",
-    "../../LICENSE"
+    "lib"
   ],
   "main": "lib/index.js",
   "dependencies": {

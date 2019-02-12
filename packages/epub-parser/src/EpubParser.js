@@ -147,12 +147,22 @@ class EpubParser extends Parser {
   }
 
   /**
+   * @returns {ParseTask[]} return before tasks
+   */
+  _parseBeforeTasks() {
+    return [
+      { fun: this._prepareParse, name: 'prepareParse' },
+      { fun: this._validatePackageIfNeeded, name: 'validatePackageIfNeeded' },
+      { fun: this._unzipIfNeeded, name: 'unzipIfNeeded' },
+    ];
+  }
+
+  /**
    * @returns {ParseTask[]} return tasks
    */
   _parseTasks() {
     return [
       ...super._parseTasks(),
-      { fun: this._validatePackageIfNeeded, name: 'validatePackageIfNeeded' },
       { fun: this._parseMetaInf, name: 'parseMetaInf' },
       { fun: this._parseOpf, name: 'parseOpf' },
       { fun: this._parseNcx, name: 'parseNcx' },

@@ -167,6 +167,7 @@ class Parser {
   _parseBeforeTasks() {
     return [
       { fun: this._prepareParse, name: 'prepareParse' },
+      { fun: this._unzipIfNeeded, name: 'unzipIfNeeded' },
     ];
   }
 
@@ -182,7 +183,6 @@ class Parser {
    */
   _parseAfterTasks() {
     return [
-      { fun: this._unzipIfNeeded, name: 'unzipIfNeeded' },
       { fun: this._createBook, name: 'createBook' },
     ];
   }
@@ -249,6 +249,7 @@ class Parser {
     if (!isString(entries.source) && isExists(unzipPath)) {
       await entries.source.extractAll(unzipPath, overwrite);
       privateProps.set(this, { ...privateProps.get(this), input: unzipPath });
+      context.entries = await readEntries(this.input, this.cryptoProvider, this.logger);
     }
     return context;
   }
