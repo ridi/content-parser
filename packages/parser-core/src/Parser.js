@@ -125,6 +125,7 @@ class Parser {
       throw createError(Errors.EINVAL, 'cryptoProvider', 'reason', 'must be CryptoProvider subclassing type');
     }
     const logger = new Logger(loggerNamespace || Parser.name);
+    logger.debug(`Create new parser with input: '${input}', cryptoProvider: ${isExists(cryptoProvider) ? 'Y' : 'N'}.`);
     privateProps.set(this, { input, cryptoProvider, logger });
   }
 
@@ -232,6 +233,7 @@ class Parser {
     const context = new ParseContext();
     context.options = mergeObjects(parseDefaultOptions, options);
     context.entries = await readEntries(this.input, this.cryptoProvider, this.logger, true);
+    this.logger.debug(`Ready to parse with options: ${JSON.stringify(context.options)}.`);
     return context;
   }
 
@@ -361,6 +363,7 @@ class Parser {
     context.items = items;
     context.entries = entries;
     context.options = mergeObjects(readDefaultOptions, options);
+    this.logger.debug(`Ready to read with options: ${JSON.stringify(context.options)}.`);
     return context;
   }
 
