@@ -35,6 +35,7 @@ const Paths = {
   EXPECTED_COMIC_BOOK_WITH_SIZE: '../../test/res/expectedComicBookWithSize.json',
   COMIC_FIRST: '../../test/res/comic/1.jpg',
   COMIC_BASE64: '../../test/res/comicBase64.txt',
+  SORT_TEST: '../../test/res/sort',
 };
 
 export default Paths;

@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Change `Logger.logLevel` default. (`error` => `warning`)
 * Rename `LogLevel.WARNING` to `LogLevel.WARN`.
 
+### Fixed
+
+* Fix an issue where subpath sort was not natural.
+
 ## [0.4.1 (2019-02-12)]
 
 ### Changed

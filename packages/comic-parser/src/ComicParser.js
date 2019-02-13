@@ -6,8 +6,8 @@ import {
 } from '@ridi/parser-core';
 
 import sizeOf from 'image-size';
-import { orderBy } from 'natural-orderby';
 import path from 'path';
+import naturalCompare from 'string-natural-compare';
 
 import Book from './model/Book';
 import Item from './model/Item';
@@ -121,7 +121,7 @@ class ComicParser extends Parser {
    */
   async _parse(context) {
     const { entries, rawBook, options } = context;
-    const items = orderBy(entries.map(entry => entry), entry => entry.entryPath)
+    const items = entries.sort((e1, e2) => naturalCompare(e1.entryPath, e2.entryPath))
       .filter((entry) => {
         const ext = path.extname(entry.entryPath);
         return ext.length > 0 && stringContains(options.ext.map(e => `.${e}`), ext);

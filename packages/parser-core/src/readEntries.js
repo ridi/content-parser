@@ -12,11 +12,12 @@ import openZip from './zipUtil';
 function create(source, entries) {
   return {
     first: entries[0],
-    find: entryPath => entries.find(entry => entryPath === entry.entryPath),
-    map: callback => entries.map(callback),
-    forEach: callback => entries.forEach(callback),
     length: entries.length,
     source,
+    find: entryPath => entries.find(entry => entryPath === entry.entryPath),
+    forEach: callback => entries.forEach(callback),
+    map: callback => entries.map(callback),
+    sort: callback => entries.sort(callback),
   };
 }
 

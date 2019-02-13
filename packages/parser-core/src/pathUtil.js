@@ -1,6 +1,6 @@
-import { orderBy } from 'natural-orderby';
 import fs from 'fs';
 import path from 'path';
+import naturalCompare from 'string-natural-compare';
 
 import { isString } from './typecheck';
 
@@ -20,9 +20,9 @@ export function safePathJoin(...components) {
 }
 
 export function getPathes(target) {
-  return orderBy(fs.readdirSync(target).reduce((subpathes, subpath) => {
+  return fs.readdirSync(target).reduce((subpathes, subpath) => {
     const fullPath = path.join(target, subpath);
     const isDirectory = fs.statSync(fullPath).isDirectory();
     return subpathes.concat(isDirectory ? getPathes(fullPath) : [fullPath]);
-  }, []));
+  }, []).sort(naturalCompare);
 }

@@ -19,7 +19,7 @@ describe('Util - Path utils', () => {
   });
 
   it('getPathes test', () => {
-    const expectedList = [
+    let expectedList = [
       path.join('META-INF', 'container.xml'),
       path.join('OEBPS', 'Fonts', 'NotoSans-Regular.ttf'),
       path.join('OEBPS', 'Images', 'ridibooks.png'),
@@ -38,5 +38,26 @@ describe('Util - Path utils', () => {
     ];
     const offset = path.normalize(Paths.UNZIPPED_DEFAULT).length + path.sep.length;
     getPathes(Paths.UNZIPPED_DEFAULT).map(subpath => subpath.substring(offset)).should.deep.equal(expectedList);
+
+    expectedList = [
+      '!000.jpg',
+      '000.jpg',
+      '1.jpg',
+      '1/1.jpg',
+      '1/2.jpg',
+      '1/3.jpg',
+      '2.jpg',
+      '3.jpg',
+      '10.jpg',
+      '11.jpg',
+      '12.jpg',
+      '13.jpg',
+      'A1.jpg',
+      'A111.jpg',
+      '__test__.jpg',
+      'a.jpg',
+      'a11.jpg',
+    ];
+    getPathes(Paths.SORT_TEST).map(subpath => subpath.replace(`${Paths.SORT_TEST}/`, '')).should.deep.equal(expectedList);
   });
 });
