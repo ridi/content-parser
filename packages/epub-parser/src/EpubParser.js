@@ -110,12 +110,15 @@ class EpubParser extends Parser {
    * Create new EpubParser
    * @param {string} input file or directory
    * @param {?CryptoProvider} cryptoProvider en/decrypto provider
+   * @param {?string} logLevel logging level
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example new EpubParser('./foo/bar.epub' or './foo/bar');
    */
-  constructor(input, cryptoProvider) {
-    super(input, cryptoProvider, 'EpubParser');
+  constructor(input, cryptoProvider, logLevel) {
+    logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
+    cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
+    super(input, cryptoProvider, { namespace: EpubParser.name, logLevel });
   }
 
   /**

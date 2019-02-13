@@ -111,6 +111,8 @@ Log level setting:
 
 ```js
 import { LogLevel, ... } from '@ridi/epub-parser';
+const parser = new EpubParser(/* path */, /* cryptoProvider */, /* logLevel */)
+// or const parser = new EpubParser(/* path */, /* logLevel */)
 parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR, WARN(default), INFO, DEBUG, VERBOSE
 ```
 

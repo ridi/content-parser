@@ -104,7 +104,7 @@ class Parser {
    * Create new Parser
    * @param {string} input file or directory
    * @param {?CryptoProvider} cryptoProvider en/decrypto provider
-   * @param {?string} loggerNamespace logger namespace
+   * @param {?object} loggerOptions logger options
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example
@@ -113,7 +113,7 @@ class Parser {
    * }
    * new FooParser('./foo/bar.zip' or './foo/bar');
    */
-  constructor(input, cryptoProvider, loggerNamespace) {
+  constructor(input, cryptoProvider, loggerOptions = {}) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
         throw createError(Errors.ENOENT, input);
@@ -124,7 +124,9 @@ class Parser {
     if (isExists(cryptoProvider) && !(cryptoProvider instanceof CryptoProvider)) {
       throw createError(Errors.EINVAL, 'cryptoProvider', 'reason', 'must be CryptoProvider subclassing type');
     }
-    const logger = new Logger(loggerNamespace || Parser.name);
+    const { namespace, logLevel } = loggerOptions;
+    const logger = new Logger(namespace || Parser.name);
+    logger.logLevel = logLevel;
     logger.debug(`Create new parser with input: '${input}', cryptoProvider: ${isExists(cryptoProvider) ? 'Y' : 'N'}.`);
     privateProps.set(this, { input, cryptoProvider, logger });
   }
