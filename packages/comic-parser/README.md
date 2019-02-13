@@ -99,7 +99,7 @@ Log level setting:
 
 ```js
 import { LogLevel, ... } from '@ridi/comic-parser';
-parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR(default), WARNING, INFO, VERBOSE
+parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR, WARNING(default), INFO, VERBOSE
 ```
 
 ## API

@@ -29,7 +29,7 @@ class Logger {
 
   constructor(namespace, logLevel = '') {
     this.namespace = namespace || Logger.name;
-    this._logLevel = stringContains(Object.values(LogLevel), logLevel) ? logLevel : LogLevel.ERROR;
+    this._logLevel = stringContains(Object.values(LogLevel), logLevel) ? logLevel : LogLevel.WARNING;
     this._firstTime = null;
   }
 
