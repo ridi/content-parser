@@ -256,7 +256,7 @@ describe('Cryptor', () => {
 
       const encryptedBytes = hex.toBytes('23b4f080a310770e93def2ddfee44817');
       encryptedBytes[encryptedBytes.length - 1] = 24;
-      try { cryptor.decrypt(encryptedBytes, Padding.PKCS7); } catch (e) { e.toString().startsWith('Error: PKCS#7').should.be.true; }
+      try { cryptor.decrypt(encryptedBytes, Padding.PKCS7); } catch (e) { e.code.should.equal(Errors.ECRYT.code); }
 
       cryptor.decrypt(encryptedBytes, Padding.AUTO);
     });
@@ -306,5 +306,20 @@ describe('Cryptor', () => {
       const decryptedText = utf8.fromBytes(decryptBytes);
       decryptedText.should.equal(text);
     });
+  });
+
+  it('Wrappers for aes-js internal error', () => {
+      // An example 128-bit key
+      const key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+      // Convert text to bytes
+      const text = 'LessThan16Bytes';
+      const textBytes = utf8.toBytes(text);
+
+      // Create cryptor
+      const cryptor = new Cryptor(Modes.ECB, { key });
+
+      // Encryption
+      try { cryptor.encrypt(textBytes); } catch (e) { e.code.should.equal(Errors.ECRYT.code); }
   });
 });

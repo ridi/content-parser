@@ -1,6 +1,6 @@
 import {
   Errors, createError,
-  isExists,
+  isExists, isString,
   Parser,
   stringContains,
 } from '@ridi/parser-core';
@@ -64,12 +64,14 @@ class ComicParser extends Parser {
    * Create new ComicParser
    * @param {string} input file or directory
    * @param {?CryptoProvider} cryptoProvider en/decrypto provider
+   * @param {?string} logLevel logging level
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example new ComicParser('./foo/bar.zip' or './foo/bar');
    */
-  constructor(input, cryptoProvider) {
-    super(input, cryptoProvider, 'ComicParser');
+  constructor(input, cryptoProvider, logLevel) {
+    logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
+    super(input, cryptoProvider, { namespace: ComicParser.name, logLevel });
   }
 
   /**

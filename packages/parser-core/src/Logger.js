@@ -5,17 +5,19 @@ import stringContains from './stringContains';
 const LogLevel = Object.freeze({
   SILENT: 'silent',
   ERROR: 'error',
-  WARNING: 'warn',
+  WARN: 'warn',
   INFO: 'info',
+  DEBUG: 'debug',
   VERBOSE: 'verbose',
 });
 
 const getOrder = (logLevel) => {
   switch (logLevel) {
     case LogLevel.ERROR: return 1;
-    case LogLevel.WARNING: return 2;
+    case LogLevel.WARN: return 2;
     case LogLevel.INFO: return 3;
-    case LogLevel.VERBOSE: return 4;
+    case LogLevel.DEBUG: return 4;
+    case LogLevel.VERBOSE: return 5;
     default: return 0;
   }
 };
@@ -29,7 +31,7 @@ class Logger {
 
   constructor(namespace, logLevel = '') {
     this.namespace = namespace || Logger.name;
-    this._logLevel = stringContains(Object.values(LogLevel), logLevel) ? logLevel : LogLevel.ERROR;
+    this._logLevel = stringContains(Object.values(LogLevel), logLevel) ? logLevel : LogLevel.WARN;
     this._firstTime = null;
   }
 
@@ -46,7 +48,7 @@ class Logger {
 
   warn(message, ...optionalParams) {
     /* istanbul ignore else */
-    if (Logger.confirm(this.logLevel, LogLevel.WARNING)) {
+    if (Logger.confirm(this.logLevel, LogLevel.WARN)) {
       console.warn(`[${this.namespace}] ${message}`, ...optionalParams);
     }
   }
@@ -55,6 +57,13 @@ class Logger {
     /* istanbul ignore else */
     if (Logger.confirm(this.logLevel, LogLevel.ERROR)) {
       console.error(`[${this.namespace}] ${message}`, ...optionalParams);
+    }
+  }
+
+  debug(message, ...optionalParams) {
+    /* istanbul ignore else */
+    if (Logger.confirm(this.logLevel, LogLevel.DEBUG)) {
+      console.debug(`[${this.namespace}] ${message}`, ...optionalParams);
     }
   }
 
