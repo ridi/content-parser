@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+* None.
+
+## [0.5.0 (2019-02-13)]
+
 ### Added
 
 * Add `LogLevel.DEBUG` and debug log in `Parser`.
@@ -126,7 +130,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.4.1...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.0...HEAD
+[0.5.0 (2019-02-13)]: https://github.com/ridi/content-parser/compare/0.4.1...0.5.0
 [0.4.1 (2019-02-12)]: https://github.com/ridi/content-parser/compare/0.4.0...0.4.1
 [0.4.0 (2019-02-12)]: https://github.com/ridi/content-parser/compare/0.3.1...0.4.0
 [0.3.1 (2019-01-31)]: https://github.com/ridi/content-parser/compare/0.3.0...0.3.1
