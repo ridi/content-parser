@@ -104,7 +104,7 @@ class Parser {
    * Create new Parser
    * @param {string} input file or directory
    * @param {?CryptoProvider} cryptoProvider en/decrypto provider
-   * @param {?string} loggerNamespace logger namespace
+   * @param {?object} loggerOptions logger options
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example
@@ -113,7 +113,7 @@ class Parser {
    * }
    * new FooParser('./foo/bar.zip' or './foo/bar');
    */
-  constructor(input, cryptoProvider, loggerNamespace) {
+  constructor(input, cryptoProvider, loggerOptions = {}) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
         throw createError(Errors.ENOENT, input);
@@ -124,7 +124,10 @@ class Parser {
     if (isExists(cryptoProvider) && !(cryptoProvider instanceof CryptoProvider)) {
       throw createError(Errors.EINVAL, 'cryptoProvider', 'reason', 'must be CryptoProvider subclassing type');
     }
-    const logger = new Logger(loggerNamespace || Parser.name);
+    const { namespace, logLevel } = loggerOptions;
+    const logger = new Logger(namespace || Parser.name);
+    logger.logLevel = logLevel;
+    logger.debug(`Create new parser with input: '${input}', cryptoProvider: ${isExists(cryptoProvider) ? 'Y' : 'N'}.`);
     privateProps.set(this, { input, cryptoProvider, logger });
   }
 
@@ -232,6 +235,7 @@ class Parser {
     const context = new ParseContext();
     context.options = mergeObjects(parseDefaultOptions, options);
     context.entries = await readEntries(this.input, this.cryptoProvider, this.logger, true);
+    this.logger.debug(`Ready to parse with options: ${JSON.stringify(context.options)}.`);
     return context;
   }
 
@@ -342,7 +346,7 @@ class Parser {
    * Validate read options and get entries from input
    * @param {Item[]} items targets
    * @param {?object} options read options
-   * @returns {Promise.<ReadContext>}  returns Context containing target items, read options, entries
+   * @returns {Promise.<ReadContext>} returns Context containing target items, read options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
@@ -361,6 +365,7 @@ class Parser {
     context.items = items;
     context.entries = entries;
     context.options = mergeObjects(readDefaultOptions, options);
+    this.logger.debug(`Ready to read with options: ${JSON.stringify(context.options)}.`);
     return context;
   }
 

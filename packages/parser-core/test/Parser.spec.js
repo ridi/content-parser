@@ -3,6 +3,7 @@ import path from 'path';
 
 import CryptoProvider from '../src/CryptoProvider';
 import Errors from '../src/errors';
+import { LogLevel } from '../src/Logger';
 import Parser from '../src/Parser';
 import Paths from '../../../test/paths';
 import { isString } from '../src/typecheck';
@@ -20,6 +21,11 @@ class Item {
 }
 
 class TestParser extends Parser {
+  constructor(input, cryptoProvider, logLevel) {
+    logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
+    cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
+    super(input, cryptoProvider, { namespace: TestParser.name, logLevel });
+  }
   _getParseContextClass() { return Object; }
   _getBookClass() { return Object; }
   _getReadContextClass() { return Object; }
@@ -69,12 +75,21 @@ describe('Parser', () => {
       parser.logger.namespace.should.equal(Parser.name);
     });
   
-    it('with loggerName', () => {
-      const parser = new Parser(zipPath, cryptoProvider, loggerNamespace);
+    it('with loggerOptions (namespace)', () => {
+      const parser = new Parser(zipPath, cryptoProvider, { namespace: loggerNamespace });
       parser.input.should.be.equal(zipPath);
       parser.cryptoProvider.should.equal(cryptoProvider);
       parser.logger.should.be.not.null;
       parser.logger.namespace.should.equal(loggerNamespace);
+    });
+
+    it('with loggerName (logLevel)', () => {
+      const parser = new Parser(zipPath, cryptoProvider, { logLevel: LogLevel.SILENT });
+      parser.input.should.be.equal(zipPath);
+      parser.cryptoProvider.should.equal(cryptoProvider);
+      parser.logger.should.be.not.null;
+      parser.logger.namespace.should.equal(Parser.name);
+      parser.logger.logLevel.should.equal(LogLevel.SILENT);
     });
   
     it('Set onProgress', () => {
@@ -85,6 +100,16 @@ describe('Parser', () => {
         isString(action).should.be.true;
       };
       return parser.parse();
+    });
+
+    it('cryptoProvider parameter can be omitted', () => {
+      let parser = new TestParser(Paths.DEFAULT, LogLevel.SILENT);
+      assert(parser.cryptoProvider === undefined);
+      parser.logger.logLevel.should.equal(LogLevel.SILENT);
+
+      parser = new TestParser(Paths.DEFAULT, cryptoProvider, LogLevel.SILENT);
+      parser.cryptoProvider.should.equal(cryptoProvider);
+      parser.logger.logLevel.should.equal(LogLevel.SILENT);
     });
   
     describe('Error situation', () => {

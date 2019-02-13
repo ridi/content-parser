@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Add `LogLevel.DEBUG` and debug log in `Parser`.
+* Add logLevel parameter for `Parser.constructor`.
+* Add error code for `Cryptor` internal error.
+
+### Changed
+
+* Change `Logger.logLevel` default. (`error` => `warning`)
+* Rename `LogLevel.WARNING` to `LogLevel.WARN`.
+
 ### Fixed
 
 * Fix an issue where subpath sort was not natural.

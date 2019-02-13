@@ -18,6 +18,14 @@ const { hex, utf8 } = aes.utils;
 
 const { pkcs7 } = aes.padding;
 
+const through = (run) => {
+  try {
+    return run();
+  } catch (e) {
+    throw createError(Errors.ECRYT, e.message);
+  }
+};
+
 const Padding = Object.freeze({
   AUTO: 'auto',
   PKCS7: 'pkcs7',
@@ -115,17 +123,17 @@ class Cryptor {
     let keyBytes = key;
     if (isString(key)) {
       if (key.length % 16 === 0) {
-        keyBytes = utf8.toBytes(key);
+        keyBytes = through(() => utf8.toBytes(key));
       } else {
-        keyBytes = pkcs7.pad(utf8.toBytes(key));
+        keyBytes = through(() => pkcs7.pad(utf8.toBytes(key)));
       }
     }
     switch (mode.name) {
-      case Modes.ECB.name: return new mode.op(keyBytes); // eslint-disable-line new-cap
-      case Modes.CBC.name: return new mode.op(keyBytes, iv); // eslint-disable-line new-cap
-      case Modes.CFB.name: return new mode.op(keyBytes, iv, segmentSize); // eslint-disable-line new-cap
-      case Modes.OFB.name: return new mode.op(keyBytes, iv); // eslint-disable-line new-cap
-      case Modes.CTR.name: return new mode.op(keyBytes, counter); // eslint-disable-line new-cap
+      case Modes.ECB.name: return through(() => new mode.op(keyBytes)); // eslint-disable-line new-cap
+      case Modes.CBC.name: return through(() => new mode.op(keyBytes, iv)); // eslint-disable-line new-cap
+      case Modes.CFB.name: return through(() => new mode.op(keyBytes, iv, segmentSize)); // eslint-disable-line new-cap
+      case Modes.OFB.name: return through(() => new mode.op(keyBytes, iv)); // eslint-disable-line new-cap
+      case Modes.CTR.name: return through(() => new mode.op(keyBytes, counter)); // eslint-disable-line new-cap
       /* istanbul ignore next */
       default: return undefined;
     }
@@ -134,20 +142,20 @@ class Cryptor {
   encrypt(bytes, padding = Padding.NONE) {
     checkDataType(bytes);
     if (padding === Padding.PKCS7 || (padding === Padding.AUTO && bytes.length % 16 !== 0)) {
-      return this.operator.encrypt(pkcs7.pad(bytes));
+      return through(() => this.operator.encrypt(pkcs7.pad(bytes)));
     }
-    return this.operator.encrypt(bytes);
+    return through(() => this.operator.encrypt(bytes));
   }
 
   decrypt(bytes, padding = Padding.NONE) {
     checkDataType(bytes);
-    const decryptedBytes = Buffer.from(this.operator.decrypt(bytes));
+    const decryptedBytes = Buffer.from(through(() => this.operator.decrypt(bytes)));
     if (padding === Padding.PKCS7 || padding === Padding.AUTO) {
       try {
         return pkcs7.strip(decryptedBytes);
       } catch (e) {
         if (padding !== Padding.AUTO) {
-          throw e;
+          throw createError(Errors.ECRYT, e.message);
         }
       }
     }
