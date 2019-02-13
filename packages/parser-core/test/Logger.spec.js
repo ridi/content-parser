@@ -101,9 +101,9 @@ describe('Logger', () => {
       Logger.confirm(LogLevel.SILENT, LogLevel.SILENT).should.be.true;
       Logger.confirm(LogLevel.SILENT, LogLevel.ERROR).should.be.false;
       Logger.confirm(LogLevel.ERROR, LogLevel.ERROR).should.be.true;
-      Logger.confirm(LogLevel.ERROR, LogLevel.WARNING).should.be.false;
-      Logger.confirm(LogLevel.WARNING, LogLevel.WARNING).should.be.true;
-      Logger.confirm(LogLevel.WARNING, LogLevel.INFO).should.be.false;
+      Logger.confirm(LogLevel.ERROR, LogLevel.WARN).should.be.false;
+      Logger.confirm(LogLevel.WARN, LogLevel.WARN).should.be.true;
+      Logger.confirm(LogLevel.WARN, LogLevel.INFO).should.be.false;
       Logger.confirm(LogLevel.INFO, LogLevel.INFO).should.be.true;
       Logger.confirm(LogLevel.INFO, LogLevel.VERBOSE).should.be.false;
       Logger.confirm(LogLevel.VERBOSE, LogLevel.VERBOSE).should.be.true;
