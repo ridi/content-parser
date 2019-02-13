@@ -7,6 +7,7 @@ const LogLevel = Object.freeze({
   ERROR: 'error',
   WARN: 'warn',
   INFO: 'info',
+  DEBUG: 'debug',
   VERBOSE: 'verbose',
 });
 
@@ -15,7 +16,8 @@ const getOrder = (logLevel) => {
     case LogLevel.ERROR: return 1;
     case LogLevel.WARN: return 2;
     case LogLevel.INFO: return 3;
-    case LogLevel.VERBOSE: return 4;
+    case LogLevel.DEBUG: return 4;
+    case LogLevel.VERBOSE: return 5;
     default: return 0;
   }
 };
@@ -55,6 +57,13 @@ class Logger {
     /* istanbul ignore else */
     if (Logger.confirm(this.logLevel, LogLevel.ERROR)) {
       console.error(`[${this.namespace}] ${message}`, ...optionalParams);
+    }
+  }
+
+  debug(message, ...optionalParams) {
+    /* istanbul ignore else */
+    if (Logger.confirm(this.logLevel, LogLevel.DEBUG)) {
+      console.debug(`[${this.namespace}] ${message}`, ...optionalParams);
     }
   }
 

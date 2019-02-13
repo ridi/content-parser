@@ -22,12 +22,13 @@ class Test {
 }
 
 describe('Logger', () => {
-  const logNames = ['log', 'info', 'warn', 'error'];
+  const logNames = ['log', 'info', 'warn', 'error', 'debug'];
   const origin = {
     log: (log => log)(console.log),
     info: (info => info)(console.info),
     warn: (warn => warn)(console.warn),
     error: (error => error)(console.error),
+    debug: (debug => debug)(console.debug),
   };
 
   before(() => {
@@ -46,7 +47,7 @@ describe('Logger', () => {
   });
 
   describe('Initialize test', () => {
-    const defaultLogLevel = LogLevel.ERROR;
+    const defaultLogLevel = LogLevel.WARN;
     it('No parms', () => {
       const logger = new Logger();
       logger.namespace.should.equal(Logger.name);
@@ -76,7 +77,7 @@ describe('Logger', () => {
     it('with invalid logLevel', () => {
       const logger = new Logger(namespace, 'invaild_level');
       logger.namespace.should.equal(namespace);
-      logger.logLevel.should.equal(LogLevel.ERROR);
+      logger.logLevel.should.equal(LogLevel.WARN);
     });
 
     it('Set logLevel in LogLevel', () => {
@@ -105,13 +106,15 @@ describe('Logger', () => {
       Logger.confirm(LogLevel.WARN, LogLevel.WARN).should.be.true;
       Logger.confirm(LogLevel.WARN, LogLevel.INFO).should.be.false;
       Logger.confirm(LogLevel.INFO, LogLevel.INFO).should.be.true;
-      Logger.confirm(LogLevel.INFO, LogLevel.VERBOSE).should.be.false;
+      Logger.confirm(LogLevel.INFO, LogLevel.DEBUG).should.be.false;
+      Logger.confirm(LogLevel.DEBUG, LogLevel.DEBUG).should.be.true;
+      Logger.confirm(LogLevel.DEBUG, LogLevel.VERBOSE).should.be.false;
       Logger.confirm(LogLevel.VERBOSE, LogLevel.VERBOSE).should.be.true;
     });
 
     it('info test', () => {
       const logger = new Logger();
-      logger.logLevel = LogLevel.VERBOSE;
+      logger.logLevel = LogLevel.INFO;
       logger.info('info');
       current.should.equal(`[Logger] info`);
       logger.info('info', 'test');
@@ -122,7 +125,7 @@ describe('Logger', () => {
   
     it('warn test', () => {
       const logger = new Logger();
-      logger.logLevel = LogLevel.VERBOSE;
+      logger.logLevel = LogLevel.WARN;
       logger.warn('warn');
       current.should.equal(`[Logger] warn`);
       logger.warn('warn', 'test');
@@ -133,13 +136,24 @@ describe('Logger', () => {
   
     it('error test', () => {
       const logger = new Logger();
-      logger.logLevel = LogLevel.VERBOSE;
+      logger.logLevel = LogLevel.ERROR;
       logger.error('error');
       current.should.equal(`[Logger] error`);
       logger.error('error', 'test');
       current.should.equal(`[Logger] error test`);
       logger.error('error', 'test', 'log');
       current.should.equal(`[Logger] error test log`);
+    });
+
+    it('debug test', () => {
+      const logger = new Logger();
+      logger.logLevel = LogLevel.DEBUG;
+      logger.debug('debug');
+      current.should.equal(`[Logger] debug`);
+      logger.debug('debug', 'test');
+      current.should.equal(`[Logger] debug test`);
+      logger.debug('debug', 'test', 'log');
+      current.should.equal(`[Logger] debug test log`);
     });
 
     it('measure test', done => {
