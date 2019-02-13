@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None.
+### Fixed
+
+* Fix an issue where subpath sort was not natural.
 
 ## [0.4.1 (2019-02-12)]
 
