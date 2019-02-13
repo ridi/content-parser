@@ -382,8 +382,6 @@ class EpubParser extends Parser {
             // Checks if item is referenced in spine list.
             const refIndex = itemRefs.findIndex(itemRef => itemRef.idref === rawItem.id);
             if (refIndex >= 0) {
-              // If isLinear is false, then index is not assigned.
-              // Because this spine is excluded from flow.
               const ref = itemRefs[refIndex];
               rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
               rawItem.index = refIndex;

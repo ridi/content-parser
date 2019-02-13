@@ -346,7 +346,7 @@ class Parser {
    * Validate read options and get entries from input
    * @param {Item[]} items targets
    * @param {?object} options read options
-   * @returns {Promise.<ReadContext>}  returns Context containing target items, read options, entries
+   * @returns {Promise.<ReadContext>} returns Context containing target items, read options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
