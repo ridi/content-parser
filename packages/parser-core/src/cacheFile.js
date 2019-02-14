@@ -45,5 +45,5 @@ export function writeCacheFile(key, message, overwrite = false) {
   if (!fs.existsSync(cachePath)) {
     fs.mkdirpSync(cachePath);
   }
-  fs.writeFileSync(filePath, message, { flag: overwrite ? 'w' : 'a', encoding: 'binary' });
+  fs.writeFileSync(filePath, message, { flag: overwrite ? 'w' : 'a', encoding: 'utf8' });
 }
