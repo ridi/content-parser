@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None.
+### Fixed
+
+* Fix an issue where broken cache values if that save out of ascii range.
 
 ## [0.5.0 (2019-02-13)]
 

@@ -15,7 +15,7 @@ should(); // Initialize should
 
 describe('Util - read/write cache file', () => {
   const key = 'key';
-  const value = 'value';
+  const value = '껄껄';
 
   it('Access to non-existent key', () => {
     assert(readCacheFile(key) === null);
