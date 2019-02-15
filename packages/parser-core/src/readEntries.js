@@ -33,20 +33,16 @@ function fromZip(zip) {
   }, []));
 }
 
-function fromDirectory(dir, cryptoProvider, resetCache) {
-  let pathes = (() => {
+function fromDirectory(dir, cryptoProvider) {
+  let paths = (() => {
     /* istanbul ignore next */
     try { return JSON.parse(readCacheFile(dir) || '[]'); } catch (e) { return []; }
   })();
-  if (resetCache || pathes.length === 0) {
-    pathes = getPathes(dir);
-    /* istanbul ignore else */
-    if (resetCache) {
-      removeAllCacheFiles();
-    }
-    writeCacheFile(dir, JSON.stringify(pathes));
+  if (paths.length === 0) {
+    paths = getPathes(dir);
+    writeCacheFile(dir, JSON.stringify(paths), true);
   }
-  return create(dir, pathes.reduce((entries, fullPath) => {
+  return create(dir, paths.reduce((entries, fullPath) => {
     const subPathOffset = path.normalize(dir).length + path.sep.length;
     const size = (() => {
       /* istanbul ignore next */
@@ -76,7 +72,7 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
   }, []));
 }
 
-export default async function readEntries(input, cryptoProvider, logger, resetCache = false) {
+export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     /* istanbul ignore if */
     if (isExists(cryptoProvider)) {
@@ -86,5 +82,5 @@ export default async function readEntries(input, cryptoProvider, logger, resetCa
     const zip = await openZip(input, cryptoProvider, logger);
     return fromZip(zip);
   }
-  return fromDirectory(input, cryptoProvider, resetCache);
+  return fromDirectory(input, cryptoProvider);
 }

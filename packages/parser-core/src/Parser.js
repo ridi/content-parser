@@ -1,5 +1,6 @@
 import fs from 'fs';
 
+import { removeAllCacheFiles } from './cacheFile';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
 import Logger from './Logger';
@@ -124,6 +125,7 @@ class Parser {
     if (isExists(cryptoProvider) && !(cryptoProvider instanceof CryptoProvider)) {
       throw createError(Errors.EINVAL, 'cryptoProvider', 'reason', 'must be CryptoProvider subclassing type');
     }
+    removeAllCacheFiles();
     const { namespace, logLevel } = loggerOptions;
     const logger = new Logger(namespace || Parser.name);
     logger.logLevel = logLevel;
@@ -234,7 +236,7 @@ class Parser {
     const ParseContext = this._getParseContextClass();
     const context = new ParseContext();
     context.options = mergeObjects(parseDefaultOptions, options);
-    context.entries = await readEntries(this.input, this.cryptoProvider, this.logger, true);
+    context.entries = await readEntries(this.input, this.cryptoProvider, this.logger);
     this.logger.debug(`Ready to parse with options: ${JSON.stringify(context.options)}.`);
     return context;
   }
