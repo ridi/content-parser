@@ -19,7 +19,7 @@ class CssItem extends Item {
   toRaw() {
     return mergeObjects(super.toRaw(), {
       namespace: this.namespace,
-      itemType: CssItem.name,
+      itemType: 'CssItem',
     });
   }
 }

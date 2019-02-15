@@ -20,7 +20,7 @@ class Item {
       href: this.href,
       mediaType: this.mediaType,
       size: this.size,
-      itemType: Item.name,
+      itemType: 'Item',
     };
   }
 }

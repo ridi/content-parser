@@ -71,7 +71,7 @@ class ComicParser extends Parser {
    */
   constructor(input, cryptoProvider, logLevel) {
     logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
-    super(input, cryptoProvider, { namespace: ComicParser.name, logLevel });
+    super(input, cryptoProvider, { namespace: 'ComicParser', logLevel });
   }
 
   /**

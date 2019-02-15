@@ -14,7 +14,7 @@ class FontItem extends Item {
 
   toRaw() {
     return mergeObjects(super.toRaw(), {
-      itemType: FontItem.name,
+      itemType: 'FontItem',
     });
   }
 }

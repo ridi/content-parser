@@ -59,13 +59,13 @@ function postGuides(guides, spines) {
 /* istanbul ignore next */
 function getItemTypeFromString(string) {
   switch (string) {
-    case Item.name: return Item;
-    case SpineItem.name: return SpineItem;
-    case NcxItem.name: return NcxItem;
-    case FontItem.name: return FontItem;
-    case ImageItem.name: return ImageItem;
-    case CssItem.name: return CssItem;
-    case InlineCssItem.name: return InlineCssItem;
+    case 'Item': return Item;
+    case 'SpineItem': return SpineItem;
+    case 'NcxItem': return NcxItem;
+    case 'FontItem': return FontItem;
+    case 'ImageItem': return ImageItem;
+    case 'CssItem': return CssItem;
+    case 'InlineCssItem': return InlineCssItem;
     default: return DeadItem;
   }
 }

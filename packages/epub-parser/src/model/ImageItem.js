@@ -15,7 +15,7 @@ class ImageItem extends Item {
   toRaw() {
     return mergeObjects(super.toRaw(), {
       isCover: this.isCover,
-      itemType: ImageItem.name,
+      itemType: 'ImageItem',
     });
   }
 }

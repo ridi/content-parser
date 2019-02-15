@@ -33,14 +33,14 @@ describe('Model - DeadItem', () => {
       id: 'toc.ncx', href: './toc.ncx', mediaType: 'application/x-dtbncx+xml', size: 151, reason: 'not_ncx'
     });
     item.toRaw().should.deep.equal({
-      id: 'toc.ncx', href: './toc.ncx', mediaType: 'application/x-dtbncx+xml', size: 151, reason: DeadItem.Reason.NOT_NCX, itemType: DeadItem.name
+      id: 'toc.ncx', href: './toc.ncx', mediaType: 'application/x-dtbncx+xml', size: 151, reason: DeadItem.Reason.NOT_NCX, itemType: 'DeadItem'
     });
 
     item = new DeadItem({
       id: 'toc.ncx', href: './toc.ncx', mediaType: 'application/x-dtbncx+xml', size: 151, reason: 'invalid_reason'
     });
     item.toRaw().should.deep.equal({
-      id: 'toc.ncx', href: './toc.ncx', mediaType: 'application/x-dtbncx+xml', size: 151, reason: DeadItem.Reason.UNKNOWN, itemType: DeadItem.name
+      id: 'toc.ncx', href: './toc.ncx', mediaType: 'application/x-dtbncx+xml', size: 151, reason: DeadItem.Reason.UNKNOWN, itemType: 'DeadItem'
     });
   });
 });

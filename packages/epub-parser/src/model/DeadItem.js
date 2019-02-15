@@ -32,7 +32,7 @@ class DeadItem extends Item {
   toRaw() {
     return mergeObjects(super.toRaw(), {
       reason: this.reason,
-      itemType: DeadItem.name,
+      itemType: 'DeadItem',
     });
   }
 }

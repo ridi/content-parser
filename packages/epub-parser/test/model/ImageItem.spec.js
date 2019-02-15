@@ -24,7 +24,7 @@ describe('Model - ImageItem', () => {
   it('toRaw test', () => {
     let item = new ImageItem({ id: 'cover.jpg', href: './cover.jpg', mediaType: 'image/jpeg', size: 105764, isCover: true });
     item.toRaw().should.deep.equal({
-      id: 'cover.jpg', href: './cover.jpg', mediaType: 'image/jpeg', size: 105764, isCover: true, itemType: ImageItem.name
+      id: 'cover.jpg', href: './cover.jpg', mediaType: 'image/jpeg', size: 105764, isCover: true, itemType: 'ImageItem'
     });
   });
 });

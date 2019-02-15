@@ -118,7 +118,7 @@ class EpubParser extends Parser {
   constructor(input, cryptoProvider, logLevel) {
     logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
     cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
-    super(input, cryptoProvider, { namespace: EpubParser.name, logLevel });
+    super(input, cryptoProvider, { namespace: 'EpubParser', logLevel });
   }
 
   /**

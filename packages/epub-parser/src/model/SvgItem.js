@@ -16,7 +16,7 @@ class SvgItem extends ImageItem {
 
   toRaw() {
     return mergeObjects(super.toRaw(), {
-      itemType: SvgItem.name,
+      itemType: 'SvgItem',
     });
   }
 }

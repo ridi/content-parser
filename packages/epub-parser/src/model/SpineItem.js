@@ -25,7 +25,7 @@ class SpineItem extends Item {
     let rawObject = mergeObjects(super.toRaw(), {
       index: this.index,
       isLinear: this.isLinear,
-      itemType: SpineItem.name,
+      itemType: 'SpineItem',
     });
     if (isExists(this.styles)) {
       rawObject = mergeObjects(rawObject, {

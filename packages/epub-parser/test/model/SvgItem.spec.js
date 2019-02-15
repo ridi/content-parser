@@ -15,7 +15,7 @@ describe('Model - SvgItem', () => {
   it('toRaw test', () => {
     const item = new SvgItem({ id: 'bg.svg', href: './bg.svg', mediaType: 'image/svg+xml', size: 321, isCover: false });
     item.toRaw().should.deep.equal({
-      id: 'bg.svg', href: './bg.svg', mediaType: 'image/svg+xml', size: 321, isCover: false, itemType: SvgItem.name
+      id: 'bg.svg', href: './bg.svg', mediaType: 'image/svg+xml', size: 321, isCover: false, itemType: 'SvgItem'
     });
   });
 });

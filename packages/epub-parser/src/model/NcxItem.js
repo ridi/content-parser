@@ -20,7 +20,7 @@ class NcxItem extends Item {
   toRaw() {
     return mergeObjects(super.toRaw(), {
       navPoints: this.navPoints.map(navPoint => navPoint.toRaw()),
-      itemType: NcxItem.name,
+      itemType: 'NcxItem',
     });
   }
 }

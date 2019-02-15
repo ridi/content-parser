@@ -25,6 +25,6 @@ describe('Model - NcxItem', () => {
     const item = new NcxItem({ navPoints: [{ id: 'c1' }, { id: 'c2' }] });
     const rawItem = item.toRaw();
     rawItem.navPoints.should.have.lengthOf(2);
-    rawItem.itemType.should.equal(NcxItem.name);
+    rawItem.itemType.should.equal('NcxItem');
   });
 });
