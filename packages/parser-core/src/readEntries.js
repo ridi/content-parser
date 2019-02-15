@@ -5,6 +5,7 @@ import { removeAllCacheFiles, readCacheFile, writeCacheFile } from './cacheFile'
 import createCryptoStream from './createCryptoStream';
 import createRangeStream from './createRangeStream';
 import CryptoProvider from './CryptoProvider';
+import Errors, { createError } from './errors';
 import { getPathes, safePath } from './pathUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
@@ -53,14 +54,20 @@ function fromDirectory(dir, cryptoProvider) {
       getFile: async (options = {}) => {
         const { encoding, end } = options;
         let file = await new Promise((resolve, reject) => {
-          const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
-          let data = Buffer.from([]);
-          stream
-            .pipe(createRangeStream(0, end))
-            .pipe(createCryptoStream(fullPath, size, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
-            .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
-            .on('error', e => reject(e))
-            .on('end', () => resolve(data));
+          if (fs.existsSync(fullPath)) {
+            const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
+            const totalSize = Math.min(end || Infinity, size);
+            let data = Buffer.from([]);
+            stream
+              .pipe(createRangeStream(0, end))
+              .pipe(createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
+              .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+              .on('error', e => reject(e))
+              .on('end', () => resolve(data));
+          } else {
+            removeAllCacheFiles();
+            throw createError(Errors.ENOFILE, fullPath);
+          }
         });
         if (isExists(encoding)) {
           file = file.toString(encoding);
