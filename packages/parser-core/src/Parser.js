@@ -255,6 +255,7 @@ class Parser {
     if (!isString(entries.source) && isExists(unzipPath)) {
       await entries.source.extractAll(unzipPath, overwrite);
       privateProps.set(this, { ...privateProps.get(this), input: unzipPath });
+      removeCacheFile(this.input);
       context.entries = await readEntries(this.input, this.cryptoProvider, this.logger);
     }
     return context;

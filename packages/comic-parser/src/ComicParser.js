@@ -70,7 +70,9 @@ class ComicParser extends Parser {
    * @example new ComicParser('./foo/bar.zip' or './foo/bar');
    */
   constructor(input, cryptoProvider, logLevel) {
+    /* istanbul ignore next */
     logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
+    cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
     super(input, cryptoProvider, { namespace: 'ComicParser', logLevel });
   }
 

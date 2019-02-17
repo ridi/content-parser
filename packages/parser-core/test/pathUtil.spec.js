@@ -36,28 +36,29 @@ describe('Util - Path utils', () => {
       path.join('OEBPS', 'toc.ncx'),
       path.join('mimetype'),
     ];
-    const offset = path.normalize(Paths.UNZIPPED_DEFAULT).length + path.sep.length;
+    let offset = path.normalize(Paths.UNZIPPED_DEFAULT).length + path.sep.length;
     getPathes(Paths.UNZIPPED_DEFAULT).map(subpath => subpath.substring(offset)).should.deep.equal(expectedList);
 
     expectedList = [
-      '!000.jpg',
-      '000.jpg',
-      '1.jpg',
-      '1/1.jpg',
-      '1/2.jpg',
-      '1/3.jpg',
-      '2.jpg',
-      '3.jpg',
-      '10.jpg',
-      '11.jpg',
-      '12.jpg',
-      '13.jpg',
-      'A1.jpg',
-      'A111.jpg',
-      '__test__.jpg',
-      'a.jpg',
-      'a11.jpg',
+      path.join('!000.jpg'),
+      path.join('000.jpg'),
+      path.join('1.jpg'),
+      path.join('1', '1.jpg'),
+      path.join('1', '2.jpg'),
+      path.join('1', '3.jpg'),
+      path.join('2.jpg'),
+      path.join('3.jpg'),
+      path.join('10.jpg'),
+      path.join('11.jpg'),
+      path.join('12.jpg'),
+      path.join('13.jpg'),
+      path.join('A1.jpg'),
+      path.join('A111.jpg'),
+      path.join('__test__.jpg'),
+      path.join('a.jpg'),
+      path.join('a11.jpg'),
     ];
-    getPathes(Paths.SORT_TEST).map(subpath => subpath.replace(`${Paths.SORT_TEST}/`, '')).should.deep.equal(expectedList);
+    offset = path.normalize(Paths.SORT_TEST).length + path.sep.length;
+    getPathes(Paths.SORT_TEST).map(subpath => subpath.substring(offset)).should.deep.equal(expectedList);
   });
 });
