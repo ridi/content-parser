@@ -15,12 +15,12 @@ function find(entryPath) {
 async function getFile(entry, options = {}) {
   const { encoding, end } = options;
   let file = await new Promise((resolve, reject) => {
-    const size = entry.uncompressedSize;
+    const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     let data = Buffer.from([]);
     const stream = entry.stream();
     stream // is DuplexStream.
       .pipe(createRangeStream(0, end))
-      .pipe(createCryptoStream(entry.path, size, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP))
+      .pipe(createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
       .on('end', () => resolve(data));

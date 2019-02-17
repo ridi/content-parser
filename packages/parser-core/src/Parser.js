@@ -1,5 +1,6 @@
 import fs from 'fs';
 
+import { removeCacheFile } from './cacheFile';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
 import Logger from './Logger';
@@ -118,6 +119,7 @@ class Parser {
       if (!fs.existsSync(input)) {
         throw createError(Errors.ENOENT, input);
       }
+      removeCacheFile(input);
     } else {
       throw createError(Errors.EINVAL, 'input', 'reason', 'must be String type');
     }
@@ -234,7 +236,7 @@ class Parser {
     const ParseContext = this._getParseContextClass();
     const context = new ParseContext();
     context.options = mergeObjects(parseDefaultOptions, options);
-    context.entries = await readEntries(this.input, this.cryptoProvider, this.logger, true);
+    context.entries = await readEntries(this.input, this.cryptoProvider, this.logger);
     this.logger.debug(`Ready to parse with options: ${JSON.stringify(context.options)}.`);
     return context;
   }

@@ -1,10 +1,11 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-import { removeAllCacheFiles, readCacheFile, writeCacheFile } from './cacheFile';
+import { removeCacheFile, readCacheFile, writeCacheFile } from './cacheFile';
 import createCryptoStream from './createCryptoStream';
 import createRangeStream from './createRangeStream';
 import CryptoProvider from './CryptoProvider';
+import Errors, { createError } from './errors';
 import { getPathes, safePath } from './pathUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
@@ -33,20 +34,16 @@ function fromZip(zip) {
   }, []));
 }
 
-function fromDirectory(dir, cryptoProvider, resetCache) {
-  let pathes = (() => {
+function fromDirectory(dir, cryptoProvider) {
+  let paths = (() => {
     /* istanbul ignore next */
     try { return JSON.parse(readCacheFile(dir) || '[]'); } catch (e) { return []; }
   })();
-  if (resetCache || pathes.length === 0) {
-    pathes = getPathes(dir);
-    /* istanbul ignore else */
-    if (resetCache) {
-      removeAllCacheFiles();
-    }
-    writeCacheFile(dir, JSON.stringify(pathes));
+  if (paths.length === 0) {
+    paths = getPathes(dir);
+    writeCacheFile(dir, JSON.stringify(paths), true);
   }
-  return create(dir, pathes.reduce((entries, fullPath) => {
+  return create(dir, paths.reduce((entries, fullPath) => {
     const subPathOffset = path.normalize(dir).length + path.sep.length;
     const size = (() => {
       /* istanbul ignore next */
@@ -57,14 +54,20 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
       getFile: async (options = {}) => {
         const { encoding, end } = options;
         let file = await new Promise((resolve, reject) => {
-          const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
-          let data = Buffer.from([]);
-          stream
-            .pipe(createRangeStream(0, end))
-            .pipe(createCryptoStream(fullPath, size, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
-            .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
-            .on('error', e => reject(e))
-            .on('end', () => resolve(data));
+          if (fs.existsSync(fullPath)) {
+            const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
+            const totalSize = Math.min(end || Infinity, size);
+            let data = Buffer.from([]);
+            stream
+              .pipe(createRangeStream(0, end))
+              .pipe(createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
+              .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+              .on('error', e => reject(e))
+              .on('end', () => resolve(data));
+          } else {
+            removeCacheFile(dir);
+            throw createError(Errors.ENOFILE, fullPath);
+          }
         });
         if (isExists(encoding)) {
           file = file.toString(encoding);
@@ -76,7 +79,7 @@ function fromDirectory(dir, cryptoProvider, resetCache) {
   }, []));
 }
 
-export default async function readEntries(input, cryptoProvider, logger, resetCache = false) {
+export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     /* istanbul ignore if */
     if (isExists(cryptoProvider)) {
@@ -86,5 +89,5 @@ export default async function readEntries(input, cryptoProvider, logger, resetCa
     const zip = await openZip(input, cryptoProvider, logger);
     return fromZip(zip);
   }
-  return fromDirectory(input, cryptoProvider, resetCache);
+  return fromDirectory(input, cryptoProvider);
 }
