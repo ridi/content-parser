@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { removeAllCacheFiles } from './cacheFile';
+import { removeCacheFile } from './cacheFile';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
 import Logger from './Logger';
@@ -119,13 +119,13 @@ class Parser {
       if (!fs.existsSync(input)) {
         throw createError(Errors.ENOENT, input);
       }
+      removeCacheFile(input);
     } else {
       throw createError(Errors.EINVAL, 'input', 'reason', 'must be String type');
     }
     if (isExists(cryptoProvider) && !(cryptoProvider instanceof CryptoProvider)) {
       throw createError(Errors.EINVAL, 'cryptoProvider', 'reason', 'must be CryptoProvider subclassing type');
     }
-    removeAllCacheFiles();
     const { namespace, logLevel } = loggerOptions;
     const logger = new Logger(namespace || Parser.name);
     logger.logLevel = logLevel;

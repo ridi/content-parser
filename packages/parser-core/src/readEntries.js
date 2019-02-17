@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-import { removeAllCacheFiles, readCacheFile, writeCacheFile } from './cacheFile';
+import { removeCacheFile, readCacheFile, writeCacheFile } from './cacheFile';
 import createCryptoStream from './createCryptoStream';
 import createRangeStream from './createRangeStream';
 import CryptoProvider from './CryptoProvider';
@@ -65,7 +65,7 @@ function fromDirectory(dir, cryptoProvider) {
               .on('error', e => reject(e))
               .on('end', () => resolve(data));
           } else {
-            removeAllCacheFiles();
+            removeCacheFile(dir);
             throw createError(Errors.ENOFILE, fullPath);
           }
         });
