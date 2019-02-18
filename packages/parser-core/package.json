@@ -1,6 +1,6 @@
 {
   "name": "@ridi/parser-core",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Utilities for parsers",
   "author": {
     "name": "Ridibooks Viewer Team",
