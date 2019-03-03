@@ -17,6 +17,8 @@ describe('Util - read/write cache file', () => {
   const key = 'key';
   const value = '껄껄';
 
+  removeAllCacheFiles();
+
   it('Access to non-existent key', () => {
     assert(readCacheFile(key) === null);
   });
