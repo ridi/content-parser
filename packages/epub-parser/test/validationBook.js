@@ -56,7 +56,7 @@ export default function validationBook(book, expectedBook, options = EpubParser.
 
   book.source.should.equal(expectedBook.source);
   
-  book.language.should.equal(expectedBook.language);
+  book.languages.should.deep.equal(expectedBook.languages);
 
   book.relation.should.equal(expectedBook.relation);
 

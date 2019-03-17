@@ -198,7 +198,7 @@ parser.onProgress = (step, totalStep, action) => {
 - format: *?string*
 - identifiers: *[Identifier](#identifier)[]*
 - source: *?string*
-- language: *?string*
+- languages: *string[]*
 - relation: *?string*
 - rights: *?string*
 - version: *[Version](#version)*

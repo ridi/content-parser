@@ -49,7 +49,7 @@
       }
     ],
     "source": "My brain",
-    "language": "en",
+    "languages": ["en"],
     "relation": "https://github.com/ridi/epub-parser",
     "coverage": "Coverage",
     "rights": "Copyright (c) 2018 Davin",

@@ -84,7 +84,7 @@ class Book {
     this.format = rawBook.format;
     this.identifiers = (rawBook.identifiers || []).map(rawObj => new Identifier(rawObj));
     this.source = rawBook.source;
-    this.language = rawBook.language;
+    this.languages = rawBook.languages || [];
     this.relation = rawBook.relation;
     this.coverage = rawBook.coverage;
     this.rights = rawBook.rights;
@@ -125,7 +125,7 @@ class Book {
       format: this.format,
       identifiers: this.identifiers.map(identifier => identifier.toRaw()),
       source: this.source,
-      language: this.language,
+      languages: this.languages,
       relation: this.relation,
       coverage: this.coverage,
       rights: this.rights,

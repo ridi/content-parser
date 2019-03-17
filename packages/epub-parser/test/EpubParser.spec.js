@@ -117,7 +117,7 @@ describe('EpubParser', () => {
           rawBook.format.should.equal(expectedRawBook.format);
           rawBook.identifiers.should.deep.equal(expectedRawBook.identifiers);
           rawBook.source.should.equal(expectedRawBook.source);
-          rawBook.language.should.equal(expectedRawBook.language);
+          rawBook.languages.should.deep.equal(expectedRawBook.languages);
           rawBook.relation.should.equal(expectedRawBook.relation);
           rawBook.coverage.should.equal(expectedRawBook.coverage);
           rawBook.rights.should.equal(expectedRawBook.rights);
