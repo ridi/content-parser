@@ -45,8 +45,8 @@ async function extractAll(unzipPath, overwrite = true) {
         writeStream.end();
       };
       writeStream.on('error', onError);
-      writeStream.on('close', () => resolve());
-      entry.stream() // is DuplexStream.
+      writeStream.on('close', resolve);
+      const stream = entry.stream() // is DuplexStream.
         .on('error', onError)
         .on('data', (chunk) => {
           /* istanbul ignore if */
@@ -56,7 +56,15 @@ async function extractAll(unzipPath, overwrite = true) {
           }
           writeStream.write(chunk);
         })
-        .on('finish', () => writeStream.end());
+        .on('finish', () => {
+          setTimeout(() => {
+            // Retain a reference to buffer so that it can't be GC'ed too soon.
+            // Otherwise, EBADF occurs.
+            // https://github.com/nodejs/node/blob/v10.15.0/lib/fs.js#L462
+            stream; // eslint-disable-line no-unused-expressions
+          }, 100);
+          writeStream.end();
+        });
     });
   };
 
