@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.5.3 (2019-04-01)]
+
+### Changed
+
+* Change the `language` field to accept multiple values.
+
+### Fixed
+
+* Fix an issue where intermittently EBADF error occurred when unzipping.
+
 ## [0.5.2 (2019-02-18)]
 
 ### Fixed
@@ -142,7 +152,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.2...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.3...HEAD
+[0.5.3 (2019-04-01)]: https://github.com/ridi/content-parser/compare/0.5.2...0.5.3
 [0.5.2 (2019-02-18)]: https://github.com/ridi/content-parser/compare/0.5.1...0.5.2
 [0.5.1 (2019-02-14)]: https://github.com/ridi/content-parser/compare/0.5.0...0.5.1
 [0.5.0 (2019-02-13)]: https://github.com/ridi/content-parser/compare/0.4.1...0.5.0
