@@ -62,7 +62,7 @@ async function extractAll(unzipPath, overwrite = true) {
             // Otherwise, EBADF occurs.
             // https://github.com/nodejs/node/blob/v10.15.0/lib/fs.js#L462
             stream; // eslint-disable-line no-unused-expressions
-          }, 100);
+          }, 200);
           writeStream.end();
         });
     });
