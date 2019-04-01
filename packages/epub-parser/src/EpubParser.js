@@ -331,7 +331,7 @@ class EpubParser extends Parser {
       rawBook.format = getValue(format);
       rawBook.identifiers = getValues(identifier, key => (key === textNodeName ? 'value' : key));
       rawBook.source = getValue(source);
-      rawBook.language = getValue(language);
+      rawBook.languages = getValues(language);
       rawBook.relation = getValue(relation);
       rawBook.coverage = getValue(coverage);
       rawBook.rights = getValue(rights);
