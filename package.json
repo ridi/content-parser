@@ -29,7 +29,7 @@
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.10.0",
     "lerna": "^3.13.0",
-    "mocha": "^6.0.2",
+    "mocha": "^6.1.4",
     "nyc": "^13.2.0",
     "rimraf": "^2.6.2"
   }
