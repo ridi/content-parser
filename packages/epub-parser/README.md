@@ -72,7 +72,7 @@ class ContentCryptoProvider extends CryptoProvider {
     this.cryptor = new AesCryptor(Modes.ECB, { key });
   }
 
-  getAesCryptor(filePath, purpose) {
+  getCryptor(filePath, purpose) {
     return this.cryptor;
   }
 

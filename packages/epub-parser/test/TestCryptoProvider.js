@@ -9,13 +9,13 @@ class TestCryptoProvider extends CryptoProvider {
     this.cryptor = new AesCryptor(Modes.ECB, { key });
   }
 
-  getAesCryptor(filePath, purpose) {
+  getCryptor(filePath, purpose) {
     return this.cryptor;
   }
 
   // decrypt -> parse -> unzip with encrypt
   run(data, filePath, purpose) {
-    const cryptor = this.getAesCryptor(filePath, purpose);
+    const cryptor = this.getCryptor(filePath, purpose);
     const padding = Padding.AUTO;
     if (purpose === Purpose.READ_IN_DIR) {
       if (filePath.endsWith('.epub')) {
