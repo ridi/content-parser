@@ -1,68 +1,68 @@
 import { should } from 'chai';
 
-import Cryptor, {
+import AesCryptor, {
   hex,
   utf8,
   Modes,
   Counter,
   Padding,
-} from '../src/Cryptor';
+} from '../src/AesCryptor';
 import Errors from '../src/errors';
 
 should(); // Initialize should
 
-describe('Cryptor', () => {
+describe('AesCryptor', () => {
   describe('Initialize test', () => {
     it('Required parameter missing', () => {
       // mode missing
-      try { new Cryptor(); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
+      try { new AesCryptor(); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
 
       // config missing
-      try { new Cryptor(Modes.ECB); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
+      try { new AesCryptor(Modes.ECB); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
 
       // key missing
-      try { new Cryptor(Modes.ECB, {}); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
+      try { new AesCryptor(Modes.ECB, {}); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
 
       // iv missing
       const key = 'i_am_key';
-      try { new Cryptor(Modes.CBC, { key }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
-      try { new Cryptor(Modes.CFB, { key }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
-      try { new Cryptor(Modes.OFB, { key }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
+      try { new AesCryptor(Modes.CBC, { key }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
+      try { new AesCryptor(Modes.CFB, { key }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
+      try { new AesCryptor(Modes.OFB, { key }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
 
       // segmentSize missing
       const iv = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-      try { new Cryptor(Modes.CFB, { key, iv }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
+      try { new AesCryptor(Modes.CFB, { key, iv }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
 
       // counter missing
-      try { new Cryptor(Modes.CTR, { key }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
+      try { new AesCryptor(Modes.CTR, { key }); } catch (e) { e.code.should.equal(Errors.EREQPRM.code); }
     });
 
     it('Invalid parameter', () => {
       // Invalid mode
-      try { new Cryptor('ECB'); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
-      try { new Cryptor({}); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor('ECB'); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor({}); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
 
       // Invalid key type
-      try { new Cryptor(Modes.ECB, { key: 36474145 }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor(Modes.ECB, { key: 36474145 }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
 
       // Invalid iv type
       let key = 'i_am_key';
-      try { new Cryptor(Modes.CBC, { key, iv: true }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor(Modes.CBC, { key, iv: true }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
 
       // Invalid segmentSize type
       const iv = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-      try { new Cryptor(Modes.CFB, { key, iv, segmentSize: '128' }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor(Modes.CFB, { key, iv, segmentSize: '128' }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
 
       // Invalid counter type
-      try { new Cryptor(Modes.CTR, { key, counter: '5' }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor(Modes.CTR, { key, counter: '5' }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
 
       // Invalid padding type
-      try { new Cryptor(Modes.ECB, { key, padding: 32 }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor(Modes.ECB, { key, padding: 32 }); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
 
       // Inavlid bytes type
       key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-      try { new Cryptor(Modes.ECB, { key }).encrypt(); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
-      try { new Cryptor(Modes.ECB, { key }).decrypt(); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor(Modes.ECB, { key }).encrypt(); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
+      try { new AesCryptor(Modes.ECB, { key }).decrypt(); } catch (e) { e.code.should.equal(Errors.EINVAL.code); }
     });
   });
 
@@ -76,7 +76,7 @@ describe('Cryptor', () => {
       const textBytes = utf8.toBytes(text);
 
       // Create cryptor
-      const cryptor = new Cryptor(Modes.ECB, { key });
+      const cryptor = new AesCryptor(Modes.ECB, { key });
 
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes);
@@ -101,7 +101,7 @@ describe('Cryptor', () => {
       const textBytes = utf8.toBytes(text);
 
       // Create cryptor instance
-      let cryptor = new Cryptor(Modes.CBC, { key, iv });
+      let cryptor = new AesCryptor(Modes.CBC, { key, iv });
 
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes);
@@ -109,7 +109,7 @@ describe('Cryptor', () => {
       encryptedHex.should.equal('e5237e9a8938d805038ae117b4f8f53a');
 
       // The CBC mode maintains internal state, so to decrypt a new instance must be instantiated.
-      cryptor = new Cryptor(Modes.CBC, { key, iv });
+      cryptor = new AesCryptor(Modes.CBC, { key, iv });
 
       // Decryption
       const decryptBytes = cryptor.decrypt(encryptedBytes);
@@ -130,7 +130,7 @@ describe('Cryptor', () => {
 
       // Create cryptor
       const segmentSize = 8;
-      let cryptor = new Cryptor(Modes.CFB, { key, iv, segmentSize });
+      let cryptor = new AesCryptor(Modes.CFB, { key, iv, segmentSize });
 
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes);
@@ -138,7 +138,7 @@ describe('Cryptor', () => {
       encryptedHex.should.equal('60a6430b598820a8970ba5e4147cfc23');
 
       // The CFB mode maintains internal state, so to decrypt a new instance must be instantiated.
-      cryptor = new Cryptor(Modes.CFB, { key, iv, segmentSize });
+      cryptor = new AesCryptor(Modes.CFB, { key, iv, segmentSize });
 
       // Decryption
       const decryptBytes = cryptor.decrypt(encryptedBytes);
@@ -158,7 +158,7 @@ describe('Cryptor', () => {
       const textBytes = utf8.toBytes(text);
 
       // Create cryptor
-      let cryptor = new Cryptor(Modes.OFB, { key, iv });
+      let cryptor = new AesCryptor(Modes.OFB, { key, iv });
 
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes);
@@ -166,7 +166,7 @@ describe('Cryptor', () => {
       encryptedHex.should.equal('60a6430b349032a5ca47853a638f1e076f59ed4dfbd51887fd02344a57ffd578df5260be82dece7be85cf9891b1813d0c7f595d314dbf028');
 
       // The OFB mode maintains internal state, so to decrypt a new instance must be instantiated.
-      cryptor = new Cryptor(Modes.OFB, { key, iv });
+      cryptor = new AesCryptor(Modes.OFB, { key, iv });
 
       // Decryption
       const decryptBytes = cryptor.decrypt(encryptedBytes);
@@ -184,7 +184,7 @@ describe('Cryptor', () => {
 
       // Create cryptor
       let counter = new Counter(12);
-      let cryptor = new Cryptor(Modes.CTR, { key, counter });
+      let cryptor = new AesCryptor(Modes.CTR, { key, counter });
 
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes);
@@ -193,7 +193,7 @@ describe('Cryptor', () => {
 
       // The CTR mode maintains internal state, so to decrypt a new instance must be instantiated.
       counter = new Counter(12);
-      cryptor = new Cryptor(Modes.CTR, { key, counter });
+      cryptor = new AesCryptor(Modes.CTR, { key, counter });
 
       // Decryption
       const decryptBytes = cryptor.decrypt(encryptedBytes);
@@ -213,7 +213,7 @@ describe('Cryptor', () => {
 
       // Create cryptor
       const padding = Padding.PKCS7;
-      const cryptor = new Cryptor(Modes.ECB, { key });
+      const cryptor = new AesCryptor(Modes.ECB, { key });
 
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes, padding);
@@ -236,7 +236,7 @@ describe('Cryptor', () => {
 
       // Create cryptor
       const padding = Padding.AUTO;
-      const cryptor = new Cryptor(Modes.ECB, { key });
+      const cryptor = new AesCryptor(Modes.ECB, { key });
 
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes, padding);
@@ -252,7 +252,7 @@ describe('Cryptor', () => {
     it('Handling damaged padding', () => {
       const key = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
-      let cryptor = new Cryptor(Modes.ECB, { key });
+      let cryptor = new AesCryptor(Modes.ECB, { key });
 
       const encryptedBytes = hex.toBytes('23b4f080a310770e93def2ddfee44817');
       encryptedBytes[encryptedBytes.length - 1] = 24;
@@ -272,7 +272,7 @@ describe('Cryptor', () => {
       const textBytes = utf8.toBytes(text);
 
       // Create cryptor
-      const cryptor = new Cryptor(Modes.ECB, { key });
+      const cryptor = new AesCryptor(Modes.ECB, { key });
 
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes);
@@ -294,7 +294,7 @@ describe('Cryptor', () => {
       const textBytes = utf8.toBytes(text);
   
       // Create cryptor
-      const cryptor = new Cryptor(Modes.ECB, { key });
+      const cryptor = new AesCryptor(Modes.ECB, { key });
   
       // Encryption
       const encryptedBytes = cryptor.encrypt(textBytes);
@@ -317,7 +317,7 @@ describe('Cryptor', () => {
       const textBytes = utf8.toBytes(text);
 
       // Create cryptor
-      const cryptor = new Cryptor(Modes.ECB, { key });
+      const cryptor = new AesCryptor(Modes.ECB, { key });
 
       // Encryption
       try { cryptor.encrypt(textBytes); } catch (e) { e.code.should.equal(Errors.ECRYT.code); }

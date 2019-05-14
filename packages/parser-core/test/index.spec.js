@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import {
   getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile,
-  Cryptor, CryptoProvider,
+  AesCryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Logger,
   LogLevel,
@@ -27,12 +27,12 @@ describe('parser-core', () => {
 
     assert(CryptoProvider.constructor !== null);
     assert(CryptoProvider.Purpose !== null);
-    assert(Cryptor.constructor !== null);
-    assert(Cryptor.hex !== null);
-    assert(Cryptor.utf8 !== null);
-    assert(Cryptor.Modes !== null);
-    assert(Cryptor.Counter !== null);
-    assert(Cryptor.Padding !== null);
+    assert(AesCryptor.constructor !== null);
+    assert(AesCryptor.hex !== null);
+    assert(AesCryptor.utf8 !== null);
+    assert(AesCryptor.Modes !== null);
+    assert(AesCryptor.Counter !== null);
+    assert(AesCryptor.Padding !== null);
 
     assert(Errors !== null);
     assert(createError !== null);

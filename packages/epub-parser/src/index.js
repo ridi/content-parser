@@ -1,5 +1,5 @@
 import {
-  CryptoProvider, Cryptor,
+  CryptoProvider, AesCryptor,
   Errors,
   LogLevel,
 } from '@ridi/parser-core';
@@ -12,6 +12,6 @@ export default {
   Errors,
   LogLevel,
   CryptoProvider,
-  Cryptor,
+  AesCryptor,
   EpubBook: Book,
 };

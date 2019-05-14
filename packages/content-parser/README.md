@@ -21,13 +21,13 @@ import {
   EpubParser,
   ComicParser,
   CryptoProvider,
-  Cryptor,
+  AesCryptor,
 } from '@ridi/content-parser';
 // or const {
 //   EpubParser,
 //   ComicParser,
 //   CryptoProvider,
-//   Cryptor,
+//   AesCryptor,
 // } = require('@ridi/content-parser');
 ```
 

@@ -1,21 +1,21 @@
-import { CryptoProvider, Cryptor } from '@ridi/parser-core';
+import { CryptoProvider, AesCryptor } from '@ridi/parser-core';
 
 const { Purpose } = CryptoProvider;
-const { Modes, Padding } = Cryptor;
+const { Modes, Padding } = AesCryptor;
 
 class TestCryptoProvider extends CryptoProvider {
   constructor(key) {
     super();
-    this.cryptor = new Cryptor(Modes.ECB, { key });
+    this.cryptor = new AesCryptor(Modes.ECB, { key });
   }
 
-  getCryptor(filePath, purpose) {
+  getAesCryptor(filePath, purpose) {
     return this.cryptor;
   }
 
   // decrypt -> parse -> unzip with encrypt
   run(data, filePath, purpose) {
-    const cryptor = this.getCryptor(filePath, purpose);
+    const cryptor = this.getAesCryptor(filePath, purpose);
     const padding = Padding.AUTO;
     if (purpose === Purpose.READ_IN_DIR) {
       if (filePath.endsWith('.epub')) {

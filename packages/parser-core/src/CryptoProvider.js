@@ -14,17 +14,17 @@ class CryptoProvider {
   }
 
   /**
-   * Create or reuse Cryptor by condition
+   * Create or reuse AesCryptor by condition
    * @param {string} filePath
    * @param {string} purpose
-   * @returns {Cryptor}
+   * @returns {AesCryptor}
    */
   getCryptor(filePath, purpose) { // eslint-disable-line no-unused-vars
     // ex)
     // if (condition) {
-    //   return new Cryptor(...);
+    //   return new AesCryptor(...);
     // } else {
-    //   return new Cryptor(...);
+    //   return new AesCryptor(...);
     // }
     mustOverride();
   }
@@ -38,7 +38,7 @@ class CryptoProvider {
   run(data, filePath, purpose) { // eslint-disable-line no-unused-vars
     // ex)
     // const cryptor = this.getCryptor(filePath, status);
-    // const padding = Cryptor.Padding.PKCS7
+    // const padding = AesCryptor.Padding.PKCS7
     // if (condition1) {
     //   return cryptor.encrypt(data, padding)
     // } else if (condition2) {

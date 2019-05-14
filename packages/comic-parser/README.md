@@ -46,19 +46,19 @@ parser.parse(/* { parseOptions } */).then((items) => {
 });
 ```
 
-with [Cryptor](https://github.com/ridi/content-parser/blob/master/src/cryptor/Cryptor.js):
+with [AesCryptor](https://github.com/ridi/content-parser/blob/master/src/cryptor/AesCryptor.js):
 
 ```js
-import { CryptoProvider, Cryptor } from '@ridi/comic-parser';
-// or const { CryptoProvider, Cryptor } = require('@ridi/comic-parser');
+import { CryptoProvider, AesCryptor } from '@ridi/comic-parser';
+// or const { CryptoProvider, AesCryptor } = require('@ridi/comic-parser');
 
 const { Purpose } = CryptoProvider;
-const { Modes, Padding } = Cryptor;
+const { Modes, Padding } = AesCryptor;
 
 class ContentCryptoProvider extends CryptoProvider {
   constructor(key) {
     super();
-    this.cryptor = new Cryptor(Modes.ECB, { key });
+    this.cryptor = new AesCryptor(Modes.ECB, { key });
   }
 
   getCryptor(filePath, purpose) {

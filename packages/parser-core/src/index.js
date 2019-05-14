@@ -6,7 +6,7 @@ import {
   writeCacheFile,
 } from './cacheFile';
 
-import Cryptor from './Cryptor';
+import AesCryptor from './AesCryptor';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
 import Logger, { LogLevel } from './Logger';
@@ -40,7 +40,7 @@ import openZip from './zipUtil';
 
 export {
   getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile,
-  Cryptor, CryptoProvider,
+  AesCryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Logger,
   LogLevel,
