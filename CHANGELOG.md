@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.5.5 (2019-05-15)]
+
+### Fixed
+
+* Fix a malfunction when parsing corrupted CSS.
+* Fix an issue where `EpubParser.parseOptions.basePath` option is not reflected in image for svg
+
 ## [0.5.4 (2019-05-14)]
 
 ### Changed
@@ -158,7 +165,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.4...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.5...HEAD
+[0.5.5 (2019-05-15)]: https://github.com/ridi/content-parser/compare/0.5.4...0.5.5
 [0.5.4 (2019-05-14)]: https://github.com/ridi/content-parser/compare/0.5.3...0.5.4
 [0.5.3 (2019-04-01)]: https://github.com/ridi/content-parser/compare/0.5.2...0.5.3
 [0.5.2 (2019-02-18)]: https://github.com/ridi/content-parser/compare/0.5.1...0.5.2
