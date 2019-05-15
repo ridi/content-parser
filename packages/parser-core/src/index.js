@@ -22,7 +22,7 @@ import {
 } from './pathUtil';
 
 import readEntries from './readEntries';
-import stringContains from './stringContains';
+import { MatchOption, stringContains } from './stringContains';
 
 import {
   getType,
@@ -49,7 +49,7 @@ export {
   Parser,
   safeDirname, safePath, safePathJoin, getPathes,
   readEntries,
-  stringContains,
+  MatchOption, stringContains,
   getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl,
   validateOptions,
   openZip,

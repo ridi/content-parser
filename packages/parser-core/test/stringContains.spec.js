@@ -1,16 +1,18 @@
 import { should } from 'chai';
 
-import stringContains from '../src/stringContains';
+import { MatchOption, stringContains } from '../src/stringContains';
 
 should(); // Initialize should
 
 describe('Util - String util', () => {
   it('stringContains test', () => {
-    const list = ['A', 'b', 'c'];
-    stringContains(list, 'a').should.be.true;
-    stringContains(list, 'b').should.be.true;
-    stringContains(list, 'C').should.be.true;
-    stringContains(list, 'd').should.be.false;
+    const list = ['Abc', 'def', 'gHi'];
+    stringContains(list, 'abc').should.be.true;
+    stringContains(list, 'gHi').should.be.true;
+    stringContains(list, 'de').should.be.false;
+    stringContains(list, 'de', MatchOption.STARTSWITH).should.be.true;
+    stringContains(list, 'de', MatchOption.CONTAINING).should.be.true;
+    stringContains(list, 'de', MatchOption.ENDSWITH).should.be.false;
     stringContains().should.be.false;
     stringContains(list).should.be.false;
   });

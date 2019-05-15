@@ -2,7 +2,7 @@ import aes from 'aes-js';
 
 import Errors, { createError } from './errors';
 import mergeObjects from './mergeObjects';
-import stringContains from './stringContains';
+import { stringContains } from './stringContains';
 import validateOptions from './validateOptions';
 
 import {

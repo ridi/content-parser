@@ -6,7 +6,7 @@ import { readCacheFile, writeCacheFile } from '../src/cacheFile';
 import Errors from '../src/errors';
 import { isString } from '../src/typecheck';
 import readEntries from '../src/readEntries';
-import stringContains from '../src/stringContains';
+import { stringContains } from '../src/stringContains';
 import Paths from '../../../test/paths';
 
 should(); // Initialize should
