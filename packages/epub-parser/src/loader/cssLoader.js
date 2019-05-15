@@ -23,6 +23,10 @@ const Types = {
 };
 
 function handleRulePrelude(selectorList, options, cssItem) {
+  if (!isExists(selectorList.children)) {
+    return false;
+  }
+
   selectorList.children.each(function (selector, item, list) { // eslint-disable-line
     let shouldRemove = false;
     csstree.walk(selector, function (node) { // eslint-disable-line
@@ -93,7 +97,8 @@ function handleRuleBlock(declarationList, options, cssItem) {
 function handleRuleset(node, item, list, options, cssItem) {
   handleRulePrelude(node.prelude, options, cssItem);
   handleRuleBlock(node.block, options, cssItem);
-  if (node.prelude.children.isEmpty() || node.block.children.isEmpty()) {
+  if ((isExists(node.prelude.children) && node.prelude.children.isEmpty())
+    || (isExists(node.block.children) && node.block.children.isEmpty())) {
     list.remove(item);
   }
 }
@@ -102,7 +107,7 @@ function handleAtrule(node, item, list, options, cssItem) {
   if (node.block) {
     // Otherwise removed at-rule don't prevent @import for removal
     this.stylesheet.firstAtrulesAllowed = false;
-    if (node.block.children.isEmpty()) {
+    if (isExists(node.block.children) && node.block.children.isEmpty()) {
       list.remove(item);
       return;
     }
