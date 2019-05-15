@@ -1,6 +1,5 @@
 import {
   isExists, isFunc, isUrl,
-  stringContains,
   mergeObjects,
   safeDirname, safePathJoin,
 } from '@ridi/parser-core';
@@ -44,9 +43,9 @@ function formatAttributes(attributes, options) {
       const text = cssLoader(dummyItem, `tmp{${value}}`, options).replace(/'|"/gm, '');
       return `${attrs} ${key}="${text.substring(4, text.length - 1)}"`;
     }
-    if (!isUrl(value) && stringContains([Names.Attrs.HREF, Names.Attrs.SRC], key)) {
+    if (!isUrl(value) && [Names.Attrs.HREF, Names.Attrs.SRC].some(name => key.endsWith(name))) {
       const { basePath, serializedAnchor } = options;
-      if (serializedAnchor && key === Names.Attrs.HREF) {
+      if (serializedAnchor && key.endsWith(Names.Attrs.HREF)) {
         const components = value.split('#');
         const spineIndex = serializedAnchor[path.basename(components[0])];
         if (isExists(spineIndex)) {
@@ -58,6 +57,7 @@ function formatAttributes(attributes, options) {
       }
       if (isExists(basePath) && value.split('#')[0].length > 0) {
         // href="#title" => href="#title"
+        // xlink:href="../Images/cover.jpg" => xlink:href="{basePath}/Images/cover.jpg"
         // src="../Images/background.jpg" => src="{basePath}/OEBPS/Images/background.jpg"
         return `${attrs} ${key}="${safePathJoin(basePath, value)}"`;
       }
