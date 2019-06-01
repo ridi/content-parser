@@ -8,7 +8,7 @@ import {
   Errors,
   LogLevel,
   CryptoProvider,
-  Cryptor,
+  AesCryptor,
 } from '../src/index';
 
 describe('content-parser', () => {
@@ -20,6 +20,6 @@ describe('content-parser', () => {
     assert(Errors !== null);
     assert(LogLevel !== null);
     assert(CryptoProvider.constructor !== null);
-    assert(Cryptor.constructor !== null);
+    assert(AesCryptor.constructor !== null);
   });
 });

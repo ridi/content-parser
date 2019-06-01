@@ -2,7 +2,7 @@ import aes from 'aes-js';
 
 import Errors, { createError } from './errors';
 import mergeObjects from './mergeObjects';
-import stringContains from './stringContains';
+import { stringContains } from './stringContains';
 import validateOptions from './validateOptions';
 
 import {
@@ -80,7 +80,7 @@ const checkDataType = (data) => {
   }
 };
 
-class Cryptor {
+class AesCryptor {
   constructor(mode, config) {
     if (!isExists(mode)) {
       throw createError(Errors.EREQPRM, 'mode');
@@ -163,10 +163,10 @@ class Cryptor {
   }
 }
 
-Cryptor.hex = hex;
-Cryptor.utf8 = utf8;
-Cryptor.Modes = Modes;
-Cryptor.Counter = Counter;
-Cryptor.Padding = Padding;
+AesCryptor.hex = hex;
+AesCryptor.utf8 = utf8;
+AesCryptor.Modes = Modes;
+AesCryptor.Counter = Counter;
+AesCryptor.Padding = Padding;
 
-export default Cryptor;
+export default AesCryptor;

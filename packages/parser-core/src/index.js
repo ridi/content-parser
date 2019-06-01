@@ -6,7 +6,7 @@ import {
   writeCacheFile,
 } from './cacheFile';
 
-import Cryptor from './Cryptor';
+import AesCryptor from './AesCryptor';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
 import Logger, { LogLevel } from './Logger';
@@ -22,7 +22,7 @@ import {
 } from './pathUtil';
 
 import readEntries from './readEntries';
-import stringContains from './stringContains';
+import { MatchOption, stringContains } from './stringContains';
 
 import {
   getType,
@@ -40,7 +40,7 @@ import openZip from './zipUtil';
 
 export {
   getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile,
-  Cryptor, CryptoProvider,
+  AesCryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Logger,
   LogLevel,
@@ -49,7 +49,7 @@ export {
   Parser,
   safeDirname, safePath, safePathJoin, getPathes,
   readEntries,
-  stringContains,
+  MatchOption, stringContains,
   getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl,
   validateOptions,
   openZip,

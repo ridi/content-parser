@@ -57,19 +57,19 @@ parser.parse(/* { parseOptions } */).then((book) => {
 });
 ```
 
-with [Cryptor](https://github.com/ridi/content-parser/blob/master/src/cryptor/Cryptor.js):
+with [AesCryptor](https://github.com/ridi/content-parser/blob/master/src/cryptor/AesCryptor.js):
 
 ```js
-import { CryptoProvider, Cryptor } from '@ridi/epub-parser';
-// or const { CryptoProvider, Cryptor } = require('@ridi/epub-parser');
+import { CryptoProvider, AesCryptor } from '@ridi/epub-parser';
+// or const { CryptoProvider, AesCryptor } = require('@ridi/epub-parser');
 
 const { Purpose } = CryptoProvider;
-const { Modes, Padding } = Cryptor;
+const { Modes, Padding } = AesCryptor;
 
 class ContentCryptoProvider extends CryptoProvider {
   constructor(key) {
     super();
-    this.cryptor = new Cryptor(Modes.ECB, { key });
+    this.cryptor = new AesCryptor(Modes.ECB, { key });
   }
 
   getCryptor(filePath, purpose) {
@@ -92,7 +92,7 @@ class ContentCryptoProvider extends CryptoProvider {
   // 5. run(data, 'OEBPS/Text/Section0001.xhtml', Purpose.READ_IN_DIR)
   //
   run(data, filePath, purpose) {
-    const cryptor = this.getCryptor(filePath, purpose);
+    const cryptor = this.getAesCryptor(filePath, purpose);
     const padding = Padding.AUTO;
     if (purpose === Purpose.READ_IN_DIR) {
       return cryptor.decrypt(data, padding);

@@ -6,7 +6,7 @@ import {
   Errors,
   LogLevel,
   CryptoProvider,
-  Cryptor,
+  AesCryptor,
 } from '../src/index';
 
 describe('comic-parser', () => {
@@ -16,6 +16,6 @@ describe('comic-parser', () => {
     assert(Errors !== null);
     assert(LogLevel !== null);
     assert(CryptoProvider.constructor !== null);
-    assert(Cryptor.constructor !== null);
+    assert(AesCryptor.constructor !== null);
   });
 });
