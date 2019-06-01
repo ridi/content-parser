@@ -24,6 +24,6 @@
     "sha1": "^1.1.1",
     "string-format": "^2.0.0",
     "string-natural-compare": "^2.0.3",
-    "unzipper": "^0.9.10"
+    "unzipper": "^0.10.0"
   }
 }
