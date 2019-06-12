@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+* None.
+
+## [0.5.6 (2019-06-12)]
+
 ### Fixed
 
 * Fix an issue where invalid path generated when URI contains unusable characters.
@@ -167,7 +171,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.5...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.6...HEAD
+[0.5.6 (2019-06-12)]: https://github.com/ridi/content-parser/compare/0.5.5...0.5.6
 [0.5.5 (2019-05-15)]: https://github.com/ridi/content-parser/compare/0.5.4...0.5.5
 [0.5.4 (2019-05-14)]: https://github.com/ridi/content-parser/compare/0.5.3...0.5.4
 [0.5.3 (2019-04-01)]: https://github.com/ridi/content-parser/compare/0.5.2...0.5.3
