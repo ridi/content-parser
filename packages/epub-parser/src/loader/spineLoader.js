@@ -40,7 +40,7 @@ function formatAttributes(attributes, options) {
     if (options.usingCssOptions && key === Names.Attrs.STYLE) {
       const dummyItem = new CssItem({ href: '' });
       // css-tree does not work unless style value is wrapped in a block.
-      const text = cssLoader(dummyItem, `tmp{${value}}`, options).replace(/'|"/gm, '');
+      const text = cssLoader(dummyItem, `tmp{${value}}`, options);
       return `${attrs} ${key}="${text.substring(4, text.length - 1)}"`;
     }
     if (!isUrl(value) && [Names.Attrs.HREF, Names.Attrs.SRC].some(name => key.endsWith(name))) {

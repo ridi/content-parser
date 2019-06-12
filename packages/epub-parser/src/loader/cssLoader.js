@@ -71,21 +71,20 @@ function handleRuleBlock(declarationList, options, cssItem) {
     let oldItem;
     let newItem;
     csstree.walk(declaration, (node, item) => {
-      const { type, value } = node;
-      if (type === Types.URL && stringContains([Types.STRING, Types.RAW], value.type)) {
-        let url = value.value.replace(/['"]/g, '');
+      if (node.type === Types.URL && stringContains([Types.STRING, Types.RAW], node.value.type)) {
+        let url = node.value.value.replace(/['"]/g, '');
         if (isExists(options.basePath) && !isUrl(url)) {
-          // url(../Image/line.jog) => url({basePath}/OEBPS/Image/line.jog)
+          // url(../Image/line.jpg) => url('{basePath}/OEBPS/Image/line.jpg')
           url = safePathJoin(options.basePath, safeDirname(cssItem.href), url);
+          oldItem = item;
+          newItem = List.createItem({
+            type: Types.URL,
+            value: {
+              type: Types.STRING,
+              value: `'${url}'`,
+            },
+          });
         }
-        oldItem = item;
-        newItem = List.createItem({
-          type: Types.URL,
-          value: {
-            type: value.type,
-            value: value.type === Types.STRING ? `"${url}"` : url,
-          },
-        });
       }
     });
     if (isExists(oldItem) && isExists(newItem)) {

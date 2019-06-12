@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None.
+### Fixed
+
+* Fix an issue where invalid path generated when URI contains unusable characters.
 
 ## [0.5.5 (2019-05-15)]
 
 ### Fixed
 
 * Fix a malfunction when parsing corrupted CSS.
-* Fix an issue where `EpubParser.parseOptions.basePath` option is not reflected in image for svg
+* Fix an issue where `EpubParser.parseOptions.basePath` option is not reflected in image for svg.
 
 ## [0.5.4 (2019-05-14)]
 

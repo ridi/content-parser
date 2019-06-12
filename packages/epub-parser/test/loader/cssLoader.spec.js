@@ -41,11 +41,11 @@ describe('Loader - CSS', () => {
   it('Use basePath option', () => {
     const cssItem = { href: 'OEBPS/Styles/Style0001.css' };
     let options = { basePath: 'a/b/c' };
-    cssLoader(cssItem, '@font-face { font-family: NotoSans; src: url(\"../Fonts/NotoSans-Regular.ttf\"); }', options)
-      .should.equal('@font-face{font-family:NotoSans;src:url(\"a/b/c/OEBPS/Fonts/NotoSans-Regular.ttf\")}');
+    cssLoader(cssItem, '@font-face { font-family: NotoSans; src: url(../Fonts/NotoSans-Regular.ttf); }', options)
+      .should.equal('@font-face{font-family:NotoSans;src:url(\'a/b/c/OEBPS/Fonts/NotoSans-Regular.ttf\')}');
     options = { basePath: './a/b/c' };
     cssLoader(cssItem, '@font-face { font-family: NotoSans; src: url(\"../Fonts/NotoSans-Regular.ttf\"); }', options)
-      .should.equal('@font-face{font-family:NotoSans;src:url(\"a/b/c/OEBPS/Fonts/NotoSans-Regular.ttf\")}');
+      .should.equal('@font-face{font-family:NotoSans;src:url(\'a/b/c/OEBPS/Fonts/NotoSans-Regular.ttf\')}');
   });
 
   it('Use parseStyle option', () => {
