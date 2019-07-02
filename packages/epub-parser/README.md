@@ -516,14 +516,14 @@ Prepend given string to namespace for identification.
 ## Read Options
 
 * [force](#force)
-* [basePath](#basePath) for [SpineItem](#spineItem), [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
-* [extractBody](#extractBody) for [SpineItem](#spineItem)
-* [serializedAnchor](#serializedAnchor) for [SpineItem](#spineItem)
-* [removeScript](#removeScript) for [SpineItem](#spineItem)
-* [removeAtrules](#removeAtrules) for [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
-* [removeTags](#removeTags) for [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
-* [removeIds](#removeIds) for [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
-* [removeClasses](#removeClasses) for [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
+* [basePath](#basePath)
+* [extractBody](#extractBody)
+* [serializedAnchor](#serializedAnchor)
+* [removeScript](#removeScript)
+* [removeAtrules](#removeAtrules)
+* [removeTagSelector](#removeTagSelector)
+* [removeIdSelector](#removeIdSelector)
+* [removeClassSelector](#removeClassSelector)
 
 ---
 
@@ -661,9 +661,9 @@ Remove at-rules.
 
 ---
 
-<a id="removeTags"></a>
+<a id="removeTagSelector"></a>
 
-### removeTags: *`string[]`*
+### removeTagSelector: *`string[]`*
 
 Remove selector that point to specified tags.
 
@@ -671,9 +671,9 @@ Remove selector that point to specified tags.
 
 ---
 
-<a id="removeIds"></a>
+<a id="removeIdSelector"></a>
 
-### removeIds: *`string[]`*
+### removeIdSelector: *`string[]`*
 
 Remove selector that point to specified ids.
 
@@ -681,9 +681,9 @@ Remove selector that point to specified ids.
 
 ---
 
-<a id="removeClasses"></a>
+<a id="removeClassSelector"></a>
 
-### removeClasses: *`string[]`*
+### removeClassSelector: *`string[]`*
 
 Remove selector that point to specified classes.
 

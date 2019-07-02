@@ -52,12 +52,12 @@ describe('Loader - Spine', () => {
   });
 
   it('Use css options', () => {
-    const options = mergeObjects(EpubParser.readDefaultOptions, { removeTags: ['body'] });
+    const options = mergeObjects(EpubParser.readDefaultOptions, { removeTagSelector: ['body'] });
     spineLoader({}, origin, options).should.equal(read(Paths.SPINE_LOADER_CSS_OPTIONS));
   });
 
   it('Use css options + basePath', () => {
-    const options = mergeObjects(EpubParser.readDefaultOptions, { basePath: 'a/b/c', removeTags: ['body'] });
+    const options = mergeObjects(EpubParser.readDefaultOptions, { basePath: 'a/b/c', removeTagSelector: ['body'] });
     spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, origin, options).should.equal(read(Paths.SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH));
   });
 

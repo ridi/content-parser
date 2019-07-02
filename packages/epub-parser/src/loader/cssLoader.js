@@ -42,15 +42,15 @@ function handleRulePrelude(selectorList, options, cssItem) {
             }
           }
         } else if (type === Types.TYPE_SELECTOR) {
-          if (stringContains(options.removeTags || [], name)) {
+          if (stringContains(options.removeTagSelector || [], name)) {
             shouldRemove = true;
           }
         } else if (type === Types.ID_SELECTOR) {
-          if (stringContains(options.removeIds || [], name)) {
+          if (stringContains(options.removeIdSelector || [], name)) {
             shouldRemove = true;
           }
         } else if (type === Types.CLASS_SELECTOR) {
-          if (stringContains(options.removeClasses || [], name)) {
+          if (stringContains(options.removeClassSelector || [], name)) {
             shouldRemove = true;
           }
         }

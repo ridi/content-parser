@@ -84,11 +84,11 @@ class EpubParser extends Parser {
       // Remove at-rules.
       removeAtrules: [],
       // Remove selector that point to specified tags.
-      removeTags: [],
+      removeTagSelector: [],
       // Remove selector that point to specified ids.
-      removeIds: [],
+      removeIdSelector: [],
       // Remove selector that point to specified classes.
-      removeClasses: [],
+      removeClassSelector: [],
     };
   }
 
@@ -103,9 +103,9 @@ class EpubParser extends Parser {
       serializedAnchor: 'Boolean',
       removeScript: 'Boolean',
       removeAtrules: 'Array',
-      removeTags: 'Array',
-      removeIds: 'Array',
-      removeClasses: 'Array',
+      removeTagSelector: 'Array',
+      removeIdSelector: 'Array',
+      removeClassSelector: 'Array',
     };
   }
 
