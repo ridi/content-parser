@@ -516,13 +516,14 @@ Prepend given string to namespace for identification.
 ## Read Options
 
 * [force](#force)
-* [basePath](#basePath)
-* [extractBody](#extractBody)
-* [serializedAnchor](#serializedAnchor)
-* [removeAtrules](#removeAtrules)
-* [removeTags](#removeTags)
-* [removeIds](#removeIds)
-* [removeClasses](#removeClasses)
+* [basePath](#basePath) for [SpineItem](#spineItem), [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
+* [extractBody](#extractBody) for [SpineItem](#spineItem)
+* [serializedAnchor](#serializedAnchor) for [SpineItem](#spineItem)
+* [removeScript](#removeScript) for [SpineItem](#spineItem)
+* [removeAtrules](#removeAtrules) for [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
+* [removeTags](#removeTags) for [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
+* [removeIds](#removeIds) for [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
+* [removeClasses](#removeClasses) for [CssItem](#cssItem), [InlineCssItem](#inlineCssItem)
 
 ---
 
@@ -635,6 +636,16 @@ If true, replace file path of anchor in spine with spine index.
 <!-- After -->
 <a href="1#title">Chapter 2</a>
 ```
+
+**Default:** `false`
+
+---
+
+<a id="removeScript"></a>
+
+### removeScript: *`boolean`*
+
+Remove all scripts from within HTML.
 
 **Default:** `false`
 

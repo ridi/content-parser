@@ -28,6 +28,7 @@ const Names = {
     DOCTYPE: '!doctype',
     STYLE: 'style',
     A: 'a',
+    SCRIPT: 'script',
   },
 };
 
@@ -71,20 +72,34 @@ function stringify(ast, options) {
     if (node.type === Types.TEXT) {
       return node.content;
     }
+
     if (node.type === Types.COMMENT) {
       return `<!--${node.content}-->`;
     }
+
     const { tagName, attributes, children } = node;
+    const ignored = options.removeScript && tagName === Names.Tags.SCRIPT;
     const isSelfClosing = arrayIncludes(options.voidTags, tagName);
-    if (options.usingCssOptions && tagName === Names.Tags.STYLE && children.length === 1) {
-      const dummyItem = new CssItem({ href: '' });
-      const inlineStyle = children[0].content;
-      const text = cssLoader(dummyItem, inlineStyle, options);
-      return `<${tagName}${formatAttributes(attributes, options)}>${text}</${tagName}>`;
+    let innerHTML = '';
+    if (ignored) {
+      innerHTML += '<!-- epub-parser ';
     }
-    return isSelfClosing
-      ? `<${tagName}${formatAttributes(attributes, options)}${tagName !== Names.Tags.DOCTYPE ? '/' : ''}>`
-      : `<${tagName}${formatAttributes(attributes, options)}>${stringify(children, options)}</${tagName}>`;
+    innerHTML += `<${tagName}${formatAttributes(attributes, options)}`;
+    innerHTML += `${isSelfClosing && tagName !== Names.Tags.DOCTYPE ? '/>' : '>'}`;
+    if (!isSelfClosing) {
+      if (options.usingCssOptions && tagName === Names.Tags.STYLE && children.length === 1) {
+        const dummyItem = new CssItem({ href: '' });
+        const inlineStyle = children[0].content;
+        innerHTML += cssLoader(dummyItem, inlineStyle, options);
+      } else {
+        innerHTML += `${stringify(children, options)}`;
+      }
+      innerHTML += `</${tagName}>`;
+    }
+    if (ignored) {
+      innerHTML += ' -->';
+    }
+    return innerHTML;
   }).join('');
 }
 
