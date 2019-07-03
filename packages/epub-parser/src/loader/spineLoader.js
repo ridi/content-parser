@@ -97,7 +97,7 @@ function stringify(ast, options) {
       innerHTML += `</${tagName}>`;
     }
     if (ignored) {
-      innerHTML += ' -->';
+      innerHTML += ` --><${tagName}></${tagName}>`;
     }
     return innerHTML;
   }).join('');
