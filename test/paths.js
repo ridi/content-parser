@@ -26,7 +26,7 @@ const Paths = {
   SPINE_LOADER_CSS_OPTIONS: '../../test/res/spineLoader/cssOptions.xhtml',
   SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH: '../../test/res/spineLoader/cssOptionsAndBasePath.xhtml',
   SPINE_LOADER_SERIALIZED_ANCHOR: '../../test/res/spineLoader/serializedAnchor.xhtml',
-  SPINE_LOADER_REMOVE_SCRIPT: '../../test/res/spineLoader/removeScript.xhtml',
+  SPINE_LOADER_IGNORE_SCRIPT: '../../test/res/spineLoader/ignoreScript.xhtml',
   EDGE_CASES1: '../../test/res/edgeCases1.epub',
   EDGE_CASES2: '../../test/res/edgeCases2.epub',
   EDGE_CASES3: '../../test/res/edgeCases3.epub',

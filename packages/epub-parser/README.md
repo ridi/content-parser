@@ -519,7 +519,7 @@ Prepend given string to namespace for identification.
 * [basePath](#basePath)
 * [extractBody](#extractBody)
 * [serializedAnchor](#serializedAnchor)
-* [removeScript](#removeScript)
+* [ignoreScript](#ignoreScript)
 * [removeAtrules](#removeAtrules)
 * [removeTagSelector](#removeTagSelector)
 * [removeIdSelector](#removeIdSelector)
@@ -641,11 +641,11 @@ If true, replace file path of anchor in spine with spine index.
 
 ---
 
-<a id="removeScript"></a>
+<a id="ignoreScript"></a>
 
-### removeScript: *`boolean`*
+### ignoreScript: *`boolean`*
 
-Remove all scripts from within HTML.
+Ignore all scripts from within HTML.
 
 **Default:** `false`
 

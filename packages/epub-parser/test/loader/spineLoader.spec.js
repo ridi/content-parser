@@ -88,8 +88,8 @@ describe('Loader - Spine', () => {
     spineLoader(spineItem, origin, options).should.equal(read(Paths.SPINE_LOADER_SERIALIZED_ANCHOR));
   });
 
-  it('Use removeScript option', () => {
-    const options = mergeObjects(EpubParser.readDefaultOptions, { removeScript: true });
-    spineLoader({}, origin, options).should.equal(read(Paths.SPINE_LOADER_REMOVE_SCRIPT));
+  it('Use ignoreScript option', () => {
+    const options = mergeObjects(EpubParser.readDefaultOptions, { ignoreScript: true });
+    spineLoader({}, origin, options).should.equal(read(Paths.SPINE_LOADER_IGNORE_SCRIPT));
   });
 });

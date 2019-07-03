@@ -78,7 +78,7 @@ function stringify(ast, options) {
     }
 
     const { tagName, attributes, children } = node;
-    const ignored = options.removeScript && tagName === Names.Tags.SCRIPT;
+    const ignored = options.ignoreScript && tagName === Names.Tags.SCRIPT;
     const isSelfClosing = arrayIncludes(options.voidTags, tagName);
     let innerHTML = '';
     if (ignored) {

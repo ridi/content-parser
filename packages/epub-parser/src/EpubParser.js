@@ -79,8 +79,8 @@ class EpubParser extends Parser {
       extractBody: false,
       // If true, replace file path of anchor in spine with spine index.
       serializedAnchor: false,
-      // If true, Remove all scripts from within HTML.
-      removeScript: false,
+      // If true, ignore all scripts from within HTML.
+      ignoreScript: false,
       // Remove at-rules.
       removeAtrules: [],
       // Remove selector that point to specified tags.
@@ -101,7 +101,7 @@ class EpubParser extends Parser {
       basePath: 'String|Undefined',
       extractBody: 'Boolean|Function',
       serializedAnchor: 'Boolean',
-      removeScript: 'Boolean',
+      ignoreScript: 'Boolean',
       removeAtrules: 'Array',
       removeTagSelector: 'Array',
       removeIdSelector: 'Array',
