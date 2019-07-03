@@ -1,6 +1,7 @@
 import { should } from 'chai';
 import fs from 'fs-extra';
 
+import Errors from '../src/errors';
 import openZip from '../src/zipUtil';
 import Paths from '../../../test/paths';
 
@@ -26,6 +27,17 @@ describe('Util - Zip', () => {
     openZip(Paths.DEFAULT).then((zip) => {
       zip.extractAll('./temp').then(() => {
         done();
+      });
+    });
+  });
+
+  it('extractAll with not overwite', (done) => {
+    openZip(Paths.DEFAULT).then((zip) => {
+      zip.extractAll('./temp').then(() => {
+        zip.extractAll('./temp', false).catch((error) => {
+          error.code.should.equal(Errors.EEXIST.code);
+          done();
+        });
       });
     });
   });
