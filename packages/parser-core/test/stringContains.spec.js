@@ -13,6 +13,7 @@ describe('Util - String util', () => {
     stringContains(list, 'de', MatchOption.STARTSWITH).should.be.true;
     stringContains(list, 'de', MatchOption.CONTAINING).should.be.true;
     stringContains(list, 'de', MatchOption.ENDSWITH).should.be.false;
+    stringContains(list, 'hi', MatchOption.ENDSWITH).should.be.true;
     stringContains().should.be.false;
     stringContains(list).should.be.false;
   });
