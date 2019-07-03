@@ -158,6 +158,20 @@ or throw exception.
 
 ---
 
+### unzip(unzipPath, overwrite)
+
+Returns `Promise<boolean>` with:
+
+- If result is `true`, unzip is successful or has already been unzipped.
+
+Or throw exception.
+
+#### unzipPath: `string`
+
+#### overwrite: `boolean`
+
+---
+
 ### onProgress = callback(step, totalStep, action)
 
 Tells the progress of parser through `callback`.
