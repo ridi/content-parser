@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+* None.
+
+## [0.5.7 (2019-07-03)]
+
 ### Added
 
 * Add `EpubParser.readOptions.ignoreScript` option. (default: `false`)
@@ -179,7 +183,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.6...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.7...HEAD
+[0.5.7 (2019-07-03)]: https://github.com/ridi/content-parser/compare/0.5.6...0.5.7
 [0.5.6 (2019-06-12)]: https://github.com/ridi/content-parser/compare/0.5.5...0.5.6
 [0.5.5 (2019-05-15)]: https://github.com/ridi/content-parser/compare/0.5.4...0.5.5
 [0.5.4 (2019-05-14)]: https://github.com/ridi/content-parser/compare/0.5.3...0.5.4
