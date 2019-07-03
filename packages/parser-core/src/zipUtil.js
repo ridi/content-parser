@@ -37,12 +37,13 @@ async function extractAll(unzipPath, overwrite = true) {
   }
   fs.mkdirpSync(unzipPath);
 
+  const flags = overwrite ? 'w' : 'wx';
   const writeFile = (entry, output) => {
-    return new Promise((resolve) => {
-      const writeStream = fs.createWriteStream(output, { encoding: 'binary' });
+    return new Promise((resolve, reject) => {
+      const writeStream = fs.createWriteStream(output, { encoding: 'binary', flags });
       const onError = (error) => {
-        resolve(error);
         writeStream.end();
+        reject(error);
       };
       writeStream.on('error', onError);
       writeStream.on('close', resolve);
@@ -80,7 +81,7 @@ async function extractAll(unzipPath, overwrite = true) {
       if (!entry.path.endsWith('/')) {
         const error = await writeFile(entry, output);
         if (error) {
-          this.logger.error(error);
+          throw error;
         }
       }
     });

@@ -246,6 +246,7 @@ class Parser {
    * @param {ParseContext} context intermediate result
    * @returns {Promise.<ParseContext>} return Context (no change at this step)
    * @throws {Errors.ENOENT} no such file or directory
+   * @throws {Errors.EEXIST} file or directory already exists
    * @see Parser.parseDefaultOptions.unzipPath
    * @see Parser.parseDefaultOptions.overwrite
    */

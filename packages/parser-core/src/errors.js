@@ -3,6 +3,7 @@ import format from 'string-format';
 const Errors = {
   ENOENT: { code: 'ENOENT', format: 'ENOENT: no such file or directory. (path: {0})' },
   ENOFILE: { code: 'ENOFILE', format: 'ENOFILE: no such file. (path: {0})' },
+  EEXIST: { code: 'EEXIST', format: 'EEXIST: file or directory already exists. (path: {0})' },
   EINVAL: { code: 'EINVAL', format: 'EINVAL: invalid {0}. ({1}: {2})' },
   ENOELMT: { code: 'ENOELMT', format: 'ENOELMT: no such element. (element: {0}, path: {1})' },
   ENOATTR: { code: 'ENOATTR', format: 'ENOATTR: no such attribute. (attribute: {0}, element: {1}, path: {2})' },
