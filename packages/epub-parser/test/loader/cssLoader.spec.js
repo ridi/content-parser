@@ -23,18 +23,18 @@ describe('Loader - CSS', () => {
     cssLoader({}, '@charset "utf8"; p { color: black; } @import "style.css";', options).should.equal('p{color:black}');
   });
 
-  it('Use removeTags option', () => {
-    const options = { removeTags: ['span'] };
+  it('Use removeTagSelector option', () => {
+    const options = { removeTagSelector: ['span'] };
     cssLoader({}, 'p > span { color: red; } span .bold { font-weight: 700; } span { }', options).should.equal('');
   });
 
-  it('Use removeIds option', () => {
-    const options = { removeIds: ['ridi'] };
+  it('Use removeIdSelector option', () => {
+    const options = { removeIdSelector: ['ridi'] };
     cssLoader({}, '#ridi { color: blue; } body #ridi { font-weight: 700; } :matches(#ridi) h1 { color: red; }', options).should.equal('');
   });
 
-  it('Use removeClasses option', () => {
-    const options = { removeClasses: ['ch'] };
+  it('Use removeClassSelector option', () => {
+    const options = { removeClassSelector: ['ch'] };
     cssLoader({}, '.ch { color: blue; } p > .ch { font-weight: 700; } .ch[at="ch"] { color: red; }', options).should.equal('');
   });
 

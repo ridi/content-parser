@@ -519,10 +519,11 @@ Prepend given string to namespace for identification.
 * [basePath](#basePath)
 * [extractBody](#extractBody)
 * [serializedAnchor](#serializedAnchor)
+* [ignoreScript](#ignoreScript)
 * [removeAtrules](#removeAtrules)
-* [removeTags](#removeTags)
-* [removeIds](#removeIds)
-* [removeClasses](#removeClasses)
+* [removeTagSelector](#removeTagSelector)
+* [removeIdSelector](#removeIdSelector)
+* [removeClassSelector](#removeClassSelector)
 
 ---
 
@@ -640,6 +641,16 @@ If true, replace file path of anchor in spine with spine index.
 
 ---
 
+<a id="ignoreScript"></a>
+
+### ignoreScript: *`boolean`*
+
+Ignore all scripts from within HTML.
+
+**Default:** `false`
+
+---
+
 <a id="removeAtrules"></a>
 
 ### removeAtrules: *`string[]`*
@@ -650,9 +661,9 @@ Remove at-rules.
 
 ---
 
-<a id="removeTags"></a>
+<a id="removeTagSelector"></a>
 
-### removeTags: *`string[]`*
+### removeTagSelector: *`string[]`*
 
 Remove selector that point to specified tags.
 
@@ -660,9 +671,9 @@ Remove selector that point to specified tags.
 
 ---
 
-<a id="removeIds"></a>
+<a id="removeIdSelector"></a>
 
-### removeIds: *`string[]`*
+### removeIdSelector: *`string[]`*
 
 Remove selector that point to specified ids.
 
@@ -670,9 +681,9 @@ Remove selector that point to specified ids.
 
 ---
 
-<a id="removeClasses"></a>
+<a id="removeClassSelector"></a>
 
-### removeClasses: *`string[]`*
+### removeClassSelector: *`string[]`*
 
 Remove selector that point to specified classes.
 

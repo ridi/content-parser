@@ -10,21 +10,21 @@ should(); // Initialize should
 
 const read = file => fs.readFileSync(file, 'utf8');
 
-const html = read(Paths.SPINE_LOADER_ORIGIN);
+const origin = read(Paths.SPINE_LOADER_ORIGIN);
 
 describe('Loader - Spine', () => {  
   it('No option', () => {
-    spineLoader({}, html).should.equal(read(Paths.SPINE_LOADER_NO_OPTIONS));
+    spineLoader({}, origin).should.equal(read(Paths.SPINE_LOADER_NO_OPTIONS));
   });
 
   it('Use extractBody option', () => {
-    let result = spineLoader({}, html, { extractBody: true });
+    let result = spineLoader({}, origin, { extractBody: true });
     result.should.equal(JSON.parse(read(Paths.SPINE_LOADER_NO_ADAPTER)).value);
 
     let extractBody = (innerHTML, attrs) => {
       return `<article ${attrs.map(attr => `${attr.key}="${attr.value}"`).join(' ')}>${innerHTML}</article>`;
     };
-    result = spineLoader({ styles }, html, { extractBody });
+    result = spineLoader({ styles }, origin, { extractBody });
     result.should.equal(JSON.parse(read(Paths.SPINE_LOADER_ADAPTER)).value);
 
     // with parseOptions.parseStyle option.
@@ -35,7 +35,7 @@ describe('Loader - Spine', () => {
     extractBody = (innerHTML, attrs) => {
       return { innerHTML, attrs };
     };
-    result = spineLoader({ styles }, html, { extractBody });
+    result = spineLoader({ styles }, origin, { extractBody });
     result.attrs.find(attr => attr.key === 'class').should.deep.equal({
       key: 'class', value: 'ridi_style1 ridi_style2',
     });
@@ -44,21 +44,21 @@ describe('Loader - Spine', () => {
   it('Use basePath option', () => {
     const expected = read(Paths.SPINE_LOADER_BASE_PATH);
 
-    let result = spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, html, { basePath: 'a/b/c' });
+    let result = spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, origin, { basePath: 'a/b/c' });
     result.should.deep.equal(expected);
 
-    result = spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, html, { basePath: './a/b/c' });
+    result = spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, origin, { basePath: './a/b/c' });
     result.should.deep.equal(expected);
   });
 
   it('Use css options', () => {
-    const options = mergeObjects(EpubParser.readDefaultOptions, { removeTags: ['body'] });
-    spineLoader({}, html, options).should.equal(read(Paths.SPINE_LOADER_CSS_OPTIONS));
+    const options = mergeObjects(EpubParser.readDefaultOptions, { removeTagSelector: ['body'] });
+    spineLoader({}, origin, options).should.equal(read(Paths.SPINE_LOADER_CSS_OPTIONS));
   });
 
   it('Use css options + basePath', () => {
-    const options = mergeObjects(EpubParser.readDefaultOptions, { basePath: 'a/b/c', removeTags: ['body'] });
-    spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, html, options).should.equal(read(Paths.SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH));
+    const options = mergeObjects(EpubParser.readDefaultOptions, { basePath: 'a/b/c', removeTagSelector: ['body'] });
+    spineLoader({ href: 'OEBPS/Text/Section0001.xhtml' }, origin, options).should.equal(read(Paths.SPINE_LOADER_CSS_OPTIONS_AND_BASE_PATH));
   });
 
   it('Use serializedAnchor option', () => {
@@ -85,6 +85,11 @@ describe('Loader - Spine', () => {
       },
     };
     const options = { serializedAnchor: true };
-    spineLoader(spineItem, html, options).should.equal(read(Paths.SPINE_LOADER_SERIALIZED_ANCHOR));
+    spineLoader(spineItem, origin, options).should.equal(read(Paths.SPINE_LOADER_SERIALIZED_ANCHOR));
+  });
+
+  it('Use ignoreScript option', () => {
+    const options = mergeObjects(EpubParser.readDefaultOptions, { ignoreScript: true });
+    spineLoader({}, origin, options).should.equal(read(Paths.SPINE_LOADER_IGNORE_SCRIPT));
   });
 });

@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None.
+### Added
+
+* Add `EpubParser.readOptions.ignoreScript` option. (default: `false`)
+
+### Changed
+
+* Rename `EpubParser.readOptions.removeTags` to `.removeTagSelector`.
+* Rename `EpubParser.readOptions.removeIds` to `.removeIdSelector`.
+* Rename `EpubParser.readOptions.removeClasses` to `.removeClassSelector`.
 
 ## [0.5.6 (2019-06-12)]
 

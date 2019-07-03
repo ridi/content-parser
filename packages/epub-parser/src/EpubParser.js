@@ -79,14 +79,16 @@ class EpubParser extends Parser {
       extractBody: false,
       // If true, replace file path of anchor in spine with spine index.
       serializedAnchor: false,
+      // If true, ignore all scripts from within HTML.
+      ignoreScript: false,
       // Remove at-rules.
       removeAtrules: [],
       // Remove selector that point to specified tags.
-      removeTags: [],
+      removeTagSelector: [],
       // Remove selector that point to specified ids.
-      removeIds: [],
+      removeIdSelector: [],
       // Remove selector that point to specified classes.
-      removeClasses: [],
+      removeClassSelector: [],
     };
   }
 
@@ -99,10 +101,11 @@ class EpubParser extends Parser {
       basePath: 'String|Undefined',
       extractBody: 'Boolean|Function',
       serializedAnchor: 'Boolean',
+      ignoreScript: 'Boolean',
       removeAtrules: 'Array',
-      removeTags: 'Array',
-      removeIds: 'Array',
-      removeClasses: 'Array',
+      removeTagSelector: 'Array',
+      removeIdSelector: 'Array',
+      removeClassSelector: 'Array',
     };
   }
 
