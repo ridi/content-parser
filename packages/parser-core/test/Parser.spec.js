@@ -261,4 +261,34 @@ describe('Parser', () => {
       });
     });
   });
+
+  describe('Unzipping test', () => {
+    it('Unizpping', () => {
+      const parser = new TestParser(Paths.DEFAULT);
+      return parser.unzip(unzipPath).then((success) => {
+        success.should.be.true;
+      });
+    });
+
+    it('Unizpping (already)', () => {
+      const parser = new TestParser(Paths.UNZIPPED_DEFAULT);
+      return parser.unzip(unzipPath).then((success) => {
+        success.should.be.true;
+      });
+    });
+
+    describe('Error situation', () => {
+      it('Invalid unzipPath', () => {
+        return new TestParser(Paths.DEFAULT).unzip().catch(err => {
+          err.code.should.equal(Errors.EINVAL.code);
+        });
+      });
+
+      it('Invalid overwrite', () => {
+        return new TestParser(Paths.DEFAULT).unzip(unzipPath, 'true').catch(err => {
+          err.code.should.equal(Errors.EINVAL.code);
+        });
+      });
+    });
+  });
 });

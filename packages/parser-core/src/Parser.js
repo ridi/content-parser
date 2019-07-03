@@ -19,6 +19,7 @@ import validateOptions from './validateOptions';
 const Action = Object.freeze({
   PARSE: 'parse',
   READ_ITEMS: 'readItems',
+  UNZIP: 'unzip',
 });
 
 const privateProps = new WeakMap();
@@ -200,23 +201,24 @@ class Parser {
    * @see Parser.parseOptionTypes
    */
   async parse(options = {}) {
+    const action = Action.PARSE;
     const tasks = [].concat(
       this._parseBeforeTasks(),
       this._parseTasks(),
       this._parseAfterTasks(),
     );
     let context = options;
-    this.onProgress(0, tasks.length, Action.PARSE);
+    this.onProgress(0, tasks.length, action);
     await tasks.reduce((prevPromise, task, index) => {
       const result = prevPromise.then(async () => {
         const { fun, name } = task;
-        const message = `${Action.PARSE} - ${name}`;
+        const message = `${action} - ${name}`;
         context = await this.logger.measure(fun, this, [context], message);
       });
-      this.onProgress(index + 1, tasks.length, Action.PARSE);
+      this.onProgress(index + 1, tasks.length, action);
       return result;
     }, Promise.resolve());
-    this.logger.result(Action.PARSE);
+    this.logger.result(action);
     return context;
   }
 
@@ -325,23 +327,24 @@ class Parser {
    * @see Parser.readOptionTypes
    */
   async readItems(items, options = {}) {
+    const action = Action.READ_ITEMS;
     const tasks = [].concat(
       this._readBeforeTasks(),
       this._readTasks(),
       this._readAfterTasks(),
     );
     let context = [items, options];
-    this.onProgress(0, tasks.length, Action.READ_ITEMS);
+    this.onProgress(0, tasks.length, action);
     await tasks.reduce((prevPromise, task, index) => {
       const result = prevPromise.then(async () => {
         const { fun, name } = task;
-        const message = `${Action.READ_ITEMS}(${items.length}) - ${name}`;
+        const message = `${action}(${items.length}) - ${name}`;
         context = await this.logger.measure(fun, this, isArray(context) ? context : [context], message);
       });
-      this.onProgress(index + 1, tasks.length, Action.READ_ITEMS);
+      this.onProgress(index + 1, tasks.length, action);
       return result;
     }, Promise.resolve());
-    this.logger.result(`${Action.READ_ITEMS}(${items.length})`);
+    this.logger.result(`${action}(${items.length})`);
     return context;
   }
 
@@ -380,6 +383,47 @@ class Parser {
    */
   async _read(context) { // eslint-disable-line no-unused-vars
     return mustOverride();
+  }
+
+  /**
+   * @typedef UnzipTask
+   * @property {function} fun Action executor
+   * @property {string} name Action name
+   */
+  /**
+   * @returns {UnzipTask[]} return tasks
+   */
+  _unzipTasks() {
+    return [
+      { fun: this._prepareParse, name: 'prepareParse' },
+      { fun: this._unzipIfNeeded, name: 'unzipIfNeeded' },
+    ];
+  }
+
+  /**
+   * @param {string} unzipPath
+   * @param {boolean} overwrite
+   * @returns {boolean} success
+   * @throws {Errors.EINVAL} invalid options or value type
+   * @throws {Errors.ENOENT} no such file or directory
+   * @throws {Errors.ENOFILE} no such file
+   */
+  async unzip(unzipPath, overwrite = true) {
+    const action = Action.UNZIP;
+    const tasks = this._unzipTasks();
+    let context = { unzipPath, overwrite };
+    this.onProgress(0, tasks.length, action);
+    await tasks.reduce((prevPromise, task, index) => {
+      const result = prevPromise.then(async () => {
+        const { fun, name } = task;
+        const message = `${action} - ${name}`;
+        context = await this.logger.measure(fun, this, [context], message);
+      });
+      this.onProgress(index + 1, tasks.length, action);
+      return result;
+    }, Promise.resolve());
+    this.logger.result(action);
+    return isString(this.input);
   }
 }
 
