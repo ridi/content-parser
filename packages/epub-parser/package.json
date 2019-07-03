@@ -1,6 +1,6 @@
 {
   "name": "@ridi/epub-parser",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "Common EPUB2 data parser for Ridibooks services",
   "author": {
     "name": "Ridibooks Viewer Team",
@@ -28,7 +28,7 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
-    "@ridi/parser-core": "^0.5.7",
+    "@ridi/parser-core": "^0.5.8",
     "css-tree": "^1.0.0-alpha.29",
     "fast-xml-parser": "^3.11.2",
     "fs-extra": "^8.0.0",
