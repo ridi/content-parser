@@ -451,6 +451,7 @@ NOT_SUPPORT_TYPE | not_support_type
 * [overwrite](#overwrite)
 * [parseStyle](#parseStyle)
 * [styleNamespacePrefix](#styleNamespacePrefix)
+* [additionalInlineStyle](#additionalInlineStyle)
 
 ---
 
@@ -459,7 +460,8 @@ NOT_SUPPORT_TYPE | not_support_type
 ### validatePackage: *`boolean`*
 
 If true, validation package specifications in [IDPF listed](http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc) below.
-> only using if input is EPUB file.
+> used only if input is EPUB file.
+
 - Zip header should not corrupt.
 - `mimetype` file must be first file in archive.
 - `mimetype` file should not compressed.
@@ -521,9 +523,20 @@ In any list, [InlineCssItem](#inlineCssItem) is always positioned after [CssItem
 ### styleNamespacePrefix: *`string`*
 
 Prepend given string to namespace for identification.
-> only using if parseStyle is true.
+> only available if parseStyle is true.
 
 **Default:** `'ridi_style'`
+
+---
+
+<a id="additionalInlineStyle"></a>
+
+### additionalInlineStyle: *`?string`*
+
+If specified, added inline styles to all spines.
+> only available if parseStyle is true.
+
+**Default:** `undefined`
 
 <a id="readOptions"></a>
 

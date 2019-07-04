@@ -7,6 +7,7 @@ import path from 'path';
 import EpubParser from '../src/EpubParser';
 import Book from '../src/model/Book';
 import DeadItem from '../src/model/DeadItem';
+import InlineCssItem from '../src/model/InlineCssItem';
 import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
 import Paths from '../../../test/paths';
@@ -191,7 +192,8 @@ describe('EpubParser', () => {
     });
 
     it('Use parseStyle option', () => {
-      return new EpubParser(Paths.EXTRACT_STYLE).parse().then(book => {
+      const additionalInlineStyle = 'body { color: #ff0000; } p { font-size: 5em !important; }';
+      return new EpubParser(Paths.EXTRACT_STYLE).parse({ additionalInlineStyle }).then(book => {
         const expectedBook = JSON.parse(fs.readFileSync(Paths.EXPECTED_EXTRACT_STYLE_BOOK));
         book.styles.forEach((style, idx) => {
           const expectedStyle = expectedBook.styles[idx];
@@ -215,12 +217,13 @@ describe('EpubParser', () => {
     });
 
     it('Not use parseStyle option', () => {
-      return new EpubParser(Paths.EXTRACT_STYLE).parse().then(book => {
+      return new EpubParser(Paths.EXTRACT_STYLE).parse({ parseStyle: false }).then(book => {
         book.styles.forEach(style => {
-          assert(style.namespace !== undefined);
+          assert(style.namespace === undefined);
+          (style instanceof InlineCssItem).should.be.false;
         });
         book.spines.forEach(spine => {
-          assert(spine.styles !== undefined);
+          assert(spine.styles === undefined);
         });
       });
     });

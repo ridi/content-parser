@@ -51,6 +51,14 @@
           "size": 1,
           "namespace": "ridi_style1",
           "text": "\n  body {\n  color: #ffffff;\n  }\n  "
+        },
+        {
+          "id": "Section0001.xhtml_ridi_style2",
+          "href": "OEBPS/Text/Section0001.xhtml_ridi_style2",
+          "mediaType": "text/css",
+          "size": 57,
+          "namespace": "ridi_style2",
+          "text": "body { color: #ff0000; } p { font-size: 5em !important; }"
         }
       ]
     },
@@ -90,6 +98,14 @@
       "size": 1,
       "namespace": "ridi_style1",
       "text": "\n  body {\n  color: #ffffff;\n  }\n  "
+    },
+    {
+      "id": "Section0001.xhtml_ridi_style2",
+      "href": "OEBPS/Text/Section0001.xhtml_ridi_style2",
+      "mediaType": "text/css",
+      "size": 57,
+      "namespace": "ridi_style2",
+      "text": "body { color: #ff0000; } p { font-size: 5em !important; }"
     }
   ],
   "spines": [
@@ -178,6 +194,14 @@
       "size": 1,
       "namespace": "ridi_style1",
       "text": "\n  body {\n  color: #ffffff;\n  }\n  "
+    },
+    {
+      "id": "Section0001.xhtml_ridi_style2",
+      "href": "OEBPS/Text/Section0001.xhtml_ridi_style2",
+      "mediaType": "text/css",
+      "size": 57,
+      "namespace": "ridi_style2",
+      "text": "body { color: #ff0000; } p { font-size: 5em !important; }"
     }
   ]
 }
