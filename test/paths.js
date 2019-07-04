@@ -16,7 +16,6 @@ const Paths = {
   OPF_MISSING: '../../test/res/opfMissing.epub',
   EXTRACT_STYLE: '../../test/res/extractStyle.epub',
   UNZIPPED_EXTRACT_STYLE: '../../test/res/extractStyle',
-  EXPECTED_EXTRACT_STYLE_CONTEXT: '../../test/res/expectedExtractStyleContext.json',
   EXPECTED_EXTRACT_STYLE_BOOK: '../../test/res/expectedExtractStyleBook.json',
   SPINE_LOADER_ORIGIN: '../../test/res/spineLoader/origin.xhtml',
   SPINE_LOADER_NO_OPTIONS: '../../test/res/spineLoader/noOptions.xhtml',

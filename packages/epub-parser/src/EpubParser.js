@@ -33,7 +33,7 @@ class EpubParser extends Parser {
   static get parseDefaultOptions() {
     return {
       ...super.parseDefaultOptions,
-      // If true, validation package specifications in IDPF listed below. (only using if input is EPUB file.)
+      // If true, validation package specifications in IDPF listed below. (used only if input is EPUB file.)
       // - Zip header should not corrupt.
       // - mimetype file must be first file in archive.
       // - mimetype file should not compressed.
@@ -46,8 +46,10 @@ class EpubParser extends Parser {
       // Otherwise it CssItem.namespace, SpineItem.styles is undefined.
       // In any list, InlineCssItem is always positioned after CssItem. (Book.styles, Book.items, SpineItem.styles, ...)
       parseStyle: true,
-      // Prepend given string to namespace for identification. (only using if parseStyle is true.)
+      // Prepend given string to namespace for identification. (only available if parseStyle is true.)
       styleNamespacePrefix: 'ridi_style',
+      // If specified, added inline styles to all spines. (only available if parseStyle is true.)
+      additionalInlineStyle: undefined,
     };
   }
 
@@ -61,6 +63,7 @@ class EpubParser extends Parser {
       allowNcxFileMissing: 'Boolean',
       parseStyle: 'Boolean',
       styleNamespacePrefix: 'String',
+      additionalInlineStyle: 'String|Undefined',
     };
   }
 
@@ -451,6 +454,7 @@ class EpubParser extends Parser {
    * @param {object} options parse options
    * @returns {StyleParseResult} returns styles and inline style from spine
    * @see EpubParser.parseDefaultOptions.styleNamespacePrefix
+   * @see EpubParser.parseDefaultOptions.additionalInlineStyle
    */
   async _parseSpineStyle(rawItem, entry, options) {
     const styles = [];
@@ -493,6 +497,7 @@ class EpubParser extends Parser {
 
     // <style ...>...</style>
     //            ^~~
+    let lastIdx;
     filter(head.children, 'tagName', 'style').forEach((style, idx) => {
       const firstNode = style.children[0];
       /* istanbul ignore else */
@@ -511,8 +516,24 @@ class EpubParser extends Parser {
         };
         styles.push(inlineStyleItem.href);
         inlineStyles.push(inlineStyleItem);
+        lastIdx = idx;
       }
     });
+
+    const { additionalInlineStyle: userStyle } = options;
+    if (userStyle) {
+      const namespace = `${options.styleNamespacePrefix}${(isExists(lastIdx) ? lastIdx + 1 : 0)}`;
+      const href = `${rawItem.href}_${namespace}`;
+      inlineStyles.push({
+        id: `${rawItem.id}_${namespace}`,
+        href,
+        mediaType: 'text/css',
+        size: userStyle.length,
+        itemType: InlineCssItem,
+        namespace,
+        style: userStyle,
+      });
+    }
 
     return { styles, inlineStyles };
   }
