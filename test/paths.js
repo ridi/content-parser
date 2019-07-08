@@ -36,6 +36,8 @@ const Paths = {
   COMIC_FIRST: '../../test/res/comic/1.jpg',
   COMIC_BASE64: '../../test/res/comicBase64.txt',
   SORT_TEST: '../../test/res/sort',
+  PDF: '../../test/res/tutorial.pdf',
+  EXPECTED_PDF_BOOK: '../../test/res/expectedPdfBook.json',
 };
 
 export default Paths;

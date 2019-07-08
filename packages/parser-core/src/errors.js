@@ -10,6 +10,8 @@ const Errors = {
   EREQPRM: { code: 'EREQPRM', format: 'EREQPRM: required parameter missing. (name: {0})' },
   EINTR: { code: 'EINTR', format: 'EINTR: interrupted function call. (detail: {0})' },
   ECRYT: { code: 'ECRYT', format: 'ECRYT: cryptor internal error. (detail: {0})' },
+  EPDFJS: { code: 'EPDFJS', format: 'EPDFJS: pdf.js internal error. (detail: {0})' },
+  ENOIMP: { code: 'ENOIMP', format: 'ENOIMP: function not implemented.' },
 };
 export default Errors;
 

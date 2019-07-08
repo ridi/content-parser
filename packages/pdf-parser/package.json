@@ -1,0 +1,24 @@
+{
+  "name": "@ridi/pdf-parser",
+  "version": "0.5.8",
+  "description": "Common PDF data parser for Ridibooks services",
+  "author": {
+    "name": "Ridibooks Viewer Team",
+    "mail": "viewer.team@ridi.com"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ridi/content-parser"
+  },
+  "bugs": "https://github.com/ridi/content-parser/issues",
+  "homepage": "https://github.com/ridi/content-parser",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "dependencies": {
+    "@ridi/parser-core": "^0.5.8",
+    "pdf-parser": "^1.0.5"
+  }
+}

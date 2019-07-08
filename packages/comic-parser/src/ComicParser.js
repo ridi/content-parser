@@ -169,7 +169,7 @@ class ComicParser extends Parser {
    * @param {ReadContext} context properties required for reading
    * @returns {(string|Buffer)[]} reading results
    * @throws {Errors.ENOFILE} no such file
-   * @see ComicParser.readDefaultOptions.force
+   * @see ComicParser.readDefaultOptions.base64
    */
   async _read(context) {
     const { items, entries, options } = context;

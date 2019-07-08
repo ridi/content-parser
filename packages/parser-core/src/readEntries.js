@@ -79,6 +79,39 @@ function fromDirectory(dir, cryptoProvider) {
   }, []));
 }
 
+function fromFile(filePath, cryptoProvider) {
+  const size = (() => {
+    /* istanbul ignore next */
+    try { return fs.lstatSync(filePath).size; } catch (e) { return 0; }
+  })();
+  return [{
+    entryPath: filePath,
+    getFile: async (options = {}) => {
+      const { encoding, end } = options;
+      let file = await new Promise((resolve, reject) => {
+        if (fs.existsSync(filePath)) {
+          const stream = fs.createReadStream(filePath, { encoding: 'binary' });
+          const totalSize = Math.min(end || Infinity, size);
+          let data = Buffer.from([]);
+          stream
+            .pipe(createRangeStream(0, end))
+            .pipe(createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
+            .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+            .on('error', e => reject(e))
+            .on('end', () => resolve(data));
+        } else {
+          throw createError(Errors.ENOFILE, filePath);
+        }
+      });
+      if (isExists(encoding)) {
+        file = file.toString(encoding);
+      }
+      return file;
+    },
+    size,
+  }];
+}
+
 export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     /* istanbul ignore if */
@@ -86,8 +119,12 @@ export default async function readEntries(input, cryptoProvider, logger) {
       /* istanbul ignore next */
       input = cryptoProvider.run(fs.readFileSync(input), input, CryptoProvider.Purpose.READ_IN_DIR);
     }
-    const zip = await openZip(input, cryptoProvider, logger);
-    return fromZip(zip);
+    try {
+      const zip = await openZip(input, cryptoProvider, logger);
+      return fromZip(zip);
+    } catch (e) {
+      return fromFile(input, cryptoProvider);
+    }
   }
   return fromDirectory(input, cryptoProvider);
 }
