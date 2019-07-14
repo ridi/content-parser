@@ -718,4 +718,4 @@ Remove selector that point to specified classes.
 
 ## License
 
-[MIT](https://github.com/ridi/content-parser/blob/master/LICENSE)
+[MIT](https://github.com/ridi/content-parser/packages/epub-parser/LICENSE)

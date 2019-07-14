@@ -281,4 +281,4 @@ If false, reads image into a buffer.
 
 ## License
 
-[MIT](https://github.com/ridi/content-parser/blob/master/LICENSE)
+[MIT](https://github.com/ridi/content-parser/packages/comic-parser/LICENSE)

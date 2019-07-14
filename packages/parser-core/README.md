@@ -10,4 +10,4 @@
 
 ## License
 
-[MIT](https://github.com/ridi/content-parser/blob/master/LICENSE)
+[MIT](https://github.com/ridi/content-parser/packages/parser-core/LICENSE)
