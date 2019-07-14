@@ -13,7 +13,7 @@
 - [ ] Structure parsing
 - [ ] Read files
   - [ ] Read cover page
-- [ ] Encrypt and decrypt function when parsing or reading
+- [x] Encrypt and decrypt function when parsing or reading
 - [ ] Debug mode
 - [ ] Environment
   - [x] Node
