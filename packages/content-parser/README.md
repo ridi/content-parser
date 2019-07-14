@@ -33,7 +33,7 @@ import {
 // } = require('@ridi/content-parser');
 ```
 
-## [@ridi/epub-parser](packages/epub-parser)
+## [@ridi/epub-parser](../epub-parser)
 
 > Common EPUB2 data parser for Ridibooks services
 
@@ -42,7 +42,7 @@ import {
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fepub-parser.svg)](https://npm.im/%40ridi%2Fepub-parser)
 
-## [@ridi/comic-parser](packages/comic-parser)
+## [@ridi/comic-parser](../comic-parser)
 
 > Common comic data parser for Ridibooks services
 
@@ -51,7 +51,7 @@ import {
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcomic-parser.svg)](https://npm.im/%40ridi%2Fcomic-parser)
 
-# @ridi/pdf-parser
+# [@ridi/pdf-parser](../pdf-parser)
 
 > Common PDF data parser for Ridibooks services
 
