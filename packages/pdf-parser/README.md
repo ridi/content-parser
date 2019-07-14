@@ -150,6 +150,12 @@ or throw exception.
 
 ---
 
+### readBuffer()
+
+Returns PDF file as `Buffer`.
+
+---
+
 ### onProgress = callback(step, totalStep, action)
 
 Tells the progress of parser through `callback`.

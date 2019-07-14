@@ -2,6 +2,7 @@ import {
   Errors, createError,
   isExists, isString,
   Parser,
+  readEntries,
 } from '@ridi/parser-core';
 
 import fs from 'fs';
@@ -134,6 +135,16 @@ class PdfParser extends Parser {
    */
   async _read(context) { // eslint-disable-line
     return null; // TODO
+  }
+
+  /**
+   * Returns PDF file as Buffer
+   * @returns {Buffer}
+   */
+  async readBuffer() {
+    const entries = await readEntries(this.input, this.cryptoProvider, this.logger);
+    const file = await entries.first.getFile();
+    return file;
   }
 
   unzip() {
