@@ -111,9 +111,10 @@ class PdfParser extends Parser {
    * @returns {Promise.<ReadContext>} return Context containing item list
    */
   async _parse(context) {
-    const { rawBook } = context;
-    await new Promise((resolve) => {
-      pdfParser.pdf2json(this.input, (error, pdf) => {
+    const { rawBook, entries } = context;
+    await new Promise(async (resolve) => {
+      const pdfFile = await entries.first.getFile();
+      pdfParser.pdf2json(pdfFile, (error, pdf) => {
         if (isExists(error)) {
           throw createError(Errors.EPDFJS, this.input);
         } else {

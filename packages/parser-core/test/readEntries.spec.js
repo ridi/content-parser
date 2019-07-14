@@ -4,7 +4,7 @@ import path from 'path';
 
 import { readCacheFile, writeCacheFile } from '../src/cacheFile';
 import Errors from '../src/errors';
-import { isString } from '../src/typecheck';
+import { isExists, isString } from '../src/typecheck';
 import readEntries from '../src/readEntries';
 import { stringContains } from '../src/stringContains';
 import Paths from '../../../test/paths';
@@ -39,7 +39,9 @@ describe('Util - entry manager', () => {
   it('Read entries from zip', done => {
     (async () => {
       const entries = await readEntries(Paths.DEFAULT);
-      isString(entries.source).should.be.false;
+      entries.should.equal(Paths.DEFAULT);
+      entries.length.should.equal(expectedListForZip.length);
+      entries.get(0).should.equal(entries.first);
       entries.map(entry => entry.entryPath).should.deep.equal(expectedListForZip);
       entries.forEach(entry => {
         const keys = Object.keys(entry);
@@ -82,7 +84,9 @@ describe('Util - entry manager', () => {
   it('Read entries from directory', done => {
     (async () => {
       const entries = await readEntries(Paths.UNZIPPED_DEFAULT);
-      isString(entries.source).should.be.true;
+      entries.should.equal(Paths.UNZIPPED_DEFAULT);
+      entries.length.should.equal(expectedListForDir.length);
+      entries.get(0).should.equal(entries.first);
       entries.map(entry => entry.entryPath).should.deep.equal(expectedListForDir);
   
       const entry = entries.find('mimetype');
@@ -101,9 +105,22 @@ describe('Util - entry manager', () => {
 
   it('Read entries from directory (cached)', () => {
     return readEntries(Paths.UNZIPPED_DEFAULT).then(entries => {
-      isString(entries.source).should.be.true;
+      entries.should.equal(Paths.UNZIPPED_DEFAULT);
       entries.map(entry => entry.entryPath).should.deep.equal(expectedListForDir);
     });
+  });
+
+  it('Read entries from file', done => {
+    (async () => {
+      const entries = await readEntries(Paths.PDF);
+      entries.should.equal(Paths.PDF);
+      entries.length.should.equal(1);
+
+      const entry = entries.first;
+      entry.entryPath.should.equal(Paths.PDF);
+  
+      done();
+    })();
   });
 
   describe('Error Situation', () => {

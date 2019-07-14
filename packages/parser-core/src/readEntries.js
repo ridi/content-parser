@@ -15,6 +15,7 @@ function create(source, entries) {
     first: entries[0],
     length: entries.length,
     source,
+    get: idx => entries[idx],
     find: entryPath => entries.find(entry => entryPath === entry.entryPath),
     forEach: callback => entries.forEach(callback),
     map: callback => entries.map(callback),
@@ -84,7 +85,7 @@ function fromFile(filePath, cryptoProvider) {
     /* istanbul ignore next */
     try { return fs.lstatSync(filePath).size; } catch (e) { return 0; }
   })();
-  return [{
+  return create(filePath, [{
     entryPath: filePath,
     getFile: async (options = {}) => {
       const { encoding, end } = options;
@@ -109,7 +110,7 @@ function fromFile(filePath, cryptoProvider) {
       return file;
     },
     size,
-  }];
+  }]);
 }
 
 export default async function readEntries(input, cryptoProvider, logger) {
