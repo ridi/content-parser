@@ -51,7 +51,7 @@ import {
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcomic-parser.svg)](https://npm.im/%40ridi%2Fcomic-parser)
 
-# [@ridi/pdf-parser](../pdf-parser)
+## [@ridi/pdf-parser](../pdf-parser)
 
 > Common PDF data parser for Ridibooks services
 
