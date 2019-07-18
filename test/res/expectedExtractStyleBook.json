@@ -53,8 +53,8 @@
           "text": "\n  body {\n  color: #ffffff;\n  }\n  "
         },
         {
-          "id": "Section0001.xhtml_ridi_style2",
-          "href": "OEBPS/Text/Section0001.xhtml_ridi_style2",
+          "id": "additional_inline_style",
+          "href": "OEBPS/additional_inline_style",
           "mediaType": "text/css",
           "size": 57,
           "namespace": "ridi_style2",
@@ -100,8 +100,8 @@
       "text": "\n  body {\n  color: #ffffff;\n  }\n  "
     },
     {
-      "id": "Section0001.xhtml_ridi_style2",
-      "href": "OEBPS/Text/Section0001.xhtml_ridi_style2",
+      "id": "additional_inline_style_ridi_style2",
+      "href": "OEBPS/additional_inline_style_ridi_style2",
       "mediaType": "text/css",
       "size": 57,
       "namespace": "ridi_style2",
@@ -196,8 +196,8 @@
       "text": "\n  body {\n  color: #ffffff;\n  }\n  "
     },
     {
-      "id": "Section0001.xhtml_ridi_style2",
-      "href": "OEBPS/Text/Section0001.xhtml_ridi_style2",
+      "id": "additional_inline_style_ridi_style2",
+      "href": "OEBPS/additional_inline_style_ridi_style2",
       "mediaType": "text/css",
       "size": 57,
       "namespace": "ridi_style2",
