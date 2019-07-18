@@ -19,7 +19,7 @@ describe('Loader - XML', () => {
           <meta name="tool" content="&copy; Baz" /> \
         </metadata> \
         <spine toc="ncx"> \
-          <itemref idref="Cover.xhtml"/ linear> \
+          <itemref idref="Cover.xhtml" linear> \
         </spine> \
       </package>';
     const { package: root } = xmlLoader(file);
