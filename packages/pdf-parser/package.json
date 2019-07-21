@@ -19,6 +19,10 @@
   "main": "lib/index.js",
   "dependencies": {
     "@ridi/parser-core": "^0.6.0-alpha.1",
-    "pdf-parser": "^1.0.5"
+    "pdfjs-dist": "^2.1.266",
+    "worker-loader": "^2.0.0"
+  },
+  "devDependencies": {
+    "fs-extra": "^8.0.0"
   }
 }

@@ -5,8 +5,6 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import Book from '../src/model/Book';
-import Item from '../src/model/Item';
-import ReadContext from '../src/model/ReadContext';
 import ParseContext from '../src/model/ParseContext';
 import Paths from '../../../test/paths';
 import PdfParser from '../src/PdfParser';
@@ -23,6 +21,22 @@ describe('PdfParser', () => {
 
     it('Unsupported unzip function', () => {
       try { new PdfParser(Paths.PDF).unzip(); } catch (err) { err.code.should.equal(Errors.ENOIMP.code); }
+    });
+
+    it('Unsupported readDefaultOptions property', () => {
+      try { PdfParser.readDefaultOptions; } catch (err) { err.code.should.equal(Errors.ENOIMP.code); }
+    });
+
+    it('Unsupported readOptionTypes property', () => {
+      try { PdfParser.readOptionTypes; } catch (err) { err.code.should.equal(Errors.ENOIMP.code); }
+    });
+
+    it('Unsupported _getReadContextClass function', () => {
+      try { new PdfParser(Paths.PDF)._getReadContextClass(); } catch (err) { err.code.should.equal(Errors.ENOIMP.code); }
+    });
+
+    it('Unsupported _getReadItemClass function', () => {
+      try { new PdfParser(Paths.PDF)._getReadItemClass(); } catch (err) { err.code.should.equal(Errors.ENOIMP.code); }
     });
   });
 
@@ -41,14 +55,36 @@ describe('PdfParser', () => {
         });
       });
 
-      it('_parse test', function() {
-        this.timeout(10 * 1000);
-        return parser._parse(_context).then((context) => {
-          const { items } = context.rawBook;
-          assert(items.length > 0);
-          items.forEach((item) => {
-            item.pageId.should.not.null;
-          });
+      it('_loadDocuemnt test', () => {
+        return parser._loadDocuemnt(_context).then((context) => {
+          const { document, rawBook } = context;
+          document.should.not.null;
+          _context = context;
+        });
+      });
+
+      it('_parseMetadata test', () => {
+        const expectedRawBook = JSON.parse(fs.readFileSync(Paths.EXPECTED_PDF_RAW_BOOK));
+        return parser._parseMetadata(_context).then((context) => {
+          const { document, rawBook } = context;
+          rawBook.pageCount.should.equal(expectedRawBook.pageCount);
+          rawBook.info.should.deep.equal(expectedRawBook.info);
+          _context = context;
+        });
+      });
+
+      it('_parseOutline test', () => {
+        const counting = (items) => {
+          return items.reduce((count, item) => {
+            if (item.items.length > 0) {
+              return count + counting(item.items);
+            }
+            return count + 1;
+          }, 0);
+        };
+        return parser._parseOutline(_context).then((context) => {
+          const { rawBook } = context;
+          counting(rawBook.outline).should.equal(9);
           _context = context;
         });
       });
@@ -62,8 +98,7 @@ describe('PdfParser', () => {
   });
   
   describe('Book serialization test', () => {
-    it('Book -> RawBook -> Book', function() {
-      this.timeout(10 * 1000);
+    it('Book -> RawBook -> Book', () => {
       return new PdfParser(Paths.PDF).parse().then(book => {
         const rawBook = book.toRaw();
         const newBook = new Book(rawBook);

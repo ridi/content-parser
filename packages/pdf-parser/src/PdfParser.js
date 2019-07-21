@@ -6,11 +6,9 @@ import {
 } from '@ridi/parser-core';
 
 import fs from 'fs';
-import pdfParser from 'pdf-parser';
+import pdfJs from 'pdfjs-dist';
 
 import Book from './model/Book';
-import Item from './model/Item';
-import ReadContext from './model/ReadContext';
 import ParseContext from './model/ParseContext';
 
 class PdfParser extends Parser {
@@ -28,25 +26,12 @@ class PdfParser extends Parser {
     return {};
   }
 
-  /**
-   * Get default values of read options
-   */
   static get readDefaultOptions() {
-    return { // TODO
-      ...super.readDefaultOptions,
-      // If false, reads image into a buffer.
-      base64: false,
-    };
+    throw createError(Errors.ENOIMP);
   }
 
-  /**
-   * Get types of read option
-   */
   static get readOptionTypes() {
-    return { // TODO
-      ...super.readOptionTypes,
-      base64: 'Boolean',
-    };
+    throw createError(Errors.ENOIMP);
   }
 
   /**
@@ -82,18 +67,12 @@ class PdfParser extends Parser {
     return Book;
   }
 
-  /**
-   * @returns {ReadContext}
-   */
   _getReadContextClass() {
-    return ReadContext; // TODO
+    throw createError(Errors.ENOIMP);
   }
 
-  /**
-   * @returns {Item}
-   */
   _getReadItemClass() {
-    return Item; // TODO
+    throw createError(Errors.ENOIMP);
   }
 
   /**
@@ -102,49 +81,95 @@ class PdfParser extends Parser {
   _parseTasks() {
     return [
       ...super._parseTasks(),
-      { fun: this._parse, name: 'parse' },
+      { fun: this._loadDocuemnt, name: 'loadDocuemnt' },
+      { fun: this._parseMetadata, name: 'parseMetadata' },
+      { fun: this._parseOutline, name: 'parseOutline' },
     ];
   }
 
   /**
-   * extracts only necessary metadata from entries and create item list
+   * load pdf document and get number of pages
    * @param {ReadContext} context intermediate result
-   * @returns {Promise.<ReadContext>} return Context containing item list
+   * @returns {Promise.<ReadContext>} return Context containing document and page count
+   * @throws {Errors.EPDFJS} pdfjs error
    */
-  async _parse(context) {
+  async _loadDocuemnt(context) {
     const { rawBook, entries } = context;
     await new Promise(async (resolve) => {
       const pdfFile = await entries.first.getFile();
-      pdfParser.pdf2json(pdfFile, (error, pdf) => {
-        if (isExists(error)) {
-          throw createError(Errors.EPDFJS, this.input);
-        } else {
-          rawBook.items = pdf.pages.sort((lhs, rhs) => lhs.pageId - rhs.pageId);
+      pdfJs.getDocument(pdfFile)
+        .promise
+        .then((document) => {
+          context.document = document;
+          rawBook.pageCount = document.numPages;
           resolve();
-        }
-      });
+        })
+        .catch((error) => {
+          throw createError(Errors.EPDFJS, error);
+        });
     });
     return context;
   }
 
   /**
-   * Contents is read using loader suitable for context
-   * @param {ReadContext} context properties required for reading
-   * @returns {(string|Buffer)[]} reading results
-   * @see PdfParser.readDefaultOptions.base64
+   * Metadata parsing in Document
+   * @param {ParseContext} context intermediate result
+   * @returns {Promise.<ParseContext>} return Context containing metadata
+   * @throws {Errors.EPDFJS} pdfjs error
    */
-  async _read(context) { // eslint-disable-line
-    return null; // TODO
+  async _parseMetadata(context) {
+    const { rawBook, document } = context;
+    await new Promise(async (resolve) => {
+      document.getMetadata()
+        .then((metadata) => {
+          const { info } = metadata;
+          const { Title: title } = info;
+          if (!isExists(title) || title.length === 0) {
+            [info.Title] = this.input.split('/').slice(-1);
+          }
+          rawBook.info = info;
+          resolve();
+        })
+        .catch((error) => {
+          throw createError(Errors.EPDFJS, error);
+        });
+    });
+    return context;
+  }
+
+  /**
+   * Outline parsing in Document
+   * @param {ParseContext} context intermediate result
+   * @returns {Promise.<ParseContext>} return Context containing outline
+   * @throws {Errors.EPDFJS} pdfjs error
+   */
+  async _parseOutline(context) {
+    const { rawBook, document } = context;
+    await new Promise(async (resolve) => {
+      document.getOutline()
+        .then((outline) => {
+          rawBook.outline = outline;
+          resolve();
+        })
+        .catch((error) => {
+          throw createError(Errors.EPDFJS, error);
+        });
+    });
+    return context;
   }
 
   /**
    * Returns PDF file as Buffer
    * @returns {Buffer}
    */
-  async readBuffer() {
+  async read() {
     const entries = await readEntries(this.input, this.cryptoProvider, this.logger);
     const file = await entries.first.getFile();
     return file;
+  }
+
+  async _read() {
+    throw createError(Errors.ENOIMP);
   }
 
   unzip() {

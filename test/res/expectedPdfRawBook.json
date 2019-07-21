@@ -1,51 +1,70 @@
 {
   "pageCount": 10,
-  "version": "1.2.0",
-  "title": "default.pdf",
-  "author": "",
-  "subject": "",
-  "keywords": "",
-  "creator": "TeX",
-  "producer": "pdfTeX",
-  "creationDate": "D:19990220212000",
-  "outlineItems": [
+  "info": {
+    "PDFFormatVersion": "1.2",
+    "Title": "default.pdf",
+    "Author": "",
+    "Subject": "",
+    "Keywords": "",
+    "Creator": "TeX",
+    "Producer": "pdfTeX",
+    "CreationDate": "D:19990220212000",
+    "IsAcroFormPresent": false,
+    "IsLinearized": false,
+    "IsXFAPresent": false
+  },
+  "outline": [
     {
       "dest": "chapter.1",
       "url": null,
       "title": "Template",
-      "color": "0,0,0",
+      "color": {
+        "0": 0,
+        "1": 0,
+        "2": 0
+      },
+      "count": -3,
       "bold": false,
       "italic": false,
-      "depth": 0,
-      "children": [
+      "items": [
         {
           "dest": "section.1.1",
           "url": null,
           "title": "How to compile a texttt {.tex} file to a texttt {.pdf} file",
-          "color": "0,0,0",
+          "color": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "count": -2,
           "bold": false,
           "italic": false,
-          "depth": 1,
-          "children": [
+          "items": [
             {
               "dest": "subsection.1.1.1",
               "url": null,
               "title": "Tools",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             },
             {
               "dest": "subsection.1.1.2",
               "url": null,
               "title": "How to use the tools",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             }
           ]
         },
@@ -53,40 +72,53 @@
           "dest": "section.1.2",
           "url": null,
           "title": "How to write a document",
-          "color": "0,0,0",
+          "color": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "count": -3,
           "bold": false,
           "italic": false,
-          "depth": 1,
-          "children": [
+          "items": [
             {
               "dest": "subsection.1.2.1",
               "url": null,
               "title": "The main document",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             },
             {
               "dest": "subsection.1.2.2",
               "url": null,
               "title": "Chapters",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             },
             {
               "dest": "subsection.1.2.3",
               "url": null,
               "title": "Spell-checking",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             }
           ]
         },
@@ -94,50 +126,66 @@
           "dest": "section.1.3",
           "url": null,
           "title": "LaTeX {} and pdfLaTeX {} capabilities",
-          "color": "0,0,0",
+          "color": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "count": -4,
           "bold": false,
           "italic": false,
-          "depth": 1,
-          "children": [
+          "items": [
             {
               "dest": "subsection.1.3.1",
               "url": null,
               "title": "Overview",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             },
             {
               "dest": "subsection.1.3.2",
               "url": null,
               "title": "LaTeX ",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             },
             {
               "dest": "subsection.1.3.3",
               "url": null,
               "title": "pdfLaTeX ",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             },
             {
               "dest": "subsection.1.3.4",
               "url": null,
               "title": "Examples",
-              "color": "0,0,0",
+              "color": {
+                "0": 0,
+                "1": 0,
+                "2": 0
+              },
               "bold": false,
               "italic": false,
-              "depth": 2,
-              "children": []
+              "items": []
             }
           ]
         }
