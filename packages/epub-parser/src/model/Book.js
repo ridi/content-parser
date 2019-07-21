@@ -1,4 +1,4 @@
-import { isExists, isString } from '@ridi/parser-core';
+import { isExists, isString, Version } from '@ridi/parser-core';
 
 import Author from './Author';
 import CssItem from './CssItem';
@@ -13,7 +13,6 @@ import Item from './Item';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
-import Version from './Version';
 
 function postSpines(spines, styles) {
   const firstSpine = spines[0];

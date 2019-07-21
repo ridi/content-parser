@@ -1,9 +1,7 @@
 class Version {
-  get isValid() { return this.major === 2; }
-
   constructor(string) {
     if (!/(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,3}/gm.test(string)) {
-      string = '2.0';
+      string = '1.0';
     }
     const result = string.split('.');
     this.major = parseInt(result[0], 10);

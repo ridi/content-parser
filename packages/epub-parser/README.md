@@ -433,12 +433,11 @@ NOT_SUPPORT_TYPE | not_support_type
 
 <a id="version"></a>
 
-### [Version](./src/model/Version.js)
+### [Version](../parser-core/src/Version.js)
 
 - major: *number*
 - minor: *number*
 - patch: *number*
-- isValid: *boolean* (**Only 2.x.x is valid because current epub-parser only supports EPUB2.**)
 - toString(): *string*
 
 <a id="parseOptions"></a>

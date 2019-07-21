@@ -13,6 +13,7 @@ import Logger, { LogLevel } from './Logger';
 import mergeObjects from './mergeObjects';
 import parseBool from './parseBool';
 import Parser from './Parser';
+import Version from './Version';
 
 import {
   safeDirname,
@@ -53,4 +54,5 @@ export {
   getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl,
   validateOptions,
   openZip,
+  Version,
 };

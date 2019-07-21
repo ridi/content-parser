@@ -1,10 +1,10 @@
 import { assert, should } from 'chai';
 
-import Version from '../../src/model/Version';
+import Version from '../src/Version';
 
 should(); // Initialize should
 
-describe('Model - Version', () => {
+describe('Version', () => {
   it('Initialize test', () => {
     let version = new Version('2');
     version.toString().should.equal('2.0.0');
