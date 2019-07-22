@@ -10,7 +10,7 @@ describe('Model - OutlineItem', () => {
     let outlineItem = new OutlineItem();
     assert(outlineItem.dest === undefined);
     assert(outlineItem.url === undefined);
-    assert(outlineItem.title === undefined);
+    assert(outlineItem.title === '');
     outlineItem.color.should.deep.equal({ 0: 0, 1: 0, 2: 0 });
     assert(outlineItem.bold === false);
     assert(outlineItem.italic === false);

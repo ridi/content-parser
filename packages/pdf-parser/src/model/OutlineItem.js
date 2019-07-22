@@ -4,7 +4,7 @@ class OutlineItem {
   constructor(rawObj = {}) {
     this.dest = rawObj.dest;
     this.url = rawObj.url;
-    this.title = rawObj.title;
+    this.title = rawObj.title || '';
     this.color = rawObj.color || { 0: 0, 1: 0, 2: 0 };
     this.bold = rawObj.bold || false;
     this.italic = rawObj.italic || false;
