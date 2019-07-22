@@ -10,7 +10,7 @@
 
 ## Features
 
-- [ ] Structure parsing
+- [x] Structure parsing
 - [ ] Read files
   - [ ] Read cover page
 - [x] Encrypt and decrypt function when parsing or reading
@@ -36,10 +36,10 @@ import { PdfParser } from '@ridi/pdf-parser';
 // or const { PdfParser } = require('@ridi/pdf-parser');
 
 const parser = new PdfParser('./foo/bar.pdf');
-parser.parse(/* { parseOptions } */).then((items) => {
-  parser.readItems(items/*, { readOptions } */).then((results) => {
-    ...
-  });
+parser.parse(/* { parseOptions } */).then((book) => {
+  ...
+});
+parser.read().then((pdfFileBuffer) => {
   ...
 });
 ```
@@ -110,47 +110,7 @@ Or throw exception.
 
 ---
 
-### readItem(item, readOptions)
-
-Returns `string` or `Buffer` in `Promise` with:
-
-- If `readOptions.base64` is `true`:
-
-  - `string`
-
-- Other:
-
-  - `Buffer`
-
-or throw exception.
-
-#### item: [Item](#item)
-
-#### [readOptions](#readOptions): `?object`
-
----
-
-### readItems(items, readOptions)
-
-Returns `string[]` or `Buffer[]` in `Promise` with:
-
-- If `readOptions.base64` is `true`:
-
-  - `string`
-
-- Other:
-
-  - `Buffer`
-
-or throw exception.
-
-#### items: [Item\[\]](#item)
-
-#### [readOptions](#readOptions): `?object`
-
----
-
-### readBuffer()
+### read()
 
 Returns PDF file as `Buffer`.
 
@@ -173,16 +133,48 @@ parser.onProgress = (step, totalStep, action) => {
 
 ### [PdfBook](./src/model/Book.js)
 
-- items: *[Item](#item)[]*
-- cover: *?[Item](#item)*
+- pageCount: *number*
+- version: *[Version](#version)*
+- title: *string*
+- author: *string*
+- subject: *string*
+- keywords: *string*
+- creator: *string*
+- producer: *string*
+- creationDate: *?string*
+- modificationDate: *?string*
+- outlineItems: *[OutlineItem](#outlineItem)[]*
 
-<a id="item"></a>
+<a id="version"></a>
 
-### [Item](./src/model/Item.js)
+### [Version](../parser-core/src/Version.js)
 
-- pageId: *number*
-- width: *number*
-- height: *number*
+- major: *number*
+- minor: *number*
+- patch: *number*
+- toString(): *string*
+
+<a id="outlineItem"></a>
+
+### [OutlineItem](./src/model/OutlineItem.js)
+
+- dest: *?string*
+- url: *?string*
+- title: *string*
+- color: *[Color](#color)*
+- bold: *boolean*
+- italic: *boolean*
+- depth: *number* (**Default: 0**)
+- children: *[OutlineItem](#outlineItem)[]*
+
+### [Color](../src/model/Color.js)
+
+- red: *number*
+- green: *number*
+- blue: *number*
+- intValue: *number* (ex: `7237488`)
+- hexString: *string* (ex: `'#6e6f70'`)
+- rgbString: *string* (ex: `'rgb(110, 111, 112)'`)
 
 <a id="parseOptions"></a>
 
@@ -191,31 +183,6 @@ parser.onProgress = (step, totalStep, action) => {
 * None.
 
 <a id="readOptions"></a>
-
-## Read Options
-
-* [force](#force)
-* [base64](#base64)
-
----
-
-<a id="force"></a>
-
-### force: *boolean*
-
-If true, ignore any exceptions that occur within parser.
-
-**Default:** `false`
-
----
-
-<a id="base64"></a>
-
-### base64: *`boolean`*
-
-If false, reads image into a buffer.
-
-**Default:** `false`
 
 ## License
 

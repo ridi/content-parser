@@ -38,7 +38,7 @@ import { ComicParser } from '@ridi/comic-parser';
 // or const { ComicParser } = require('@ridi/comic-parser');
 
 const parser = new ComicParser('./foo/bar.zip' or './unzippedPath');
-parser.parse(/* { parseOptions } */).then((items) => {
+parser.parse(/* { parseOptions } */).then((book) => {
   parser.readItems(items/*, { readOptions } */).then((results) => {
     ...
   });

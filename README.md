@@ -10,7 +10,7 @@
 
 ## [@ridi/content-parser](packages/content-parser)
 
-> Content data parser for Ridibooks services (epub-parser + comic-parser)
+> Content data parser for Ridibooks services (epub-parser + comic-parser + pdf-parser)
 
 [![NPM version](https://badge.fury.io/js/%40ridi%2Fcontent-parser.svg)](https://badge.fury.io/js/%40ridi%2Fcontent-parser)
 [![Build Status](https://travis-ci.org/ridi/content-parser.svg?branch=master)](https://travis-ci.org/ridi/content-parser)
@@ -38,7 +38,7 @@
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcomic-parser.svg)](https://npm.im/%40ridi%2Fcomic-parser)
 [![Greenkeeper badge](https://badges.greenkeeper.io/ridi/content-parser.svg)](https://greenkeeper.io/)
 
-# [@ridi/pdf-parser](packages/pdf-parser)
+## [@ridi/pdf-parser](packages/pdf-parser)
 
 > Common PDF data parser for Ridibooks services
 
