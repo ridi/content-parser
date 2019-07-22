@@ -95,13 +95,15 @@ class PdfParser extends Parser {
    */
   async _execute(that, fun, args = []) {
     const result = await new Promise(async (resolve) => {
-      fun.apply(that, args)
-        .then((data) => {
-          resolve(data);
-        })
-        .catch((error) => { /* istanbul ignore next */
-          throw createError(Errors.EPDFJS, error);
-        });
+      let runner = fun.apply(that, args);
+      if (isExists(runner.promise)) {
+        runner = runner.promise;
+      }
+      runner.then((data) => {
+        resolve(data);
+      }).catch((error) => { /* istanbul ignore next */
+        throw createError(Errors.EPDFJS, error);
+      });
     });
     return result;
   }
