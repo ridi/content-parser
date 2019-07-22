@@ -104,7 +104,7 @@ class PdfParser extends Parser {
           rawBook.pageCount = document.numPages;
           resolve();
         })
-        .catch((error) => {
+        .catch((error) => { /* istanbul ignore next */
           throw createError(Errors.EPDFJS, error);
         });
     });
@@ -130,7 +130,7 @@ class PdfParser extends Parser {
           rawBook.info = info;
           resolve();
         })
-        .catch((error) => {
+        .catch((error) => { /* istanbul ignore next */
           throw createError(Errors.EPDFJS, error);
         });
     });
@@ -151,7 +151,7 @@ class PdfParser extends Parser {
           rawBook.outline = outline;
           resolve();
         })
-        .catch((error) => {
+        .catch((error) => { /* istanbul ignore next */
           throw createError(Errors.EPDFJS, error);
         });
     });
