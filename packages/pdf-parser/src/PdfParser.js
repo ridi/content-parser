@@ -88,6 +88,25 @@ class PdfParser extends Parser {
   }
 
   /**
+   * @param {object} that
+   * @param {function} fun
+   * @param {*[]} args
+   * @returns {*}
+   */
+  async _execute(that, fun, args = []) {
+    const result = await new Promise(async (resolve) => {
+      fun.apply(that, args)
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((error) => { /* istanbul ignore next */
+          throw createError(Errors.EPDFJS, error);
+        });
+    });
+    return result;
+  }
+
+  /**
    * load pdf document and get number of pages
    * @param {ReadContext} context intermediate result
    * @returns {Promise.<ReadContext>} return Context containing document and page count
@@ -95,19 +114,10 @@ class PdfParser extends Parser {
    */
   async _loadDocuemnt(context) {
     const { rawBook, entries } = context;
-    await new Promise(async (resolve) => {
-      const pdfFile = await entries.first.getFile();
-      pdfJs.getDocument(pdfFile)
-        .promise
-        .then((document) => {
-          context.document = document;
-          rawBook.pageCount = document.numPages;
-          resolve();
-        })
-        .catch((error) => { /* istanbul ignore next */
-          throw createError(Errors.EPDFJS, error);
-        });
-    });
+    const pdfFile = await entries.first.getFile();
+    const document = await this._execute(pdfJs, pdfJs.getDocument, [pdfFile]);
+    context.document = document;
+    rawBook.pageCount = document.numPages;
     return context;
   }
 
@@ -119,21 +129,13 @@ class PdfParser extends Parser {
    */
   async _parseMetadata(context) {
     const { rawBook, document } = context;
-    await new Promise(async (resolve) => {
-      document.getMetadata()
-        .then((metadata) => {
-          const { info } = metadata;
-          const { Title: title } = info;
-          if (!isExists(title) || title.length === 0) {
-            [info.Title] = this.input.split('/').slice(-1);
-          }
-          rawBook.info = info;
-          resolve();
-        })
-        .catch((error) => { /* istanbul ignore next */
-          throw createError(Errors.EPDFJS, error);
-        });
-    });
+    const metadata = await this._execute(document, document.getMetadata);
+    const { info } = metadata;
+    const { Title: title } = info;
+    if (!isExists(title) || title.length === 0) {
+      [info.Title] = this.input.split('/').slice(-1);
+    }
+    rawBook.info = info;
     return context;
   }
 
@@ -145,16 +147,7 @@ class PdfParser extends Parser {
    */
   async _parseOutline(context) {
     const { rawBook, document } = context;
-    await new Promise(async (resolve) => {
-      document.getOutline()
-        .then((outline) => {
-          rawBook.outline = outline;
-          resolve();
-        })
-        .catch((error) => { /* istanbul ignore next */
-          throw createError(Errors.EPDFJS, error);
-        });
-    });
+    rawBook.outline = await this._execute(document, document.getOutline);
     return context;
   }
 
