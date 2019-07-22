@@ -438,6 +438,21 @@ class EpubParser extends Parser {
       });
     }, Promise.resolve());
 
+    const { additionalInlineStyle: userStyle } = options;
+    if (isExists(userStyle)) {
+      const namespace = `${options.styleNamespacePrefix}${inlineStyles.length}`;
+      const id = `additional_inline_style_${namespace}`;
+      inlineStyles.push({
+        id,
+        href: `${basePath}/${id}`,
+        mediaType: 'text/css',
+        size: userStyle.length,
+        itemType: InlineCssItem,
+        namespace,
+        style: userStyle,
+      });
+    }
+
     rawBook.items = [...rawBook.items, ...inlineStyles];
 
     return context;
@@ -497,7 +512,6 @@ class EpubParser extends Parser {
 
     // <style ...>...</style>
     //            ^~~
-    let lastIdx;
     filter(head.children, 'tagName', 'style').forEach((style, idx) => {
       const firstNode = style.children[0];
       /* istanbul ignore else */
@@ -516,24 +530,8 @@ class EpubParser extends Parser {
         };
         styles.push(inlineStyleItem.href);
         inlineStyles.push(inlineStyleItem);
-        lastIdx = idx;
       }
     });
-
-    const { additionalInlineStyle: userStyle } = options;
-    if (userStyle) {
-      const namespace = `${options.styleNamespacePrefix}${(isExists(lastIdx) ? lastIdx + 1 : 0)}`;
-      const href = `${rawItem.href}_${namespace}`;
-      inlineStyles.push({
-        id: `${rawItem.id}_${namespace}`,
-        href,
-        mediaType: 'text/css',
-        size: userStyle.length,
-        itemType: InlineCssItem,
-        namespace,
-        style: userStyle,
-      });
-    }
 
     return { styles, inlineStyles };
   }

@@ -207,6 +207,8 @@ describe('EpubParser', () => {
           }
         });
 
+        book.items.filter(item => item.id.startsWith('additional_inline_style')).should.have.lengthOf(1);
+
         book.spines.forEach((spine, spineIdx) => {
           spine.styles.forEach((style, styleIdx) => {
             const expectedStyle = expectedBook.spines[spineIdx].styles[styleIdx];
