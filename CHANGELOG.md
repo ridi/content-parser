@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Add `pdf-parser` package.
 
+### Changed
+
+* Remove `Version.isValid` property.
+
 ## [0.5.8 (2019-07-03)]
 
 ### Added
