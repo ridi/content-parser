@@ -64,7 +64,6 @@ export default function validationBook(book, expectedBook, options = EpubParser.
 
   book.rights.should.equal(expectedBook.rights);
 
-  book.version.isValid.should.be.true;
   book.version.toString().should.equal(expectedBook.version);
 
   book.items.should.have.lengthOf(expectedBook.items.length);

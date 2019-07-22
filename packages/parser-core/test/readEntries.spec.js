@@ -36,10 +36,10 @@ describe('Util - entry manager', () => {
     'OEBPS/Video/empty.mp4',
   ];
 
-  it('Read entries from zip', done => {
+  it('Read entries from zip', (done) => {
     (async () => {
       const entries = await readEntries(Paths.DEFAULT);
-      entries.should.equal(Paths.DEFAULT);
+      entries.source.should.not.null;
       entries.length.should.equal(expectedListForZip.length);
       entries.get(0).should.equal(entries.first);
       entries.map(entry => entry.entryPath).should.deep.equal(expectedListForZip);
@@ -84,7 +84,7 @@ describe('Util - entry manager', () => {
   it('Read entries from directory', done => {
     (async () => {
       const entries = await readEntries(Paths.UNZIPPED_DEFAULT);
-      entries.should.equal(Paths.UNZIPPED_DEFAULT);
+      entries.source.should.equal(Paths.UNZIPPED_DEFAULT);
       entries.length.should.equal(expectedListForDir.length);
       entries.get(0).should.equal(entries.first);
       entries.map(entry => entry.entryPath).should.deep.equal(expectedListForDir);
@@ -105,7 +105,7 @@ describe('Util - entry manager', () => {
 
   it('Read entries from directory (cached)', () => {
     return readEntries(Paths.UNZIPPED_DEFAULT).then(entries => {
-      entries.should.equal(Paths.UNZIPPED_DEFAULT);
+      entries.source.should.equal(Paths.UNZIPPED_DEFAULT);
       entries.map(entry => entry.entryPath).should.deep.equal(expectedListForDir);
     });
   });
@@ -113,11 +113,12 @@ describe('Util - entry manager', () => {
   it('Read entries from file', done => {
     (async () => {
       const entries = await readEntries(Paths.PDF);
-      entries.should.equal(Paths.PDF);
+      entries.source.should.equal(Paths.PDF);
       entries.length.should.equal(1);
 
       const entry = entries.first;
       entry.entryPath.should.equal(Paths.PDF);
+      entry.getFile().should.not.null;
   
       done();
     })();
