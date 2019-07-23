@@ -150,7 +150,34 @@ class PdfParser extends Parser {
    */
   async _parseOutline(context) {
     const { rawBook, document } = context;
-    rawBook.outline = await this._execute(document, document.getOutline);
+    const outline = await this._execute(document, document.getOutline);
+    if (isExists(outline)) {
+      await new Promise((resolveAll) => {
+        const makePromise = (items) => {
+          return (items || []).reduce((list, item) => {
+            list = [
+              ...list,
+              new Promise(async (resolve) => {
+                const dest = await this._execute(document, document.getDestination, [item.dest]);
+                const page = await this._execute(document, document.getPageIndex, [dest[0]]);
+                resolve({ [`${item.dest}`]: page });
+              }),
+              ...makePromise(item.items),
+            ];
+            return list;
+          }, []);
+        };
+        Promise.all(makePromise(outline)).then((results) => {
+          let pageMap = {};
+          results.forEach((result) => {
+            pageMap = { ...pageMap, ...result };
+          });
+          rawBook.pageMap = pageMap;
+          resolveAll();
+        });
+      });
+    }
+    rawBook.outline = outline;
     return context;
   }
 

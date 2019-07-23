@@ -39,7 +39,8 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 4
             },
             {
               "dest": "subsection.1.1.2",
@@ -49,9 +50,11 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 4
             }
-          ]
+          ],
+          "page": 4
         },
         {
           "dest": "section.1.2",
@@ -70,7 +73,8 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 5
             },
             {
               "dest": "subsection.1.2.2",
@@ -80,7 +84,8 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 5
             },
             {
               "dest": "subsection.1.2.3",
@@ -90,9 +95,11 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 5
             }
-          ]
+          ],
+          "page": 5
         },
         {
           "dest": "section.1.3",
@@ -111,7 +118,8 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 6
             },
             {
               "dest": "subsection.1.3.2",
@@ -121,7 +129,8 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 6
             },
             {
               "dest": "subsection.1.3.3",
@@ -131,7 +140,8 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 6
             },
             {
               "dest": "subsection.1.3.4",
@@ -141,11 +151,14 @@
               "bold": false,
               "italic": false,
               "depth": 2,
-              "children": []
+              "children": [],
+              "page": 6
             }
-          ]
+          ],
+          "page": 6
         }
-      ]
+      ],
+      "page": 4
     }
   ],
   "permissions": {

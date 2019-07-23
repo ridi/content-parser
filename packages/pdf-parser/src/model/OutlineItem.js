@@ -3,7 +3,7 @@ import { mergeObjects } from '@ridi/parser-core';
 import Color from './Color';
 
 class OutlineItem {
-  constructor(rawObj = {}) {
+  constructor(rawObj = {}, pageMap = {}) {
     this.dest = rawObj.dest;
     this.url = rawObj.url;
     this.title = rawObj.title || '';
@@ -12,8 +12,9 @@ class OutlineItem {
     this.italic = rawObj.italic || false;
     this.depth = rawObj.depth || 0;
     this.children = (rawObj.items || []).map((item) => {
-      return new OutlineItem(mergeObjects(item, { depth: this.depth + 1 }));
+      return new OutlineItem(mergeObjects(item, { depth: this.depth + 1 }), pageMap);
     });
+    this.page = pageMap[this.dest] || rawObj.page;
     Object.freeze(this);
   }
 
@@ -26,6 +27,7 @@ class OutlineItem {
       bold: this.bold,
       italic: this.italic,
       children: this.children.map(child => child.toRaw()),
+      page: this.page,
     };
   }
 }

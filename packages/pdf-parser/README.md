@@ -172,6 +172,7 @@ parser.onProgress = (step, totalStep, action) => {
 - italic: *boolean*
 - depth: *number* (**Default: 0**)
 - children: *[OutlineItem](#outlineItem)[]*
+- page: *?number*
 
 <a id="color"></a>
 

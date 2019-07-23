@@ -28,6 +28,9 @@ export default function validationBook(book, expectedBook) {
     actual.depth.should.equal(expected.depth);
     actual.children.should.have.lengthOf(expected.children.length);
     actual.children.forEach((outlineItem, idx) => outlineItemEquals(outlineItem, expected.children[idx]));
+    if (isExists(actual.page)) {
+      actual.page.should.equal(expected.page);
+    }
   };
   book.outlineItems.should.have.lengthOf(expectedBook.outlineItems.length);
   book.outlineItems.forEach((outlineItem, idx) => outlineItemEquals(outlineItem, expectedBook.outlineItems[idx]));

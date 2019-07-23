@@ -21,7 +21,7 @@ class Book {
     this.isCollectionPresent = info.IsCollectionPresent || false;
     this.userInfo = info.Custom || {};
     this.outlineItems = (rawBook.outline || []).map((outlineItem) => {
-      return new OutlineItem(outlineItem, rawBook.getBook);
+      return new OutlineItem(outlineItem, rawBook.pageMap);
     });
     this.pageCount = rawBook.pageCount || 0;
     this.permissions = new Permissions(rawBook.permissions);

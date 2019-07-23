@@ -16,6 +16,7 @@ describe('Model - OutlineItem', () => {
     assert(outlineItem.italic === false);
     assert(outlineItem.depth === 0);
     assert(isArray(outlineItem.children));
+    assert(outlineItem.page === undefined);
 
     outlineItem = new OutlineItem({
       dest: 'chapter-1',
@@ -42,18 +43,21 @@ describe('Model - OutlineItem', () => {
     outlineItem.title.should.equal('Chapter 1.');
     outlineItem.depth.should.equal(2);
     outlineItem.children.should.have.lengthOf(2);
+    assert(outlineItem.page === undefined);
 
     let child = outlineItem.children[0];
     child.dest.should.equal('chapter-1.1');
     child.title.should.equal('Chapter 1.1.');
     child.depth.should.equal(3);
     child.children.should.have.lengthOf(1);
+    assert(outlineItem.page === undefined);
 
     child = outlineItem.children[1];
     child.dest.should.equal('chapter-1.2');
     child.title.should.equal('Chapter 1.2.');
     child.depth.should.equal(3);
     child.children.should.have.lengthOf(0);
+    assert(outlineItem.page === undefined);
 
     (() => {
       outlineItem.dest = 'chapter-2';
@@ -64,6 +68,7 @@ describe('Model - OutlineItem', () => {
       outlineItem.italic = true;
       outlineItem.depth = 1;
       outlineItem.children = [];
+      outlineItem.page = 5;
     }).should.throw(/read only property/gi);
   });
 
@@ -78,9 +83,11 @@ describe('Model - OutlineItem', () => {
           dest: 'chapter-1.1',
           title: 'Chapter 1.1.',
           color: { 0: 255, 1: 255, 2: 255 },
-          items: []
+          items: [],
+          page: 6,
         }
-      ]
+      ],
+      page: 5,
     });
     outlineItem.toRaw().should.deep.equal({
       dest: 'chapter-1',
@@ -98,8 +105,10 @@ describe('Model - OutlineItem', () => {
           bold: false,
           italic: false,
           children: [],
+          page: 6,
         }
       ],
+      page: 5,
     });
   });
 });
