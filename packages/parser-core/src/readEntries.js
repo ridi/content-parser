@@ -115,17 +115,16 @@ function fromFile(filePath, cryptoProvider) {
 
 export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
+    if (path.extname(input).toLowerCase() === '.pdf') {
+      return fromFile(input, cryptoProvider);
+    }
     /* istanbul ignore if */
     if (isExists(cryptoProvider)) {
       /* istanbul ignore next */
       input = cryptoProvider.run(fs.readFileSync(input), input, CryptoProvider.Purpose.READ_IN_DIR);
     }
-    try {
-      const zip = await openZip(input, cryptoProvider, logger);
-      return fromZip(zip);
-    } catch (e) {
-      return fromFile(input, cryptoProvider);
-    }
+    const zip = await openZip(input, cryptoProvider, logger);
+    return fromZip(zip);
   }
   return fromDirectory(input, cryptoProvider);
 }
