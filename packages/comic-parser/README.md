@@ -190,6 +190,7 @@ parser.onProgress = (step, totalStep, action) => {
 ### [ComicBook](./src/model/Book.js)
 
 - items: *[Item](#item)[]*
+- toRaw(): *object*
 
 <a id="item"></a>
 
@@ -200,6 +201,7 @@ parser.onProgress = (step, totalStep, action) => {
 - fileSize: *?number*
 - width: *?number*
 - height: *?number*
+- toRaw(): *object*
 
 <a id="parseOptions"></a>
 

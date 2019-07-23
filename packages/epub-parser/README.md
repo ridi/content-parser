@@ -226,6 +226,7 @@ parser.onProgress = (step, totalStep, action) => {
 - styles: *[CssItem](#cssItem)[]*
 - guides: *[Guide](#Guide)[]*
 - deadItems: *[DeadItem](#deadItem)[]*
+- toRaw(): *object*
 
 <a id="author"></a>
 
@@ -234,6 +235,7 @@ parser.onProgress = (step, totalStep, action) => {
 - name: *?string*
 - fileAs: *?string*
 - role: *string* (**Default: Author.Roles.UNDEFINED**)
+- toRaw(): *object*
 
 #### [Author.Roles](./src/model/Author.js#L4)
 
@@ -277,6 +279,7 @@ TRANSLATOR | trl
 
 - value: *?string*
 - event: *string* (**Default: DateTime.Events.UNDEFINED**)
+- toRaw(): *object*
 
 #### [DateTime.Events](./src/model/DateTime.js#L3)
 
@@ -294,6 +297,7 @@ PUBLICATION | publication
 
 - value: *?string*
 - scheme: *string* (**Default: Identifier.Schemes.UNDEFINED**)
+- toRaw(): *object*
 
 #### [Identifier.Schemes](./src/model/Identifier.js#L3)
 
@@ -315,6 +319,7 @@ URI | uri
 
 - name: *?string*
 - content: *?string*
+- toRaw(): *object*
 
 <a id="guide"></a>
 
@@ -324,6 +329,7 @@ URI | uri
 - type: *string* (**Default: Guide.Types.UNDEFINED**)
 - href: *?string*
 - item: *?[Item](#item)*
+- toRaw(): *object*
 
 #### [Guide.Types](./src/model/Guide.js#L3)
 
@@ -362,6 +368,7 @@ TEXT | text
 - mediaType: *?string*
 - size: *?number*
 - isFileExists: *boolean* (**size !== undefined**)
+- toRaw(): *object*
 
 <a id="spineItem"></a>
 
@@ -430,6 +437,7 @@ NOT_SUPPORT_TYPE | not_support_type
 - depth: *number* (**Default: 0**)
 - children: *NavPoint[]*
 - spine: *?[SpineItem](#spineItem)*
+- toRaw(): *object*
 
 <a id="version"></a>
 

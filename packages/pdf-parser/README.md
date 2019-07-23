@@ -150,6 +150,7 @@ parser.onProgress = (step, totalStep, action) => {
 - userInfo: *object*
 - pageCount: *number*
 - permissions: *[Permissions](#permissions)*
+- toRaw(): *object*
 
 <a id="version"></a>
 
@@ -173,6 +174,7 @@ parser.onProgress = (step, totalStep, action) => {
 - depth: *number* (**Default: 0**)
 - children: *[OutlineItem](#outlineItem)[]*
 - page: *?number*
+- toRaw(): *object*
 
 <a id="color"></a>
 
@@ -184,6 +186,7 @@ parser.onProgress = (step, totalStep, action) => {
 - intValue: *number* (ex: `7237488`)
 - hexString: *string* (ex: `'#6e6f70'`)
 - rgbString: *string* (ex: `'rgb(110, 111, 112)'`)
+- toRaw(): *object*
 
 <a id="permissions"></a>
 
@@ -197,6 +200,7 @@ parser.onProgress = (step, totalStep, action) => {
 - allowCopyingForAccessibility: *boolean*
 - allowAssembling: *boolean*
 - allowHighQualityPrinting: *boolean*
+- toRaw(): *?number[]*
 
 <a id="parseOptions"></a>
 
