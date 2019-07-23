@@ -1,6 +1,7 @@
 import { Version } from '@ridi/parser-core';
 
 import OutlineItem from './OutlineItem';
+import Permissions from './Permissions';
 
 class Book {
   constructor(rawBook = {}) {
@@ -14,10 +15,16 @@ class Book {
     this.producer = info.Producer || '';
     this.creationDate = info.CreationDate;
     this.modificationDate = info.ModDate;
+    this.isLinearized = info.IsLinearized || false;
+    this.isAcroFormPresent = info.IsAcroFormPresent || false;
+    this.isXFAPresent = info.IsXFAPresent || false;
+    this.isCollectionPresent = info.IsCollectionPresent || false;
+    this.userInfo = info.Custom || {};
     this.outlineItems = (rawBook.outline || []).map((outlineItem) => {
       return new OutlineItem(outlineItem, rawBook.getBook);
     });
     this.pageCount = rawBook.pageCount || 0;
+    this.permissions = new Permissions(rawBook.permissions);
     Object.freeze(this);
   }
 
@@ -33,9 +40,15 @@ class Book {
         Producer: this.producer,
         CreationDate: this.creationDate,
         ModDate: this.modificationDate,
+        IsLinearized: this.isLinearized,
+        IsAcroFormPresent: this.isAcroFormPresent,
+        IsXFAPresent: this.isXFAPresent,
+        IsCollectionPresent: this.isCollectionPresent,
+        Custom: this.userInfo,
       },
       outline: this.outlineItems.map(outlineItem => outlineItem.toRaw()),
       pageCount: this.pageCount,
+      permissions: this.permissions.toRaw(),
     };
   }
 }

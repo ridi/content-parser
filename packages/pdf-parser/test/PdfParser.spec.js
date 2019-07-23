@@ -75,7 +75,7 @@ describe('PdfParser', () => {
 
       it('_parseOutline test', () => {
         const counting = (items) => {
-          return items.reduce((count, item) => {
+          return (items || []).reduce((count, item) => {
             if (item.items.length > 0) {
               return count + counting(item.items);
             }

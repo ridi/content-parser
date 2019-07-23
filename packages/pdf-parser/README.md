@@ -143,7 +143,13 @@ parser.onProgress = (step, totalStep, action) => {
 - creationDate: *?string*
 - modificationDate: *?string*
 - outlineItems: *[OutlineItem](#outlineItem)[]*
+- isLinearized: *boolean*
+- isAcroFormPresent: *boolean*
+- isXFAPresent: *boolean*
+- isCollectionPresent: *boolean*
+- userInfo: *object*
 - pageCount: *number*
+- permissions: *[Permissions](#permissions)*
 
 <a id="version"></a>
 
@@ -167,6 +173,8 @@ parser.onProgress = (step, totalStep, action) => {
 - depth: *number* (**Default: 0**)
 - children: *[OutlineItem](#outlineItem)[]*
 
+<a id="color"></a>
+
 ### [Color](../src/model/Color.js)
 
 - red: *number*
@@ -175,6 +183,19 @@ parser.onProgress = (step, totalStep, action) => {
 - intValue: *number* (ex: `7237488`)
 - hexString: *string* (ex: `'#6e6f70'`)
 - rgbString: *string* (ex: `'rgb(110, 111, 112)'`)
+
+<a id="permissions"></a>
+
+### [Permissions](../src/model/Permissions.js)
+
+- allowPrinting: *boolean*
+- allowContentsModifying: *boolean*
+- allowCopying: *boolean*
+- allowAnnotationsModifying: *boolean*
+- allowInteractiveFormsModifying: *boolean*
+- allowCopyingForAccessibility: *boolean*
+- allowAssembling: *boolean*
+- allowHighQualityPrinting: *boolean*
 
 <a id="parseOptions"></a>
 

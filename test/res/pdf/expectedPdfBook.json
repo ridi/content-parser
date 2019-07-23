@@ -1,5 +1,4 @@
 {
-  "pageCount": 10,
   "version": "1.2.0",
   "title": "default.pdf",
   "author": "",
@@ -8,6 +7,11 @@
   "creator": "TeX",
   "producer": "pdfTeX",
   "creationDate": "D:19990220212000",
+  "isLinearized": false,
+  "isAcroFormPresent": false,
+  "isXFAPresent": false,
+  "isCollectionPresent": false,
+  "userInfo": {},
   "outlineItems": [
     {
       "dest": "chapter.1",
@@ -143,5 +147,17 @@
         }
       ]
     }
-  ]
+  ],
+  "permissions": {
+    "_rawValue": null,
+    "allowPrinting": true,
+    "allowContentsModifying": true,
+    "allowCopying": true,
+    "allowAnnotationsModifying": true,
+    "allowInteractiveFormsModifying": true,
+    "allowCopyingForAccessibility": true,
+    "allowAssembling": true,
+    "allowHighQualityPrinting": true
+  },
+  "pageCount": 10
 }

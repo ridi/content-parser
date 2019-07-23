@@ -84,6 +84,7 @@ class PdfParser extends Parser {
       { fun: this._loadDocuemnt, name: 'loadDocuemnt' },
       { fun: this._parseMetadata, name: 'parseMetadata' },
       { fun: this._parseOutline, name: 'parseOutline' },
+      { fun: this._parsePermission, name: 'parsePermission' },
     ];
   }
 
@@ -150,6 +151,18 @@ class PdfParser extends Parser {
   async _parseOutline(context) {
     const { rawBook, document } = context;
     rawBook.outline = await this._execute(document, document.getOutline);
+    return context;
+  }
+
+  /**
+   * Permission parsing in Document
+   * @param {ParseContext} context intermediate result
+   * @returns {Promise.<ParseContext>} return Context containing permissions
+   * @throws {Errors.EPDFJS} pdfjs error
+   */
+  async _parsePermission(context) {
+    const { rawBook, document } = context;
+    rawBook.permissions = await this._execute(document, document.getPermissions);
     return context;
   }
 
