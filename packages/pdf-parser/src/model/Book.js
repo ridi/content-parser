@@ -5,7 +5,6 @@ import OutlineItem from './OutlineItem';
 class Book {
   constructor(rawBook = {}) {
     const info = rawBook.info || {};
-    this.pageCount = rawBook.pageCount || 0;
     this.version = new Version(info.PDFFormatVersion);
     this.title = info.Title || '';
     this.author = info.Author || '';
@@ -18,12 +17,12 @@ class Book {
     this.outlineItems = (rawBook.outline || []).map((outlineItem) => {
       return new OutlineItem(outlineItem, rawBook.getBook);
     });
+    this.pageCount = rawBook.pageCount || 0;
     Object.freeze(this);
   }
 
   toRaw() {
     return {
-      pageCount: this.pageCount,
       info: {
         PDFFormatVersion: this.version.toString(),
         Title: this.title,
@@ -36,6 +35,7 @@ class Book {
         ModDate: this.modificationDate,
       },
       outline: this.outlineItems.map(outlineItem => outlineItem.toRaw()),
+      pageCount: this.pageCount,
     };
   }
 }

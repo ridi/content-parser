@@ -133,7 +133,6 @@ parser.onProgress = (step, totalStep, action) => {
 
 ### [PdfBook](./src/model/Book.js)
 
-- pageCount: *number*
 - version: *[Version](#version)*
 - title: *string*
 - author: *string*
@@ -144,6 +143,7 @@ parser.onProgress = (step, totalStep, action) => {
 - creationDate: *?string*
 - modificationDate: *?string*
 - outlineItems: *[OutlineItem](#outlineItem)[]*
+- pageCount: *number*
 
 <a id="version"></a>
 
