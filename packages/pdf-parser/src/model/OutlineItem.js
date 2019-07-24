@@ -1,4 +1,4 @@
-import { mergeObjects } from '@ridi/parser-core';
+import { mergeObjects, isString, isExists } from '@ridi/parser-core';
 
 import Color from './Color';
 
@@ -14,7 +14,11 @@ class OutlineItem {
     this.children = (rawObj.items || []).map((item) => {
       return new OutlineItem(mergeObjects(item, { depth: this.depth + 1 }), pageMap);
     });
-    this.page = pageMap[this.dest] || rawObj.page;
+    if (isExists(this.dest)) {
+      this.page = pageMap[isString(this.dest) ? this.dest : this.dest[0].num] || rawObj.page;
+    } else {
+      this.page = rawObj.page;
+    }
     Object.freeze(this);
   }
 

@@ -158,9 +158,15 @@ class PdfParser extends Parser {
             list = [
               ...list,
               new Promise(async (resolve) => {
-                const dest = await this._execute(document, document.getDestination, [item.dest]);
-                const page = await this._execute(document, document.getPageIndex, [dest[0]]);
-                resolve({ [`${item.dest}`]: page });
+                let ref = item.dest;
+                let key = ref;
+                if (isString(ref)) {
+                  ref = await this._execute(document, document.getDestination, [ref]);
+                } else {
+                  key = ref[0].num;
+                }
+                const page = await this._execute(document, document.getPageIndex, [ref[0]]);
+                resolve({ [`${key}`]: page });
               }),
               ...makePromise(item.items),
             ];
