@@ -1,6 +1,6 @@
 {
   "name": "@ridi/content-parser",
-  "version": "0.6.0-alpha.4",
+  "version": "0.6.0-alpha.5",
   "description": "Content data parser for Ridibooks services",
   "author": {
     "name": "Ridibooks Viewer Team",
@@ -21,6 +21,6 @@
     "@ridi/comic-parser": "^0.6.0-alpha.4",
     "@ridi/epub-parser": "^0.6.0-alpha.4",
     "@ridi/parser-core": "^0.6.0-alpha.4",
-    "@ridi/pdf-parser": "^0.6.0-alpha.4"
+    "@ridi/pdf-parser": "^0.6.0-alpha.5"
   }
 }
