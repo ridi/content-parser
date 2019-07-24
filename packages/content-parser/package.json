@@ -18,9 +18,9 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
-    "@ridi/comic-parser": "^0.6.0-alpha.4",
-    "@ridi/epub-parser": "^0.6.0-alpha.4",
-    "@ridi/parser-core": "^0.6.0-alpha.4",
+    "@ridi/comic-parser": "^0.6.0-alpha.5",
+    "@ridi/epub-parser": "^0.6.0-alpha.5",
+    "@ridi/parser-core": "^0.6.0-alpha.5",
     "@ridi/pdf-parser": "^0.6.0-alpha.5"
   }
 }
