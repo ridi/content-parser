@@ -14,7 +14,7 @@ import openZip from './zipUtil';
 
 function getReadStreamOptions(cryptoProvider) {
   let options = {};
-  if (isExists(cryptoProvider)) {
+  if (isExists(cryptoProvider) && isExists(cryptoProvider.bufferSize)) {
     options = { ...options, highWaterMark: cryptoProvider.bufferSize };
   }
   return options;
