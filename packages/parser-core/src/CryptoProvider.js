@@ -7,6 +7,12 @@ const Purpose = Object.freeze({
 });
 
 class CryptoProvider {
+  /**
+   * Size of data to process at once (`undefined` means no limit)
+   * @returns {?number}
+   */
+  get bufferSize() { return undefined; }
+
   constructor() {
     if (this.constructor === CryptoProvider) {
       throw createError(Errors.EINTR, 'You must use subclasses.');

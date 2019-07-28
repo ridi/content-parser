@@ -12,10 +12,10 @@ import { conditionally } from './streamUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
 
-function getReadStreamOptions(bufferSize) {
+function getReadStreamOptions(cryptoProvider) {
   let options = {};
-  if (isExists(bufferSize)) {
-    options = { ...options, highWaterMark: bufferSize };
+  if (isExists(cryptoProvider)) {
+    options = { ...options, highWaterMark: cryptoProvider.bufferSize };
   }
   return options;
 }
@@ -63,10 +63,10 @@ function fromDirectory(dir, cryptoProvider) {
     return entries.concat([{
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (options = {}) => {
-        const { encoding, end, bufferSize } = options;
+        const { encoding, end } = options;
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
-            const stream = fs.createReadStream(fullPath, getReadStreamOptions(bufferSize));
+            const stream = fs.createReadStream(fullPath, getReadStreamOptions(cryptoProvider));
             const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
@@ -98,10 +98,10 @@ function fromFile(filePath, cryptoProvider) {
   return create(filePath, [{
     entryPath: filePath,
     getFile: async (options = {}) => {
-      const { encoding, end, bufferSize } = options;
+      const { encoding, end } = options;
       let file = await new Promise((resolve, reject) => {
         if (fs.existsSync(filePath)) {
-          const stream = fs.createReadStream(filePath, getReadStreamOptions(bufferSize));
+          const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
           const totalSize = Math.min(end || Infinity, size);
           let data = Buffer.from([]);
           stream
