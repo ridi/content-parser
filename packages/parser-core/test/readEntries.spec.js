@@ -118,8 +118,20 @@ describe('Util - entry manager', () => {
 
       const entry = entries.first;
       entry.entryPath.should.equal(Paths.PDF);
-      entry.getFile().should.not.null;
+      const file = await entry.getFile();
+      file.should.not.null;
   
+      done();
+    })();
+  });
+
+  it('Read file with bufferSize option from directory', function(done) {
+    this.timeout(5 * 1000);
+    (async () => {
+      const entries = await readEntries(Paths.UNZIPPED_DEFAULT);
+      const entry = entries.get(2);
+      const file = await entry.getFile({ bufferSize: 1024 });
+      file.length.should.equal(313144);
       done();
     })();
   });

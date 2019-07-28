@@ -10,6 +10,14 @@ import { getPathes, safePath } from './pathUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
 
+function getReadStreamOptions(bufferSize) {
+  let options = { encoding: 'binary' };
+  if (isExists(bufferSize)) {
+    options = { ...options, highWaterMark: bufferSize };
+  }
+  return options;
+}
+
 function create(source, entries) {
   return {
     first: entries[0],
@@ -53,10 +61,10 @@ function fromDirectory(dir, cryptoProvider) {
     return entries.concat([{
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (options = {}) => {
-        const { encoding, end } = options;
+        const { encoding, end, bufferSize } = options;
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
-            const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
+            const stream = fs.createReadStream(fullPath, getReadStreamOptions(bufferSize));
             const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
@@ -88,10 +96,10 @@ function fromFile(filePath, cryptoProvider) {
   return create(filePath, [{
     entryPath: filePath,
     getFile: async (options = {}) => {
-      const { encoding, end } = options;
+      const { encoding, end, bufferSize } = options;
       let file = await new Promise((resolve, reject) => {
         if (fs.existsSync(filePath)) {
-          const stream = fs.createReadStream(filePath, { encoding: 'binary' });
+          const stream = fs.createReadStream(filePath, getReadStreamOptions(bufferSize));
           const totalSize = Math.min(end || Infinity, size);
           let data = Buffer.from([]);
           stream
