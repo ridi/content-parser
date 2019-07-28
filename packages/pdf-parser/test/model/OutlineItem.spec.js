@@ -18,6 +18,16 @@ describe('Model - OutlineItem', () => {
     assert(isArray(outlineItem.children));
     assert(outlineItem.page === undefined);
 
+    const dest = [{ num: 5, gen: 0 }];
+    outlineItem = new OutlineItem({
+      dest,
+      title: 'Chapter 1.',
+      depth: 0,
+      items: [],
+    });
+    outlineItem.dest.should.deep.equal(dest);
+    assert(outlineItem.page === undefined);
+
     outlineItem = new OutlineItem({
       dest: 'chapter-1',
       title: 'Chapter 1.',
