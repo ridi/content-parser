@@ -165,7 +165,7 @@ parser.onProgress = (step, totalStep, action) => {
 
 ### [OutlineItem](./src/model/OutlineItem.js)
 
-- dest: *?string*
+- dest: *?string|\*[]*
 - url: *?string*
 - title: *string*
 - color: *[Color](#color)*
