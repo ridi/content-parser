@@ -1,17 +1,17 @@
 import { assert } from 'chai';
 import fs from 'fs';
 
-import createRangeStream from '../src/createRangeStream';
+import createSliceStream from '../src/createSliceStream';
 import Paths from '../../../test/paths';
 
-describe('Util - createRangeStream', () => {
+describe('Util - createSliceStream', () => {
   const filePath = Paths.DEFAULT;
   const test = (start, end) => {
     const readStream = fs.createReadStream(filePath, { highWaterMark: 1024 });
     return new Promise((resolve, reject) => {
       let data = Buffer.from([]);
       readStream
-        .pipe(createRangeStream(start, end))
+        .pipe(createSliceStream(start, end))
         .on('error', error => reject(error))
         .on('data', chunk => {
           data = Buffer.concat([data, chunk]);

@@ -3,7 +3,7 @@ import path from 'path';
 
 import { removeCacheFile, readCacheFile, writeCacheFile } from './cacheFile';
 import createCryptoStream from './createCryptoStream';
-import createRangeStream from './createRangeStream';
+import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError } from './errors';
 import { getPathes, safePath } from './pathUtil';
@@ -68,7 +68,7 @@ function fromDirectory(dir, cryptoProvider) {
             const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
-              .pipe(createRangeStream(0, end))
+              .pipe(createSliceStream(0, end))
               .pipe(createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
               .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
               .on('error', e => reject(e))
@@ -103,7 +103,7 @@ function fromFile(filePath, cryptoProvider) {
           const totalSize = Math.min(end || Infinity, size);
           let data = Buffer.from([]);
           stream
-            .pipe(createRangeStream(0, end))
+            .pipe(createSliceStream(0, end))
             .pipe(createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))

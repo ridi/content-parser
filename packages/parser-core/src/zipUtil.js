@@ -3,7 +3,7 @@ import path from 'path';
 import unzipper from 'unzipper';
 
 import createCryptoStream from './createCryptoStream';
-import createRangeStream from './createRangeStream';
+import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import { isExists, isString } from './typecheck';
 import { safePathJoin } from './pathUtil';
@@ -19,7 +19,7 @@ async function getFile(entry, options = {}) {
     let data = Buffer.from([]);
     const stream = entry.stream();
     stream // is DuplexStream.
-      .pipe(createRangeStream(0, end))
+      .pipe(createSliceStream(0, end))
       .pipe(createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
