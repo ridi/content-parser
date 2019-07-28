@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import fs from 'fs-extra';
 import path from 'path';
+import StreamChopper from 'stream-chopper';
 import unzipper from 'unzipper';
 
 import createCryptoStream from './createCryptoStream';
@@ -14,13 +15,21 @@ function find(entryPath) {
   return this.files.find(entry => entryPath === entry.path);
 }
 
+function _getBufferSize(cryptoProvider) {
+  if (isExists(cryptoProvider)) {
+    return cryptoProvider.bufferSize;
+  }
+  return undefined;
+}
+
 async function getFile(entry, options = {}) {
   const { encoding, end } = options;
   let file = await new Promise((resolve, reject) => {
     const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
+    const bufferSize = _getBufferSize(this.cryptoProvider);
     let data = Buffer.from([]);
-    const stream = entry.stream();
-    stream // is DuplexStream.
+    entry.stream() // is DuplexStream.
+      .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: bufferSize })))
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
       .pipe(conditionally(isExists(this.cryptoProvider), createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
@@ -42,6 +51,7 @@ async function extractAll(unzipPath, overwrite = true) {
   const flags = overwrite ? 'w' : 'wx';
   const writeFile = (entry, output) => {
     return new Promise((resolve, reject) => {
+      const bufferSize = _getBufferSize(this.cryptoProvider);
       const writeStream = fs.createWriteStream(output, { encoding: 'binary', flags });
       const onError = (error) => {
         writeStream.end();
@@ -49,7 +59,9 @@ async function extractAll(unzipPath, overwrite = true) {
       };
       writeStream.on('error', onError);
       writeStream.on('close', resolve);
-      const stream = entry.stream() // is DuplexStream.
+      // Stream is DuplexStream.
+      const stream = entry.stream()
+        .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: bufferSize })))
         .on('error', onError)
         .on('data', (chunk) => {
           /* istanbul ignore if */
@@ -59,7 +71,7 @@ async function extractAll(unzipPath, overwrite = true) {
           }
           writeStream.write(chunk);
         })
-        .on('finish', () => {
+        .on('end', () => {
           setTimeout(() => {
             // Retain a reference to buffer so that it can't be GC'ed too soon.
             // Otherwise, EBADF occurs.
