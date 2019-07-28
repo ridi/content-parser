@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import fs from 'fs-extra';
 import path from 'path';
 import unzipper from 'unzipper';
@@ -7,6 +8,7 @@ import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import { isExists, isString } from './typecheck';
 import { safePathJoin } from './pathUtil';
+import { conditionally } from './streamUtil';
 
 function find(entryPath) {
   return this.files.find(entry => entryPath === entry.path);
@@ -19,8 +21,8 @@ async function getFile(entry, options = {}) {
     let data = Buffer.from([]);
     const stream = entry.stream();
     stream // is DuplexStream.
-      .pipe(createSliceStream(0, end))
-      .pipe(createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP))
+      .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+      .pipe(conditionally(isExists(this.cryptoProvider), createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
       .on('end', () => resolve(data));

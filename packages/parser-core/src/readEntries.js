@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -7,11 +8,12 @@ import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError } from './errors';
 import { getPathes, safePath } from './pathUtil';
+import { conditionally } from './streamUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
 
 function getReadStreamOptions(bufferSize) {
-  let options = { encoding: 'binary' };
+  let options = {};
   if (isExists(bufferSize)) {
     options = { ...options, highWaterMark: bufferSize };
   }
@@ -68,8 +70,8 @@ function fromDirectory(dir, cryptoProvider) {
             const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
-              .pipe(createSliceStream(0, end))
-              .pipe(createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
+              .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+              .pipe(conditionally(isExists(cryptoProvider), createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
               .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
               .on('error', e => reject(e))
               .on('end', () => resolve(data));
@@ -103,8 +105,8 @@ function fromFile(filePath, cryptoProvider) {
           const totalSize = Math.min(end || Infinity, size);
           let data = Buffer.from([]);
           stream
-            .pipe(createSliceStream(0, end))
-            .pipe(createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
+            .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+            .pipe(conditionally(isExists(cryptoProvider), createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))
             .on('end', () => resolve(data));
