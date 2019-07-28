@@ -156,29 +156,25 @@ describe('Logger', () => {
       current.should.equal(`[Logger] debug test log`);
     });
 
-    it('measure test', done => {
-      (async () => {
-        const logger = new Logger();
-        logger.logLevel = LogLevel.VERBOSE;
-  
-        const args = [1, 'string', true]
-        let test = new Test();
-        let result = await logger.measure(test.run, test, args, 'measure');
-        result.should.deep.equal(args);
-        current.startsWith(`[Logger] measure`).should.be.true;
-        result = await logger.measure(test.run, test, args, 'measure', 'log');
-        result.should.deep.equal(args);
-        current.startsWith(`[Logger] measure log`).should.be.true;
-        logger.result('measure result', 'log');
-        current.startsWith(`[Logger] measure result log`).should.be.true;
-  
-        logger.logLevel = LogLevel.ERROR;
-        result = await logger.measure(test.run, test, args, 'skip');
-        result.should.deep.equal(args);
-        current.startsWith(`[Logger] measure result log`).should.be.true;
+    it('measure test', async () => {
+      const logger = new Logger();
+      logger.logLevel = LogLevel.VERBOSE;
 
-        done();
-      })();
+      const args = [1, 'string', true]
+      let test = new Test();
+      let result = await logger.measure(test.run, test, args, 'measure');
+      result.should.deep.equal(args);
+      current.startsWith(`[Logger] measure`).should.be.true;
+      result = await logger.measure(test.run, test, args, 'measure', 'log');
+      result.should.deep.equal(args);
+      current.startsWith(`[Logger] measure log`).should.be.true;
+      logger.result('measure result', 'log');
+      current.startsWith(`[Logger] measure result log`).should.be.true;
+
+      logger.logLevel = LogLevel.ERROR;
+      result = await logger.measure(test.run, test, args, 'skip');
+      result.should.deep.equal(args);
+      current.startsWith(`[Logger] measure result log`).should.be.true;
     });
 
     it('measureSync test', () => {

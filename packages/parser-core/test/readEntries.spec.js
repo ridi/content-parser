@@ -36,31 +36,27 @@ describe('Util - entry manager', () => {
     'OEBPS/Video/empty.mp4',
   ];
 
-  it('Read entries from zip', (done) => {
-    (async () => {
-      const entries = await readEntries(Paths.DEFAULT);
-      entries.source.should.not.null;
-      entries.length.should.equal(expectedListForZip.length);
-      entries.get(0).should.equal(entries.first);
-      entries.map(entry => entry.entryPath).should.deep.equal(expectedListForZip);
-      entries.forEach(entry => {
-        const keys = Object.keys(entry);
-        stringContains(keys, 'method').should.be.true;
-        stringContains(keys, 'extraFieldLength').should.be.true;
-      });
-  
-      const entry = entries.find('mimetype');
-      let file = await entry.getFile();
-      file.should.deep.equal(expectedFile.buffer);
-      file = await entry.getFile({ encoding: 'utf8' });
-      file.should.equal(expectedFile.string);
-      file = await entry.getFile({ end: 100000 });
-      file.should.deep.equal(expectedFile.buffer);
-      file = await entry.getFile({ encoding: 'utf8', end: 11 });
-      file.should.deep.equal(expectedFile.string.substr(0, 11));
+  it('Read entries from zip', async () => {
+    const entries = await readEntries(Paths.DEFAULT);
+    entries.source.should.not.null;
+    entries.length.should.equal(expectedListForZip.length);
+    entries.get(0).should.equal(entries.first);
+    entries.map(entry => entry.entryPath).should.deep.equal(expectedListForZip);
+    entries.forEach(entry => {
+      const keys = Object.keys(entry);
+      stringContains(keys, 'method').should.be.true;
+      stringContains(keys, 'extraFieldLength').should.be.true;
+    });
 
-      done();
-    })();
+    const entry = entries.find('mimetype');
+    let file = await entry.getFile();
+    file.should.deep.equal(expectedFile.buffer);
+    file = await entry.getFile({ encoding: 'utf8' });
+    file.should.equal(expectedFile.string);
+    file = await entry.getFile({ end: 100000 });
+    file.should.deep.equal(expectedFile.buffer);
+    file = await entry.getFile({ encoding: 'utf8', end: 11 });
+    file.should.deep.equal(expectedFile.string.substr(0, 11));
   });
   
   const expectedListForDir = [
@@ -81,26 +77,22 @@ describe('Util - entry manager', () => {
     'mimetype',
   ];
 
-  it('Read entries from directory', done => {
-    (async () => {
-      const entries = await readEntries(Paths.UNZIPPED_DEFAULT);
-      entries.source.should.equal(Paths.UNZIPPED_DEFAULT);
-      entries.length.should.equal(expectedListForDir.length);
-      entries.get(0).should.equal(entries.first);
-      entries.map(entry => entry.entryPath).should.deep.equal(expectedListForDir);
-  
-      const entry = entries.find('mimetype');
-      let file = await entry.getFile();
-      file.should.deep.equal(expectedFile.buffer);
-      file = await entry.getFile({ encoding: 'utf8' });
-      file.should.equal(expectedFile.string);
-      file = await entry.getFile({ end: 100000 });
-      file.should.deep.equal(expectedFile.buffer);
-      file = await entry.getFile({ encoding: 'utf8', end: 11 });
-      file.should.deep.equal(expectedFile.string.substr(0, 11));
+  it('Read entries from directory', async () => {
+    const entries = await readEntries(Paths.UNZIPPED_DEFAULT);
+    entries.source.should.equal(Paths.UNZIPPED_DEFAULT);
+    entries.length.should.equal(expectedListForDir.length);
+    entries.get(0).should.equal(entries.first);
+    entries.map(entry => entry.entryPath).should.deep.equal(expectedListForDir);
 
-      done();
-    })();
+    const entry = entries.find('mimetype');
+    let file = await entry.getFile();
+    file.should.deep.equal(expectedFile.buffer);
+    file = await entry.getFile({ encoding: 'utf8' });
+    file.should.equal(expectedFile.string);
+    file = await entry.getFile({ end: 100000 });
+    file.should.deep.equal(expectedFile.buffer);
+    file = await entry.getFile({ encoding: 'utf8', end: 11 });
+    file.should.deep.equal(expectedFile.string.substr(0, 11));
   });
 
   it('Read entries from directory (cached)', () => {
@@ -110,30 +102,22 @@ describe('Util - entry manager', () => {
     });
   });
 
-  it('Read entries from file', done => {
-    (async () => {
-      const entries = await readEntries(Paths.PDF);
-      entries.source.should.equal(Paths.PDF);
-      entries.length.should.equal(1);
+  it('Read entries from file', async () => {
+    const entries = await readEntries(Paths.PDF);
+    entries.source.should.equal(Paths.PDF);
+    entries.length.should.equal(1);
 
-      const entry = entries.first;
-      entry.entryPath.should.equal(Paths.PDF);
-      const file = await entry.getFile();
-      file.should.not.null;
-  
-      done();
-    })();
+    const entry = entries.first;
+    entry.entryPath.should.equal(Paths.PDF);
+    const file = await entry.getFile();
+    file.should.not.null;
   });
 
-  it('Read file with bufferSize option from directory', function(done) {
-    this.timeout(5 * 1000);
-    (async () => {
-      const entries = await readEntries(Paths.UNZIPPED_DEFAULT);
-      const entry = entries.get(2);
-      const file = await entry.getFile({ bufferSize: 1024 });
-      file.length.should.equal(313144);
-      done();
-    })();
+  it('Read file with bufferSize option from directory', async () => {
+    const entries = await readEntries(Paths.UNZIPPED_DEFAULT);
+    const entry = entries.get(1);
+    const file = await entry.getFile({ bufferSize: 1024 });
+    file.length.should.equal(313144);
   });
 
   describe('Error Situation', () => {
@@ -143,17 +127,15 @@ describe('Util - entry manager', () => {
       });
     });
 
-    it('No such file from directory', done => {
-      (async () => {
-        const dir = Paths.UNZIPPED_DEFAULT;
-        const paths = JSON.parse(readCacheFile(dir));
-        paths[paths.length - 1] = `${paths[paths.length - 1]}.bak`;
-        writeCacheFile(dir, JSON.stringify(paths), true);
-        const entries = await readEntries(dir);
-        const entry = entries.find('mimetype.bak');
-        try { await entry.getFile() } catch (err) { err.code.should.equal(Errors.ENOFILE.code); }
-        done();
-      })();
+    it('No such file from directory', async () => {
+      const dir = Paths.UNZIPPED_DEFAULT;
+      const paths = JSON.parse(readCacheFile(dir));
+      paths[paths.length - 1] = `${paths[paths.length - 1]}.bak`;
+      writeCacheFile(dir, JSON.stringify(paths), true);
+
+      const entries = await readEntries(dir);
+      const entry = entries.find('mimetype.bak');
+      try { await entry.getFile() } catch (err) { err.code.should.equal(Errors.ENOFILE.code); }
     });
   });
 });

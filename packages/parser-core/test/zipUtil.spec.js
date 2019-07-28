@@ -12,33 +12,26 @@ describe('Util - Zip', () => {
     fs.removeSync('./temp');
   });
 
-  it('openZip test', () => {
-    return openZip(Paths.DEFAULT).then(async (zip) => {
-      const entry = zip.find('mimetype')
-      entry.should.not.null;
-      const buffer = await zip.getFile(entry);
-      Buffer.isBuffer(buffer).should.be.true;
-      const string = await zip.getFile(entry, { encoding: 'utf8' });
-      string.should.equal('application/epub+zip');
-    });
+  it('openZip test', async () => {
+    const zip = await openZip(Paths.DEFAULT);
+    const entry = zip.find('mimetype')
+    entry.should.not.null;
+    const buffer = await zip.getFile(entry);
+    Buffer.isBuffer(buffer).should.be.true;
+    const string = await zip.getFile(entry, { encoding: 'utf8' });
+    string.should.equal('application/epub+zip');
   });
 
-  it('extractAll test', (done) => {
-    openZip(Paths.DEFAULT).then((zip) => {
-      zip.extractAll('./temp').then(() => {
-        done();
-      });
-    });
+  it('extractAll test', async () => {
+    const zip = await openZip(Paths.DEFAULT);
+    await zip.extractAll('./temp');
   });
 
-  it('extractAll with not overwite', (done) => {
-    openZip(Paths.DEFAULT).then((zip) => {
-      zip.extractAll('./temp').then(() => {
-        zip.extractAll('./temp', false).catch((error) => {
-          error.code.should.equal(Errors.EEXIST.code);
-          done();
-        });
-      });
+  it('extractAll with not overwite', async () => {
+    const zip = await openZip(Paths.DEFAULT);
+    await zip.extractAll('./temp');
+    await zip.extractAll('./temp', false).catch((error) => {
+      error.code.should.equal(Errors.EEXIST.code);
     });
   });
 
