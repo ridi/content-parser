@@ -23,6 +23,7 @@ import {
 } from './pathUtil';
 
 import readEntries from './readEntries';
+import { conditionally } from './streamUtil';
 import { MatchOption, stringContains } from './stringContains';
 
 import {
@@ -50,6 +51,7 @@ export {
   Parser,
   safeDirname, safePath, safePathJoin, getPathes,
   readEntries,
+  conditionally,
   MatchOption, stringContains,
   getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl,
   validateOptions,
