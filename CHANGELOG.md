@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 * Remove `Version.isValid` property.
+* Improve cryption performance.
 
 ## [0.5.8 (2019-07-03)]
 
