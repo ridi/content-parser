@@ -51,12 +51,12 @@ import { CryptoProvider, AesCryptor } from '@ridi/pdf-parser';
 // or const { CryptoProvider, AesCryptor } = require('@ridi/pdf-parser');
 
 const { Purpose } = CryptoProvider;
-const { Modes, Padding } = AesCryptor;
+const { Mode, Padding } = AesCryptor;
 
 class ContentCryptoProvider extends CryptoProvider {
   constructor(key) {
     super();
-    this.cryptor = new AesCryptor(Modes.ECB, { key });
+    this.cryptor = new AesCryptor(Mode.ECB, { key });
   }
 
   getCryptor(filePath, purpose) {
@@ -75,9 +75,8 @@ class ContentCryptoProvider extends CryptoProvider {
   //
   run(data, filePath, purpose) {
     const cryptor = this.getCryptor(filePath, purpose);
-    const padding = Padding.AUTO;
     if (purpose === Purpose.READ_IN_DIR) {
-      return cryptor.decrypt(data, padding);
+      return cryptor.decrypt(data, { padding: Padding.AUTO });
     }
     return data;
   }
