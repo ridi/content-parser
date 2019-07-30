@@ -8,10 +8,11 @@ const Purpose = Object.freeze({
 
 class CryptoProvider {
   /**
-   * Size of data to process at once (`undefined` means no limit)
+   * Size of data to process at once
+   * `null` means use nodejs default (default: 65535)
    * @returns {?number}
    */
-  get bufferSize() { return undefined; }
+  get bufferSize() { return null; }
 
   constructor() {
     if (this.constructor === CryptoProvider) {

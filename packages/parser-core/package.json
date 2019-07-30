@@ -18,7 +18,7 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
-    "aes-js": "^3.1.1",
+    "crypto-js": "^3.1.9-1",
     "event-stream": "3.3.4",
     "fs-extra": "^8.0.0",
     "sha1": "^1.1.1",
