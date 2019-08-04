@@ -77,14 +77,16 @@ describe('ComicParser', () => {
       });
     });
 
-    it('Use parseImageSize option (boolean)', () => {
+    it('Use parseImageSize option (boolean)', function () {
+      this.timeout(5 * 1000);
       const parseOptions = { parseImageSize: true };
       return new ComicParser(Paths.UNZIPPED_COMIC).parse(parseOptions).then(book => {
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_COMIC_BOOK_WITH_SIZE)), parseOptions);
       });
     });
 
-    it('Use parseImageSize option (number)', () => {
+    it('Use parseImageSize option (number)', function () {
+      this.timeout(5 * 1000);
       const parseOptions = { parseImageSize: 1024 * 50 };
       return new ComicParser(Paths.UNZIPPED_COMIC).parse(parseOptions).then(book => {
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_COMIC_BOOK_WITH_SIZE)), parseOptions);

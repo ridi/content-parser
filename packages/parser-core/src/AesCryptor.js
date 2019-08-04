@@ -1,90 +1,132 @@
-import aes from 'aes-js';
+/* eslint-disable no-bitwise, no-plusplus */
+import CryptoJs from 'crypto-js';
 
 import Errors, { createError } from './errors';
 import mergeObjects from './mergeObjects';
 import { stringContains } from './stringContains';
 import validateOptions from './validateOptions';
 
-import {
-  isExists,
-  isObject,
-  isString,
-  getType,
-} from './typecheck';
+import { isExists, isObject, isString } from './typecheck';
 
-const { ModeOfOperation, Counter } = aes;
-
-const { hex, utf8 } = aes.utils;
-
-const { pkcs7 } = aes.padding;
-
-const through = (run) => {
-  try {
-    return run();
-  } catch (e) {
-    throw createError(Errors.ECRYT, e.message);
-  }
-};
+const {
+  pad, enc, mode: aesMode, AES,
+} = CryptoJs;
+const { Pkcs7 } = pad;
+const { Utf8, Hex } = enc;
 
 const Padding = Object.freeze({
-  AUTO: 'auto',
-  PKCS7: 'pkcs7',
-  NONE: 'none',
+  AUTO: {
+    name: 'auto',
+    op: Pkcs7,
+    pad: data => Pkcs7.pad(data, 4),
+    unpad: Pkcs7.unpad,
+  },
+  PKCS7: {
+    name: 'pkcs7',
+    op: pad.Pkcs7,
+    pad: data => Pkcs7.pad(data, 4),
+    unpad: Pkcs7.unpad,
+  },
+  NONE: {
+    name: 'none',
+    op: pad.NoPadding,
+  },
+});
+
+const Uint8 = {
+  decode: (uint8Array) => {
+    const len = uint8Array.length;
+    const words = [];
+    let i = 0;
+    while (i < len) {
+      words.push((uint8Array[i++] << 24) | (uint8Array[i++] << 16) | (uint8Array[i++] << 8) | (uint8Array[i++]));
+    }
+    return CryptoJs.lib.WordArray.create(words, words.length * 4);
+  },
+  encode: (wordArray) => {
+    const { words, sigBytes } = wordArray;
+    const uint8Array = new Uint8Array(sigBytes);
+    let offset = 0;
+    let word;
+    for (let i = 0; i < words.length; i++) {
+      word = words[i];
+      uint8Array[offset++] = word >> 24;
+      uint8Array[offset++] = (word >> 16) & 0xff;
+      uint8Array[offset++] = (word >> 8) & 0xff;
+      uint8Array[offset++] = word & 0xff;
+    }
+    return uint8Array;
+  },
+};
+
+const Encoding = Object.freeze({
+  UTF8: {
+    name: 'utf8',
+    decode: Utf8.parse,
+    encode: Utf8.stringify,
+  },
+  HEX: {
+    name: 'hex',
+    decode: Hex.parse,
+    encode: Hex.stringify,
+  },
+  UINT8: {
+    name: 'uint8',
+    decode: Uint8.decode,
+    encode: Uint8.encode,
+  },
+  BUFFER: {
+    name: 'buffer',
+    decode: data => Uint8.decode(new Uint8Array(data)),
+    encode: data => Buffer.from(Uint8.encode(data)),
+  },
 });
 
 const defaultConfigTypes = {
   key: 'String|Buffer|Uint8Array|Array',
-  padding: 'String',
 };
 
-const Modes = Object.freeze({
+const Mode = Object.freeze({
   ECB: { // Electronic Codebook (key)
     name: 'ECB',
-    op: ModeOfOperation.ecb,
+    op: aesMode.ECB,
     configTypes: defaultConfigTypes,
   },
   CBC: { // Cipher-Block Chaining (key + iv)
     name: 'CBC',
-    op: ModeOfOperation.cbc,
+    op: aesMode.CBC,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
     }),
   },
-  CFB: { // Cipher Feedback (key + IV + segmentSize)
+  CFB: { // Cipher Feedback (key + iv + {segmentSize})
     name: 'CFB',
-    op: ModeOfOperation.cfb,
+    op: aesMode.CFB,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
-      segmentSize: 'Number',
     }),
   },
-  OFB: { // Output Feedback (key + IV)
+  OFB: { // Output Feedback (key + iv)
     name: 'OFB',
-    op: ModeOfOperation.ofb,
+    op: aesMode.OFB,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
     }),
   },
-  CTR: { // Counter (key + Counter)
+  CTR: { // Counter (key + iv + {counter})
     name: 'CTR',
-    op: ModeOfOperation.ctr,
+    op: aesMode.CTR,
     configTypes: mergeObjects(defaultConfigTypes, {
-      counter: 'Counter',
+      iv: 'Buffer|Uint8Array|Array',
     }),
   },
 });
-
-const checkDataType = (data) => {
-  if (!stringContains(['Buffer', 'Uint8Array', 'Array'], getType(data))) {
-    throw createError(Errors.EINVAL, 'bytes type', 'reason', 'require Buffer or Uint8Array or Array');
-  }
-};
 
 class AesCryptor {
   constructor(mode, config) {
     if (!isExists(mode)) {
       throw createError(Errors.EREQPRM, 'mode');
-    } else if (!isObject(mode) || !stringContains(Object.keys(Modes), mode.name)) {
+    } else if (!isObject(mode) || !stringContains(Object.keys(Mode), mode.name)) {
       throw createError(Errors.EINVAL, 'mode', 'mode', 'use Modes');
     }
     if (!isExists(config)) {
@@ -94,19 +136,12 @@ class AesCryptor {
       throw createError(Errors.EREQPRM, 'config.key');
     }
     switch (mode.name) {
-      case Modes.CFB.name:
-        if (!isExists(config.segmentSize)) {
-          throw createError(Errors.EREQPRM, 'config.segmentSize');
-        }
-      case Modes.CBC.name: // eslint-disable-line no-fallthrough
-      case Modes.OFB.name:
+      case Mode.CFB.name:
+      case Mode.CBC.name:
+      case Mode.OFB.name:
+      case Mode.CTR.name:
         if (!isExists(config.iv)) {
           throw createError(Errors.EREQPRM, 'config.iv');
-        }
-        break;
-      case Modes.CTR.name:
-        if (!isExists(config.counter)) {
-          throw createError(Errors.EREQPRM, 'config.counter');
         }
         break;
       default: break;
@@ -117,56 +152,118 @@ class AesCryptor {
   }
 
   makeOperator(mode, config) {
-    const {
-      key, iv, segmentSize, counter,
-    } = config;
-    let keyBytes = key;
+    let { key, iv } = config;
+
+    // convert key to WordArray
     if (isString(key)) {
-      if (key.length % 16 === 0) {
-        keyBytes = through(() => utf8.toBytes(key));
-      } else {
-        keyBytes = through(() => pkcs7.pad(utf8.toBytes(key)));
+      const { length } = key;
+      key = Encoding.UTF8.decode(key);
+      if (length % 16 !== 0) {
+        Padding.PKCS7.pad(key);
       }
+    } else if (Buffer.isBuffer(key)) {
+      key = Encoding.BUFFER.decode(key);
+    } else if (key instanceof Uint8Array || key instanceof Array) {
+      key = Encoding.UINT8.decode(key);
     }
-    switch (mode.name) {
-      case Modes.ECB.name: return through(() => new mode.op(keyBytes)); // eslint-disable-line new-cap
-      case Modes.CBC.name: return through(() => new mode.op(keyBytes, iv)); // eslint-disable-line new-cap
-      case Modes.CFB.name: return through(() => new mode.op(keyBytes, iv, segmentSize)); // eslint-disable-line new-cap
-      case Modes.OFB.name: return through(() => new mode.op(keyBytes, iv)); // eslint-disable-line new-cap
-      case Modes.CTR.name: return through(() => new mode.op(keyBytes, counter)); // eslint-disable-line new-cap
-      /* istanbul ignore next */
-      default: return undefined;
+
+    // convert iv to WordArray
+    if (Buffer.isBuffer(iv)) {
+      iv = Encoding.BUFFER.decode(iv);
+    } else if (iv instanceof Uint8Array || iv instanceof Array) {
+      iv = Encoding.UINT8.decode(iv);
     }
+
+    const checkType = (data, allow) => {
+      if (!isExists(data)) {
+        const message = `require Buffer or Uint8Array or Array${isExists(allow) ? ` ${allow}` : ''}`;
+        throw createError(Errors.ECRYT, 'data type', 'reason', message);
+      }
+      return data;
+    };
+
+    // return operator
+    const options = { iv, mode: mode.op, padding: Padding.NONE.op };
+    return { // Note that all data and return type is a WordArray
+      name: mode.name,
+      encrypt: data => AES.encrypt(checkType(data, 'or String'), key, options).ciphertext,
+      decrypt: (data) => {
+        const cipherParams = CryptoJs.lib.CipherParams.create({ ciphertext: checkType(data) });
+        return AES.decrypt(cipherParams, key, options);
+      },
+    };
   }
 
-  encrypt(bytes, padding = Padding.NONE) {
-    checkDataType(bytes);
-    if (padding === Padding.PKCS7 || (padding === Padding.AUTO && bytes.length % 16 !== 0)) {
-      return through(() => this.operator.encrypt(pkcs7.pad(bytes)));
+  encrypt(data, options = {}) {
+    const padding = options.padding || Padding.NONE;
+    const encoding = options.encoding || Encoding.BUFFER;
+    const length = isExists(data) && isExists(data.length) ? data.length : 0;
+
+    // convert data to WordArray
+    if (isString(data)) {
+      data = Encoding.UTF8.decode(data);
+    } else if (Buffer.isBuffer(data)) {
+      data = Encoding.BUFFER.decode(data);
+    } else if (data instanceof Uint8Array || data instanceof Array) {
+      data = Encoding.UINT8.decode(data);
     }
-    return through(() => this.operator.encrypt(bytes));
+
+    // padding data if needed as padding type
+    if (padding === Padding.PKCS7 || (padding === Padding.AUTO && length % 16 !== 0)) {
+      padding.pad(data);
+    }
+
+    // encrypt data and convert to encoding type
+    return encoding.encode(this.operator.encrypt(data));
   }
 
-  decrypt(bytes, padding = Padding.NONE) {
-    checkDataType(bytes);
-    const decryptedBytes = Buffer.from(through(() => this.operator.decrypt(bytes)));
+  decrypt(data, options = {}) {
+    const padding = options.padding || Padding.NONE;
+    const encoding = options.encoding || Encoding.BUFFER;
+
+    // convert data to WordArray
+    if (Buffer.isBuffer(data)) {
+      data = Encoding.BUFFER.decode(data);
+    } else if (data instanceof Uint8Array || data instanceof Array) {
+      data = Encoding.UINT8.decode(data);
+    }
+
+    // decrypt data
+    const decryptedData = this.operator.decrypt(data);
+
+    // unpadding data if needed as padding type
     if (padding === Padding.PKCS7 || padding === Padding.AUTO) {
       try {
-        return pkcs7.strip(decryptedBytes);
+        const array = Encoding.UINT8.encode(decryptedData);
+        if (array.length < 16) {
+          throw createError(Errors.ECRYT, 'invalid data length');
+        }
+        const padder = array[array.length - 1];
+        if (padder > 16) {
+          throw createError(Errors.ECRYT, 'padding byte out of range');
+        }
+        const length = array.length - padder;
+        for (let i = 0; i < padder; i += 1) {
+          if (array[length + i] !== padder) {
+            throw createError(Errors.ECRYT, 'invalid padding byte');
+          }
+        }
+        padding.unpad(decryptedData);
       } catch (e) {
         if (padding !== Padding.AUTO) {
           throw createError(Errors.ECRYT, e.message);
         }
       }
     }
-    return decryptedBytes;
+    pad.ZeroPadding.unpad(decryptedData);
+
+    // convert WordArray to encoding type
+    return encoding.encode(decryptedData);
   }
 }
 
-AesCryptor.hex = hex;
-AesCryptor.utf8 = utf8;
-AesCryptor.Modes = Modes;
-AesCryptor.Counter = Counter;
 AesCryptor.Padding = Padding;
+AesCryptor.Encoding = Encoding;
+AesCryptor.Mode = Mode;
 
 export default AesCryptor;

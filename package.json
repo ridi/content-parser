@@ -2,7 +2,7 @@
   "scripts": {
     "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
     "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
-    "test": "yarn build && yarn lint && lerna exec --parallel -- nyc mocha --recursive",
+    "test": "yarn build && yarn lint && lerna exec --concurrency 1 -- nyc mocha --recursive",
     "coverage": "codecov",
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
@@ -15,7 +15,6 @@
   "devDependencies": {
     "@babel/runtime": "^7.5.5",
     "@ridi/eslint-config": "^4.1.0",
-    "codecov": "^3.1.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.0.1",
     "babel-plugin-add-module-exports": "^1.0.2",
@@ -24,6 +23,7 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
+    "codecov": "^3.1.0",
     "eslint": "^6.0.0",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.17.2",

@@ -38,7 +38,7 @@ import { ComicParser } from '@ridi/comic-parser';
 // or const { ComicParser } = require('@ridi/comic-parser');
 
 const parser = new ComicParser('./foo/bar.zip' or './unzippedPath');
-parser.parse(/* { parseOptions } */).then((items) => {
+parser.parse(/* { parseOptions } */).then((book) => {
   parser.readItems(items/*, { readOptions } */).then((results) => {
     ...
   });
@@ -53,12 +53,12 @@ import { CryptoProvider, AesCryptor } from '@ridi/comic-parser';
 // or const { CryptoProvider, AesCryptor } = require('@ridi/comic-parser');
 
 const { Purpose } = CryptoProvider;
-const { Modes, Padding } = AesCryptor;
+const { Mode, Padding } = AesCryptor;
 
 class ContentCryptoProvider extends CryptoProvider {
   constructor(key) {
     super();
-    this.cryptor = new AesCryptor(Modes.ECB, { key });
+    this.cryptor = new AesCryptor(Mode.ECB, { key });
   }
 
   getCryptor(filePath, purpose) {
@@ -83,9 +83,9 @@ class ContentCryptoProvider extends CryptoProvider {
     const cryptor = this.getCryptor(filePath, purpose);
     const padding = Padding.AUTO;
     if (purpose === Purpose.READ_IN_DIR) {
-      return cryptor.decrypt(data, padding);
+      return cryptor.decrypt(data, { padding });
     } else if (purpose === Purpose.WRITE) {
-      return cryptor.encrypt(data, padding);
+      return cryptor.encrypt(data, { padding });
     }
     return data;
   }
@@ -190,6 +190,7 @@ parser.onProgress = (step, totalStep, action) => {
 ### [ComicBook](./src/model/Book.js)
 
 - items: *[Item](#item)[]*
+- toRaw(): *object*
 
 <a id="item"></a>
 
@@ -200,6 +201,7 @@ parser.onProgress = (step, totalStep, action) => {
 - fileSize: *?number*
 - width: *?number*
 - height: *?number*
+- toRaw(): *object*
 
 <a id="parseOptions"></a>
 
@@ -281,4 +283,4 @@ If false, reads image into a buffer.
 
 ## License
 
-[MIT](https://github.com/ridi/content-parser/blob/master/LICENSE)
+[MIT](https://github.com/ridi/content-parser/packages/comic-parser/LICENSE)

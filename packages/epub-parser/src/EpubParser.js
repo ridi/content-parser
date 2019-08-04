@@ -655,7 +655,7 @@ class EpubParser extends Parser {
   /**
    * Contents is read using loader suitable for context
    * @param {ReadContext} context properties required for reading
-   * @returns {(string|Buffer)[]} reading results
+   * @returns {(string[]|Buffer[])} reading results
    * @throws {Errors.ENOFILE} no such file
    * @see EpubParser.readDefaultOptions.force
    */

@@ -1,7 +1,5 @@
 import es from 'event-stream';
 
-import { isExists } from './typecheck';
-
 const createCryptoStream = (filePath, totalSize, cryptoProvider, purpose) => {
   let tmpChunk = Buffer.from([]);
   let pushedSize = 0;
@@ -12,10 +10,7 @@ const createCryptoStream = (filePath, totalSize, cryptoProvider, purpose) => {
       tmpChunk = Buffer.concat([tmpChunk, chunk]);
       callback();
     } else {
-      chunk = Buffer.concat([tmpChunk, chunk]);
-      if (isExists(cryptoProvider)) {
-        chunk = cryptoProvider.run(chunk, filePath, purpose);
-      }
+      chunk = cryptoProvider.run(Buffer.concat([tmpChunk, chunk]), filePath, purpose);
       pushedSize += chunk.length;
       tmpChunk = Buffer.from([]);
       callback(null, chunk);

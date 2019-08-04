@@ -381,6 +381,7 @@ class Parser {
    * @param {ReadContext} context properties required for reading
    * @returns {(string|Buffer)[]} reading results
    * @throws {Errors.ENOFILE} no such file
+   * @see Parser.readDefaultOptions.force
    */
   async _read(context) { // eslint-disable-line no-unused-vars
     return mustOverride();

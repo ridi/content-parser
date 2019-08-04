@@ -6,7 +6,8 @@
         "packages/comic-parser/package.json",
         "packages/content-parser/package.json",
         "packages/epub-parser/package.json",
-        "packages/parser-core/package.json"
+        "packages/parser-core/package.json",
+        "packages/pdf-parser/package.json"
       ]
     }
   },

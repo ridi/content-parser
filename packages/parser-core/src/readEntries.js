@@ -1,20 +1,31 @@
+/* eslint-disable max-len */
 import fs from 'fs-extra';
 import path from 'path';
 
 import { removeCacheFile, readCacheFile, writeCacheFile } from './cacheFile';
 import createCryptoStream from './createCryptoStream';
-import createRangeStream from './createRangeStream';
+import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError } from './errors';
 import { getPathes, safePath } from './pathUtil';
+import { conditionally } from './streamUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
+
+function getReadStreamOptions(cryptoProvider) {
+  let options = {};
+  if (isExists(cryptoProvider) && isExists(cryptoProvider.bufferSize)) {
+    options = { ...options, highWaterMark: cryptoProvider.bufferSize };
+  }
+  return options;
+}
 
 function create(source, entries) {
   return {
     first: entries[0],
     length: entries.length,
     source,
+    get: idx => entries[idx],
     find: entryPath => entries.find(entry => entryPath === entry.entryPath),
     forEach: callback => entries.forEach(callback),
     map: callback => entries.map(callback),
@@ -55,12 +66,12 @@ function fromDirectory(dir, cryptoProvider) {
         const { encoding, end } = options;
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
-            const stream = fs.createReadStream(fullPath, { encoding: 'binary' });
+            const stream = fs.createReadStream(fullPath, getReadStreamOptions(cryptoProvider));
             const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
-              .pipe(createRangeStream(0, end))
-              .pipe(createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR))
+              .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+              .pipe(conditionally(isExists(cryptoProvider), createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
               .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
               .on('error', e => reject(e))
               .on('end', () => resolve(data));
@@ -79,8 +90,44 @@ function fromDirectory(dir, cryptoProvider) {
   }, []));
 }
 
+function fromFile(filePath, cryptoProvider) {
+  const size = (() => {
+    /* istanbul ignore next */
+    try { return fs.lstatSync(filePath).size; } catch (e) { return 0; }
+  })();
+  return create(filePath, [{
+    entryPath: filePath,
+    getFile: async (options = {}) => {
+      const { encoding, end } = options;
+      let file = await new Promise((resolve, reject) => {
+        if (fs.existsSync(filePath)) {
+          const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
+          const totalSize = Math.min(end || Infinity, size);
+          let data = Buffer.from([]);
+          stream
+            .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+            .pipe(conditionally(isExists(cryptoProvider), createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+            .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+            .on('error', e => reject(e))
+            .on('end', () => resolve(data));
+        } else {
+          throw createError(Errors.ENOFILE, filePath);
+        }
+      });
+      if (isExists(encoding)) {
+        file = file.toString(encoding);
+      }
+      return file;
+    },
+    size,
+  }]);
+}
+
 export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
+    if (path.extname(input).toLowerCase() === '.pdf') {
+      return fromFile(input, cryptoProvider);
+    }
     /* istanbul ignore if */
     if (isExists(cryptoProvider)) {
       /* istanbul ignore next */

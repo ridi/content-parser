@@ -1,6 +1,6 @@
 import es from 'event-stream';
 
-const createRangeStream = (start = 0, end = Infinity) => {
+const createSliceStream = (start = 0, end = Infinity) => {
   let bytesReceived = 0;
   let finish = false;
   return es.map((chunk, callback) => { // eslint-disable-line
@@ -21,4 +21,4 @@ const createRangeStream = (start = 0, end = Infinity) => {
   });
 };
 
-export default createRangeStream;
+export default createSliceStream;

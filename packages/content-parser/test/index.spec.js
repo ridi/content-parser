@@ -5,6 +5,8 @@ import {
   EpubBook,
   ComicParser,
   ComicBook,
+  PdfParser,
+  PdfBook,
   Errors,
   LogLevel,
   CryptoProvider,
@@ -17,6 +19,8 @@ describe('content-parser', () => {
     assert(EpubBook.constructor !== null);
     assert(ComicParser.constructor !== null);
     assert(ComicBook.constructor !== null);
+    assert(PdfParser.constructor !== null);
+    assert(PdfBook.constructor !== null);
     assert(Errors !== null);
     assert(LogLevel !== null);
     assert(CryptoProvider.constructor !== null);

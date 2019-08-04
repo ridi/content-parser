@@ -7,6 +7,13 @@ const Purpose = Object.freeze({
 });
 
 class CryptoProvider {
+  /**
+   * Size of data to process at once
+   * `null` means use nodejs default (default: 65535)
+   * @returns {?number}
+   */
+  get bufferSize() { return null; }
+
   constructor() {
     if (this.constructor === CryptoProvider) {
       throw createError(Errors.EINTR, 'You must use subclasses.');

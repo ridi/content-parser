@@ -1,6 +1,6 @@
 {
   "name": "@ridi/parser-core",
-  "version": "0.5.8",
+  "version": "0.6.0-alpha.8",
   "description": "Utilities for parsers",
   "author": {
     "name": "Ridibooks Viewer Team",
@@ -18,10 +18,11 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
-    "aes-js": "^3.1.1",
+    "crypto-js": "^3.1.9-1",
     "event-stream": "3.3.4",
     "fs-extra": "^8.0.0",
     "sha1": "^1.1.1",
+    "stream-chopper": "^3.0.1",
     "string-format": "^2.0.0",
     "string-natural-compare": "^2.0.3",
     "unzipper": "^0.10.1"
