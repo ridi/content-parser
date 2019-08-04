@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+* None.
+
+## [0.6.0 (2019-08-04)]
+
 ### Added
 
 * Add `pdf-parser` package.
@@ -202,7 +206,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.5.8...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.0...HEAD
+[0.6.0 (2019-08-04)]: https://github.com/ridi/content-parser/compare/0.5.8...0.6.0
 [0.5.8 (2019-07-03)]: https://github.com/ridi/content-parser/compare/0.5.7...0.5.8
 [0.5.7 (2019-07-03)]: https://github.com/ridi/content-parser/compare/0.5.6...0.5.7
 [0.5.6 (2019-06-12)]: https://github.com/ridi/content-parser/compare/0.5.5...0.5.6
