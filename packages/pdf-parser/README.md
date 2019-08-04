@@ -36,7 +36,7 @@ import { PdfParser } from '@ridi/pdf-parser';
 // or const { PdfParser } = require('@ridi/pdf-parser');
 
 const parser = new PdfParser('./foo/bar.pdf');
-parser.parse(/* { parseOptions } */).then((book) => {
+parser.parse().then((book) => {
   ...
 });
 parser.read().then((pdfFileBuffer) => {
@@ -97,15 +97,13 @@ parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR, WARN(default), INFO
 
 ## API
 
-### parse(parseOptions)
+### parse()
 
 Returns `Promise<PdfBook>` with:
 
 - [PdfBook](#book): Instance with pages info.
 
 Or throw exception.
-
-#### [parseOptions](#parseOptions): `?object`
 
 ---
 
@@ -200,14 +198,6 @@ parser.onProgress = (step, totalStep, action) => {
 - allowAssembling: *boolean*
 - allowHighQualityPrinting: *boolean*
 - toRaw(): *?number[]*
-
-<a id="parseOptions"></a>
-
-## Parse Options
-
-* None.
-
-<a id="readOptions"></a>
 
 ## License
 
