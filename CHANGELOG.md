@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* Add `EpubParser.parseOptions.additionalInlineStyle` option. (default: `undefined`)
 * Add `pdf-parser` package.
+* Add `EpubParser.parseOptions.additionalInlineStyle` option. (default: `undefined`)
+* Add `CryptoProvider.bufferSize` property.
 
 ### Changed
 
