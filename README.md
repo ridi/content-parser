@@ -8,7 +8,6 @@
 [![Build Status](https://travis-ci.org/ridi/content-parser.svg?branch=master)](https://travis-ci.org/ridi/content-parser)
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fparser-core.svg)](https://npm.im/%40ridi%2Fparser-core)
-[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/content-parser.svg)](https://greenkeeper.io/)
 
 ## [@ridi/content-parser](packages/content-parser)
 
@@ -18,7 +17,6 @@
 [![Build Status](https://travis-ci.org/ridi/content-parser.svg?branch=master)](https://travis-ci.org/ridi/content-parser)
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcontent-parser.svg)](https://npm.im/%40ridi%2Fcontent-parser)
-[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/content-parser.svg)](https://greenkeeper.io/)
 
 ## [@ridi/epub-parser](packages/epub-parser)
 
@@ -28,7 +26,6 @@
 [![Build Status](https://travis-ci.org/ridi/content-parser.svg?branch=master)](https://travis-ci.org/ridi/content-parser)
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fepub-parser.svg)](https://npm.im/%40ridi%2Fepub-parser)
-[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/content-parser.svg)](https://greenkeeper.io/)
 
 ## [@ridi/comic-parser](packages/comic-parser)
 
@@ -38,7 +35,6 @@
 [![Build Status](https://travis-ci.org/ridi/content-parser.svg?branch=master)](https://travis-ci.org/ridi/content-parser)
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcomic-parser.svg)](https://npm.im/%40ridi%2Fcomic-parser)
-[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/content-parser.svg)](https://greenkeeper.io/)
 
 ## [@ridi/pdf-parser](packages/pdf-parser)
 
@@ -48,7 +44,6 @@
 [![Build Status](https://travis-ci.org/ridi/content-parser.svg?branch=master)](https://travis-ci.org/ridi/content-parser)
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fpdf-parser.svg)](https://npm.im/%40ridi%2Fpdf-parser)
-[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/content-parser.svg)](https://greenkeeper.io/)
 
 # Development
 
