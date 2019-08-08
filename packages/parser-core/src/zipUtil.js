@@ -4,6 +4,7 @@ import path from 'path';
 import StreamChopper from 'stream-chopper';
 import unzipper from 'unzipper';
 
+import { trimEnd } from './bufferUtil';
 import createCryptoStream from './createCryptoStream';
 import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
@@ -37,7 +38,7 @@ async function getFile(entry, options = {}) {
       .on('end', () => resolve(data));
   });
   if (isExists(encoding)) {
-    file = file.toString(encoding);
+    file = trimEnd(file).toString(encoding);
   }
   return file;
 }

@@ -1,3 +1,5 @@
+import { trim, trimStart, trimEnd } from './bufferUtil';
+
 import {
   getCachePath,
   removeCacheFile,
@@ -41,6 +43,7 @@ import validateOptions from './validateOptions';
 import openZip from './zipUtil';
 
 export {
+  trim, trimStart, trimEnd,
   getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile,
   AesCryptor, CryptoProvider,
   Errors, createError, mustOverride,

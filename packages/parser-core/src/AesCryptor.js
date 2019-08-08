@@ -255,7 +255,6 @@ class AesCryptor {
         }
       }
     }
-    pad.ZeroPadding.unpad(decryptedData);
 
     // convert WordArray to encoding type
     return encoding.encode(decryptedData);

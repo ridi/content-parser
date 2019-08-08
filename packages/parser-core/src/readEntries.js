@@ -2,6 +2,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
+import { trimEnd } from './bufferUtil';
 import { removeCacheFile, readCacheFile, writeCacheFile } from './cacheFile';
 import createCryptoStream from './createCryptoStream';
 import createSliceStream from './createSliceStream';
@@ -81,7 +82,7 @@ function fromDirectory(dir, cryptoProvider) {
           }
         });
         if (isExists(encoding)) {
-          file = file.toString(encoding);
+          file = trimEnd(file).toString(encoding);
         }
         return file;
       },
@@ -115,7 +116,7 @@ function fromFile(filePath, cryptoProvider) {
         }
       });
       if (isExists(encoding)) {
-        file = file.toString(encoding);
+        file = trimEnd(file).toString(encoding);
       }
       return file;
     },
