@@ -29,7 +29,7 @@ async function getFile(entry, options = {}) {
     const bufferSize = _getBufferSize(this.cryptoProvider);
     let data = Buffer.from([]);
     entry.stream() // is DuplexStream.
-      .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: bufferSize })))
+      .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
       .pipe(conditionally(isExists(this.cryptoProvider), createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
@@ -61,7 +61,7 @@ async function extractAll(unzipPath, overwrite = true) {
       writeStream.on('close', resolve);
       // Stream is DuplexStream.
       const stream = entry.stream()
-        .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: bufferSize })))
+        .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
         .on('error', onError)
         .on('data', (chunk) => {
           /* istanbul ignore if */
