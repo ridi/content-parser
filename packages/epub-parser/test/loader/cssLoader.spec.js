@@ -50,7 +50,21 @@ describe('Loader - CSS', () => {
 
   it('Use parseStyle option', () => {
     const cssItem = { namespace: 'namespace' };
-    cssLoader(cssItem, '#id { color: red; } .class { font-size: 1em; } p { line-length: 0.9em; }')
-      .should.equal('.namespace #id{color:red}.namespace .class{font-size:1em}.namespace p{line-length:0.9em}');
+    cssLoader(cssItem, '#id { color: red; } .class { font-size: 1em; } p { line-length: 0.9em; } html { color: blue; } body { color: red; } html > .size { font-size: 1em; } html, body { line-height: 1em; } .w100 > body { width: 100%; }')
+      .should.equal('.namespace #id{color:red}.namespace .class{font-size:1em}.namespace p{line-length:0.9em}.namespace html{color:blue}.namespace body{color:red}.namespace html>.size{font-size:1em}.namespace html,.namespace body{line-height:1em}.namespace .w100>body{width:100%}');
+  });
+
+  it('Use parseStyle option with extractBody(true)', () => {
+    const cssItem = { namespace: 'namespace' };
+    const options = { extractBody: true };
+    cssLoader(cssItem, '#id { color: red; } .class { font-size: 1em; } p { line-length: 0.9em; } html { color: blue; } body { color: red; } html > .size { font-size: 1em; } html, body { line-height: 1em; } .w100 > body { width: 100%; }', options)
+      .should.equal('.namespace #id{color:red}.namespace .class{font-size:1em}.namespace p{line-length:0.9em}.namespace{color:blue}.namespace body{color:red}.namespace>.size{font-size:1em}.namespace,.namespace body{line-height:1em}.namespace .w100>body{width:100%}');
+  });
+
+  it('Use parseStyle option with extractBody(function)', () => {
+    const cssItem = { namespace: 'namespace' };
+    const options = { extractBody: () => {} };
+    cssLoader(cssItem, '#id { color: red; } .class { font-size: 1em; } p { line-length: 0.9em; } html { color: blue; } body { color: red; } html > .size { font-size: 1em; } html, body { line-height: 1em; } .w100 > body { width: 100%; }', options)
+      .should.equal('.namespace #id{color:red}.namespace .class{font-size:1em}.namespace p{line-length:0.9em}.namespace{color:blue}.namespace{color:red}.namespace>.size{font-size:1em}.namespace,.namespace{line-height:1em}.namespace .w100>body{width:100%}');
   });
 });

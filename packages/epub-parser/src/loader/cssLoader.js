@@ -1,6 +1,7 @@
 import {
   isExists,
   isUrl,
+  isFunc,
   stringContains,
   safeDirname,
   safePathJoin,
@@ -22,13 +23,29 @@ const Types = {
   // See type reference for more types.
 };
 
+function getUnwrappingTagList(namespace, options) {
+  if (isExists(namespace)) {
+    const { extractBody } = options;
+    if (extractBody === true) {
+      return ['html'];
+    }
+    if (isFunc(extractBody)) {
+      return ['html', 'body'];
+    }
+  }
+  return [];
+}
+
 function handleRulePrelude(selectorList, options, cssItem) {
   if (!isExists(selectorList.children)) {
     return false;
   }
 
+  const { namespace } = cssItem;
+  const unwrappingTagList = getUnwrappingTagList(namespace, options);
   selectorList.children.each(function (selector, item, list) { // eslint-disable-line
     let shouldRemove = false;
+    let shouldUnwrap = false;
     csstree.walk(selector, function (node) { // eslint-disable-line
       const context = this;
       // Ignore nodes in nested selectors
@@ -44,6 +61,8 @@ function handleRulePrelude(selectorList, options, cssItem) {
         } else if (type === Types.TYPE_SELECTOR) {
           if (stringContains(options.removeTagSelector || [], name)) {
             shouldRemove = true;
+          } else if (stringContains(unwrappingTagList, name)) {
+            shouldUnwrap = true;
           }
         } else if (type === Types.ID_SELECTOR) {
           if (stringContains(options.removeIdSelector || [], name)) {
@@ -58,9 +77,24 @@ function handleRulePrelude(selectorList, options, cssItem) {
     });
     if (shouldRemove) {
       list.remove(item);
-    } else if (isExists(cssItem.namespace)) {
+    } else if (isExists(namespace)) {
+      const namespaceData = { type: Types.CLASS_SELECTOR, name: namespace };
+      if (shouldUnwrap) {
+        const array = selector.children.toArray();
+        if (array.length > 1) {
+          const [head] = array;
+          if (stringContains(unwrappingTagList, head.name)) {
+            selector.children.shift();
+            selector.children.prependData(namespaceData);
+            return;
+          }
+        } else {
+          selector.children = new List().fromArray([namespaceData]);
+          return;
+        }
+      }
       selector.children.prependData({ type: Types.WHITE_SPACE, value: ' ' });
-      selector.children.prependData({ type: Types.CLASS_SELECTOR, name: cssItem.namespace });
+      selector.children.prependData(namespaceData);
     }
   });
   return selectorList.children.isEmpty();
