@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.6.1 (2019-08-09)]
+
+### Changed
+
+* Replace `html` and `body` styles with namespace when If use `EpubParser.parseOptions.parseStyle` and `EpubParser.readOptions.extractBody` together.
+
+### Fixed
+
+* Fix an issue where encrypted zip file could not be opened.
+* Fix an issue where unzipping process terminates if `CryptorProvider.bufferSize` is larger than file size to be unzip.
+
 ## [0.6.0 (2019-08-04)]
 
 ### Added
@@ -206,7 +217,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.1...HEAD
+[0.6.1 (2019-08-09)]: https://github.com/ridi/content-parser/compare/0.6.0...0.6.1
 [0.6.0 (2019-08-04)]: https://github.com/ridi/content-parser/compare/0.5.8...0.6.0
 [0.5.8 (2019-07-03)]: https://github.com/ridi/content-parser/compare/0.5.7...0.5.8
 [0.5.7 (2019-07-03)]: https://github.com/ridi/content-parser/compare/0.5.6...0.5.7
