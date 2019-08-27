@@ -1,6 +1,6 @@
-/* eslint-disable no-bitwise, no-plusplus */
 import CryptoJs from 'crypto-js';
 
+import { Padding, Encoding } from './cryptoUtil';
 import Errors, { createError } from './errors';
 import mergeObjects from './mergeObjects';
 import { stringContains } from './stringContains';
@@ -8,79 +8,7 @@ import validateOptions from './validateOptions';
 
 import { isExists, isObject, isString } from './typecheck';
 
-const {
-  pad, enc, mode: aesMode, AES,
-} = CryptoJs;
-const { Pkcs7 } = pad;
-const { Utf8, Hex } = enc;
-
-const Padding = Object.freeze({
-  AUTO: {
-    name: 'auto',
-    op: Pkcs7,
-    pad: data => Pkcs7.pad(data, 4),
-    unpad: Pkcs7.unpad,
-  },
-  PKCS7: {
-    name: 'pkcs7',
-    op: pad.Pkcs7,
-    pad: data => Pkcs7.pad(data, 4),
-    unpad: Pkcs7.unpad,
-  },
-  NONE: {
-    name: 'none',
-    op: pad.NoPadding,
-  },
-});
-
-const Uint8 = {
-  decode: (uint8Array) => {
-    const len = uint8Array.length;
-    const words = [];
-    let i = 0;
-    while (i < len) {
-      words.push((uint8Array[i++] << 24) | (uint8Array[i++] << 16) | (uint8Array[i++] << 8) | (uint8Array[i++]));
-    }
-    return CryptoJs.lib.WordArray.create(words, words.length * 4);
-  },
-  encode: (wordArray) => {
-    const { words, sigBytes } = wordArray;
-    const uint8Array = new Uint8Array(sigBytes);
-    let offset = 0;
-    let word;
-    for (let i = 0; i < words.length; i++) {
-      word = words[i];
-      uint8Array[offset++] = word >> 24;
-      uint8Array[offset++] = (word >> 16) & 0xff;
-      uint8Array[offset++] = (word >> 8) & 0xff;
-      uint8Array[offset++] = word & 0xff;
-    }
-    return uint8Array;
-  },
-};
-
-const Encoding = Object.freeze({
-  UTF8: {
-    name: 'utf8',
-    decode: Utf8.parse,
-    encode: Utf8.stringify,
-  },
-  HEX: {
-    name: 'hex',
-    decode: Hex.parse,
-    encode: Hex.stringify,
-  },
-  UINT8: {
-    name: 'uint8',
-    decode: Uint8.decode,
-    encode: Uint8.encode,
-  },
-  BUFFER: {
-    name: 'buffer',
-    decode: data => Uint8.decode(new Uint8Array(data)),
-    encode: data => Buffer.from(Uint8.encode(data)),
-  },
-});
+const { mode: aesMode, AES } = CryptoJs;
 
 const defaultConfigTypes = {
   key: 'String|Buffer|Uint8Array|Array',
