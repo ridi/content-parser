@@ -20,7 +20,8 @@
   "dependencies": {
     "@ridi/parser-core": "^0.6.1",
     "pdfjs-dist": "^2.1.266",
-    "worker-loader": "^2.0.0"
+    "worker-loader": "^2.0.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "fs-extra": "^8.0.0"

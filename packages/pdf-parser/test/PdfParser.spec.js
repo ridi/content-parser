@@ -95,6 +95,12 @@ describe('PdfParser', () => {
         });
       });
     });
+
+    describe('Use fakeWorker option', () => {
+      return new PdfParser(Paths.PDF).parse({ fakeWorker: true }).then(book => {
+        validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_PDF_BOOK)));
+      });
+    });
   });
   
   describe('Book serialization test', () => {
