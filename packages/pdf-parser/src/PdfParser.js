@@ -180,8 +180,10 @@ class PdfParser extends Parser {
                 let key = ref;
                 if (isString(ref)) {
                   ref = await this._execute(document, document.getDestination, [ref]);
-                } else {
+                } else if (isExists(ref)) {
                   key = ref[0].num;
+                } else {
+                  resolve(null);
                 }
                 const page = await this._execute(document, document.getPageIndex, [ref[0]]);
                 resolve({ [`${key}`]: page });
@@ -194,7 +196,9 @@ class PdfParser extends Parser {
         Promise.all(makePromise(outline)).then((results) => {
           let pageMap = {};
           results.forEach((result) => {
-            pageMap = { ...pageMap, ...result };
+            if (isExists(result)) {
+              pageMap = { ...pageMap, ...result };
+            }
           });
           rawBook.pageMap = pageMap;
           resolveAll();
