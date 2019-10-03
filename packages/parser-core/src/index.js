@@ -10,6 +10,7 @@ import {
 
 import AesCryptor from './AesCryptor';
 import CryptoProvider from './CryptoProvider';
+import { Hash } from './cryptoUtil';
 import Errors, { createError, mustOverride } from './errors';
 import Logger, { LogLevel } from './Logger';
 import mergeObjects from './mergeObjects';
@@ -47,6 +48,7 @@ export {
   getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile,
   AesCryptor, CryptoProvider,
   Errors, createError, mustOverride,
+  Hash,
   Logger,
   LogLevel,
   mergeObjects,
