@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+* None.
+
+## [0.6.3 (2019-10-03)]
+
 ### Added
 
 * Add hash function.
@@ -229,7 +233,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.2...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.3...HEAD
+[0.6.3 (2019-10-03)]: https://github.com/ridi/content-parser/compare/0.6.2...0.6.3
 [0.6.2 (2019-09-10)]: https://github.com/ridi/content-parser/compare/0.6.1...0.6.2
 [0.6.1 (2019-08-09)]: https://github.com/ridi/content-parser/compare/0.6.0...0.6.1
 [0.6.0 (2019-08-04)]: https://github.com/ridi/content-parser/compare/0.5.8...0.6.0
