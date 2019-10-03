@@ -1,6 +1,6 @@
 import {
   Errors, createError,
-  isExists, isString,
+  isArray, isExists, isString,
   Parser,
   readEntries,
 } from '@ridi/parser-core';
@@ -111,15 +111,15 @@ class PdfParser extends Parser {
    * @returns {*}
    */
   async _execute(that, fun, args = []) {
-    const result = await new Promise(async (resolve) => {
+    const result = await new Promise(async (resolve, reject) => {
       let runner = fun.apply(that, args);
       if (isExists(runner.promise)) {
         runner = runner.promise;
       }
       runner.then((data) => {
         resolve(data);
-      }).catch((error) => { /* istanbul ignore next */
-        throw createError(Errors.EPDFJS, error);
+      }).catch((error) => {
+        reject(createError(Errors.EPDFJS, error));
       });
     });
     return result;
@@ -178,15 +178,23 @@ class PdfParser extends Parser {
               new Promise(async (resolve) => {
                 let ref = item.dest;
                 let key = ref;
-                if (isString(ref)) {
-                  ref = await this._execute(document, document.getDestination, [ref]);
-                } else if (isExists(ref)) {
+                if (isArray(ref) && ref.length > 0 && isExists(ref[0].num)) {
                   key = ref[0].num;
+                } else if (isString(ref)) {
+                  ref = await this._execute(document, document.getDestination, [ref]);
                 } else {
+                  this.logger.warn('Outline \'%s\' ignored. (reason: pageIndexRef not found)', item.title);
+                  resolve(null);
+                  return;
+                }
+
+                try {
+                  const page = await this._execute(document, document.getPageIndex, [ref[0]]);
+                  resolve({ [`${key}`]: page });
+                } catch (error) {
+                  this.logger.warn('Outline \'%s\' ignored. (reason: %s)', item.title, error.toString());
                   resolve(null);
                 }
-                const page = await this._execute(document, document.getPageIndex, [ref[0]]);
-                resolve({ [`${key}`]: page });
               }),
               ...makePromise(item.items),
             ];

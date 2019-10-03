@@ -1,0 +1,88 @@
+[
+  {
+    "dest": "chapter.1",
+    "url": null,
+    "title": "Case 1. dest is string type",
+    "color": {
+      "0": 0,
+      "1": 0,
+      "2": 0
+    },
+    "count": -4,
+    "bold": false,
+    "italic": false,
+    "children": [],
+    "page": 4
+  },
+  {
+    "dest": [{ "num": 13, "gen": 0 }, { "name": "XYZ" }, 0, 974, null],
+    "url": null,
+    "title": "Case 2. dest is array type",
+    "color": {
+      "0": 0,
+      "1": 0,
+      "2": 0
+    },
+    "count": -1,
+    "bold": false,
+    "italic": false,
+    "children": [],
+    "page": 5
+  },
+  {
+    "dest": null,
+    "url": null,
+    "title": "Case 3. dest is null",
+    "color": {
+      "0": 0,
+      "1": 0,
+      "2": 0
+    },
+    "bold": false,
+    "italic": false,
+    "children": [],
+    "page": null
+  },
+  {
+    "dest": {},
+    "url": null,
+    "title": "Case 4. dest is empty object",
+    "color": {
+      "0": 0,
+      "1": 0,
+      "2": 0
+    },
+    "bold": false,
+    "italic": false,
+    "children": [],
+    "page": null
+  },
+  {
+    "dest": "Unknown dest",
+    "url": null,
+    "title": "Case 5. dest with no matching destination",
+    "color": {
+      "0": 0,
+      "1": 0,
+      "2": 0
+    },
+    "bold": false,
+    "italic": false,
+    "children": [],
+    "page": null
+  },
+  {
+    "dest": "subsection.1.2.1",
+    "url": null,
+    "title": "Case 6. dest with no matching pageIndexRef",
+    "color": {
+      "0": 0,
+      "1": 0,
+      "2": 0
+    },
+    "bold": false,
+    "italic": false,
+    "children": [],
+    "page": null
+  }
+]
