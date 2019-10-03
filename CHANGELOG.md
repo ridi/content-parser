@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None.
+### Added
+
+* Add hash function.
 
 ## [0.6.1 (2019-08-09)]
 
