@@ -96,13 +96,15 @@ parser.logger.logLevel = LogLevel.VERBOSE; // SILENT, ERROR, WARN(default), INFO
 
 ## API
 
-### parse()
+### parse(parseOptions)
 
 Returns `Promise<PdfBook>` with:
 
 - [PdfBook](#book): Instance with pages info.
 
 Or throw exception.
+
+#### [parseOptions](#parseOptions): `?object`
 
 ---
 
@@ -197,6 +199,22 @@ parser.onProgress = (step, totalStep, action) => {
 - allowAssembling: *boolean*
 - allowHighQualityPrinting: *boolean*
 - toRaw(): *?number[]*
+
+<a id="parseOptions"></a>
+
+## Parse Options
+
+* [fakeWorker](#fakeWorker)
+
+---
+
+<a id="fakeWorker"></a>
+
+### fakeWorker: *`boolean`*
+
+Use fake worker when used in a browser environment such as Electron Renderer Proccess.
+
+**Default:** `false`
 
 ## License
 

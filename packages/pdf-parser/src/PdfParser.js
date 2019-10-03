@@ -1,12 +1,13 @@
 import {
   Errors, createError,
-  isExists, isString,
+  isArray, isExists, isString,
   Parser,
   readEntries,
 } from '@ridi/parser-core';
 
 import fs from 'fs';
-import pdfJs from 'pdfjs-dist';
+import pdfJs, { PDFWorker } from 'pdfjs-dist';
+import uuid from 'uuid/v4';
 
 import Book from './model/Book';
 import ParseContext from './model/ParseContext';
@@ -16,14 +17,19 @@ class PdfParser extends Parser {
    * Get default values of parse options
    */
   static get parseDefaultOptions() {
-    return {};
+    return {
+      // Use fake worker when used in a browser environment such as Electron Renderer Proccess.
+      fakeWorker: false,
+    };
   }
 
   /**
    * Get types of parse options
    */
   static get parseOptionTypes() {
-    return {};
+    return {
+      fakeWorker: 'Boolean',
+    };
   }
 
   static get readDefaultOptions() {
@@ -89,21 +95,31 @@ class PdfParser extends Parser {
   }
 
   /**
+   * @returns {ParseTask[]} return after tasks
+   */
+  _parseAfterTasks() {
+    return [
+      { fun: this._destoryWorkerIfNeeded, name: 'destoryWorkerIfNeeded' },
+      ...super._parseAfterTasks(),
+    ];
+  }
+
+  /**
    * @param {object} that
    * @param {function} fun
    * @param {*[]} args
    * @returns {*}
    */
   async _execute(that, fun, args = []) {
-    const result = await new Promise(async (resolve) => {
+    const result = await new Promise(async (resolve, reject) => {
       let runner = fun.apply(that, args);
       if (isExists(runner.promise)) {
         runner = runner.promise;
       }
       runner.then((data) => {
         resolve(data);
-      }).catch((error) => { /* istanbul ignore next */
-        throw createError(Errors.EPDFJS, error);
+      }).catch((error) => {
+        reject(createError(Errors.EPDFJS, error));
       });
     });
     return result;
@@ -116,10 +132,12 @@ class PdfParser extends Parser {
    * @throws {Errors.EPDFJS} pdfjs error
    */
   async _loadDocuemnt(context) {
-    const { rawBook, entries } = context;
-    const pdfFile = await entries.first.getFile();
-    const document = await this._execute(pdfJs, pdfJs.getDocument, [pdfFile]);
+    const { rawBook, entries, options } = context;
+    const worker = options.fakeWorker ? new PDFWorker(`pdfWorker_${uuid()}`) : null;
+    const data = await entries.first.getFile();
+    const document = await this._execute(pdfJs, pdfJs.getDocument, [{ data, worker }]);
     context.document = document;
+    context.worker = worker;
     rawBook.pageCount = document.numPages;
     return context;
   }
@@ -160,13 +178,23 @@ class PdfParser extends Parser {
               new Promise(async (resolve) => {
                 let ref = item.dest;
                 let key = ref;
-                if (isString(ref)) {
+                if (isArray(ref) && ref.length > 0 && isExists(ref[0].num)) {
+                  key = ref[0].num;
+                } else if (isString(ref)) {
                   ref = await this._execute(document, document.getDestination, [ref]);
                 } else {
-                  key = ref[0].num;
+                  this.logger.warn('Outline \'%s\' ignored. (reason: pageIndexRef not found)', item.title);
+                  resolve(null);
+                  return;
                 }
-                const page = await this._execute(document, document.getPageIndex, [ref[0]]);
-                resolve({ [`${key}`]: page });
+
+                try {
+                  const page = await this._execute(document, document.getPageIndex, [ref[0]]);
+                  resolve({ [`${key}`]: page });
+                } catch (error) {
+                  this.logger.warn('Outline \'%s\' ignored. (reason: %s)', item.title, error.toString());
+                  resolve(null);
+                }
               }),
               ...makePromise(item.items),
             ];
@@ -176,7 +204,9 @@ class PdfParser extends Parser {
         Promise.all(makePromise(outline)).then((results) => {
           let pageMap = {};
           results.forEach((result) => {
-            pageMap = { ...pageMap, ...result };
+            if (isExists(result)) {
+              pageMap = { ...pageMap, ...result };
+            }
           });
           rawBook.pageMap = pageMap;
           resolveAll();
@@ -196,6 +226,19 @@ class PdfParser extends Parser {
   async _parsePermission(context) {
     const { rawBook, document } = context;
     rawBook.permissions = await this._execute(document, document.getPermissions);
+    return context;
+  }
+
+  /**
+   * Destory fake worker.
+   * @param {ParseContext} context intermediate result
+   * @returns {Promise.<ParseContext>} return Context containing permissions
+   */
+  async _destoryWorkerIfNeeded(context) {
+    const { worker } = context;
+    if (isExists(worker)) {
+      worker.destroy();
+    }
     return context;
   }
 

@@ -39,6 +39,8 @@ const Paths = {
   PDF: '../../test/res/pdf/default.pdf',
   EXPECTED_PDF_RAW_BOOK: '../../test/res/pdf/expectedPdfRawBook.json',
   EXPECTED_PDF_BOOK: '../../test/res/pdf/expectedPdfBook.json',
+  OUTLINE: '../../test/res/pdf/outline.json',
+  EXPECTED_OUTLINE: '../../test/res/pdf/expectedOutline.json'
 };
 
 export default Paths;

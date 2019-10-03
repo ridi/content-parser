@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Add hash function.
 
+### Fixed
+
+* Fix an issue where parser error with an outline that cannot be inferred page.
+
+## [0.6.2 (2019-09-10)]
+
+### Added
+
+* Add `PdfParser.parseOptions.fakeWorker` option. (default: `false`)
+
 ## [0.6.1 (2019-08-09)]
 
 ### Changed
@@ -219,7 +229,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.1...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.2...HEAD
+[0.6.2 (2019-09-10)]: https://github.com/ridi/content-parser/compare/0.6.1...0.6.2
 [0.6.1 (2019-08-09)]: https://github.com/ridi/content-parser/compare/0.6.0...0.6.1
 [0.6.0 (2019-08-04)]: https://github.com/ridi/content-parser/compare/0.5.8...0.6.0
 [0.5.8 (2019-07-03)]: https://github.com/ridi/content-parser/compare/0.5.7...0.5.8
