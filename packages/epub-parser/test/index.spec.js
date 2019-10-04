@@ -7,6 +7,7 @@ import {
   LogLevel,
   CryptoProvider,
   AesCryptor,
+  Hash,
 } from '../src/index';
 
 describe('epub-parser', () => {
@@ -17,5 +18,6 @@ describe('epub-parser', () => {
     assert(LogLevel !== null);
     assert(CryptoProvider.constructor !== null);
     assert(AesCryptor.constructor !== null);
+    assert(Hash !== null);
   });
 });

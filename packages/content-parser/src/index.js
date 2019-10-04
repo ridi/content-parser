@@ -1,5 +1,5 @@
 import {
-  CryptoProvider, AesCryptor,
+  CryptoProvider, AesCryptor, Hash,
   Errors,
   LogLevel,
 } from '@ridi/parser-core';
@@ -19,4 +19,5 @@ export default {
   LogLevel,
   CryptoProvider,
   AesCryptor,
+  Hash,
 };

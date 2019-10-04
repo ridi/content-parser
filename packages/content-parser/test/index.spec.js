@@ -11,6 +11,7 @@ import {
   LogLevel,
   CryptoProvider,
   AesCryptor,
+  Hash,
 } from '../src/index';
 
 describe('content-parser', () => {
@@ -25,5 +26,6 @@ describe('content-parser', () => {
     assert(LogLevel !== null);
     assert(CryptoProvider.constructor !== null);
     assert(AesCryptor.constructor !== null);
+    assert(Hash !== null);
   });
 });
