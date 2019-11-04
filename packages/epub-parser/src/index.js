@@ -7,12 +7,12 @@ import {
 import EpubParser from './EpubParser';
 import Book from './model/Book';
 
-export default {
+export {
   EpubParser,
   Errors,
   LogLevel,
   CryptoProvider,
   AesCryptor,
   Hash,
-  EpubBook: Book,
+  Book as EpubBook,
 };

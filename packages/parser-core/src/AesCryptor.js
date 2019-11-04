@@ -194,3 +194,9 @@ AesCryptor.Encoding = Encoding;
 AesCryptor.Mode = Mode;
 
 export default AesCryptor;
+
+export {
+  Padding,
+  Encoding,
+  Mode,
+};
