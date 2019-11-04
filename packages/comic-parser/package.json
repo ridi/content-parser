@@ -1,6 +1,6 @@
 {
   "name": "@ridi/comic-parser",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "Common comic data parser for Ridibooks services",
   "author": {
     "name": "Ridibooks Viewer Team",
@@ -18,7 +18,7 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
-    "@ridi/parser-core": "^0.6.4",
+    "@ridi/parser-core": "^0.6.5",
     "fs-extra": "^8.0.0",
     "image-size": "^0.7.1",
     "string-natural-compare": "^2.0.3"
