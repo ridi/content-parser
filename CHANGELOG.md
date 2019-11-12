@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.6.7 (2019-11-12)]
+
+### Changed
+
+* Revert "Dependencies and babel updates".
+* Fixed specify cross-dependency version numbers exactly.
+
+## [0.6.6 (2019-11-05)]
+
+## [0.6.5 (2019-11-04)]
+
+### Changed
+
+* Dependencies and babel updates.
+
 ## [0.6.4 (2019-10-04)]
 
 ### Fixed
@@ -239,7 +254,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.4...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.7...HEAD
+[0.6.7 (2019-11-12)]: https://github.com/ridi/content-parser/compare/0.6.6...0.6.7
+[0.6.6 (2019-11-05)]: https://github.com/ridi/content-parser/compare/0.6.5...0.6.6
+[0.6.5 (2019-11-04)]: https://github.com/ridi/content-parser/compare/0.6.4...0.6.5
 [0.6.4 (2019-10-04)]: https://github.com/ridi/content-parser/compare/0.6.3...0.6.4
 [0.6.3 (2019-10-03)]: https://github.com/ridi/content-parser/compare/0.6.2...0.6.3
 [0.6.2 (2019-09-10)]: https://github.com/ridi/content-parser/compare/0.6.1...0.6.2

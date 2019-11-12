@@ -7,7 +7,7 @@
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
-    "bump": "lerna publish --force-publish=*"
+    "bump": "lerna publish --force-publish=* --exact"
   },
   "publishConfig": {
     "access": "public"
