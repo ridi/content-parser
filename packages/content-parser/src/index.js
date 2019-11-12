@@ -8,7 +8,7 @@ import { EpubParser, EpubBook } from '@ridi/epub-parser';
 import { ComicParser, ComicBook } from '@ridi/comic-parser';
 import { PdfParser, PdfBook } from '@ridi/pdf-parser';
 
-export {
+export default {
   EpubParser,
   EpubBook,
   ComicParser,

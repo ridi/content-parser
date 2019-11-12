@@ -1,12 +1,14 @@
 {
   "presets": [
-		["@babel/preset-env"]
+		["env"]
 	],
 	"plugins": [
 		"add-module-exports",
-    ["@babel/plugin-proposal-class-properties", { "loose": false }],
-		"@babel/plugin-proposal-object-rest-spread",
-		"@babel/transform-runtime"
+		["transform-es2015-classes", {
+			"loose": true
+		}],
+		"transform-object-rest-spread",
+		"transform-runtime"
 	],
 	"comments": true
 }

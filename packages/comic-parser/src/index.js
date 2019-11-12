@@ -7,12 +7,12 @@ import {
 import ComicParser from './ComicParser';
 import Book from './model/Book';
 
-export {
+export default {
   ComicParser,
   Errors,
   LogLevel,
   CryptoProvider,
   AesCryptor,
   Hash,
-  Book as ComicBook,
+  ComicBook: Book,
 };

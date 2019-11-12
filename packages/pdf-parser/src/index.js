@@ -7,12 +7,12 @@ import {
 import PdfParser from './PdfParser';
 import Book from './model/Book';
 
-export {
+export default {
   PdfParser,
   Errors,
   LogLevel,
   CryptoProvider,
   AesCryptor,
   Hash,
-  Book as PdfBook,
+  PdfBook: Book,
 };
