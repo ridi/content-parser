@@ -25,7 +25,7 @@
     ],
     "dates": [
       {
-        "value": "2018-08-25",
+        "value": "2020-01-21",
         "event": "modification"
       },
       {
@@ -58,6 +58,10 @@
       {
         "name": "Sigil version",
         "content": "0.9.10"
+      },
+      {
+        "#text": "2020-01-21T07:08:09Z",
+        "property": "dcterms:modified"
       },
       {
         "name": "cover",

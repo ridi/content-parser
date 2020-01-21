@@ -362,7 +362,7 @@ class EpubParser extends Parser {
     const { toc: tocId } = spine;
     const items = getValues(manifest.item);
     const itemRefs = getValues(spine.itemref);
-    const coverMeta = rawBook.metas.find(item => item.name.toLowerCase() === 'cover');
+    const coverMeta = rawBook.metas.find(item => isExists(item.name) && item.name.toLowerCase() === 'cover');
     let inlineStyles = [];
 
     rawBook.items = [];

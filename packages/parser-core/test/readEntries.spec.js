@@ -21,19 +21,19 @@ describe('Util - entry manager', () => {
   const expectedListForZip = [
     'mimetype',
     'META-INF/container.xml',
-    'OEBPS/content.opf',
-    'OEBPS/Fonts/NotoSans-Regular.ttf',
-    'OEBPS/Images/ridibooks.png',
+    'OEBPS/Video/empty.mp4',
     'OEBPS/Images/ridibooks_logo.png',
+    'OEBPS/Images/ridibooks.png',
     'OEBPS/Styles/Style0001.css',
-    'OEBPS/Text/Cover.xhtml',
+    'OEBPS/content.opf',
     'OEBPS/Text/Section0001.xhtml',
+    'OEBPS/Text/Section0005.xhtml',
     'OEBPS/Text/Section0002.xhtml',
     'OEBPS/Text/Section0004.xhtml',
-    'OEBPS/Text/Section0005.xhtml',
     'OEBPS/Text/Section0006.xhtml',
-    'OEBPS/toc.ncx',
-    'OEBPS/Video/empty.mp4',
+    'OEBPS/Text/Cover.xhtml',
+    'OEBPS/Fonts/NotoSans-Regular.ttf',
+    'OEBPS/toc.ncx'
   ];
 
   it('Read entries from zip', async () => {
