@@ -252,7 +252,7 @@ class PdfParser extends Parser {
     return file;
   }
 
-  async _read() {
+  _read() {
     throw createError(Errors.ENOIMP);
   }
 
