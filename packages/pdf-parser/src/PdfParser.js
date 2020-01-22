@@ -178,7 +178,7 @@ class PdfParser extends Parser {
               new Promise(async (resolve) => {
                 let ref = item.dest;
                 let key = ref;
-                if (isArray(ref) && ref.length > 0 && isExists(ref[0].num)) {
+                if (isArray(ref) && isExists(ref[0]) && isExists(ref[0].num)) {
                   key = ref[0].num;
                 } else if (isString(ref)) {
                   ref = await this._execute(document, document.getDestination, [ref]);
