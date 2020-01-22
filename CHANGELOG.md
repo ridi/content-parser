@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.6.9 (2020-01-22)]
+
+### Fixed
+
+* Fix an issue that could crash during PDF outline parsing.
+
 ## [0.6.8 (2020-01-21)]
 
 ### Fixed
@@ -260,7 +266,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.8...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.9...HEAD
+[0.6.9 (2020-01-22)]: https://github.com/ridi/content-parser/compare/0.6.8...0.6.9
 [0.6.8 (2020-01-21)]: https://github.com/ridi/content-parser/compare/0.6.7...0.6.8
 [0.6.7 (2019-11-12)]: https://github.com/ridi/content-parser/compare/0.6.6...0.6.7
 [0.6.6 (2019-11-05)]: https://github.com/ridi/content-parser/compare/0.6.5...0.6.6
