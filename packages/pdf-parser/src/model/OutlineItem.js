@@ -1,4 +1,7 @@
-import { mergeObjects, isArray, isString } from '@ridi/parser-core';
+import {
+  mergeObjects,
+  isArray, isExists, isString,
+} from '@ridi/parser-core';
 
 import Color from './Color';
 
@@ -16,7 +19,7 @@ class OutlineItem {
     });
     if (isString(this.dest)) {
       this.page = pageMap[this.dest] || rawObj.page;
-    } else if (isArray(this.dest) && this.dest.length > 0) {
+    } else if (isArray(this.dest) && isExists(this.dest[0])) {
       this.page = pageMap[this.dest[0].num] || rawObj.page;
     } else {
       this.page = rawObj.page;
