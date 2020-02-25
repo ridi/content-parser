@@ -27,6 +27,24 @@ describe('Loader - Spine', () => {
     result = spineLoader({ styles }, origin, { extractBody });
     result.should.equal(JSON.parse(read(Paths.SPINE_LOADER_ADAPTER)).value);
 
+    // Hmm... Interesting Cases...
+    extractBody = innerHTML => innerHTML;
+
+    let html = '<div>no html, no body.</div>';
+    let expectedHtml = html;
+    result = spineLoader({}, html, { extractBody });
+    result.should.equal(expectedHtml);
+
+    html = '<html><div>no body.</div></html>';
+    expectedHtml = '<div>no body.</div>';
+    result = spineLoader({}, html, { extractBody });
+    result.should.equal(expectedHtml);
+
+    html = '<body><div>no html.</div></body>';
+    expectedHtml = '<div>no html.</div>';
+    result = spineLoader({}, html, { extractBody });
+    result.should.equal(expectedHtml);
+
     // with parseOptions.parseStyle option.
     const styles = [
       { namespace: 'ridi_style1' },

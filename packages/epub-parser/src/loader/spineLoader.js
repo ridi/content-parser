@@ -1,5 +1,5 @@
 import {
-  isExists, isFunc, isUrl,
+  isArray, isExists, isFunc, isUrl,
   mergeObjects,
   safeDirname, safePathJoin,
 } from '@ridi/parser-core';
@@ -26,6 +26,8 @@ const Names = {
   },
   Tags: {
     DOCTYPE: '!doctype',
+    HTML: 'html',
+    BODY: 'body',
     STYLE: 'style',
     A: 'a',
     SCRIPT: 'script',
@@ -126,13 +128,39 @@ function getStringifyOptions(spineItem, options) {
   return mergeObjects(parseDefaults, mergeObjects(options, additional));
 }
 
+function getSafeBody(ast) {
+  const { BODY } = Names.Tags;
+  const body = ast.find(child => child.tagName === BODY);
+  if (isExists(body)) return body;
+  return {
+    type: 'element',
+    tagName: BODY,
+    attributes: [],
+    children: isArray ? ast : [ast],
+  };
+}
+
+function getSafeHtml(ast) {
+  const { HTML } = Names.Tags;
+  const html = ast.find(child => child.tagName === HTML);
+  if (isExists(html)) return html;
+  return {
+    type: 'element',
+    tagName: HTML,
+    attributes: [],
+    children: [
+      getSafeBody(ast),
+    ],
+  };
+}
+
 export default function spineLoader(spineItem, string, options = {}) {
   const ast = parse(string);
   const stringifyOptions = getStringifyOptions(spineItem, options);
 
   if (stringifyOptions.extractBody) {
-    const html = ast.find(child => child.tagName === 'html');
-    const body = html.children.find(child => child.tagName === 'body');
+    const html = getSafeHtml(ast);
+    const body = getSafeBody(html.children);
     let attrs = body.attributes;
     if (isExists(spineItem.styles)) {
       attrs = attrs.concat([{
