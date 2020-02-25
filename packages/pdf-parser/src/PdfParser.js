@@ -111,7 +111,7 @@ class PdfParser extends Parser {
    * @returns {*}
    */
   async _execute(that, fun, args = []) {
-    const result = await new Promise(async (resolve, reject) => {
+    const result = await new Promise((resolve, reject) => {
       let runner = fun.apply(that, args);
       if (isExists(runner.promise)) {
         runner = runner.promise;
@@ -175,6 +175,7 @@ class PdfParser extends Parser {
           return (items || []).reduce((list, item) => {
             list = [
               ...list,
+              // eslint-disable-next-line no-async-promise-executor
               new Promise(async (resolve) => {
                 let ref = item.dest;
                 let key = ref;
