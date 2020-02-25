@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.6.11 (2020-02-26)]
+
+### Fixed
+
+* Fix an issue where parser crash when parsing spines without html or body tag.
+
 ## [0.6.10 (2020-01-22)]
 
 ## [0.6.9 (2020-01-22)]
@@ -268,7 +274,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.10...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.11...HEAD
+[0.6.11 (2020-02-26)]: https://github.com/ridi/content-parser/compare/0.6.10...0.6.11
 [0.6.10 (2020-01-22)]: https://github.com/ridi/content-parser/compare/0.6.9...0.6.10
 [0.6.9 (2020-01-22)]: https://github.com/ridi/content-parser/compare/0.6.8...0.6.9
 [0.6.8 (2020-01-21)]: https://github.com/ridi/content-parser/compare/0.6.7...0.6.8
