@@ -18,9 +18,11 @@ class OutlineItem {
       return new OutlineItem(mergeObjects(item, { depth: this.depth + 1 }), pageMap);
     });
     if (isString(this.dest)) {
-      this.page = pageMap[this.dest] || rawObj.page;
+      const page = pageMap[this.dest];
+      this.page = isExists(page) ? page : rawObj.page;
     } else if (isArray(this.dest) && isExists(this.dest[0])) {
-      this.page = pageMap[this.dest[0].num] || rawObj.page;
+      const page = pageMap[this.dest[0].num];
+      this.page = isExists(page) ? page : rawObj.page;
     } else {
       this.page = rawObj.page;
     }

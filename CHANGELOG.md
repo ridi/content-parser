@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.6.12 (2020-03-03)]
+
+### Fixed
+
+* Fix an issue where first page is always calculated to `undefined` when calculating pages for PDF outline.
+
 ## [0.6.11 (2020-02-26)]
 
 ### Fixed
@@ -275,6 +281,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * First release.
 
 [Unreleased]: https://github.com/ridi/content-parser/compare/0.6.11...HEAD
+[0.6.12 (2020-03-03)]: https://github.com/ridi/content-parser/compare/0.6.11...0.6.12
 [0.6.11 (2020-02-26)]: https://github.com/ridi/content-parser/compare/0.6.10...0.6.11
 [0.6.10 (2020-01-22)]: https://github.com/ridi/content-parser/compare/0.6.9...0.6.10
 [0.6.9 (2020-01-22)]: https://github.com/ridi/content-parser/compare/0.6.8...0.6.9
