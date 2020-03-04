@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf">
-  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <dc:language>en</dc:language>
     <dc:coverage>Coverage</dc:coverage>
     <dc:subject>Subject</dc:subject>
     <dc:rights>Copyright (c) 2018 Davin</dc:rights>
     <dc:source>My brain</dc:source>
     <dc:title>Default</dc:title>
-    <meta name="Sigil version" content="0.9.10" />
+    <meta name="Sigil version" content="0.9.13" />
     <dc:identifier opf:scheme="ISBN">0-306-40615-2</dc:identifier>
-    <dc:date opf:event="modification">2020-01-21</dc:date>
+    <dc:date opf:event="modification">2020-03-04</dc:date>
     <dc:date opf:event="creation">2018-08-07</dc:date>
     <dc:date>2018-08-07</dc:date>
     <dc:description>Description</dc:description>

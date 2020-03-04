@@ -25,7 +25,7 @@
     ],
     "dates": [
       {
-        "value": "2020-01-21",
+        "value": "2020-03-04",
         "event": "modification"
       },
       {
@@ -57,7 +57,7 @@
     "metas": [
       {
         "name": "Sigil version",
-        "content": "0.9.10"
+        "content": "0.9.13"
       },
       {
         "#text": "2020-01-21T07:08:09Z",
@@ -223,15 +223,6 @@
                 }
               }
             ]
-          },
-          {
-            "id": "navPoint-16",
-            "navLabel": {
-              "text": "Copyrights"
-            },
-            "content": {
-              "src": ""
-            }
           }
         ]
       },

@@ -25,7 +25,7 @@
   ],
   "dates": [
     {
-      "value": "2020-01-21",
+      "value": "2020-03-04",
       "event": "modification"
     },
     {
@@ -62,7 +62,7 @@
   "metas": [
     {
       "name": "Sigil version",
-      "content": "0.9.10"
+      "content": "0.9.13"
     },
     {
       "name": "cover",
@@ -318,13 +318,6 @@
             "index": 2,
             "isLinear": true
           }
-        },
-        {
-          "id": "navPoint-16",
-          "label": "Copyrights",
-          "src": "",
-          "depth": 0,
-          "children": []
         }
       ]
     },
@@ -662,13 +655,6 @@
           "index": 2,
           "isLinear": true
         }
-      },
-      {
-        "id": "navPoint-16",
-        "label": "Copyrights",
-        "src": "",
-        "depth": 0,
-        "children": []
       }
     ]
   },

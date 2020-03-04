@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.6.13 (2020-03-04)]
+
+### Changed
+
+* Fix to ignore `NavPoint` if it cannot find `SpineItem` that maps to `NavPoint`.
+
 ## [0.6.12 (2020-03-03)]
 
 ### Fixed

@@ -615,16 +615,19 @@ class EpubParser extends Parser {
             np.children[idx] = normalizeSrc(child);
           });
         }
-        if (isExists(np.content) && isExists(np.content.src) && np.content.src.length > 0) {
-          // Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
-          np.content.src = safePathJoin(context.basePath, np.content.src);
-        }
+        // Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
+        np.content.src = safePathJoin(context.basePath, np.content.src);
         return np;
       };
 
       const keyTranslator = key => (key === 'navPoint' ? 'children' : key);
       getValues(ncx.navMap.navPoint, keyTranslator).forEach((navPoint) => {
-        return ncxItem.navPoints.push(normalizeSrc(navPoint));
+        const { id, content } = navPoint;
+        if (isExists(id) && isExists(content) && isExists(content.src) && content.src.length > 0) {
+          ncxItem.navPoints.push(normalizeSrc(navPoint));
+        } else {
+          this.logger.warn('NavPoint \'%s\' ignored. (reason: \'id\' or \'content.src\' is not defined)', navPoint.id);
+        }
       });
     } else if (!allowNcxFileMissing) {
       const prevNcxItem = rawBook.items.find((item) => {
