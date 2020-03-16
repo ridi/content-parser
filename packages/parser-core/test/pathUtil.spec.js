@@ -26,6 +26,8 @@ describe('Util - Path utils', () => {
       path.join('OEBPS', 'Images', 'ridibooks_logo.png'),
       path.join('OEBPS', 'Styles', 'Style0001.css'),
       path.join('OEBPS', 'Text', 'Cover.xhtml'),
+      path.join('OEBPS', 'Text', 'Section 0007.xhtml'),
+      path.join('OEBPS', 'Text', 'Section%200008.xhtml'),
       path.join('OEBPS', 'Text', 'Section0001.xhtml'),
       path.join('OEBPS', 'Text', 'Section0002.xhtml'),
       path.join('OEBPS', 'Text', 'Section0004.xhtml'),

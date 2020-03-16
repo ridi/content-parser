@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf">
-  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <dc:language>en</dc:language>
     <dc:coverage>Coverage</dc:coverage>
     <dc:subject>Subject</dc:subject>
     <dc:rights>Copyright (c) 2018 Davin</dc:rights>
     <dc:source>My brain</dc:source>
     <dc:title>Default</dc:title>
-    <meta name="Sigil version" content="0.9.13" />
+    <meta name="Sigil version" content="1.1.0" />
     <dc:identifier opf:scheme="ISBN">0-306-40615-2</dc:identifier>
-    <dc:date opf:event="modification">2020-03-04</dc:date>
+    <dc:date opf:event="modification">2020-03-16</dc:date>
     <dc:date opf:event="creation">2018-08-07</dc:date>
     <dc:date>2018-08-07</dc:date>
     <dc:description>Description</dc:description>
@@ -39,6 +39,8 @@
     <item id="Section0005.xhtml" href="Text/Section0005.xhtml" media-type="application/xhtml+xml"/>
     <item id="Section0006.xhtml" href="Text/Section0006.xhtml" media-type="application/xhtml+xml"/>
     <item id="empty.mp4" href="Video/empty.mp4" media-type="video/mp4"/>
+    <item id="Section_0007.xhtml" href="Text/Section%200007.xhtml" media-type="application/xhtml+xml"/>
+    <item id="Section_200008.xhtml" href="Text/Section%200008.xhtml" media-type="application/xhtml+xml"/>
   </manifest>
   <spine toc="ncx">
     <itemref idref="Cover.xhtml"/>
@@ -47,6 +49,8 @@
     <itemref idref="Section0003.xhtml"/>
     <itemref idref="Section0004.xhtml" linear="false"/>
     <itemref idref="Section0005.xhtml"/>
+    <itemref idref="Section_0007.xhtml"/>
+    <itemref idref="Section_200008.xhtml"/>
   </spine>
   <guide>
     <reference type="cover" title="Cover" href="Text/Cover.xhtml"/>

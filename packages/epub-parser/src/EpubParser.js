@@ -278,7 +278,7 @@ class EpubParser extends Parser {
    */
   async _parseOpf(context) {
     const { entries, opfPath } = context;
-    const opfEntry = entries.find(opfPath);
+    const opfEntry = entries.find(opfPath, false);
     if (!isExists(opfEntry)) {
       throw createError(Errors.ENOFILE, opfPath);
     }
@@ -381,7 +381,7 @@ class EpubParser extends Parser {
           this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
         }
 
-        const itemEntry = entries.find(rawItem.href);
+        const itemEntry = entries.find(rawItem.href, false);
         if (isExists(itemEntry)) {
           rawItem.size = itemEntry.size;
 
@@ -580,7 +580,7 @@ class EpubParser extends Parser {
     const { allowNcxFileMissing } = options;
     const ncxItem = rawBook.items.find(item => item.itemType === NcxItem);
     if (isExists(ncxItem)) {
-      const ncxEntry = entries.find(ncxItem.href);
+      const ncxEntry = entries.find(ncxItem.href, false);
 
       // toc.ncx
       // <?xml ... ?>
@@ -672,7 +672,7 @@ class EpubParser extends Parser {
           return;
         }
 
-        const entry = entries.find(item.href);
+        const entry = entries.find(item.href, false);
         if (!options.force && !isExists(entry)) {
           throw createError(Errors.ENOFILE, item.href);
         }

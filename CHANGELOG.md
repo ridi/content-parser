@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * None.
 
+## [0.6.14 (2020-03-16)]
+
+### Changed
+
+* Add feature to ignore percent encoding when matching files and items.
+
 ## [0.6.13 (2020-03-04)]
 
 ### Changed
@@ -286,7 +292,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.13...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.6.14...HEAD
+[0.6.14 (2020-03-16)]: https://github.com/ridi/content-parser/compare/0.6.13...0.6.14
 [0.6.13 (2020-03-04)]: https://github.com/ridi/content-parser/compare/0.6.12...0.6.13
 [0.6.12 (2020-03-03)]: https://github.com/ridi/content-parser/compare/0.6.11...0.6.12
 [0.6.11 (2020-02-26)]: https://github.com/ridi/content-parser/compare/0.6.10...0.6.11

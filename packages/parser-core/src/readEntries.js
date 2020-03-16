@@ -10,6 +10,7 @@ import CryptoProvider from './CryptoProvider';
 import Errors, { createError } from './errors';
 import { getPathes, safePath } from './pathUtil';
 import { conditionally } from './streamUtil';
+import { safeDecodeURI } from './stringUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
 
@@ -27,7 +28,11 @@ function create(source, entries) {
     length: entries.length,
     source,
     get: idx => entries[idx],
-    find: entryPath => entries.find(entry => entryPath === entry.entryPath),
+    find: (entryPath, strict = true) => entries.find(entry => {
+      const lhs = strict ? entryPath : safeDecodeURI(entryPath);
+      const rhs = strict ? entry.entryPath : safeDecodeURI(entry.entryPath);
+      return lhs === rhs;
+    }),
     forEach: callback => entries.forEach(callback),
     map: callback => entries.map(callback),
     sort: callback => entries.sort(callback),

@@ -27,7 +27,7 @@ import {
 
 import readEntries from './readEntries';
 import { conditionally } from './streamUtil';
-import { MatchOption, stringContains } from './stringContains';
+import { MatchOption, stringContains, safeDecodeURI } from './stringUtil';
 
 import {
   getType,
@@ -57,7 +57,7 @@ export {
   safeDirname, safePath, safePathJoin, getPathes,
   readEntries,
   conditionally,
-  MatchOption, stringContains,
+  MatchOption, stringContains, safeDecodeURI,
   getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl,
   validateOptions,
   openZip,

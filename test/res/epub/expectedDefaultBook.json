@@ -25,7 +25,7 @@
   ],
   "dates": [
     {
-      "value": "2020-03-04",
+      "value": "2020-03-16",
       "event": "modification"
     },
     {
@@ -62,7 +62,7 @@
   "metas": [
     {
       "name": "Sigil version",
-      "content": "0.9.13"
+      "content": "1.1.0"
     },
     {
       "name": "cover",
@@ -405,6 +405,22 @@
       "mediaType": "video/mp4",
       "size": 1,
       "reason": "not_support_type"
+    },
+    {
+      "id": "Section_0007.xhtml",
+      "href": "OEBPS/Text/Section%200007.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "index": 6,
+      "isLinear": true
+    },
+    {
+      "id": "Section_200008.xhtml",
+      "href": "OEBPS/Text/Section%200008.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "index": 7,
+      "isLinear": true
     }
   ],
   "ncx": {
@@ -697,6 +713,22 @@
       "mediaType": "application/xhtml+xml",
       "size": 1,
       "index": 5,
+      "isLinear": true
+    },
+    {
+      "id": "Section_0007.xhtml",
+      "href": "OEBPS/Text/Section%200007.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "index": 6,
+      "isLinear": true
+    },
+    {
+      "id": "Section_200008.xhtml",
+      "href": "OEBPS/Text/Section%200008.xhtml",
+      "mediaType": "application/xhtml+xml",
+      "size": 1,
+      "index": 7,
       "isLinear": true
     }
   ],

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { isExists } from './typecheck';
-import { stringContains } from './stringContains';
+import { stringContains } from './stringUtil';
 
 const LogLevel = Object.freeze({
   SILENT: 'silent',

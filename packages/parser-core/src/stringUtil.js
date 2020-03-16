@@ -29,7 +29,19 @@ function stringContains(array = [], string = '', matchOption = MatchOption.MATCH
   }));
 }
 
+function safeDecodeURI(uri) {
+  try {
+    return decodeURI(uri);
+  } catch (e) {
+    if (e.message === 'URI malformed') {
+      return uri;
+    }
+    throw e;
+  }
+}
+
 export {
   MatchOption,
   stringContains,
+  safeDecodeURI,
 };

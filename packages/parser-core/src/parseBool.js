@@ -1,5 +1,5 @@
 import { isBool, isString } from './typecheck';
-import { stringContains } from './stringContains';
+import { stringContains } from './stringUtil';
 
 export default function parseBool(any) {
   if (isBool(any)) {

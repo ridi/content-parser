@@ -6,7 +6,7 @@ import { readCacheFile, writeCacheFile } from '../src/cacheFile';
 import Errors from '../src/errors';
 import { isExists, isString } from '../src/typecheck';
 import readEntries from '../src/readEntries';
-import { stringContains } from '../src/stringContains';
+import { stringContains } from '../src/stringUtil';
 import Paths from '../../../test/paths';
 
 should(); // Initialize should
@@ -27,11 +27,13 @@ describe('Util - entry manager', () => {
     'OEBPS/Styles/Style0001.css',
     'OEBPS/content.opf',
     'OEBPS/Text/Section0001.xhtml',
+    "OEBPS/Text/Section 0007.xhtml",
     'OEBPS/Text/Section0005.xhtml',
     'OEBPS/Text/Section0002.xhtml',
     'OEBPS/Text/Section0004.xhtml',
     'OEBPS/Text/Section0006.xhtml',
     'OEBPS/Text/Cover.xhtml',
+    "OEBPS/Text/Section%200008.xhtml",
     'OEBPS/Fonts/NotoSans-Regular.ttf',
     'OEBPS/toc.ncx'
   ];
@@ -57,6 +59,9 @@ describe('Util - entry manager', () => {
     file.should.deep.equal(expectedFile.buffer);
     file = await entry.getFile({ encoding: 'utf8', end: 11 });
     file.should.deep.equal(expectedFile.string.substr(0, 11));
+
+    isExists(entries.find('OEBPS/Text/Section 0008.xhtml', false)).should.be.true;
+    isExists(entries.find('OEBPS/Text/Section 0008.xhtml', true)).should.be.false;
   });
   
   const expectedListForDir = [
@@ -66,6 +71,8 @@ describe('Util - entry manager', () => {
     'OEBPS/Images/ridibooks_logo.png',
     'OEBPS/Styles/Style0001.css',
     'OEBPS/Text/Cover.xhtml',
+    "OEBPS/Text/Section 0007.xhtml",
+    "OEBPS/Text/Section%200008.xhtml",
     'OEBPS/Text/Section0001.xhtml',
     'OEBPS/Text/Section0002.xhtml',
     'OEBPS/Text/Section0004.xhtml',
@@ -93,6 +100,9 @@ describe('Util - entry manager', () => {
     file.should.deep.equal(expectedFile.buffer);
     file = await entry.getFile({ encoding: 'utf8', end: 11 });
     file.should.deep.equal(expectedFile.string.substr(0, 11));
+
+    isExists(entries.find('OEBPS/Text/Section 0008.xhtml', false)).should.be.true;
+    isExists(entries.find('OEBPS/Text/Section 0008.xhtml', true)).should.be.false;
   });
 
   it('Read entries from directory (cached)', () => {

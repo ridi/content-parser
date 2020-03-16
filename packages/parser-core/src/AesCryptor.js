@@ -3,7 +3,7 @@ import CryptoJs from 'crypto-js';
 import { Padding, Encoding } from './cryptoUtil';
 import Errors, { createError } from './errors';
 import mergeObjects from './mergeObjects';
-import { stringContains } from './stringContains';
+import { stringContains } from './stringUtil';
 import validateOptions from './validateOptions';
 
 import { isExists, isObject, isString } from './typecheck';

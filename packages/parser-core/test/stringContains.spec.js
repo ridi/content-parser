@@ -1,6 +1,6 @@
 import { should } from 'chai';
 
-import { MatchOption, stringContains } from '../src/stringContains';
+import { MatchOption, stringContains, safeDecodeURI } from '../src/stringUtil';
 
 should(); // Initialize should
 
@@ -16,5 +16,10 @@ describe('Util - String util', () => {
     stringContains(list, 'hi', MatchOption.ENDSWITH).should.be.true;
     stringContains().should.be.false;
     stringContains(list).should.be.false;
+  });
+
+  it('safeDecodeURI test', () => {
+    safeDecodeURI('%E0%A4%A').should.equal('%E0%A4%A');
+    safeDecodeURI('Chapter%201.html').should.equal('Chapter 1.html');
   });
 });
