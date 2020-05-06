@@ -1,6 +1,6 @@
 {
   "require": [
-    "babel-register"
+    "esm"
   ],
   "temp-directory": "coverage/.nyc_output",
   "report-dir": "coverage",

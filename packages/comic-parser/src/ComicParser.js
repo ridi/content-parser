@@ -177,8 +177,9 @@ class ComicParser extends Parser {
     await items.reduce((prevPromise, item) => {
       return prevPromise.then(async () => {
         const entry = entries.find(item.path);
-        /* istanbul ignore else */
+        /* istanbul ignore next */
         if (!options.force && !isExists(entry)) {
+          /* istanbul ignore next */
           throw createError(Errors.ENOFILE, item.path);
         }
         const file = await entry.getFile();

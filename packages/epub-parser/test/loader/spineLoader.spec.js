@@ -24,7 +24,7 @@ describe('Loader - Spine', () => {
     let extractBody = (innerHTML, attrs) => {
       return `<article ${attrs.map(attr => `${attr.key}="${attr.value}"`).join(' ')}>${innerHTML}</article>`;
     };
-    result = spineLoader({ styles }, origin, { extractBody });
+    result = spineLoader({}, origin, { extractBody });
     result.should.equal(JSON.parse(read(Paths.SPINE_LOADER_ADAPTER)).value);
 
     // Hmm... Interesting Cases...
