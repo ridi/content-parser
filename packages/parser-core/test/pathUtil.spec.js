@@ -8,7 +8,9 @@ should(); // Initialize should
 
 describe('Util - Path utils', () => {
   it('safeDirname test', () => {
+    safeDirname('temp/a/b/c/foo.epub').should.equal('temp/a/b/c');
     safeDirname('temp\\a\\b\\c\\foo.epub').should.equal('temp/a/b/c');
+    safeDirname('https://a.com/b.epub').should.equal('https://a.com');
   });
 
   it('safePathJoin test', () => {
@@ -16,6 +18,7 @@ describe('Util - Path utils', () => {
     safePathJoin('temp', undefined).should.equal('');
     safePathJoin('temp', '..', '..', 'a', 'b').should.equal('../a/b');
     safePathJoin('..', '..', 'temp').should.equal('../../temp');
+    safePathJoin('https://', 'a.com', 'b.epub').should.equal('https://a.com/b.epub');
   });
 
   it('getPathes test', () => {
