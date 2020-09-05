@@ -97,7 +97,9 @@ class Book {
       const freeze = !(itemType === SpineItem || itemType === NcxItem);
       return new itemType(rawObj, freeze);
     });
-    this.spines = this.items.filter(item => item instanceof SpineItem);
+    this.spines = this.items
+      .filter(item => item instanceof SpineItem)
+      .sort((lhs, rhs) => lhs.index - rhs.index);
     this.ncx = this.items.find(item => item instanceof NcxItem);
     this.fonts = this.items.filter(item => item instanceof FontItem);
     this.cover = this.items.find(item => item.isCover);
