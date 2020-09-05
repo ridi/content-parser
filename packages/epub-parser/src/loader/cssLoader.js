@@ -7,7 +7,6 @@ import {
   safePathJoin,
 } from '@ridi/parser-core';
 
-
 import csstree, { List } from 'css-tree';
 
 // Type reference: https://github.com/csstree/csstree/blob/master/docs/ast.md
