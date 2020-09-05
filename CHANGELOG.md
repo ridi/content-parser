@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None.
+### Changed
+
+* Dependencies and babel updates. (on babel 7)
+
+### Fixed
+
+* Fix an issue where scheme was broken when using URL as `basePath`.
+* Fix an issue where order of spines in OPF is mixed when order of spines does not match manifest in OPF.
 
 ## [0.6.14 (2020-03-16)]
 
