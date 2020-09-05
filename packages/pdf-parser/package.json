@@ -19,11 +19,11 @@
   "main": "lib/index.js",
   "dependencies": {
     "@ridi/parser-core": "0.6.15-alpha.1",
-    "pdfjs-dist": "^2.2.228",
-    "uuid": "^3.3.3",
-    "worker-loader": "^2.0.0"
+    "pdfjs-dist": "^2.4.456",
+    "uuid": "^8.3.0",
+    "worker-loader": "^3.0.2"
   },
   "devDependencies": {
-    "fs-extra": "^8.0.0"
+    "fs-extra": "^9.0.1"
   }
 }
