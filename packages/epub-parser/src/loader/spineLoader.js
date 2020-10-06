@@ -35,7 +35,7 @@ const Names = {
 };
 
 function formatAttributes(attributes, options) {
-  return attributes.reduce((attrs, attribute) => {
+  return (attributes || []).reduce((attrs, attribute) => {
     const { key, value } = attribute;
     if (value === null) {
       return `${attrs} ${key}`;
@@ -70,7 +70,7 @@ function formatAttributes(attributes, options) {
 }
 
 function stringify(ast, options) {
-  return ast.map((node) => {
+  return (ast || []).map((node) => {
     if (node.type === Types.TEXT) {
       return node.content;
     }

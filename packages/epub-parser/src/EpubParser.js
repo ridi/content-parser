@@ -676,7 +676,6 @@ class EpubParser extends Parser {
         if (!options.force && !isExists(entry)) {
           throw createError(Errors.ENOFILE, item.href);
         }
-
         const file = await entry.getFile({ encoding: item.defaultEncoding });
         if (item instanceof SpineItem) {
           results.push(spineLoader(item, file, options));
