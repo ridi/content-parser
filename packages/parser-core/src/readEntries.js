@@ -73,7 +73,6 @@ function fromDirectory(dir, cryptoProvider) {
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
             const stream = fs.createReadStream(fullPath, getReadStreamOptions(cryptoProvider));
-            // const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
               .pipe(conditionally(isExists(end), createSliceStream(0, end)))
@@ -94,7 +93,7 @@ function fromDirectory(dir, cryptoProvider) {
           }
         }
         if (isExists(encoding)) {
-          file = new TextDecoder().decode(file);
+          file = trimEnd(file).toString(encoding);
         }
         return file;
       },

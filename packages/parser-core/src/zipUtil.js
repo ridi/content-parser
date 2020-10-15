@@ -23,16 +23,13 @@ function _getBufferSize(cryptoProvider) {
 }
 
 async function getFile(entry, options = {}) {
-  console.log('zipUtil getFile');
   const { encoding, end } = options;
   let file = await new Promise((resolve, reject) => {
-    // const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     const bufferSize = _getBufferSize(this.cryptoProvider);
     let data = Buffer.from([]);
     entry.stream() // is DuplexStream.
       .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-      // .pipe(conditionally(isExists(this.cryptoProvider), createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
       .on('end', () => resolve(data));
@@ -50,7 +47,6 @@ async function getFile(entry, options = {}) {
 }
 
 async function extractAll(unzipPath, overwrite = true) {
-  console.log('zipUtil extractAll');
   if (overwrite) {
     fs.removeSync(unzipPath);
   }
@@ -73,21 +69,20 @@ async function extractAll(unzipPath, overwrite = true) {
         .on('error', onError)
         .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
         .on('end', () => {
-          if (this.cryptoProvider) {
-            data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);
-            if (Promise.resolve(data) === data) {
-              data.then(result => {
-                writeStream.write(result);
-                writeStream.end();
-              });
-            } else {
-              writeStream.write(data);
-              writeStream.end();
+          setTimeout(() => {
+            if (this.cryptoProvider) {
+              data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);
+              if (Promise.resolve(data) === data) {
+                data.then(result => {
+                  writeStream.write(result);
+                  writeStream.end();
+                });
+                return;
+              }
             }
-          } else {
             writeStream.write(data);
             writeStream.end();
-          }
+          }, 200);
         });
     });
   };
