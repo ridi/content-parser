@@ -5,6 +5,7 @@ import StreamChopper from 'stream-chopper';
 import unzipper from 'unzipper';
 
 import { trimEnd } from './bufferUtil';
+import createCryptoStream from './createCryptoStream';
 import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import { isExists, isString } from './typecheck';
@@ -24,17 +25,20 @@ function _getBufferSize(cryptoProvider) {
 
 async function getFile(entry, options = {}) {
   const { encoding, end } = options;
+  const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(this.cryptoProvider);
   let file = await new Promise((resolve, reject) => {
+    const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     const bufferSize = _getBufferSize(this.cryptoProvider);
     let data = Buffer.from([]);
     entry.stream() // is DuplexStream.
       .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+      .pipe(conditionally(decryptFlags.shouldDecryptInChunk, createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
       .on('end', () => resolve(data));
   });
-  if (this.cryptoProvider) {
+  if (decryptFlags.shouldDecryptAsWhole) {
     file = this.cryptoProvider.run(file, entry.path, CryptoProvider.Purpose.READ_IN_DIR);
     if (Promise.resolve(file) === file) {
       file = await file;
@@ -64,10 +68,21 @@ async function extractAll(unzipPath, overwrite = true) {
       writeStream.on('error', onError);
       writeStream.on('close', resolve);
       // Stream is DuplexStream.
+      const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(this.cryptoProvider);
+      console.log(decryptFlags);
       const stream = entry.stream()
         .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
         .on('error', onError)
-        .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+        .on('data', (chunk) => {
+          /* istanbul ignore if */
+          if (decryptFlags.shouldDecryptInChunk) {
+            /* istanbul ignore next */
+            chunk = this.cryptoProvider.run(chunk, entry.path, CryptoProvider.Purpose.WRITE);
+            writeStream.write(chunk);
+          } else {
+            data = Buffer.concat([data, chunk]);
+          }
+        })
         .on('end', () => {
           // Retain a reference to buffer so that it can't be GC'ed too soon.
           // Otherwise, EBADF occurs.
@@ -75,7 +90,7 @@ async function extractAll(unzipPath, overwrite = true) {
           setTimeout(() => {
             stream; // eslint-disable-line no-unused-expressions
           }, 200);
-          if (this.cryptoProvider) {
+          if (decryptFlags.shouldDecryptAsWhole) {
             data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);
             if (Promise.resolve(data) === data) {
               data.then(result => {

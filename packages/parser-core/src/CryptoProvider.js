@@ -1,4 +1,5 @@
 import Errors, { createError, mustOverride } from './errors';
+import { isExists } from './typecheck';
 
 const Purpose = Object.freeze({
   READ_IN_ZIP: 'read_in_zip',
@@ -7,6 +8,15 @@ const Purpose = Object.freeze({
 });
 
 class CryptoProvider {
+  shouldDecryptInChunk = true;
+
+  static getDecryptInChunkOrWhole(cryptoProvider) {
+    const cryptoExist = isExists(cryptoProvider);
+    const shouldDecryptInChunk = cryptoExist && !!cryptoProvider.shouldDecryptInChunk;
+    const shouldDecryptAsWhole = cryptoExist && !cryptoProvider.shouldDecryptInChunk;
+    return { cryptoExist, shouldDecryptInChunk, shouldDecryptAsWhole };
+  }
+
   /**
    * Size of data to process at once
    * `null` means use nodejs default (default: 65535)

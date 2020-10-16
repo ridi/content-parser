@@ -4,7 +4,7 @@ import path from 'path';
 
 import { trimEnd } from './bufferUtil';
 import { removeCacheFile, readCacheFile, writeCacheFile } from './cacheFile';
-// import createCryptoStream from './createCryptoStream';
+import createCryptoStream from './createCryptoStream';
 import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError } from './errors';
@@ -70,12 +70,15 @@ function fromDirectory(dir, cryptoProvider) {
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (options = {}) => {
         const { encoding, end } = options;
+        const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(cryptoProvider);
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
             const stream = fs.createReadStream(fullPath, getReadStreamOptions(cryptoProvider));
+            const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
               .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+              .pipe(conditionally(decryptFlags.shouldDecryptInChunk, createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
               .on('data', (chunk) => {
                 data = Buffer.concat([data, chunk]);
               })
@@ -86,7 +89,7 @@ function fromDirectory(dir, cryptoProvider) {
             throw createError(Errors.ENOFILE, fullPath);
           }
         });
-        if (cryptoProvider) {
+        if (decryptFlags.shouldDecryptAsWhole) {
           file = cryptoProvider.run(file, fullPath, CryptoProvider.Purpose.READ_IN_DIR);
           if (Promise.resolve(file) === file) {
             file = await file;
@@ -111,12 +114,15 @@ function fromFile(filePath, cryptoProvider) {
     entryPath: filePath,
     getFile: async (options = {}) => {
       const { encoding, end } = options;
+      const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(cryptoProvider);
       let file = await new Promise((resolve, reject) => {
         if (fs.existsSync(filePath)) {
           const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
           let data = Buffer.from([]);
+          const totalSize = Math.min(end || Infinity, size);
           stream
             .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+            .pipe(conditionally(decryptFlags.shouldDecryptInChunk, createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))
             .on('end', () => resolve(data));
@@ -124,7 +130,7 @@ function fromFile(filePath, cryptoProvider) {
           throw createError(Errors.ENOFILE, filePath);
         }
       });
-      if (cryptoProvider) {
+      if (decryptFlags.shouldDecryptAsWhole) {
         file = cryptoProvider.run(file, filePath, CryptoProvider.Purpose.READ_IN_DIR);
         if (Promise.resolve(file) === file) {
           file = await file;
