@@ -25,7 +25,6 @@ function _getBufferSize(cryptoProvider) {
 
 async function getFile(entry, options = {}) {
   const { encoding, end } = options;
-  const decryptFlags = CryptoProvider.getDecryptFlags(this.cryptoProvider);
   let file = await new Promise((resolve, reject) => {
     const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     const bufferSize = _getBufferSize(this.cryptoProvider);
@@ -33,12 +32,12 @@ async function getFile(entry, options = {}) {
     entry.stream() // is DuplexStream.
       .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-      .pipe(conditionally(decryptFlags.shouldDecryptInChunk, createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
+      .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode, createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
       .on('end', () => resolve(data));
   });
-  if (decryptFlags.shouldDecryptAsWhole) {
+  if (this.cryptoProvider && !this.cryptoProvider.isStreamMode) {
     file = this.cryptoProvider.run(file, entry.path, CryptoProvider.Purpose.READ_IN_DIR);
     if (Promise.resolve(file) === file) {
       file = await file;
@@ -68,13 +67,12 @@ async function extractAll(unzipPath, overwrite = true) {
       writeStream.on('error', onError);
       writeStream.on('close', resolve);
       // Stream is DuplexStream.
-      const decryptFlags = CryptoProvider.getDecryptFlags(this.cryptoProvider);
       const stream = entry.stream()
         .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
         .on('error', onError)
         .on('data', (chunk) => {
           /* istanbul ignore if */
-          if (decryptFlags.shouldDecryptInChunk) {
+          if (this.cryptoProvider && !!this.cryptoProvider.isStreamMode) {
             /* istanbul ignore next */
             chunk = this.cryptoProvider.run(chunk, entry.path, CryptoProvider.Purpose.WRITE);
             writeStream.write(chunk);
@@ -89,7 +87,7 @@ async function extractAll(unzipPath, overwrite = true) {
           setTimeout(() => {
             stream; // eslint-disable-line no-unused-expressions
           }, 200);
-          if (decryptFlags.shouldDecryptAsWhole) {
+          if (this.cryptoProvider && !this.cryptoProvider.isStreamMode) {
             data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);
             if (Promise.resolve(data) === data) {
               data.then(result => {

@@ -6,6 +6,8 @@ const { Purpose } = CryptoProvider;
 const { Mode, Padding } = AesCryptor;
 
 class TestCryptoProvider extends CryptoProvider {
+  isStreamMode = true;
+
   constructor(key) {
     super();
     this.cryptor = new AesCryptor(Mode.ECB, { key });

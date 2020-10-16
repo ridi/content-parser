@@ -6,13 +6,13 @@ const { Purpose } = CryptoProvider;
 const { Mode, Padding } = AesCryptor;
 
 class TestPromiseCryptoProvider extends CryptoProvider {
+  isStreamMode = false;
+
   constructor(key) {
     super();
     this.cryptor = new AesCryptor(Mode.ECB, { key });
     this.prepareTest();
   }
-
-  shouldDecryptInChunk = true;
 
   prepareTest() {
     const options = { padding: Padding.AUTO };

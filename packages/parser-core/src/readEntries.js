@@ -70,7 +70,6 @@ function fromDirectory(dir, cryptoProvider) {
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (options = {}) => {
         const { encoding, end } = options;
-        const decryptFlags = CryptoProvider.getDecryptFlags(cryptoProvider);
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
             const stream = fs.createReadStream(fullPath, getReadStreamOptions(cryptoProvider));
@@ -78,7 +77,7 @@ function fromDirectory(dir, cryptoProvider) {
             let data = Buffer.from([]);
             stream
               .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-              .pipe(conditionally(decryptFlags.shouldDecryptInChunk, createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+              .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode, createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
               .on('data', (chunk) => {
                 data = Buffer.concat([data, chunk]);
               })
@@ -89,7 +88,7 @@ function fromDirectory(dir, cryptoProvider) {
             throw createError(Errors.ENOFILE, fullPath);
           }
         });
-        if (decryptFlags.shouldDecryptAsWhole) {
+        if (cryptoProvider && !cryptoProvider.isStreamMode) {
           file = cryptoProvider.run(file, fullPath, CryptoProvider.Purpose.READ_IN_DIR);
           if (Promise.resolve(file) === file) {
             file = await file;
@@ -114,7 +113,6 @@ function fromFile(filePath, cryptoProvider) {
     entryPath: filePath,
     getFile: async (options = {}) => {
       const { encoding, end } = options;
-      const decryptFlags = CryptoProvider.getDecryptFlags(cryptoProvider);
       let file = await new Promise((resolve, reject) => {
         if (fs.existsSync(filePath)) {
           const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
@@ -122,7 +120,7 @@ function fromFile(filePath, cryptoProvider) {
           const totalSize = Math.min(end || Infinity, size);
           stream
             .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-            .pipe(conditionally(decryptFlags.shouldDecryptInChunk, createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+            .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode, createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))
             .on('end', () => resolve(data));
@@ -130,7 +128,7 @@ function fromFile(filePath, cryptoProvider) {
           throw createError(Errors.ENOFILE, filePath);
         }
       });
-      if (decryptFlags.shouldDecryptAsWhole) {
+      if (cryptoProvider && !cryptoProvider.isStreamMode) {
         file = cryptoProvider.run(file, filePath, CryptoProvider.Purpose.READ_IN_DIR);
         if (Promise.resolve(file) === file) {
           file = await file;
