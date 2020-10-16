@@ -14,8 +14,6 @@ class TestCryptoProvider extends CryptoProvider {
     this.prepareTest();
   }
 
-  shouldDecryptInChunk = true;
-
   prepareTest() {
     const options = { padding: Padding.AUTO };
     const data = fs.readFileSync(Paths.DEFAULT);

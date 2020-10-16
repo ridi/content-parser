@@ -79,8 +79,6 @@ class AesCryptor {
     Object.freeze(this);
   }
 
-  shouldDecryptInChunk = true;
-
   makeOperator(mode, config) {
     let { key, iv } = config;
 
