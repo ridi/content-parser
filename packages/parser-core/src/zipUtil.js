@@ -64,7 +64,7 @@ async function extractAll(unzipPath, overwrite = true) {
       writeStream.on('error', onError);
       writeStream.on('close', resolve);
       // Stream is DuplexStream.
-      entry.stream()
+      const stream = entry.stream()
         .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
         .on('error', onError)
         .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
@@ -73,19 +73,20 @@ async function extractAll(unzipPath, overwrite = true) {
           // Otherwise, EBADF occurs.
           // https://github.com/nodejs/node/blob/v10.15.0/lib/fs.js#L462
           setTimeout(() => {
-            if (this.cryptoProvider) {
-              data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);
-              if (Promise.resolve(data) === data) {
-                data.then(result => {
-                  writeStream.write(result);
-                  writeStream.end();
-                });
-                return;
-              }
-            }
-            writeStream.write(data);
-            writeStream.end();
+            stream; // eslint-disable-line no-unused-expressions
           }, 200);
+          if (this.cryptoProvider) {
+            data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);
+            if (Promise.resolve(data) === data) {
+              data.then(result => {
+                writeStream.write(result);
+                writeStream.end();
+              });
+              return;
+            }
+          }
+          writeStream.write(data);
+          writeStream.end();
         });
     });
   };
