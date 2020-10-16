@@ -133,7 +133,7 @@ class PdfParser extends Parser {
    */
   async _loadDocuemnt(context) {
     const { rawBook, entries, options } = context;
-    const worker = options.fakeWorker ? new PDFWorker(`pdfWorker_${uuid()}`) : null;
+    const worker = options.fakeWorker ? new pdfJs.PDFWorker(`pdfWorker_${uuid()}`) : null;
     const data = await entries.first.getFile();
     const document = await this._execute(pdfJs, pdfJs.getDocument, [{ data, worker }]);
     context.document = document;
