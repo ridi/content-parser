@@ -7,7 +7,7 @@ const Purpose = Object.freeze({
 });
 
 class CryptoProvider {
-  isStreamMode = undefined;
+  isStreamMode = true;
 
   /**
    * Size of data to process at once
