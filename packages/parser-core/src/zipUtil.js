@@ -69,7 +69,6 @@ async function extractAll(unzipPath, overwrite = true) {
       writeStream.on('close', resolve);
       // Stream is DuplexStream.
       const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(this.cryptoProvider);
-      console.log(decryptFlags);
       const stream = entry.stream()
         .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
         .on('error', onError)
