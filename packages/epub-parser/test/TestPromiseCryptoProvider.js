@@ -5,8 +5,8 @@ import Paths from '../../../test/paths';
 const { Purpose } = CryptoProvider;
 const { Mode, Padding } = AesCryptor;
 
-class TestCryptoProvider extends CryptoProvider {
-  isStreamMode = true;
+class TestPromiseCryptoProvider extends CryptoProvider {
+  isStreamMode = false;
 
   constructor(key) {
     super();
@@ -29,7 +29,7 @@ class TestCryptoProvider extends CryptoProvider {
   }
 
   // decrypt -> parse -> unzip with encrypt
-  run(data, filePath, purpose) {
+  async run(data, filePath, purpose) {
     const cryptor = this.getCryptor(filePath, purpose);
     const options = { padding: Padding.AUTO };
     if (purpose === Purpose.READ_IN_DIR) {
@@ -41,4 +41,4 @@ class TestCryptoProvider extends CryptoProvider {
   }
 }
 
-export default TestCryptoProvider;
+export default TestPromiseCryptoProvider;

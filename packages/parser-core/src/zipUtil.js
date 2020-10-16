@@ -32,11 +32,17 @@ async function getFile(entry, options = {}) {
     entry.stream() // is DuplexStream.
       .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-      .pipe(conditionally(isExists(this.cryptoProvider), createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
+      .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode, createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
       .on('end', () => resolve(data));
   });
+  if (this.cryptoProvider && !this.cryptoProvider.isStreamMode) {
+    file = this.cryptoProvider.run(file, entry.path, CryptoProvider.Purpose.READ_IN_DIR);
+    if (Promise.resolve(file) === file) {
+      file = await file;
+    }
+  }
   if (isExists(encoding)) {
     file = trimEnd(file).toString(encoding);
   }
@@ -48,7 +54,6 @@ async function extractAll(unzipPath, overwrite = true) {
     fs.removeSync(unzipPath);
   }
   fs.mkdirpSync(unzipPath);
-
   const flags = overwrite ? 'w' : 'wx';
   const writeFile = (entry, output) => {
     return new Promise((resolve, reject) => {
@@ -58,6 +63,7 @@ async function extractAll(unzipPath, overwrite = true) {
         writeStream.end();
         reject(error);
       };
+      let data = Buffer.from([]);
       writeStream.on('error', onError);
       writeStream.on('close', resolve);
       // Stream is DuplexStream.
@@ -66,19 +72,32 @@ async function extractAll(unzipPath, overwrite = true) {
         .on('error', onError)
         .on('data', (chunk) => {
           /* istanbul ignore if */
-          if (isExists(this.cryptoProvider)) {
+          if (this.cryptoProvider && !!this.cryptoProvider.isStreamMode) {
             /* istanbul ignore next */
             chunk = this.cryptoProvider.run(chunk, entry.path, CryptoProvider.Purpose.WRITE);
+            writeStream.write(chunk);
+          } else {
+            data = Buffer.concat([data, chunk]);
           }
-          writeStream.write(chunk);
         })
         .on('end', () => {
+          // Retain a reference to buffer so that it can't be GC'ed too soon.
+          // Otherwise, EBADF occurs.
+          // https://github.com/nodejs/node/blob/v10.15.0/lib/fs.js#L462
           setTimeout(() => {
-            // Retain a reference to buffer so that it can't be GC'ed too soon.
-            // Otherwise, EBADF occurs.
-            // https://github.com/nodejs/node/blob/v10.15.0/lib/fs.js#L462
             stream; // eslint-disable-line no-unused-expressions
           }, 200);
+          if (this.cryptoProvider && !this.cryptoProvider.isStreamMode) {
+            data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);
+            if (Promise.resolve(data) === data) {
+              data.then(result => {
+                writeStream.write(result);
+                writeStream.end();
+              });
+              return;
+            }
+          }
+          writeStream.write(data);
           writeStream.end();
         });
     });
@@ -104,10 +123,7 @@ async function extractAll(unzipPath, overwrite = true) {
 }
 
 export default async function openZip(file, cryptoProvider, logger) {
-  let open = unzipper.Open.file;
-  if (!isString(file)) {
-    open = unzipper.Open.buffer;
-  }
+  const open = (!isString(file)) ? unzipper.Open.buffer : unzipper.Open.file;
   const zip = await open(file);
   zip.cryptoProvider = cryptoProvider;
   return {

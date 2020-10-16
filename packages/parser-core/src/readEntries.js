@@ -77,8 +77,10 @@ function fromDirectory(dir, cryptoProvider) {
             let data = Buffer.from([]);
             stream
               .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-              .pipe(conditionally(isExists(cryptoProvider), createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
-              .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+              .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode, createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+              .on('data', (chunk) => {
+                data = Buffer.concat([data, chunk]);
+              })
               .on('error', e => reject(e))
               .on('end', () => resolve(data));
           } else {
@@ -86,6 +88,12 @@ function fromDirectory(dir, cryptoProvider) {
             throw createError(Errors.ENOFILE, fullPath);
           }
         });
+        if (cryptoProvider && !cryptoProvider.isStreamMode) {
+          file = cryptoProvider.run(file, fullPath, CryptoProvider.Purpose.READ_IN_DIR);
+          if (Promise.resolve(file) === file) {
+            file = await file;
+          }
+        }
         if (isExists(encoding)) {
           file = trimEnd(file).toString(encoding);
         }
@@ -108,11 +116,11 @@ function fromFile(filePath, cryptoProvider) {
       let file = await new Promise((resolve, reject) => {
         if (fs.existsSync(filePath)) {
           const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
-          const totalSize = Math.min(end || Infinity, size);
           let data = Buffer.from([]);
+          const totalSize = Math.min(end || Infinity, size);
           stream
             .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-            .pipe(conditionally(isExists(cryptoProvider), createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+            .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode, createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))
             .on('end', () => resolve(data));
@@ -120,6 +128,12 @@ function fromFile(filePath, cryptoProvider) {
           throw createError(Errors.ENOFILE, filePath);
         }
       });
+      if (cryptoProvider && !cryptoProvider.isStreamMode) {
+        file = cryptoProvider.run(file, filePath, CryptoProvider.Purpose.READ_IN_DIR);
+        if (Promise.resolve(file) === file) {
+          file = await file;
+        }
+      }
       if (isExists(encoding)) {
         file = trimEnd(file).toString(encoding);
       }
@@ -138,6 +152,9 @@ export default async function readEntries(input, cryptoProvider, logger) {
     if (isExists(cryptoProvider)) {
       /* istanbul ignore next */
       input = cryptoProvider.run(fs.readFileSync(input), input, CryptoProvider.Purpose.READ_IN_DIR);
+      if (Promise.resolve(input) === input) {
+        input = await input;
+      }
     }
     const zip = await openZip(input, cryptoProvider, logger);
     return fromZip(zip);

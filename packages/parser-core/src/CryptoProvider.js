@@ -7,6 +7,8 @@ const Purpose = Object.freeze({
 });
 
 class CryptoProvider {
+  isStreamMode = true;
+
   /**
    * Size of data to process at once
    * `null` means use nodejs default (default: 65535)
