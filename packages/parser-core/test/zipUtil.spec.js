@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import Errors from '../src/errors';
 import openZip from '../src/zipUtil';
 import Paths from '../../../test/paths';
+import TestPromiseCryptoProvider from '../../epub-parser/test/TestPromiseCryptoProvider';
 
 should(); // Initialize should
 
@@ -24,6 +25,12 @@ describe('Util - Zip', () => {
 
   it('extractAll test', async () => {
     const zip = await openZip(Paths.DEFAULT);
+    await zip.extractAll('./temp');
+  });
+
+  it('extractAll as whole test', async () => {
+    const provider = new TestPromiseCryptoProvider('epub-parser');
+    const zip = await openZip(Paths.DEFAULT, provider);
     await zip.extractAll('./temp');
   });
 
