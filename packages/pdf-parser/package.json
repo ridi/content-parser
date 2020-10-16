@@ -1,6 +1,6 @@
 {
   "name": "@ridi/pdf-parser",
-  "version": "0.6.16-alpha.0",
+  "version": "0.6.17-alpha.0",
   "description": "Common PDF data parser for Ridibooks services",
   "author": {
     "name": "Ridibooks Viewer Team",
@@ -18,7 +18,7 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
-    "@ridi/parser-core": "0.6.16-alpha.0",
+    "@ridi/parser-core": "0.6.17-alpha.0",
     "pdfjs-dist": "^2.4.456",
     "uuid": "^8.3.0",
     "worker-loader": "^3.0.2"
