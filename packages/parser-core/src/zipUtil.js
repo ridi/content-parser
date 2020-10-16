@@ -69,6 +69,9 @@ async function extractAll(unzipPath, overwrite = true) {
         .on('error', onError)
         .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
         .on('end', () => {
+          // Retain a reference to buffer so that it can't be GC'ed too soon.
+          // Otherwise, EBADF occurs.
+          // https://github.com/nodejs/node/blob/v10.15.0/lib/fs.js#L462
           setTimeout(() => {
             if (this.cryptoProvider) {
               data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);

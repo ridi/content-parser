@@ -9,7 +9,6 @@
     "bootstrap": "lerna bootstrap",
     "bump": "lerna publish --force-publish=* --exact"
   },
-  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
