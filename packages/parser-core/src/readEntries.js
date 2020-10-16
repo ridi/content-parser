@@ -114,11 +114,9 @@ function fromFile(filePath, cryptoProvider) {
       let file = await new Promise((resolve, reject) => {
         if (fs.existsSync(filePath)) {
           const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
-          const totalSize = Math.min(end || Infinity, size);
           let data = Buffer.from([]);
           stream
             .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-            .pipe(conditionally(isExists(cryptoProvider), createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))
             .on('end', () => resolve(data));
@@ -126,6 +124,12 @@ function fromFile(filePath, cryptoProvider) {
           throw createError(Errors.ENOFILE, filePath);
         }
       });
+      if (cryptoProvider) {
+        file = cryptoProvider.run(file, filePath, CryptoProvider.Purpose.READ_IN_DIR);
+        if (Promise.resolve(file) === file) {
+          file = await file;
+        }
+      }
       if (isExists(encoding)) {
         file = trimEnd(file).toString(encoding);
       }
