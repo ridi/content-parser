@@ -4,7 +4,6 @@ import fs from 'fs-extra';
 import Errors from '../src/errors';
 import openZip from '../src/zipUtil';
 import Paths from '../../../test/paths';
-import TestPromiseCryptoProvider from '../../epub-parser/test/TestPromiseCryptoProvider';
 
 should(); // Initialize should
 
