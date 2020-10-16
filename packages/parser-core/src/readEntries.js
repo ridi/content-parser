@@ -70,7 +70,7 @@ function fromDirectory(dir, cryptoProvider) {
       entryPath: safePath(fullPath).substring(subPathOffset),
       getFile: async (options = {}) => {
         const { encoding, end } = options;
-        const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(cryptoProvider);
+        const decryptFlags = CryptoProvider.getDecryptFlags(cryptoProvider);
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
             const stream = fs.createReadStream(fullPath, getReadStreamOptions(cryptoProvider));
@@ -114,7 +114,7 @@ function fromFile(filePath, cryptoProvider) {
     entryPath: filePath,
     getFile: async (options = {}) => {
       const { encoding, end } = options;
-      const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(cryptoProvider);
+      const decryptFlags = CryptoProvider.getDecryptFlags(cryptoProvider);
       let file = await new Promise((resolve, reject) => {
         if (fs.existsSync(filePath)) {
           const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));

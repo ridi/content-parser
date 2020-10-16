@@ -25,7 +25,7 @@ function _getBufferSize(cryptoProvider) {
 
 async function getFile(entry, options = {}) {
   const { encoding, end } = options;
-  const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(this.cryptoProvider);
+  const decryptFlags = CryptoProvider.getDecryptFlags(this.cryptoProvider);
   let file = await new Promise((resolve, reject) => {
     const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     const bufferSize = _getBufferSize(this.cryptoProvider);
@@ -68,7 +68,7 @@ async function extractAll(unzipPath, overwrite = true) {
       writeStream.on('error', onError);
       writeStream.on('close', resolve);
       // Stream is DuplexStream.
-      const decryptFlags = CryptoProvider.getDecryptInChunkOrWhole(this.cryptoProvider);
+      const decryptFlags = CryptoProvider.getDecryptFlags(this.cryptoProvider);
       const stream = entry.stream()
         .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
         .on('error', onError)

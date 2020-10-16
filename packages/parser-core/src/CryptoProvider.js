@@ -8,12 +8,12 @@ const Purpose = Object.freeze({
 });
 
 class CryptoProvider {
-  shouldDecryptInChunk = true;
+  isStreamMode = true;
 
-  static getDecryptInChunkOrWhole(cryptoProvider) {
+  getDecryptFlags(cryptoProvider) {
     const cryptoExist = isExists(cryptoProvider);
-    const shouldDecryptInChunk = cryptoExist && !!cryptoProvider.shouldDecryptInChunk;
-    const shouldDecryptAsWhole = cryptoExist && !cryptoProvider.shouldDecryptInChunk;
+    const shouldDecryptInChunk = cryptoExist && !!cryptoProvider.isStreamMode;
+    const shouldDecryptAsWhole = cryptoExist && !cryptoProvider.isStreamMode;
     return { cryptoExist, shouldDecryptInChunk, shouldDecryptAsWhole };
   }
 
