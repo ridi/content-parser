@@ -27,6 +27,7 @@ describe('Util - createCryptoStream', () => {
         .on('end', resolve());
     });
   });
+
   it('it should work with the cryptoprovider that returns a promise', () => {
     const filePath = Paths.ENCRYPTED_DEFAULT;
     const fileSize = fs.lstatSync(filePath).size;
