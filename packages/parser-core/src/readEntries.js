@@ -4,7 +4,7 @@ import path from 'path';
 
 import { trimEnd } from './bufferUtil';
 import { removeCacheFile, readCacheFile, writeCacheFile } from './cacheFile';
-import createCryptoStream from './createCryptoStream';
+// import createCryptoStream from './createCryptoStream';
 import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError } from './errors';
