@@ -28,12 +28,6 @@ describe('Util - Zip', () => {
     await zip.extractAll('./temp');
   });
 
-  it('extractAll as whole test', async () => {
-    const provider = new TestPromiseCryptoProvider('epub-parser');
-    const zip = await openZip(Paths.DEFAULT, provider);
-    await zip.extractAll('./temp');
-  });
-
   it('extractAll with not overwite', async () => {
     const zip = await openZip(Paths.DEFAULT);
     await zip.extractAll('./temp');
