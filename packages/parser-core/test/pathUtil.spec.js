@@ -13,6 +13,7 @@ describe('Util - Path utils', () => {
     safeDirname('https://a.com/b.epub').should.equal('https://a.com');
     safeDirname('https:/a.com/b.epub').should.equal('https://a.com');
     safeDirname('C:/a.com/b.epub').should.equal('C:/a.com');
+    safeDirname('C:\\a.com\\b.epub').should.equal('C:/a.com');
   });
 
   it('safePathJoin test', () => {
