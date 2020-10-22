@@ -23,6 +23,3 @@ node_modules
 # Test resource directories
 decryptedDefault
 
-# Lock file
-yarn.lock
-package-lock.json
