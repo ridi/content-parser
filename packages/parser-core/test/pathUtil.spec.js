@@ -11,6 +11,8 @@ describe('Util - Path utils', () => {
     safeDirname('temp/a/b/c/foo.epub').should.equal('temp/a/b/c');
     safeDirname('temp\\a\\b\\c\\foo.epub').should.equal('temp/a/b/c');
     safeDirname('https://a.com/b.epub').should.equal('https://a.com');
+    safeDirname('https:/a.com/b.epub').should.equal('https://a.com');
+    safeDirname('C:/a.com/b.epub').should.equal('C:/a.com');
   });
 
   it('safePathJoin test', () => {
