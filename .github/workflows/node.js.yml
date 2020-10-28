@@ -16,7 +16,7 @@ jobs:
         node-version: [14.x]
 
     steps:
-    - name: Notify slack success
+    - name: Notify slack
       if: success()
       id: slack # IMPORTANT: reference this step ID value in future Slack steps
       env:
