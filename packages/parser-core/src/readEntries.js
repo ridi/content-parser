@@ -42,19 +42,20 @@ function create(source, entries) {
 function fromZip(zip) {
   const zipCopy = { ...zip };
   zipCopy.files = zip.files.map((file) => {
+    const getFile = (options = {}) => {
+      let data = file.getData();
+      if (options.encoding) {
+        data = data.toString(options.encoding);
+      }
+      if (options.end) {
+        data = data.slice(0, options.end);
+      }
+      return data;
+    };
     return {
       ...file,
+      getFile,
       entryPath: file.entryName,
-      getFile: (options = {}) => {
-        let data = file.getData();
-        if (options.encoding) {
-          data = data.toString(options.encoding);
-        }
-        if (options.end) {
-          data = data.slice(0, options.end);
-        }
-        return data;
-      },
       size: file.header.size,
       method: file.header.method,
       extraFieldLength: file.extra.length,
