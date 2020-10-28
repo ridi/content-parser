@@ -1,0 +1,56 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install packages
+      uses: Borales/actions-yarn@v2.3.0
+      with:
+        cmd: install
+    - name: run tests
+      uses: Borales/actions-yarn@v2.3.0
+      with:
+        cmd: test
+    - name: calculate coverage
+      uses: Borales/actions-yarn@v2.3.0
+      with:
+        cmd: coverage
+    - name: Notify slack success
+      if: success()
+      env:
+        SLACK_BOT_TOKEN: xapp-1-A01DGG328KU-1482391361776-77c35f8da9c287bd5eccb3b4a23b1e44c0f91cf4ab8cf5eab801cce509121bfb
+      uses: voxmedia/github-action-slack-notify-build@v1
+      with:
+        channel: NEc5gIdX4RMLubMOEvZUPGYSAX4hhtZPSn1h2LM/I/FOxZsXsvaxC5NFwdoJxU6M8c8UTBmud8DUf7Rrt1nTxuqI7ZsaD+TV0nz6OFRSCUH+X0cc94exJpNH0b2fNnHrNqfBXVlFnckeNi5xE+J3h/x6tcFpKO4fC+Q3cLo8bhasZrq/LTa2H7dF0kCrTgsDeD08uEpWVHb26UT0faSqJxu/d5l+O4vSiIVplunEmjvZptWeZNTCKsTnsxjq/hcLad+PQJBqmMTZ84IkDln+JmWOteei8DoCOUoi42eO+9xYD4pCptVZXzqrXDmGj6DCVkApwlisXrNE9P2fiI4Oxf2YmtGRJmtE8ZFZfqlfCwB0SAX91CLvfmPIExJ6+FAcQvI1TCdhCS9v52wRP9XZISCYtMwFce3k7uPo8t//OX39jnokK5PrEivc/cOU/x7nECToDKnMGEb9kmWVFrNYx4HRAEMZ4RodApOCUZYplYmPCnfo4lcvl5sdlvaXvn35YhCHkmOE1mPizXlnqtnNCuJEXoQ2rFfXN6ArkjIhf9su8AjCCGKZon+6oPiZH3E0L5XBy9GA8nL+fVssGZGrWCtCIqDRve10DqZPeaj7NpYueSvzbotivIpOI9HQeQZBXPylAM2iYmaNUuuv6sFanvhAb/4NYErLRF3Ga+QoIDM=
+        status: SUCCESS
+        color: good
+    - name: Notify slack fail
+      if: failure()
+      env:
+        SLACK_BOT_TOKEN: xapp-1-A01DGG328KU-1482391361776-77c35f8da9c287bd5eccb3b4a23b1e44c0f91cf4ab8cf5eab801cce509121bfb
+      uses: voxmedia/github-action-slack-notify-build@v1
+      with:
+        channel: NEc5gIdX4RMLubMOEvZUPGYSAX4hhtZPSn1h2LM/I/FOxZsXsvaxC5NFwdoJxU6M8c8UTBmud8DUf7Rrt1nTxuqI7ZsaD+TV0nz6OFRSCUH+X0cc94exJpNH0b2fNnHrNqfBXVlFnckeNi5xE+J3h/x6tcFpKO4fC+Q3cLo8bhasZrq/LTa2H7dF0kCrTgsDeD08uEpWVHb26UT0faSqJxu/d5l+O4vSiIVplunEmjvZptWeZNTCKsTnsxjq/hcLad+PQJBqmMTZ84IkDln+JmWOteei8DoCOUoi42eO+9xYD4pCptVZXzqrXDmGj6DCVkApwlisXrNE9P2fiI4Oxf2YmtGRJmtE8ZFZfqlfCwB0SAX91CLvfmPIExJ6+FAcQvI1TCdhCS9v52wRP9XZISCYtMwFce3k7uPo8t//OX39jnokK5PrEivc/cOU/x7nECToDKnMGEb9kmWVFrNYx4HRAEMZ4RodApOCUZYplYmPCnfo4lcvl5sdlvaXvn35YhCHkmOE1mPizXlnqtnNCuJEXoQ2rFfXN6ArkjIhf9su8AjCCGKZon+6oPiZH3E0L5XBy9GA8nL+fVssGZGrWCtCIqDRve10DqZPeaj7NpYueSvzbotivIpOI9HQeQZBXPylAM2iYmaNUuuv6sFanvhAb/4NYErLRF3Ga+QoIDM=
+        status: FAILED
+        color: danger
