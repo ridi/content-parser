@@ -1,15 +1,13 @@
 /* eslint-disable max-len */
 import fs from 'fs-extra';
-import path from 'path';
 import StreamChopper from 'stream-chopper';
-import unzipper from 'unzipper';
+import AdmZip from 'adm-zip';
 
 import { trimEnd } from './bufferUtil';
 import createCryptoStream from './createCryptoStream';
 import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
-import { isExists, isString } from './typecheck';
-import { safePathJoin } from './pathUtil';
+import { isExists } from './typecheck';
 import { conditionally } from './streamUtil';
 
 function find(entryPath) {
@@ -54,80 +52,23 @@ async function extractAll(unzipPath, overwrite = true) {
     fs.removeSync(unzipPath);
   }
   fs.mkdirpSync(unzipPath);
-  const flags = overwrite ? 'w' : 'wx';
-  const writeFile = (entry, output) => {
-    return new Promise((resolve, reject) => {
-      const bufferSize = _getBufferSize(this.cryptoProvider);
-      const writeStream = fs.createWriteStream(output, { encoding: 'binary', flags });
-      const onError = (error) => {
-        writeStream.end();
-        reject(error);
-      };
-      let data = Buffer.from([]);
-      writeStream.on('error', onError);
-      writeStream.on('close', resolve);
-      // Stream is DuplexStream.
-      const stream = entry.stream()
-        .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
-        .on('error', onError)
-        .on('data', (chunk) => {
-          /* istanbul ignore if */
-          if (this.cryptoProvider && !!this.cryptoProvider.isStreamMode) {
-            /* istanbul ignore next */
-            chunk = this.cryptoProvider.run(chunk, entry.path, CryptoProvider.Purpose.WRITE);
-            writeStream.write(chunk);
-          } else {
-            data = Buffer.concat([data, chunk]);
-          }
-        })
-        .on('end', () => {
-          // Retain a reference to buffer so that it can't be GC'ed too soon.
-          // Otherwise, EBADF occurs.
-          // https://github.com/nodejs/node/blob/v10.15.0/lib/fs.js#L462
-          setTimeout(() => {
-            stream; // eslint-disable-line no-unused-expressions
-          }, 200);
-          if (this.cryptoProvider && !this.cryptoProvider.isStreamMode) {
-            data = this.cryptoProvider.run(data, entry.path, CryptoProvider.Purpose.WRITE);
-            if (Promise.resolve(data) === data) {
-              data.then(result => {
-                writeStream.write(result);
-                writeStream.end();
-              });
-              return;
-            }
-          }
-          writeStream.write(data);
-          writeStream.end();
-        });
-    });
-  };
-
-  await this.files.reduce((prevPromise, entry) => {
-    return prevPromise.then(async () => {
-      const output = safePathJoin(unzipPath, entry.path);
-      if (entry.path.split('/').length > 1) {
-        const dir = path.dirname(output);
-        if (!fs.existsSync(dir)) {
-          fs.mkdirpSync(dir);
-        }
+  const zip = new AdmZip();
+  if (this.cryptoProvider) {
+    await Promise.all(this.files.map(async (entry) => {
+      if (!entry.isDirectory) {
+        entry.setData(await this.cryptoProvider.run(entry.getData(), entry.entryPath, CryptoProvider.Purpose.WRITE));
       }
-      if (!entry.path.endsWith('/')) {
-        const error = await writeFile(entry, output);
-        if (error) {
-          throw error;
-        }
-      }
-    });
-  }, Promise.resolve());
+      zip.addFile(entry.entryName, entry.getData());
+    }));
+  }
+  zip.extractAllTo(unzipPath);
 }
 
 export default async function openZip(file, cryptoProvider, logger) {
-  const open = (!isString(file)) ? unzipper.Open.buffer : unzipper.Open.file;
-  const zip = await open(file);
-  zip.cryptoProvider = cryptoProvider;
+  const files = new AdmZip(file).getEntries();
   return {
-    ...zip,
+    files,
+    cryptoProvider,
     find,
     getFile,
     extractAll,

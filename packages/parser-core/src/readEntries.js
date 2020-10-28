@@ -40,15 +40,18 @@ function create(source, entries) {
 }
 
 function fromZip(zip) {
-  return create(zip, Object.values(zip.files).reduce((entries, entry) => {
-    return entries.concat([{
-      entryPath: entry.path,
-      getFile: options => zip.getFile(entry, options),
-      size: entry.uncompressedSize,
-      method: entry.compressionMethod,
-      extraFieldLength: entry.extraFieldLength,
-    }]);
-  }, []));
+  const zipCopy = { ...zip };
+  zipCopy.files = zip.files.map((file) => {
+    return {
+      ...file,
+      entryPath: file.entryName,
+      getFile: () => zip.entries.find(file),
+      size: file.header.size,
+      method: file.header.size,
+      extraFieldLength: file.extra.length,
+    };
+  });
+  return create(zipCopy, zipCopy.files);
 }
 
 function fromDirectory(dir, cryptoProvider) {
