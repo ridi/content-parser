@@ -39,7 +39,7 @@ jobs:
     - name: Notify slack success
       if: success()
       env:
-        SLACK_BOT_TOKEN: xoxb-263925111025-1471192436161-BlVM2WLrCIfn3qfYF50DVmGC
+        SLACK_BOT_TOKEN: xoxb-263925111025-1471192436161-2Xjkk72bkYPeLgc9q0yHWlaq
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
         channel_id: C01718N3MGD
@@ -48,7 +48,7 @@ jobs:
     - name: Notify slack fail
       if: failure()
       env:
-        SLACK_BOT_TOKEN: xoxb-263925111025-1471192436161-BlVM2WLrCIfn3qfYF50DVmGC
+        SLACK_BOT_TOKEN: xoxb-263925111025-1471192436161-2Xjkk72bkYPeLgc9q0yHWlaq
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
         channel_id: C01718N3MGD
