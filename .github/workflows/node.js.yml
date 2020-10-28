@@ -39,18 +39,18 @@ jobs:
     - name: Notify slack success
       if: success()
       env:
-        SLACK_BOT_TOKEN: xapp-1-A01DGG328KU-1482391361776-77c35f8da9c287bd5eccb3b4a23b1e44c0f91cf4ab8cf5eab801cce509121bfb
+        SLACK_BOT_TOKEN: xoxb-263925111025-1471192436161-BlVM2WLrCIfn3qfYF50DVmGC
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
-        channel: NEc5gIdX4RMLubMOEvZUPGYSAX4hhtZPSn1h2LM/I/FOxZsXsvaxC5NFwdoJxU6M8c8UTBmud8DUf7Rrt1nTxuqI7ZsaD+TV0nz6OFRSCUH+X0cc94exJpNH0b2fNnHrNqfBXVlFnckeNi5xE+J3h/x6tcFpKO4fC+Q3cLo8bhasZrq/LTa2H7dF0kCrTgsDeD08uEpWVHb26UT0faSqJxu/d5l+O4vSiIVplunEmjvZptWeZNTCKsTnsxjq/hcLad+PQJBqmMTZ84IkDln+JmWOteei8DoCOUoi42eO+9xYD4pCptVZXzqrXDmGj6DCVkApwlisXrNE9P2fiI4Oxf2YmtGRJmtE8ZFZfqlfCwB0SAX91CLvfmPIExJ6+FAcQvI1TCdhCS9v52wRP9XZISCYtMwFce3k7uPo8t//OX39jnokK5PrEivc/cOU/x7nECToDKnMGEb9kmWVFrNYx4HRAEMZ4RodApOCUZYplYmPCnfo4lcvl5sdlvaXvn35YhCHkmOE1mPizXlnqtnNCuJEXoQ2rFfXN6ArkjIhf9su8AjCCGKZon+6oPiZH3E0L5XBy9GA8nL+fVssGZGrWCtCIqDRve10DqZPeaj7NpYueSvzbotivIpOI9HQeQZBXPylAM2iYmaNUuuv6sFanvhAb/4NYErLRF3Ga+QoIDM=
+        channel_id: C01718N3MGD
         status: SUCCESS
         color: good
     - name: Notify slack fail
       if: failure()
       env:
-        SLACK_BOT_TOKEN: xapp-1-A01DGG328KU-1482391361776-77c35f8da9c287bd5eccb3b4a23b1e44c0f91cf4ab8cf5eab801cce509121bfb
+        SLACK_BOT_TOKEN: xoxb-263925111025-1471192436161-BlVM2WLrCIfn3qfYF50DVmGC
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
-        channel: NEc5gIdX4RMLubMOEvZUPGYSAX4hhtZPSn1h2LM/I/FOxZsXsvaxC5NFwdoJxU6M8c8UTBmud8DUf7Rrt1nTxuqI7ZsaD+TV0nz6OFRSCUH+X0cc94exJpNH0b2fNnHrNqfBXVlFnckeNi5xE+J3h/x6tcFpKO4fC+Q3cLo8bhasZrq/LTa2H7dF0kCrTgsDeD08uEpWVHb26UT0faSqJxu/d5l+O4vSiIVplunEmjvZptWeZNTCKsTnsxjq/hcLad+PQJBqmMTZ84IkDln+JmWOteei8DoCOUoi42eO+9xYD4pCptVZXzqrXDmGj6DCVkApwlisXrNE9P2fiI4Oxf2YmtGRJmtE8ZFZfqlfCwB0SAX91CLvfmPIExJ6+FAcQvI1TCdhCS9v52wRP9XZISCYtMwFce3k7uPo8t//OX39jnokK5PrEivc/cOU/x7nECToDKnMGEb9kmWVFrNYx4HRAEMZ4RodApOCUZYplYmPCnfo4lcvl5sdlvaXvn35YhCHkmOE1mPizXlnqtnNCuJEXoQ2rFfXN6ArkjIhf9su8AjCCGKZon+6oPiZH3E0L5XBy9GA8nL+fVssGZGrWCtCIqDRve10DqZPeaj7NpYueSvzbotivIpOI9HQeQZBXPylAM2iYmaNUuuv6sFanvhAb/4NYErLRF3Ga+QoIDM=
+        channel_id: C01718N3MGD
         status: FAILED
         color: danger
