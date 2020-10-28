@@ -50,7 +50,7 @@ jobs:
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
         message_id: ${{ steps.slack.outputs.message_id }}
-        channel: viewer-repositories
+        channel: ${{ secrets.SLACK_BOT_CHANNEL }}
         status: SUCCESS
         color: good
     - name: Notify slack fail
@@ -60,6 +60,6 @@ jobs:
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
         message_id: ${{ steps.slack.outputs.message_id }}
-        channel: viewer-repositories
+        channel: ${{ secrets.SLACK_BOT_CHANNEL }}
         status: FAILED
         color: danger
