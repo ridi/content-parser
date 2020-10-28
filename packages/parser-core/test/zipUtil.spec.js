@@ -14,7 +14,7 @@ describe('Util - Zip', () => {
 
   it('openZip test', async () => {
     const zip = await openZip(Paths.DEFAULT);
-    const entry = zip.find('mimetype')
+    const entry = zip.find('mimetype');
     entry.should.not.null;
     const buffer = await zip.getFile(entry);
     Buffer.isBuffer(buffer).should.be.true;

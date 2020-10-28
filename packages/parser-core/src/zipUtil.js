@@ -2,6 +2,7 @@
 import fs from 'fs-extra';
 import StreamChopper from 'stream-chopper';
 import AdmZip from 'adm-zip';
+import { Readable } from 'stream';
 
 import { trimEnd } from './bufferUtil';
 import createCryptoStream from './createCryptoStream';
@@ -9,9 +10,10 @@ import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
 import { isExists } from './typecheck';
 import { conditionally } from './streamUtil';
+import Errors, { createError } from './errors';
 
 function find(entryPath) {
-  return this.files.find(entry => entryPath === entry.path);
+  return this.files.find(entry => entryPath === entry.entryName);
 }
 
 function _getBufferSize(cryptoProvider) {
@@ -27,7 +29,8 @@ async function getFile(entry, options = {}) {
     const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     const bufferSize = _getBufferSize(this.cryptoProvider);
     let data = Buffer.from([]);
-    entry.stream() // is DuplexStream.
+    const readable = Readable.from(entry.getData());
+    readable
       .pipe(conditionally(isExists(bufferSize), new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
       .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode, createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
@@ -53,25 +56,27 @@ async function extractAll(unzipPath, overwrite = true) {
   }
   fs.mkdirpSync(unzipPath);
   const zip = new AdmZip();
-  if (this.cryptoProvider) {
-    await Promise.all(this.files.map(async (entry) => {
-      if (!entry.isDirectory) {
-        entry.setData(await this.cryptoProvider.run(entry.getData(), entry.entryPath, CryptoProvider.Purpose.WRITE));
-      }
-      zip.addFile(entry.entryName, entry.getData());
-    }));
-  }
+  await Promise.all(this.files.map(async (entry) => {
+    if (this.cryptoProvider && !entry.isDirectory) {
+      entry.setData(await this.cryptoProvider.run(entry.getData(), entry.entryPath, CryptoProvider.Purpose.WRITE));
+    }
+    zip.addFile(entry.entryName, entry.getData());
+  }));
   zip.extractAllTo(unzipPath);
 }
 
 export default async function openZip(file, cryptoProvider, logger) {
-  const files = new AdmZip(file).getEntries();
-  return {
-    files,
-    cryptoProvider,
-    find,
-    getFile,
-    extractAll,
-    logger,
-  };
+  try {
+    const files = new AdmZip(file).getEntries();
+    return {
+      files,
+      cryptoProvider,
+      find,
+      getFile,
+      extractAll,
+      logger,
+    };
+  } catch (err) {
+    throw createError(Errors.ENOENT, file);
+  }
 }
