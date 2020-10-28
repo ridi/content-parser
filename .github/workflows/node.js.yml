@@ -19,6 +19,16 @@ jobs:
         node-version: [10.x, 12.x, 14.x]
 
     steps:
+    - name: Notify slack success
+      if: success()
+      id: slack # IMPORTANT: reference this step ID value in future Slack steps
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: voxmedia/github-action-slack-notify-build@v1
+      with:
+        channel: viewer-repositories
+        status: STARTING
+        color: warning
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -36,21 +46,23 @@ jobs:
       uses: Borales/actions-yarn@v2.3.0
       with:
         cmd: coverage
-    - name: Notify slack success
+   - name: Notify slack success
       if: success()
       env:
-        SLACK_BOT_TOKEN: xoxb-263925111025-1471192436161-2Xjkk72bkYPeLgc9q0yHWlaq
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
-        channel_id: C01718N3MGD
+        message_id: ${{ steps.slack.outputs.message_id }}
+        channel: viewer-repositories
         status: SUCCESS
         color: good
     - name: Notify slack fail
       if: failure()
       env:
-        SLACK_BOT_TOKEN: xoxb-263925111025-1471192436161-2Xjkk72bkYPeLgc9q0yHWlaq
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
-        channel_id: C01718N3MGD
+        message_id: ${{ steps.slack.outputs.message_id }}
+        channel: viewer-repositories
         status: FAILED
         color: danger
