@@ -38,11 +38,7 @@ jobs:
     - name: run tests
       uses: Borales/actions-yarn@v2.3.0
       with:
-        cmd: test
-    - name: calculate coverage
-      uses: Borales/actions-yarn@v2.3.0
-      with:
-        cmd: coverage
+        cmd: test --timeout 4000
     - name: Notify slack success
       if: success()
       env:
