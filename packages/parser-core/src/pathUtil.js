@@ -5,7 +5,7 @@ import naturalCompare from 'string-natural-compare';
 import { isString } from './typecheck';
 
 export function safePath(target) {
-  return target.replace(/\\/g, '/').replace(/:\/(?!\/)/, '://');
+  return target.replace(/\\/g, '/').replace(/(?<![A-Z]):\/(?!\/)/, '://');
 }
 
 export function safeDirname(target) {
