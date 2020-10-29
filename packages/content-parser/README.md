@@ -61,4 +61,4 @@ import {
 
 ## License
 
-[Apache-2.0](https://github.com/ridi/content-parser/packages/content-parser/LICENSE)
+[Apache-2.0](https://github.com/ridi/content-parser/blob/master/packages/content-parser/LICENSE)
