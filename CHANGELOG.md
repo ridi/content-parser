@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-* None.
+## [0.7.0 (2020-10-31)]
+
+### Changed
+
+* Replace `unzipper` with `adm-zip`.
+* Changed Parsers to accept async CryptoProvider methods.
+* Added an option to the CryptoProvider to not handle stream in chunks.
+
+### Fixed
+
+* Fix a bug where path has an additional slah in Windows.
 
 ## [0.6.15 (2020-09-05)]
 
