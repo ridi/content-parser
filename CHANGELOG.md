@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-* Fix a bug where path has an additional slah in Windows.
+* Fix a bug where path has an additional slash in Windows.
 
 ## [0.6.15 (2020-09-05)]
 
