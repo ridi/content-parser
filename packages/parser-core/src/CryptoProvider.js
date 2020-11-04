@@ -1,5 +1,17 @@
+// eslint-disable-next-line no-unused-vars
+import AesCryptor from './AesCryptor';
 import Errors, { createError, mustOverride } from './errors';
 
+/**
+ * @typedef {Object} CryptoProviderPurpose
+ * @property {string} READ_IN_ZIP "read_in_zip"
+ * @property {string} READ_IN_DIR "read_in_dir"
+ * @property {string} WRITE "write"
+*/
+
+/**
+ * @type {CryptoProviderPurpose}
+ */
 const Purpose = Object.freeze({
   READ_IN_ZIP: 'read_in_zip',
   READ_IN_DIR: 'read_in_dir',
@@ -11,8 +23,9 @@ class CryptoProvider {
 
   /**
    * Size of data to process at once
+   *
    * `null` means use nodejs default (default: 65535)
-   * @returns {?number}
+   * @returns {number}
    */
   get bufferSize() { return null; }
 
@@ -24,6 +37,7 @@ class CryptoProvider {
 
   /**
    * Create or reuse AesCryptor by condition
+   * @abstract
    * @param {string} filePath
    * @param {string} purpose
    * @returns {AesCryptor}
@@ -40,6 +54,7 @@ class CryptoProvider {
 
   /**
    * Should execute encrypt or decrypt by condition if needed
+   * @abstract
    * @param {Buffer} data
    * @param {string} filePath
    * @param {string} purpose

@@ -1,8 +1,12 @@
 /* eslint-disable import/prefer-default-export */
-import es from 'event-stream';
-
+import * as es from 'event-stream';
 import { isFunc } from './typecheck';
-
+/**
+ * Apply event stream conditionally
+ * @param  {boolean | (()=>boolean)} condition
+ * @param  {es.MapStream} stream
+ * @returns {es.MapStream} Mapstream
+ */
 export function conditionally(condition, stream) {
   if (isFunc(condition) ? condition() : condition) {
     return stream;

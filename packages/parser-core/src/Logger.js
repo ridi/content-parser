@@ -2,6 +2,23 @@
 import { isExists } from './typecheck';
 import { stringContains } from './stringUtil';
 
+/**
+  * @typedef LogLevel
+  * @property {string} SILENT "silent"
+  * @property {string} ERROR "error"
+  * @property {string} WARN "warn"
+  * @property {string} INFO "info"
+  * @property {string} DEBUG "debug"
+  * @property {string} VERBOSE "verbose"
+  *
+  * @typedef LoggerOptions
+  * @property {string} namespace
+  * @property {LogLevel} logLevel
+*/
+
+/**
+* @enum {LogLevel}
+*/
 const LogLevel = Object.freeze({
   SILENT: 'silent',
   ERROR: 'error',
@@ -11,6 +28,11 @@ const LogLevel = Object.freeze({
   VERBOSE: 'verbose',
 });
 
+/**
+ * Get an order of a log level
+ * @param  {LogLevel} logLevel
+ * @returns {number} order of a level
+ */
 const getOrder = (logLevel) => {
   switch (logLevel) {
     case LogLevel.ERROR: return 1;
@@ -29,16 +51,31 @@ class Logger {
 
   set logLevel(level) { this._logLevel = stringContains(Object.values(LogLevel), level) ? level : this.logLevel; }
 
-  constructor(namespace, logLevel = '') {
+  /**
+   * Construct Logger Class;
+   * @param  {string} namespace
+   * @param  {LogLevel} logLevel
+   */
+  constructor(namespace, logLevel) {
     this.namespace = namespace || Logger.name;
     this._logLevel = stringContains(Object.values(LogLevel), logLevel) ? logLevel : LogLevel.WARN;
     this._firstTime = null;
   }
 
+  /**
+   * @param  {LogLevel} current
+   * @param  {LogLevel} target
+   * @returns {boolean}
+   */
   static confirm(current, target) {
     return getOrder(current) >= getOrder(target);
   }
 
+  /**
+   * Log information
+   * @param  {any?} message
+   * @param  {any[]} ...optionalParams
+   */
   info(message, ...optionalParams) {
     /* istanbul ignore else */
     if (Logger.confirm(this.logLevel, LogLevel.INFO)) {
@@ -46,6 +83,11 @@ class Logger {
     }
   }
 
+  /**
+   * Log warning
+   * @param  {any?} message
+   * @param  {any[]} ...optionalParams
+   */
   warn(message, ...optionalParams) {
     /* istanbul ignore else */
     if (Logger.confirm(this.logLevel, LogLevel.WARN)) {
@@ -53,6 +95,11 @@ class Logger {
     }
   }
 
+  /**
+   * Log error
+   * @param  {any?} message
+   * @param  {any[]} ...optionalParams
+   */
   error(message, ...optionalParams) {
     /* istanbul ignore else */
     if (Logger.confirm(this.logLevel, LogLevel.ERROR)) {
@@ -60,6 +107,11 @@ class Logger {
     }
   }
 
+  /**
+   * Log degug
+   * @param  {string?} message
+   * @param  {any[]} ...optionalParams
+   */
   debug(message, ...optionalParams) {
     /* istanbul ignore else */
     if (Logger.confirm(this.logLevel, LogLevel.DEBUG)) {
@@ -67,33 +119,60 @@ class Logger {
     }
   }
 
-  async measure(run, thisArg, argsArray, message, ...optionalParams) {
+  /**
+   * @async
+   * Measure run time onf a function.
+   * @param  {(...any)=>Promise<T>} func
+   * @param  {any} thisArg
+   * @param  {any} argsArray
+   * @param  {any} message
+   * @param  {any[]} optionalParams
+   * @returns {Promise<T>} result of the run
+   * @template T
+   */
+  async measure(func, thisArg, argsArray, message, ...optionalParams) {
     if (Logger.confirm(this.logLevel, LogLevel.INFO)) {
       const startTime = new Date().getTime();
       if (!isExists(this._firstTime)) {
         this._firstTime = startTime;
       }
-      const result = await run.apply(thisArg, argsArray);
+      const result = await func.apply(thisArg, argsArray);
       console.log(`[${this.namespace}] ${message}`, ...optionalParams, `(${touchTime(startTime)}ms)`);
       return result;
     }
-    const result = await run.apply(thisArg, argsArray);
+    const result = await func.apply(thisArg, argsArray);
     return result;
   }
 
-  measureSync(run, thisArg, argsArray, message, ...optionalParams) {
+  /**
+   * Measure run time of a function
+   * @param  {(...any)=>T} func
+   * @param  {any} thisArg
+   * @param  {any} argsArray
+   * @param  {any} message
+   * @param  {any[]} optionalParams
+   * @returns {T} result of the function
+   * @template T
+   */
+  measureSync(func, thisArg, argsArray, message, ...optionalParams) {
     if (Logger.confirm(this.logLevel, LogLevel.INFO)) {
       const startTime = new Date().getTime();
       if (!isExists(this._firstTime)) {
         this._firstTime = startTime;
       }
-      const result = run.apply(thisArg, argsArray);
+      const result = func.apply(thisArg, argsArray);
       console.log(`[${this.namespace}] ${message}`, ...optionalParams, `(${touchTime(startTime)}ms)`);
       return result;
     }
-    return run.apply(thisArg, argsArray);
+    return func.apply(thisArg, argsArray);
   }
 
+
+  /**
+   * Measure the total time of this.measureSync
+   * @param  {any?} message
+   * @param  {any[]} optionalParams
+   */
   result(message, ...optionalParams) {
     const startTime = this._firstTime || new Date().getTime();
     if (Logger.confirm(this.logLevel, LogLevel.INFO)) {

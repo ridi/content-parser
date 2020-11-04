@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 import path from 'path';
 
 import { trimEnd } from './bufferUtil';
@@ -14,14 +13,41 @@ import { safeDecodeURI } from './stringUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
 
+/**
+ * @typedef {Object} ReadStreamOption
+ * @property {number} highWaterMark
+ */
+/**
+ * Get read stream option
+ * @param  {CryptoProvider} cryptoProvider
+ * @returns {ReadStreamOption}
+ */
 function getReadStreamOptions(cryptoProvider) {
   let options = {};
   if (isExists(cryptoProvider) && isExists(cryptoProvider.bufferSize)) {
-    options = { ...options, highWaterMark: cryptoProvider.bufferSize };
+    options = { highWaterMark: cryptoProvider.bufferSize };
   }
   return options;
 }
+/**
+ * @typedef {Object} FileEntryObject
+ * @property {S} first
+ * @property {number} length
+ * @property {T} source
+ * @property {(idx:number)=>S} get
+ * @property {(entryPath:string,strict:boolean)=>S} find
+ * @property {(callback:(value: S, index: number, array: S[]) => void)=>void} forEach
+ * @property {(callback: (value: S, index: number, array: S[]) => any)=>void} map
+ * @property {(callback: (a: S, b: S) => number)=>void} sort
+ * @template T, S
+ */
 
+/**
+ * @param  {T} source
+ * @param  {S[]} entries
+ * @returns {FileEntryObject<T, S>}
+ * @template T, S
+ */
 function create(source, entries) {
   return {
     first: entries[0],
@@ -39,6 +65,24 @@ function create(source, entries) {
   };
 }
 
+/**
+ * @typedef {Object} EntryBasicInformation
+ * @property {string} entryPath
+ * @property {number} size
+ * @property {(options:{endocing:string, end: number})=>(Promise<Buffer>|Buffer)} getFile
+ *
+ * @typedef {Object} ZipfileEntryInformation
+ * @property {string} method
+ * @property {number} extraFieldLength
+ *
+ * @typedef {import('adm-zip').IZipEntry & EntryBasicInformation & ZipfileEntryInformation} IZipEntryPlus
+*/
+
+/**
+ * Get FileEntryObject from the zip file
+ * @param  {import('./zipUtil').ZipFileInformation} zip
+ * @returns {FileEntryObject<import('./zipUtil').ZipFileInformation, IZipEntryPlus}
+ */
 function fromZip(zip) {
   const zipCopy = { ...zip };
   zipCopy.files = zip.files.map((file) => {
@@ -56,7 +100,7 @@ function fromZip(zip) {
       ...file,
       getFile,
       entryPath: file.entryName,
-      size: file.header.size,
+      size: file.header.length,
       method: file.header.method,
       extraFieldLength: file.extra.length,
     };
@@ -64,6 +108,11 @@ function fromZip(zip) {
   return create(zipCopy, zipCopy.files);
 }
 
+/**
+ * @param  {string} dir
+ * @param  {CryptoProvider} cryptoProvider
+ * @returns {FileEntryObject<string, EntryBasicInformation>}
+ */
 function fromDirectory(dir, cryptoProvider) {
   let paths = (() => {
     /* istanbul ignore next */
@@ -117,6 +166,11 @@ function fromDirectory(dir, cryptoProvider) {
   }, []));
 }
 
+/**
+ * @param  {string} filePath
+ * @param  {CryptoProvider} cryptoProvider
+ * @returns {FileEntryObject<string, EntryBasicInformation>}
+ */
 function fromFile(filePath, cryptoProvider) {
   const size = (() => {
     /* istanbul ignore next */
@@ -156,6 +210,12 @@ function fromFile(filePath, cryptoProvider) {
   }]);
 }
 
+/**
+ * @async
+ * @param  {string} input
+ * @param  {CryptoProvider} cryptoProvider
+ * @param  {import('./Logger').default} logger
+ */
 export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     if (path.extname(input).toLowerCase() === '.pdf') {

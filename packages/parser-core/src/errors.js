@@ -1,5 +1,29 @@
 import format from 'string-format';
 
+/**
+ * @typedef ErrorType
+ * @property {string} code
+ * @property {string} format
+*/
+
+/**
+ * @typedef Errors
+ * @property {ErrorType} ENOENT
+ * @property {ErrorType} ENOFILE
+ * @property {ErrorType} EEXIST
+ * @property {ErrorType} EINVAL
+ * @property {ErrorType} ENOELMT
+ * @property {ErrorType} ENOATTR
+ * @property {ErrorType} EREQPRM
+ * @property {ErrorType} EINTR
+ * @property {ErrorType} ECRYT
+ * @property {ErrorType} EPDFJS
+ * @property {ErrorType} ENOIMP
+ */
+
+/**
+ * @type {Errors}
+ */
 const Errors = {
   ENOENT: { code: 'ENOENT', format: 'ENOENT: no such file or directory. (path: {0})' },
   ENOFILE: { code: 'ENOFILE', format: 'ENOFILE: no such file. (path: {0})' },
@@ -13,14 +37,23 @@ const Errors = {
   EPDFJS: { code: 'EPDFJS', format: 'EPDFJS: pdf.js internal error. (detail: {0})' },
   ENOIMP: { code: 'ENOIMP', format: 'ENOIMP: function not implemented.' },
 };
-export default Errors;
 
+export default Errors;
+/**
+ * Create error
+ * @param  {Errors} type
+ * @param  {string[]} args
+ * @returns {Error}
+ */
 export function createError(type, ...args) {
   const error = new Error(format(type.format, ...args));
   error.code = type.code;
   return error;
 }
-
+/**
+ * Create MustOverride error
+ * @returns {Error}
+ */
 export function mustOverride() {
   throw createError(Errors.EINTR, 'You must override in a subclass.');
 }

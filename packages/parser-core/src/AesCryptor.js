@@ -1,19 +1,44 @@
-import CryptoJs from 'crypto-js';
+import * as CryptoJs from 'crypto-js';
 
 import { Padding, Encoding } from './cryptoUtil';
 import Errors, { createError } from './errors';
 import mergeObjects from './mergeObjects';
 import { stringContains } from './stringUtil';
 import validateOptions from './validateOptions';
-
 import { isExists, isObject, isString } from './typecheck';
 
 const { mode: aesMode, AES } = CryptoJs;
 
+/**
+ * @typedef {Object} ModeConfig
+ * @property {string} key
+ * @property {string} [iv]
+*/
+
+/**
+ * @type {ModeConfig}
+ */
 const defaultConfigTypes = {
   key: 'String|Buffer|Uint8Array|Array',
 };
 
+/**
+ * @typedef {Object} ModeObject
+ * @property {string} name
+ * @property {typeof aesMode.ECB} op
+ * @property {ModeConfig} configTypes
+ *
+ * @typedef {Object} ModeList
+ * @property {ModeObject} ECB
+ * @property {ModeObject} CBC
+ * @property {ModeObject} CFB
+ * @property {ModeObject} OFB
+ * @property {ModeObject} CTR
+*/
+
+/**
+ * @type {ModeList}
+*/
 const Mode = Object.freeze({
   ECB: { // Electronic Codebook (key)
     name: 'ECB',
@@ -51,6 +76,25 @@ const Mode = Object.freeze({
 });
 
 class AesCryptor {
+   /**
+   * @typedef {(data: string | CryptoJs.lib.WordArray) => CryptoJs.lib.WordArray} EncodeAndDecode
+   * @typedef {Object} Operator
+   * @property {string} name
+   * @property {EncodeAndDecode} encrypt
+   * @property {EncodeAndDecode} decrypt
+   */
+
+  /**
+   * @private
+   * @type {Operator}
+   */
+  operator;
+
+  /**
+   * Construct AesCryptor
+   * @param  {ModeObject} mode Crypto mode
+   * @param  {ModeConfig} config Crypto config
+   */
   constructor(mode, config) {
     if (!isExists(mode)) {
       throw createError(Errors.EREQPRM, 'mode');
@@ -79,6 +123,14 @@ class AesCryptor {
     Object.freeze(this);
   }
 
+
+  /**
+   * Make an operator
+   * @private
+   * @param  {ModeObject} mode
+   * @param  {ModeConfig} config
+   * @returns {Operator} Operator
+   */
   makeOperator(mode, config) {
     let { key, iv } = config;
 
@@ -122,6 +174,18 @@ class AesCryptor {
     };
   }
 
+  /**
+   * @typedef {Object} CryptOption
+   * @property {import('./cryptoUtil').PaddingObject} padding
+   * @property {import('./cryptoUtil').EncodingObject} encoding
+   */
+
+  /**
+   * Encrypt string
+   * @param {string} data
+   * @param {CryptOption} options
+   * @returns {string} encrypted string
+   */
   encrypt(data, options = {}) {
     const padding = options.padding || Padding.NONE;
     const encoding = options.encoding || Encoding.BUFFER;
@@ -145,6 +209,12 @@ class AesCryptor {
     return encoding.encode(this.operator.encrypt(data));
   }
 
+  /**
+   * Decrupt string
+   * @param {string} data
+   * @param {CryptOption} options
+   * @returns {string} decrypted string
+   */
   decrypt(data, options = {}) {
     const padding = options.padding || Padding.NONE;
     const encoding = options.encoding || Encoding.BUFFER;

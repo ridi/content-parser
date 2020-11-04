@@ -1,9 +1,17 @@
-import es from 'event-stream';
-
+import * as es from 'event-stream';
+// eslint-disable-next-line no-unused-vars
+import CryptoProvider from './CryptoProvider';
+/**
+ * @param  {string} filePath
+ * @param  {number} totalSize
+ * @param  {CryptoProvider} cryptoProvider
+ * @param  {import('./CryptoProvider').CryptoProviderPurpose} purpose
+ * @returns {es.MapStream}
+ */
 const createCryptoStream = (filePath, totalSize, cryptoProvider, purpose) => {
   let tmpChunk = Buffer.from([]);
   let pushedSize = 0;
-  return es.map(async (chunk, callback) => { // eslint-disable-line
+  return es.map(async (chunk, callback) => {
     chunk = Buffer.from(chunk, 'binary');
     const subTotalSize = pushedSize + tmpChunk.length + chunk.length;
     if (subTotalSize < totalSize && subTotalSize % 16 !== 0) {

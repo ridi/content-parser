@@ -1,5 +1,5 @@
-/* eslint-disable no-bitwise, no-plusplus */
-import CryptoJs from 'crypto-js';
+/* eslint-disable no-bitwise */
+import * as CryptoJs from 'crypto-js';
 
 const {
   pad, enc, MD5, SHA1, SHA224, SHA256, SHA384, SHA512, SHA3, RIPEMD160,
@@ -7,6 +7,24 @@ const {
 const { Pkcs7 } = pad;
 const { Utf8, Hex } = enc;
 
+/**
+ * @typedef {Object} PaddingObject
+ * @property {string} name
+ * @property {Padding} op
+ * @property {(data:CryptoJs.lib.WordArray)=>void} pad
+ * @property {(data:CryptoJs.lib.WordArray)=>void} unpad
+ */
+
+/**
+ * @typedef {Object} PaddingList
+ * @property {PaddingObject} AUTO
+ * @property {PaddingObject} PKCS7
+ * @property {PaddingObject} NONE
+ */
+
+/**
+ * @type {PaddingList}
+ */
 const Padding = Object.freeze({
   AUTO: {
     name: 'auto',
@@ -26,13 +44,25 @@ const Padding = Object.freeze({
   },
 });
 
+/**
+ * @typedef {Uint8Array|Buffer|Array} IterableObject
+ * @typedef {(uint8ArrayOrBufferOrArray:IterableObject)=>CryptoJs.lib.WordArray} DecodeFunction
+ * @typedef {(wordArray:CryptoJs.lib.WordArray)=>Uint8Array} EncodeFunction
+ * @typedef {Object} UINT8Object
+ * @property {DecodeFunction} decode
+ * @property {EncodeFunction} encode
+ */
+
+/**
+ * @type {UINT8Object}
+ */
 const Uint8 = {
   decode: (uint8ArrayOrBufferOrArray) => {
     let uint8Array = uint8ArrayOrBufferOrArray;
     if (Buffer.isBuffer(uint8ArrayOrBufferOrArray)) {
       const buffer = uint8ArrayOrBufferOrArray;
       uint8Array = new Uint8Array(buffer.length);
-      for (let i = 0; i < buffer.length; i++) {
+      for (let i = 0; i < buffer.length; i += 1) {
         uint8Array[i] = buffer[i];
       }
     } else if (uint8ArrayOrBufferOrArray instanceof Array) {
@@ -45,17 +75,35 @@ const Uint8 = {
     const uint8Array = new Uint8Array(sigBytes);
     let offset = 0;
     let word;
-    for (let i = 0; i < words.length; i++) {
+    for (let i = 0; i < words.length; i += 1) {
       word = words[i];
-      uint8Array[offset++] = word >> 24;
-      uint8Array[offset++] = (word >> 16) & 0xff;
-      uint8Array[offset++] = (word >> 8) & 0xff;
-      uint8Array[offset++] = word & 0xff;
+      uint8Array[offset += 1] = word >> 24;
+      uint8Array[offset += 1] = (word >> 16) & 0xff;
+      uint8Array[offset += 1] = (word >> 8) & 0xff;
+      uint8Array[offset += 1] = word & 0xff;
     }
     return uint8Array;
   },
 };
 
+/**
+ * @typedef {Object} EncodingObject
+ * @property {string} name
+ * @property {(str: string)=>CryptoJs.lib.WordArray} decode
+ * @property {(wordArray: CryptoJs.lib.WordArray)=>string} encode
+ */
+
+/**
+ * @typedef {Object} EncodingList
+ * @property {EncodingObject} UTF8
+ * @property {EncodingObject} HEX
+ * @property {EncodingObject} UINT8
+ * @property {EncodingObject} BUFFER
+ */
+
+/**
+ * @type {EncodingList}
+ */
 const Encoding = Object.freeze({
   UTF8: {
     name: 'utf8',
@@ -79,6 +127,10 @@ const Encoding = Object.freeze({
   },
 });
 
+/**
+ * @param  {any} any
+ * @returns {any}
+ */
 const prepareHash = (any) => {
   if (Buffer.isBuffer(any)) {
     return Encoding.BUFFER.decode(any);
@@ -89,6 +141,25 @@ const prepareHash = (any) => {
   return any;
 };
 
+/**
+ * @typedef {(any:any, encoding:EncodingObject)=>string} HashFunction Use `Encoding`
+ */
+
+/**
+ * @typedef {Object} HashList
+ * @property {HashFunction} md5
+ * @property {HashFunction} sha1
+ * @property {HashFunction} sha224
+ * @property {HashFunction} sha256
+ * @property {HashFunction} sha384
+ * @property {HashFunction} sha512
+ * @property {HashFunction} sha3
+ * @property {HashFunction} ripemd160
+ */
+
+/**
+ * @type {HashList}
+ */
 const Hash = Object.freeze({
   md5: (any, encoding = Encoding.HEX) => encoding.encode(MD5(prepareHash(any))),
   sha1: (any, encoding = Encoding.HEX) => encoding.encode(SHA1(prepareHash(any))),

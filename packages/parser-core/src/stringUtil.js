@@ -1,5 +1,16 @@
 import { isExists } from './typecheck';
 
+/**
+ * @typedef MatchOption
+ * @property {number} MATCHING "0"
+ * @property {number} CONTAINING "1"
+ * @property {number} STARTSWITH "2"
+ * @property {number} ENDSWITH "3"
+ */
+
+/**
+* @enum {MatchOption}
+*/
 const MatchOption = {
   MATCHING: 0,
   CONTAINING: 1,
@@ -7,28 +18,31 @@ const MatchOption = {
   ENDSWITH: 3,
 };
 
+/**
+ * @param  {string[]} array=[]
+ * @param  {string} string=''
+ * @param  {MatchOption} matchOption=MatchOption.MATCHING
+ */
 function stringContains(array = [], string = '', matchOption = MatchOption.MATCHING) {
   const lString = string.toLowerCase();
   return isExists(array.find((item) => {
     const lItem = item.toLowerCase();
     switch (matchOption) {
       case MatchOption.CONTAINING:
-        if (lItem.indexOf(lString) >= 0) { return true; }
-        break;
+        return lItem.includes(lString);
       case MatchOption.STARTSWITH:
-        if (lItem.startsWith(lString)) { return true; }
-        break;
+        return lItem.startsWith(lString);
       case MatchOption.ENDSWITH:
-        if (lItem.endsWith(lString)) { return true; }
-        break;
+        return lItem.endsWith(lString);
       default:
-        if (lItem === lString) { return true; }
-        break;
+        return lItem === lString;
     }
-    return false;
   }));
 }
-
+/**
+ * Decode URI
+ * @param  {string} uri
+ */
 function safeDecodeURI(uri) {
   try {
     return decodeURI(uri);
