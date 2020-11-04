@@ -4,6 +4,7 @@
     "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
     "test": "yarn build && yarn lint && lerna exec --concurrency 1 -- nyc mocha --recursive",
     "coverage": "codecov",
+    "type": "lerna exec -- tsc",
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
@@ -35,7 +36,8 @@
     "lerna": "^3.22.1",
     "mocha": "^8.1.3",
     "nyc": "^15.1.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "typescript": "^4.0.5"
   },
   "esm": {
     "cjs": true
