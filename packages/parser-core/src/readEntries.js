@@ -100,7 +100,7 @@ function fromZip(zip) {
       ...file,
       getFile,
       entryPath: file.entryName,
-      size: file.header.length,
+      size: file.header.size,
       method: file.header.method,
       extraFieldLength: file.extra.length,
     };
@@ -139,7 +139,8 @@ function fromDirectory(dir, cryptoProvider) {
             let data = Buffer.from([]);
             stream
               .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-              .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode, createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+              .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode,
+                createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
               .on('data', (chunk) => {
                 data = Buffer.concat([data, chunk]);
               })
@@ -187,7 +188,8 @@ function fromFile(filePath, cryptoProvider) {
           const totalSize = Math.min(end || Infinity, size);
           stream
             .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-            .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode, createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+            .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode,
+              createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
             .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
             .on('error', e => reject(e))
             .on('end', () => resolve(data));

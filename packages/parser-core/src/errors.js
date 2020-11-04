@@ -22,7 +22,7 @@ import format from 'string-format';
  */
 
 /**
- * @type {Errors}
+ * @enum {Errors}
  */
 const Errors = {
   ENOENT: { code: 'ENOENT', format: 'ENOENT: no such file or directory. (path: {0})' },
@@ -41,7 +41,7 @@ const Errors = {
 export default Errors;
 /**
  * Create error
- * @param  {Errors} type
+ * @param  {ErrorType} type
  * @param  {string[]} args
  * @returns {Error}
  */

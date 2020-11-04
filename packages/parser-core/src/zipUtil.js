@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import StreamChopper from 'stream-chopper';
-import * as AdmZip from 'adm-zip';
+import AdmZip from 'adm-zip';
 import { Readable } from 'stream';
 
 import { trimEnd } from './bufferUtil';

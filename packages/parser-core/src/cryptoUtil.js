@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-bitwise */
 import * as CryptoJs from 'crypto-js';
 
@@ -77,10 +78,10 @@ const Uint8 = {
     let word;
     for (let i = 0; i < words.length; i += 1) {
       word = words[i];
-      uint8Array[offset += 1] = word >> 24;
-      uint8Array[offset += 1] = (word >> 16) & 0xff;
-      uint8Array[offset += 1] = (word >> 8) & 0xff;
-      uint8Array[offset += 1] = word & 0xff;
+      uint8Array[offset++] = word >> 24;
+      uint8Array[offset++] = (word >> 16) & 0xff;
+      uint8Array[offset++] = (word >> 8) & 0xff;
+      uint8Array[offset++] = word & 0xff;
     }
     return uint8Array;
   },
@@ -89,8 +90,8 @@ const Uint8 = {
 /**
  * @typedef {Object} EncodingObject
  * @property {string} name
- * @property {(str: string)=>CryptoJs.lib.WordArray} decode
- * @property {(wordArray: CryptoJs.lib.WordArray)=>string} encode
+ * @property {(str: string)=>CryptoJs.lib.WordArray | DecodeFunction} decode
+ * @property {(wordArray: CryptoJs.lib.WordArray)=>string | EncodeFunction} encode
  */
 
 /**

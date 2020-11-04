@@ -300,10 +300,11 @@ class Parser {
    * @template S Additional Option template
    */
   async _prepareParse(options = {}) {
-    validateOptions(options, Parser.parseOptionTypes);
+    const { parseOptionTypes, parseDefaultOptions } = this.constructor;
+    validateOptions(options, parseOptionTypes);
     const ParseContext = this._getParseContextClass();
     const context = new ParseContext();
-    context.options = mergeObjects(Parser.parseDefaultOptions, options);
+    context.options = mergeObjects(parseDefaultOptions, options);
     context.entries = await readEntries(this.input, this.cryptoProvider, this.logger);
     this.logger.debug(`Ready to parse with options: ${JSON.stringify(context.options)}.`);
     return context;
