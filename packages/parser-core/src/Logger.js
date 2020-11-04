@@ -167,7 +167,6 @@ class Logger {
     return func.apply(thisArg, argsArray);
   }
 
-
   /**
    * Measure the total time of this.measureSync
    * @param  {any?} message

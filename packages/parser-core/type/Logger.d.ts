@@ -25,6 +25,10 @@ export type LogLevel = {
      */
     VERBOSE: string;
 };
+export type LoggerOptions = {
+    namespace: string;
+    logLevel: LogLevel;
+};
 declare class Logger {
     /**
      * @param  {LogLevel} current
@@ -105,6 +109,10 @@ declare class Logger {
   * @property {string} INFO "info"
   * @property {string} DEBUG "debug"
   * @property {string} VERBOSE "verbose"
+  *
+  * @typedef LoggerOptions
+  * @property {string} namespace
+  * @property {LogLevel} logLevel
 */
 /**
 * @enum {LogLevel}

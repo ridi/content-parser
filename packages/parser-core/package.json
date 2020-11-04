@@ -14,9 +14,11 @@
   "bugs": "https://github.com/ridi/content-parser/issues",
   "homepage": "https://github.com/ridi/content-parser",
   "files": [
-    "lib"
+    "lib",
+    "type"
   ],
   "main": "lib/index.js",
+  "types": "type/index.d.ts",
   "dependencies": {
     "adm-zip": "^0.4.16",
     "crypto-js": "^4.0.0",

@@ -5,7 +5,7 @@
  * @returns {ZipFileInformation}
  * @throws {Errors.ENOENT} When file can't be found
  */
-export default function openZip(file: string | Buffer, cryptoProvider: CryptoProvider, logger: Logger): ZipFileInformation;
+export default function openZip(file: string | Buffer, cryptoProvider: CryptoProvider, logger: any): ZipFileInformation;
 export type GetFileOptions = {
     encoding: string;
     end: number;
@@ -16,8 +16,7 @@ export type ZipFileInformation = {
     find: (entryPath: string) => AdmZip.IZipEntry;
     getFile: (entry: AdmZip.IZipEntry, options?: GetFileOptions) => Promise<any>;
     extractAll: (unzipPath: any, overwrite?: boolean) => Promise<any>;
-    logger: Logger;
+    logger: import('./Logger').default;
 };
 import CryptoProvider from "./CryptoProvider";
-import Logger from "./Logger";
 import * as AdmZip from "adm-zip";

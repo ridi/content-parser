@@ -123,6 +123,7 @@ class Parser {
    * @returns {Logger}
    */
   get logger() { return privateProps.get(this).logger; }
+
   /**
    * Get onProgress callback
    * @returns {OnProgressCallBack}
@@ -452,6 +453,7 @@ class Parser {
    * @throws {Errors.ENOFILE} no such file
    * @see Parser.readDefaultOptions.force
    */
+  // eslint-disable-next-line no-unused-vars
   async _read(context) {
     return mustOverride();
   }

@@ -25,7 +25,7 @@ const defaultConfigTypes = {
 /**
  * @typedef {Object} ModeObject
  * @property {string} name
- * @property {typeof aesMode.ECB} op
+ * @property {import('../type/CryptoJs').BlockCipherMode} op
  * @property {ModeConfig} configTypes
  *
  * @typedef {Object} ModeList
@@ -76,7 +76,7 @@ const Mode = Object.freeze({
 });
 
 class AesCryptor {
-   /**
+  /**
    * @typedef {(data: string | CryptoJs.lib.WordArray) => CryptoJs.lib.WordArray} EncodeAndDecode
    * @typedef {Object} Operator
    * @property {string} name
@@ -122,7 +122,6 @@ class AesCryptor {
     this.operator = this.makeOperator(mode, config);
     Object.freeze(this);
   }
-
 
   /**
    * Make an operator

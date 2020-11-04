@@ -1,18 +1,72 @@
 export default AesCryptor;
+export type ModeConfig = {
+    key: string;
+    iv?: string;
+};
+export type ModeObject = {
+    name: string;
+    op: import('../type/CryptoJs').BlockCipherMode;
+    configTypes: ModeConfig;
+};
+export type ModeList = {
+    ECB: ModeObject;
+    CBC: ModeObject;
+    CFB: ModeObject;
+    OFB: ModeObject;
+    CTR: ModeObject;
+};
 declare class AesCryptor {
-    constructor(mode: any, config: any);
-    operator: {
-        name: any;
-        encrypt: (data: any) => any;
-        decrypt: (data: any) => any;
-    };
-    makeOperator(mode: any, config: any): {
-        name: any;
-        encrypt: (data: any) => any;
-        decrypt: (data: any) => any;
-    };
-    encrypt(data: any, options?: {}): any;
-    decrypt(data: any, options?: {}): any;
+    /**
+     * Construct AesCryptor
+     * @param  {ModeObject} mode Crypto mode
+     * @param  {ModeConfig} config Crypto config
+     */
+    constructor(mode: ModeObject, config: ModeConfig);
+    /**
+     * @typedef {(data: string | CryptoJs.lib.WordArray) => CryptoJs.lib.WordArray} EncodeAndDecode
+     * @typedef {Object} Operator
+     * @property {string} name
+     * @property {EncodeAndDecode} encrypt
+     * @property {EncodeAndDecode} decrypt
+     */
+    /**
+     * @private
+     * @type {Operator}
+     */
+    private operator;
+    /**
+     * Make an operator
+     * @private
+     * @param  {ModeObject} mode
+     * @param  {ModeConfig} config
+     * @returns {Operator} Operator
+     */
+    private makeOperator;
+    /**
+     * @typedef {Object} CryptOption
+     * @property {import('./cryptoUtil').PaddingObject} padding
+     * @property {import('./cryptoUtil').EncodingObject} encoding
+     */
+    /**
+     * Encrypt string
+     * @param {string} data
+     * @param {CryptOption} options
+     * @returns {string} encrypted string
+     */
+    encrypt(data: string, options?: {
+        padding: import('./cryptoUtil').PaddingObject;
+        encoding: import('./cryptoUtil').EncodingObject;
+    }): string;
+    /**
+     * Decrupt string
+     * @param {string} data
+     * @param {CryptOption} options
+     * @returns {string} decrypted string
+     */
+    decrypt(data: string, options?: {
+        padding: import('./cryptoUtil').PaddingObject;
+        encoding: import('./cryptoUtil').EncodingObject;
+    }): string;
 }
 declare namespace AesCryptor {
     export { Padding };
@@ -21,33 +75,21 @@ declare namespace AesCryptor {
 }
 import { Padding } from "./cryptoUtil";
 import { Encoding } from "./cryptoUtil";
-export const Mode: Readonly<{
-    ECB: {
-        name: string;
-        op: any;
-        configTypes: {
-            key: string;
-        };
-    };
-    CBC: {
-        name: string;
-        op: any;
-        configTypes: any;
-    };
-    CFB: {
-        name: string;
-        op: any;
-        configTypes: any;
-    };
-    OFB: {
-        name: string;
-        op: any;
-        configTypes: any;
-    };
-    CTR: {
-        name: string;
-        op: any;
-        configTypes: any;
-    };
-}>;
+/**
+ * @typedef {Object} ModeObject
+ * @property {string} name
+ * @property {import('../type/CryptoJs').BlockCipherMode} op
+ * @property {ModeConfig} configTypes
+ *
+ * @typedef {Object} ModeList
+ * @property {ModeObject} ECB
+ * @property {ModeObject} CBC
+ * @property {ModeObject} CFB
+ * @property {ModeObject} OFB
+ * @property {ModeObject} CTR
+*/
+/**
+ * @type {ModeList}
+*/
+export const Mode: ModeList;
 export { Padding, Encoding };
