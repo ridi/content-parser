@@ -3,14 +3,16 @@ import AesCryptor from './AesCryptor';
 import Errors, { createError, mustOverride } from './errors';
 
 /**
+ * @typedef {string} CryptoProviderOption
+ *
  * @typedef {Object} CryptoProviderPurpose
- * @property {string} READ_IN_ZIP "read_in_zip"
- * @property {string} READ_IN_DIR "read_in_dir"
- * @property {string} WRITE "write"
+ * @property {CryptoProviderOption} READ_IN_ZIP "read_in_zip"
+ * @property {CryptoProviderOption} READ_IN_DIR "read_in_dir"
+ * @property {CryptoProviderOption} WRITE "write"
 */
 
 /**
- * @type {CryptoProviderPurpose}
+ * @enum {CryptoProviderPurpose}
  */
 const Purpose = Object.freeze({
   READ_IN_ZIP: 'read_in_zip',

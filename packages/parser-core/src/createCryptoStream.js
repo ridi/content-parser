@@ -5,7 +5,7 @@ import CryptoProvider from './CryptoProvider';
  * @param  {string} filePath
  * @param  {number} totalSize
  * @param  {CryptoProvider} cryptoProvider
- * @param  {import('./CryptoProvider').CryptoProviderPurpose} purpose
+ * @param  {import('./CryptoProvider').CryptoProviderOption} purpose
  * @returns {es.MapStream}
  */
 const createCryptoStream = (filePath, totalSize, cryptoProvider, purpose) => {

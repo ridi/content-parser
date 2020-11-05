@@ -90,8 +90,8 @@ const Uint8 = {
 /**
  * @typedef {Object} EncodingObject
  * @property {string} name
- * @property {(str: string)=>CryptoJs.lib.WordArray | DecodeFunction} decode
- * @property {(wordArray: CryptoJs.lib.WordArray)=>string | EncodeFunction} encode
+ * @property {(str: string|IterableObject)=>CryptoJs.lib.WordArray} decode
+ * @property {(wordArray: CryptoJs.lib.WordArray)=>(string|Uint8Array)} encode
  */
 
 /**

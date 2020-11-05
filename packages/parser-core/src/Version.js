@@ -1,5 +1,20 @@
 class Version {
   /**
+   * @private
+   */
+  major;
+
+  /**
+   * @private
+   */
+  minor;
+
+  /**
+   * @private
+   */
+  patch;
+
+  /**
    * Construct Version object with version.
    * @param  {string} version
    */

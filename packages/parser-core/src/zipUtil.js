@@ -56,9 +56,9 @@ function _getBufferSize(cryptoProvider) {
  * @param {GetFileOptions} options
  * @returns {Promise<Buffer | String>} String is encoding is provided, Buffer otherwise
  */
-async function getFile(entry, options = {}) {
+async function getFile(entry, options = { encoding: undefined, end: undefined }) {
   const { encoding, end } = options;
-  let file = await new Promise((resolve, reject) => {
+  let file = await new Promise<Buffer>((resolve, reject) => {
     const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     const bufferSize = _getBufferSize(this.cryptoProvider);
     let data = Buffer.from([]);
@@ -68,7 +68,7 @@ async function getFile(entry, options = {}) {
         new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
       .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode,
-        createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_ZIP)))
+        createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
       .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
       .on('error', e => reject(e))
       .on('end', () => resolve(data));

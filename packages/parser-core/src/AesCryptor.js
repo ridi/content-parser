@@ -239,7 +239,7 @@ class AesCryptor {
         if (padder > 16) {
           throw createError(Errors.ECRYT, 'padding byte out of range');
         }
-        const length = array.length - padder;
+        const length = array.length - Number(padder);
         for (let i = 0; i < padder; i += 1) {
           if (array[length + i] !== padder) {
             throw createError(Errors.ECRYT, 'invalid padding byte');

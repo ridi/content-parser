@@ -172,8 +172,7 @@ class Parser {
       throw createError(Errors.EINVAL, 'cryptoProvider', 'reason', 'must be CryptoProvider subclassing type');
     }
     const { namespace, logLevel } = loggerOptions;
-    const logger = new Logger(namespace || Parser.name);
-    logger.logLevel = logLevel;
+    const logger = new Logger(namespace || Parser.name, logLevel);
     logger.debug(`Create new parser with input: '${input}', cryptoProvider: ${isExists(cryptoProvider) ? 'Y' : 'N'}.`);
     privateProps.set(this, { input, cryptoProvider, logger });
   }

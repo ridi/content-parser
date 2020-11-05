@@ -47,6 +47,21 @@ const getOrder = (logLevel) => {
 const touchTime = time => new Date().getTime() - time;
 
 class Logger {
+  /**
+   * @private
+   */
+  _logLevel;
+
+  /**
+   * @private
+  */
+  namespace;
+
+  /**
+   * @private
+  */
+  _firstTime;
+
   get logLevel() { return this._logLevel; }
 
   set logLevel(level) { this._logLevel = stringContains(Object.values(LogLevel), level) ? level : this.logLevel; }
