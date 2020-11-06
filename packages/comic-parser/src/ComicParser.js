@@ -134,7 +134,7 @@ class ComicParser extends Parser {
         rawBook.items.push({
           index,
           path: item.entryPath,
-          fileSize: item.size,
+          size: item.size,
           ...await this._parseImageSize(item, options),
         });
       });

@@ -19,7 +19,7 @@ class Item {
   constructor(rawObj = {}, freeze = true) {
     this.index = rawObj.index;
     this.path = rawObj.path;
-    this.fileSize = rawObj.fileSize;
+    this.size = rawObj.size;
     if (isExists(rawObj.width)) {
       this.width = rawObj.width;
     }
@@ -36,7 +36,7 @@ class Item {
     return {
       index: this.index,
       path: this.path,
-      fileSize: this.fileSize,
+      size: this.size,
       ...(isExists(this.width) ? { width: this.width } : {}),
       ...(isExists(this.height) ? { height: this.height } : {}),
     };

@@ -197,7 +197,7 @@ parser.onProgress = (step, totalStep, action) => {
 
 - index: *?string*
 - path: *?string*
-- fileSize: *?number*
+- size: *?number*
 - width: *?number*
 - height: *?number*
 - toRaw(): *object*
