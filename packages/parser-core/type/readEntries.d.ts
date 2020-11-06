@@ -1,10 +1,14 @@
 /**
+ * @typedef {FileEntryObject<string, EntryBasicInformation | IZipEntryPlus>} ReadEntriesReturnType
+ */
+/**
  * @async
  * @param  {string} input
  * @param  {CryptoProvider} cryptoProvider
  * @param  {import('./Logger').default} logger
+ * @returns {Promise<ReadEntriesReturnType>}
  */
-export default function readEntries(input: string, cryptoProvider: CryptoProvider, logger: import('./Logger').default): Promise<FileEntryObject<import("./zipUtil").ZipFileInformation, import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation> | FileEntryObject<string, EntryBasicInformation>>;
+export default function readEntries(input: string, cryptoProvider: CryptoProvider, logger: import('./Logger').default): Promise<ReadEntriesReturnType>;
 export type ReadStreamOption = {
     highWaterMark: number;
 };
@@ -31,4 +35,14 @@ export type ZipfileEntryInformation = {
     extraFieldLength: number;
 };
 export type IZipEntryPlus = import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation;
+export type ReadEntriesReturnType = {
+    first: EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation);
+    length: number;
+    source: string;
+    get: (idx: number) => EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation);
+    find: (entryPath: string, strict: boolean) => EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation);
+    forEach: (callback: (value: EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation), index: number, array: (EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation))[]) => void) => void;
+    map: (callback: (value: EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation), index: number, array: (EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation))[]) => any) => void;
+    sort: (callback: (a: EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation), b: EntryBasicInformation | (import("adm-zip").IZipEntry & EntryBasicInformation & ZipfileEntryInformation)) => number) => void;
+};
 import CryptoProvider from "./CryptoProvider";

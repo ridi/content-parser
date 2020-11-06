@@ -1,17 +1,32 @@
 export default CryptoProvider;
+export type CryptoProviderOption = string;
 export type CryptoProviderPurpose = {
     /**
      * "read_in_zip"
      */
-    READ_IN_ZIP: string;
+    READ_IN_ZIP: CryptoProviderOption;
     /**
      * "read_in_dir"
      */
-    READ_IN_DIR: string;
+    READ_IN_DIR: CryptoProviderOption;
     /**
      * "write"
      */
-    WRITE: string;
+    WRITE: CryptoProviderOption;
+};
+export type Purpose = {
+    /**
+     * "read_in_zip"
+     */
+    READ_IN_ZIP: CryptoProviderOption;
+    /**
+     * "read_in_dir"
+     */
+    READ_IN_DIR: CryptoProviderOption;
+    /**
+     * "write"
+     */
+    WRITE: CryptoProviderOption;
 };
 declare class CryptoProvider {
     isStreamMode: boolean;
@@ -44,12 +59,18 @@ declare namespace CryptoProvider {
 }
 import AesCryptor from "./AesCryptor";
 /**
+ * @typedef {string} CryptoProviderOption
+ *
  * @typedef {Object} CryptoProviderPurpose
- * @property {string} READ_IN_ZIP "read_in_zip"
- * @property {string} READ_IN_DIR "read_in_dir"
- * @property {string} WRITE "write"
+ * @property {CryptoProviderOption} READ_IN_ZIP "read_in_zip"
+ * @property {CryptoProviderOption} READ_IN_DIR "read_in_dir"
+ * @property {CryptoProviderOption} WRITE "write"
 */
 /**
- * @type {CryptoProviderPurpose}
+ * @enum {CryptoProviderPurpose}
  */
-declare const Purpose: CryptoProviderPurpose;
+declare const Purpose: Readonly<{
+    READ_IN_ZIP: string;
+    READ_IN_DIR: string;
+    WRITE: string;
+}>;

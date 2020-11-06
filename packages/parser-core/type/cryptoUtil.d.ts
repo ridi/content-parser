@@ -18,8 +18,8 @@ export type UINT8Object = {
 };
 export type EncodingObject = {
     name: string;
-    decode: (str: string) => CryptoJs.lib.WordArray;
-    encode: (wordArray: CryptoJs.lib.WordArray) => string;
+    decode: (str: string | IterableObject) => CryptoJs.lib.WordArray;
+    encode: (wordArray: CryptoJs.lib.WordArray) => (string | Uint8Array);
 };
 export type EncodingList = {
     UTF8: EncodingObject;
@@ -61,8 +61,8 @@ export const Padding: PaddingList;
 /**
  * @typedef {Object} EncodingObject
  * @property {string} name
- * @property {(str: string)=>CryptoJs.lib.WordArray} decode
- * @property {(wordArray: CryptoJs.lib.WordArray)=>string} encode
+ * @property {(str: string|IterableObject)=>CryptoJs.lib.WordArray} decode
+ * @property {(wordArray: CryptoJs.lib.WordArray)=>(string|Uint8Array)} encode
  */
 /**
  * @typedef {Object} EncodingList

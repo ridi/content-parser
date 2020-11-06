@@ -11,12 +11,12 @@ export type GetFileOptions = {
     end: number;
 };
 export type ZipFileInformation = {
-    files: AdmZip.IZipEntry[];
+    file: string;
+    files: any[];
     cryptoProvider: CryptoProvider;
-    find: (entryPath: string) => AdmZip.IZipEntry;
-    getFile: (entry: AdmZip.IZipEntry, options?: GetFileOptions) => Promise<any>;
+    find: (entryPath: string) => any;
+    getFile: (entry: any, options?: GetFileOptions) => Promise<any>;
     extractAll: (unzipPath: any, overwrite?: boolean) => Promise<any>;
     logger: import('./Logger').default;
 };
 import CryptoProvider from "./CryptoProvider";
-import * as AdmZip from "adm-zip";

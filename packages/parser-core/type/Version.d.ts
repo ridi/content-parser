@@ -5,9 +5,18 @@ declare class Version {
      * @param  {string} version
      */
     constructor(version: string);
-    major: number;
-    minor: number;
-    patch: number;
+    /**
+     * @private
+     */
+    private major;
+    /**
+     * @private
+     */
+    private minor;
+    /**
+     * @private
+     */
+    private patch;
     /**
      * Get Version as string
      * @returns {string} version

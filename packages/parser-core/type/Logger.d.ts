@@ -42,11 +42,20 @@ declare class Logger {
      * @param  {LogLevel} logLevel
      */
     constructor(namespace: string, logLevel: LogLevel);
+    /**
+     * @private
+     */
+    private _logLevel;
+    /**
+     * @private
+    */
+    private namespace;
+    /**
+     * @private
+    */
+    private _firstTime;
     set logLevel(arg: string | LogLevel);
     get logLevel(): string | LogLevel;
-    _logLevel: string | LogLevel;
-    namespace: string;
-    _firstTime: number;
     /**
      * Log information
      * @param  {any?} message
