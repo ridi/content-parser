@@ -81,7 +81,7 @@ function create(source, entries) {
 /**
  * Get FileEntryObject from the zip file
  * @param  {import('./zipUtil').ZipFileInformation} zip
- * @returns {FileEntryObject<import('./zipUtil').ZipFileInformation, IZipEntryPlus}
+ * @returns {FileEntryObject<string, IZipEntryPlus}
  */
 function fromZip(zip) {
   const zipCopy = { ...zip };
@@ -211,12 +211,15 @@ function fromFile(filePath, cryptoProvider) {
     size,
   }]);
 }
-
+/**
+ * @typedef {FileEntryObject<string, EntryBasicInformation | IZipEntryPlus>} ReadEntriesReturnType
+ */
 /**
  * @async
  * @param  {string} input
  * @param  {CryptoProvider} cryptoProvider
  * @param  {import('./Logger').default} logger
+ * @returns {Promise<ReadEntriesReturnType>}
  */
 export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.

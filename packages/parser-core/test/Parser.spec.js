@@ -50,7 +50,7 @@ describe('Parser', () => {
     const unzippedPath = Paths.UNZIPPED_DEFAULT;
     const cryptoProvider = new TestCryptoProvider();
     const loggerNamespace = 'LoggerNamespace';
-  
+
     it('Input is file path', () => {
       const parser = new Parser(zipPath);
       parser.input.should.be.equal(zipPath);
@@ -58,7 +58,7 @@ describe('Parser', () => {
       parser.logger.should.be.not.null;
       parser.logger.namespace.should.equal(Parser.name);
     });
-  
+
     it('Input is directory path', () => {
       const parser = new Parser(unzippedPath);
       parser.input.should.be.equal(unzippedPath);
@@ -66,7 +66,7 @@ describe('Parser', () => {
       parser.logger.should.be.not.null;
       parser.logger.namespace.should.equal(Parser.name);
     });
-  
+
     it('with cryptoProvider', () => {
       const parser = new Parser(zipPath, cryptoProvider);
       parser.input.should.be.equal(zipPath);
@@ -74,7 +74,7 @@ describe('Parser', () => {
       parser.logger.should.be.not.null;
       parser.logger.namespace.should.equal(Parser.name);
     });
-  
+
     it('with loggerOptions (namespace)', () => {
       const parser = new Parser(zipPath, cryptoProvider, { namespace: loggerNamespace });
       parser.input.should.be.equal(zipPath);
@@ -91,7 +91,7 @@ describe('Parser', () => {
       parser.logger.namespace.should.equal(Parser.name);
       parser.logger.logLevel.should.equal(LogLevel.SILENT);
     });
-  
+
     it('Set onProgress', () => {
       const parser = new TestParser(Paths.DEFAULT);
       parser.onProgress = (step, totalStep, action) => {
@@ -111,7 +111,7 @@ describe('Parser', () => {
       parser.cryptoProvider.should.equal(cryptoProvider);
       parser.logger.logLevel.should.equal(LogLevel.SILENT);
     });
-  
+
     describe('Error situation', () => {
       it('Input required', () => {
         try { new Parser(); } catch (err) { err.code.should.equal(Errors.EINVAL.code); }
@@ -124,11 +124,11 @@ describe('Parser', () => {
       it('No such file or directory', () => {
         try { new Parser('./test/res/test'); } catch (err) { err.code.should.equal(Errors.ENOENT.code); }
       });
-  
+
       it('Input must be CryptoProvider subclassing type', () => {
         try { new Parser(zipPath, []); } catch (err) { err.code.should.equal(Errors.EINVAL.code); }
       });
-  
+
       it('onProgress must be function type', () => {
         const parser = new Parser(Paths.DEFAULT);
         try { parser.onProgress = 5; } catch (err) { err.code.should.equal(Errors.EINVAL.code); }
@@ -186,7 +186,7 @@ describe('Parser', () => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
-    
+
       it('Invalid option value (Type mismatch)', () => {
         return new TestParser(Paths.DEFAULT).parse({ unzipPath: true }).catch(err => {
           err.code.should.equal(Errors.EINVAL.code);
@@ -242,7 +242,7 @@ describe('Parser', () => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
-    
+
       it('Invalid option value (Type mismatch)', () => {
         return new TestParser(Paths.DEFAULT).readItem({}, { force: 'true' }).catch(err => {
           err.code.should.equal(Errors.EINVAL.code);

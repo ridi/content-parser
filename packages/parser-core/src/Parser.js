@@ -1,4 +1,5 @@
 import fs from 'fs';
+import validateOptions from './validateOptions';
 
 import { removeCacheFile } from './cacheFile';
 import CryptoProvider from './CryptoProvider';
@@ -14,18 +15,27 @@ import {
 } from './typecheck';
 
 import readEntries from './readEntries';
-import validateOptions from './validateOptions';
 
 /**
+ * @typedef {import('../type/BaseParseContext').default} BaseParseContext
+ * @typedef {import('../type/BaseParseContext').BaseParserOption} BaseParserOption
+ * @typedef {import('../type/BaseBook').default} BaseBook
+ * @typedef {import('../type/BaseItem').default} BaseItem
+ * @typedef {import('../type/BaseReadContext').default} BaseReadContext
+ * @typedef {import('../type/BaseReadContext').BaseReadOption} BaseReadOption
+ */
+
+/**
+ * @typedef {string} ParserAction
+ *
  * @typedef {Object} ActionEnum
- * @property {string} PARSER "parse"
- * @property {string} READ_ITEMS "readItems"
- * @property {string} UNZIP "unzip"
+ * @property {ParserAction} PARSER "parse"
+ * @property {ParserAction} READ_ITEMS "readItems"
+ * @property {ParserAction} UNZIP "unzip"
  */
 
 /**
  * @readonly
- * @enum {string}
  * @type {ActionEnum}
  */
 const Action = Object.freeze({
@@ -34,35 +44,21 @@ const Action = Object.freeze({
   UNZIP: 'unzip',
 });
 
+/**
+  * @typedef {(step:number, totalStep:number, action:string)=>void} OnProgressCallBack
+  *
+  * @typedef Task
+  * @property {Function} fun Action executor
+  * @property {string} name Action name
+*/
+
 const privateProps = new WeakMap();
 
 class Parser {
   /**
-   * @typedef {Object} ParserOption
-   * @property {string|undefined} unzipPath If specified, unzip to that path.
-   * @property {boolean} overwrite If true, overwrite to unzipPath when unzip. (only using if unzipPath specified.)
-    *
-    * @typedef {Object} ParserOptionType
-    * @property {string} unzipPath
-    * @property {string} overwrite
-    *
-    * @typedef {Object} ReadOption
-    * @property {boolean} force If true, ignore any exceptions that occur within parser.
-    *
-    * @typedef {Object} ReadOptionType
-    * @property {string} force
-    *
-    * @typedef {(step:number, totalStep:number, action:string)=>void} OnProgressCallBack
-    *
-    * @typedef Task
-    * @property {Function} fun Action executor
-    * @property {string} name Action name
-  */
-
-  /**
    * Get default values of parse options
    * @static
-   * @return {ParserOption}
+   * @return {BaseParserOption}
   */
   static get parseDefaultOptions() {
     return {
@@ -86,7 +82,7 @@ class Parser {
   /**
    * Get default values of read options
    * @static
-   * @returns {ReadOption}
+   * @returns {BaseParserOption}
    */
   static get readDefaultOptions() {
     return {
@@ -178,49 +174,43 @@ class Parser {
   }
 
   /**
-   * @typedef {Object} ParseContext
-   * @property {ReturnType<readEntries>} entries
-   * @property {Object} options
-   * @property {Object[]} rawBook
-   */
-  /**
-   * @override
-   * @private
-   * @returns {ParseContext}
+   * @virtual
+   * @protected
+   * @returns {new ()=>BaseParseContext}
    */
   _getParseContextClass() {
     return mustOverride();
   }
 
   /**
-   * @override
-   * @prviate
-   * @returns {Book}
+   * @virtual
+   * @protected
+   * @returns {new ()=>BaseBook}
    */
   _getBookClass() {
     return mustOverride();
   }
 
   /**
-   * @override
-   * @private
-   * @returns {ReadContext}
+   * @virtual
+   * @protected
+   * @returns {new ()=>BaseReadContext}
    */
   _getReadContextClass() {
-    return mustOverride();
+    mustOverride();
   }
 
   /**
-   * @override
-   * @private
-   * @returns {Item}
+   * @virtual
+   * @protected
+   * @returns {new ()=>BaseItem}
    */
   _getReadItemClass() {
-    return mustOverride();
+    mustOverride();
   }
 
   /**
-   * @private
+   * @protected
    * @returns {Task[]} return before tasks
    */
   _parseBeforeTasks() {
@@ -231,7 +221,7 @@ class Parser {
   }
 
   /**
-   * @private
+   * @protected
    * @returns {Task[]} return tasks
    */
   _parseTasks() {
@@ -239,7 +229,7 @@ class Parser {
   }
 
   /**
-   * @private
+   * @protected
    * @returns {Task[]} return after tasks
    */
   _parseAfterTasks() {
@@ -251,12 +241,11 @@ class Parser {
   /**
    * Parse the input
    * @async
-   * @param {T} [options] parse options
-   * @returns {Promise<S>} return Book
+   * @param {BaseParserOption} [options] parse options
+   * @returns {Promise<BaseBook>} return Book
    * @see Parser.parseDefaultOptions
    * @see Parser.parseOptionTypes
-   * @template T,S
-   */
+  */
   async parse(options = {}) {
     const action = Action.PARSE;
     const tasks = [].concat(
@@ -280,23 +269,13 @@ class Parser {
   }
 
   /**
-   * @typedef {Object} IContextBasic
-   * @property {T & S} options
-   * @property {ReturnType<readEntries>} entries
-   * @template T,S
-   */
-  /**
    * Validate parse options and get entries from input
    * @async
-   * @param {T} [options] parse options
-   * @returns {Promise<T & IContextBasic<ParserOption,S>} return Context containing parse options, entries
+   * @param {BaseParserOption} [options] parse options
+   * @returns {Promise<BaseParseContext>} return Context containing parse options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
-   * @see Parser.parseDefaultOptions
-   * @see Parser.parseOptionTypes
-   * @template T Parser specified context interface
-   * @template S Additional Option template
    */
   async _prepareParse(options = {}) {
     const { parseOptionTypes, parseDefaultOptions } = this.constructor;
@@ -312,12 +291,10 @@ class Parser {
   /**
    * Unzipping if zip source and unzipPath option specified
    * @async
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context (no change at this step)
+   * @param {BaseParseContext} context intermediate result
+   * @returns {Promise<BaseParseContext>} return Context (no change at this step)
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EEXIST} file or directory already exists
-   * @see Parser.parseDefaultOptions.unzipPath
-   * @see Parser.parseDefaultOptions.overwrite
    */
   async _unzipIfNeeded(context) {
     const { options, entries } = context;
@@ -334,8 +311,8 @@ class Parser {
   /**
    * Create new Book from context
    * @protected
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise<Book>} return Book
+   * @param {BaseParseContext} context intermediate result
+   * @returns {Promise<BaseBook>} return Book
    */
   _createBook(context) {
     return new Promise((resolve) => {
@@ -374,8 +351,8 @@ class Parser {
 
   /**
    * Reading contents of Item
-   * @param {Item} item target
-   * @param {object} [options] read options
+   * @param {BaseItem} item target
+   * @param {BaseReadOption} [options] read options
    * @returns {(string|Buffer)} reading result
    * @see Parser.readDefaultOptions
    * @see Parser.readOptionTypes
@@ -388,8 +365,8 @@ class Parser {
   /**
    * Reading contents of Items
    * @async
-   * @param {Item[]} items targets
-   * @param {Object} [options] read options
+   * @param {BaseItem[]} items targets
+   * @param {BaseReadOption} [options] read options
    * @returns {(string|Buffer)[]} reading results
    * @see Parser.readDefaultOptions
    * @see Parser.readOptionTypes
@@ -420,13 +397,11 @@ class Parser {
    * Validate read options and get entries from input
    * @async
    * @param {Item[]} items targets
-   * @param {Object} [options] read options
-   * @returns {Promise<ReadContext>} returns Context containing target items, read options, entries
+   * @param {BaseReadOption} [options] read options
+   * @returns {Promise<BaseReadContext>} returns Context containing target items, read options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
-   * @see Parser.readDefaultOptions
-   * @see Parser.readOptionTypes
    */
   async _prepareRead(items, options = {}) {
     if (!options.force && items.find(item => !(item instanceof this._getReadItemClass()))) {

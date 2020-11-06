@@ -19,11 +19,12 @@ import Errors, { createError } from './errors';
 
 /**
  * @typedef {Object} ZipFileInformation
+ * @property {string} file
  * @property {AdmZip.IZipEntry[]} files
  * @property {CryptoProvider} cryptoProvider
  * @property {(entryPath: string) => AdmZip.IZipEntry} find
  * @property {(entry: AdmZip.IZipEntry, options?: GetFileOptions) => Promise<any>} getFile
- * @property {(unzipPath: any, overwrite?: boolean) => Promise<any>} extractAll
+ * @property {(unzipPath: string, overwrite?: boolean) => Promise<any>} extractAll
  * @property {import('./Logger').default} logger
  */
 
@@ -58,7 +59,7 @@ function _getBufferSize(cryptoProvider) {
  */
 async function getFile(entry, options = { encoding: undefined, end: undefined }) {
   const { encoding, end } = options;
-  let file = await new Promise<Buffer>((resolve, reject) => {
+  let file = await new Promise((resolve, reject) => {
     const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     const bufferSize = _getBufferSize(this.cryptoProvider);
     let data = Buffer.from([]);
