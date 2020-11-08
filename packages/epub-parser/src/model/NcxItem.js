@@ -1,11 +1,27 @@
 import { mergeObjects } from '@ridi/parser-core';
 
-import Item from './Item';
+import BaseEpubItem from './BaseEpubItem';
 import NavPoint from './NavPoint';
+/**
+ * @typedef {Object} NcxItemExtra
+ * @property {NavPoint} navPoints
+ *
+ * @typedef {import('./BaseEpubItem').BaseEpubItemParam & NcxItemExtra} NcxItemParam
+ */
 
-class NcxItem extends Item {
+class NcxItem extends BaseEpubItem {
   get defaultEncoding() { return 'utf8'; }
 
+  /**
+   * @type {NavPoint[]}
+   */
+  navPoints;
+
+  /**
+   *
+   * @param {NcxItemParam} rawObj
+   * @param {boolean} freeze
+   */
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     this.navPoints = (rawObj.navPoints || []).map((navPoint) => {

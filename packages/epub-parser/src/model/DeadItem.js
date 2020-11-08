@@ -1,6 +1,6 @@
 import { isExists, mergeObjects, stringContains } from '@ridi/parser-core';
 
-import Item from './Item';
+import BaseEpubItem from './BaseEpubItem';
 
 const Reason = Object.freeze({
   UNDEFINED: 'undefined',
@@ -11,7 +11,30 @@ const Reason = Object.freeze({
   NOT_SUPPORT_TYPE: 'not_support_type',
 });
 
-class DeadItem extends Item {
+class DeadItem extends BaseEpubItem {
+  /**
+   * @type {string}
+   */
+  reason;
+
+  /**
+   * @type {string}
+   */
+  itemType;
+
+  /**
+   * @typedef {Object} DeadItemExtra
+   * @property {string} [reason]
+   * @property {string} [itemType]
+   *
+   * @typedef {import('./BaseEpubItem').BaseEpubItemParam & DeadItemExtra} DeadItemParam
+   */
+
+  /**
+   *
+   * @param {DeadItemParam} rawObj
+   * @param {boolean} freeze
+   */
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     if (isExists(rawObj.reason)) {

@@ -1,4 +1,6 @@
-import { isExists, isString, Version } from '@ridi/parser-core';
+import {
+  BaseBook, isExists, isString, Version,
+} from '@ridi/parser-core';
 
 import Author from './Author';
 import CssItem from './CssItem';
@@ -9,10 +11,10 @@ import Guide from './Guide';
 import Identifier from './Identifier';
 import ImageItem from './ImageItem';
 import InlineCssItem from './InlineCssItem';
-import Item from './Item';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
+import BaseEpubItem from './BaseEpubItem';
 
 function postSpines(spines, styles) {
   const firstSpine = spines[0];
@@ -58,7 +60,7 @@ function postGuides(guides, spines) {
 /* istanbul ignore next */
 function getItemTypeFromString(string) {
   switch (string) {
-    case 'Item': return Item;
+    case 'Item': return BaseEpubItem;
     case 'SpineItem': return SpineItem;
     case 'NcxItem': return NcxItem;
     case 'FontItem': return FontItem;
@@ -70,8 +72,166 @@ function getItemTypeFromString(string) {
 }
 
 /* eslint-disable new-cap */
-class Book {
+class Book extends BaseBook {
+  /**
+   * @type {string}
+   */
+  titles;
+
+  /**
+   * @type {import('./Author').default[]}
+   */
+  creators;
+
+  /**
+   * @type {string[]}
+   */
+  subjects;
+
+  /**
+   * @type {string}
+   */
+  description;
+
+  /**
+   * @type {string}
+   */
+  publisher;
+
+  /**
+   * @type {import('./Author').default[]}
+   */
+  contributors;
+
+  /**
+   * @type {import('./DateTime').default[]};
+   */
+  dates;
+
+  /**
+   * @type {string}
+   */
+  type;
+
+  /**
+   * @type {string}
+   */
+  format;
+
+  /**
+   * @type {import('./Identifier').default[]};
+   */
+  identifiers;
+
+  /**
+   * @type {string}
+   */
+  source;
+
+  /**
+   * @type {string[]}
+   */
+  languages;
+
+  /**
+   * @type {string}
+   */
+  relation;
+
+  /**
+   * @type {string}
+   */
+  coverage;
+
+  /**
+   * @type {string}
+   */
+  rights;
+
+  /**
+   * @type {import('@ridi/parser-core').Version}
+   */
+  version;
+
+  /**
+   * @type {import('./Meta').default[]}
+   */
+  metas;
+
+  /**
+   * @type {import('./BaseEpubItem').default[]}
+   */
+  items;
+
+  /**
+   * @type {import('./SpineItem').default[]}
+   */
+  spines;
+
+  /**
+   * @type {import('./NcxItem').default[]}
+   */
+  ncx
+
+  /**
+   * @type {import('./FontItem').default[]}
+   */
+  fonts
+
+  /**
+   * @type {import('./ImageItem').default}
+   */
+  cover;
+
+  /**
+   * @type {import('./ImageItem').default[]}
+   */
+  images;
+
+  /**
+   * @type {import('./CssItem').default[]}
+   */
+  styles;
+
+  /**
+   * @type {import('./Guide').default[]}
+   */
+  guides;
+
+  /**
+   * @type {import('./DeadItem').default[]}
+   */
+  deadItems;
+
+  /**
+   * @typedef {Object} EpubBookExtra
+   * @property {string} [titles]
+   * @property {Author} [creators]
+   * @property {string[]} [subjects]
+   * @property {string} [description]
+   * @property {string} [publisher]
+   * @property {Author[]} [contributors]
+   * @property {DateTime[]} [dates]
+   * @property {string} [type]
+   * @property {string} [format]
+   * @property {Identifier[]} [identifiers]
+   * @property {string} [source]
+   * @property {string[]} [languages]
+   * @property {string} [relation]
+   * @property {string} [coverage]
+   * @property {string} [rights]
+   * @property {Version} [version]
+   * @property {Meta[]} [metas]
+   * @property {import('./BaseEpubItem')[]} [items]
+   *
+   * @typedef {BaseBook & EpubBookExtra} EpubBookParam
+   */
+  /**
+   *
+   * @param {EpubBookParam} rawBook
+   */
   constructor(rawBook = {}) {
+    super();
     this.titles = rawBook.titles || [];
     this.creators = (rawBook.creators || []).map(rawObj => new Author(rawObj));
     this.subjects = rawBook.subjects || [];

@@ -1,10 +1,26 @@
 import { isExists, mergeObjects } from '@ridi/parser-core';
 
-import Item from './Item';
+import BaseEpubItem from './BaseEpubItem';
 
-class CssItem extends Item {
+/**
+ * @typedef {Object} CssItemExtra
+ * @property {string} [namespace]
+ *
+ * @typedef {import('./BaseEpubItem').BaseEpubItemParam & CssItemExtra} CssItemParam
+ */
+class CssItem extends BaseEpubItem {
   get defaultEncoding() { return 'utf8'; }
 
+  /**
+   * @type {string}
+   */
+  namespace;
+
+  /**
+   *
+   * @param {CssItemParam} rawObj
+   * @param {boolean} freeze
+   */
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     if (isExists(rawObj.namespace)) {

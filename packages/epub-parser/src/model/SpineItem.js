@@ -1,9 +1,39 @@
 import { isExists, mergeObjects } from '@ridi/parser-core';
 
-import Item from './Item';
+import BaseEpubItem from './BaseEpubItem';
 
-class SpineItem extends Item {
+class SpineItem extends BaseEpubItem {
   get defaultEncoding() { return 'utf8'; }
+
+  /**
+   * @type{()=>void}
+   */
+  first;
+
+  /**
+   * @type{()=>void}
+   */
+  prev;
+
+  /**
+   * @type{()=>void}
+   */
+  next;
+
+  /**
+   * @type {number}
+   */
+  index;
+
+  /**
+   * @type {boolean}
+   */
+  isLinear;
+
+  /**
+   * @type {stting}
+   */
+  styles;
 
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);

@@ -9,6 +9,25 @@ const Events = Object.freeze({
 });
 
 class DateTime {
+  /**
+   * @type {string}
+   */
+  value;
+
+  /**
+   * @type {string}
+   */
+  event;
+
+  /**
+   * @typedef DateTimeParam
+   * @property {string} [value]
+   * @property {string} [event]
+   */
+  /**
+   *
+   * @param {DateTimeParam} rawObj
+   */
   constructor(rawObj = {}) {
     if (isString(rawObj)) {
       this.value = rawObj;

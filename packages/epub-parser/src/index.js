@@ -5,7 +5,7 @@ import {
 } from '@ridi/parser-core';
 
 import EpubParser from './EpubParser';
-import Book from './model/Book';
+import Book from './model/EpubBook';
 
 export {
   EpubParser,

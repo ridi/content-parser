@@ -1,6 +1,50 @@
 import { mergeObjects } from '@ridi/parser-core';
 
+/**
+ * @typedef {Object} NavPointParam
+ * @property {string} id
+ * @property {{text:string}} navLabel
+ * @property {{src: string}} content
+ * @property {number} depth
+ * @property {NavPoint} children
+ * @property {string} spine
+ */
 class NavPoint {
+  /**
+   * @type {string}
+   */
+  id
+
+  /**
+   * @type {string}
+   */
+  label
+
+  /**
+   * @type {string}
+   */
+  src
+
+  /**
+   * @type {string}
+   */
+  anchor
+
+  /**
+   * @type {number}
+   */
+  depth
+
+  /**
+   * @type {NavPoint}
+   */
+  children
+
+  /**
+   * @type {string}
+   */
+  spine
+
   constructor(rawObj = {}, freeze = true) {
     this.id = rawObj.id;
     this.label = (rawObj.navLabel || {}).text;

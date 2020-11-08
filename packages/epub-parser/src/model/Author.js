@@ -35,7 +35,32 @@ const Roles = Object.freeze({
   TRANSLATOR: 'trl',
 });
 
+/**
+ * @typedef {object} AuthorParam
+ * @property {string} [name]
+ * @property {string} [fileAs]
+ * @property {string} [role]
+ */
 class Author {
+  /**
+   * @type {string}
+   */
+  name;
+
+  /**
+   * @type {string}
+   */
+  fileAs;
+
+  /**
+   * @type {string}
+   */
+  role;
+
+  /**
+   *
+   * @param {string|AuthorParam} rawObj
+   */
   constructor(rawObj = {}) {
     if (isString(rawObj)) {
       this.name = rawObj;

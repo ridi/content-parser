@@ -12,7 +12,15 @@ const Schemes = Object.freeze({
   URI: 'uri',
 });
 
+/**
+ * @typedef {Object} IdentifierParam
+ * @property {string} [value]
+ * @property {string} [scheme]
+ */
 class Identifier {
+  /**
+   * @param {IdentifierParam} rawObj
+   */
   constructor(rawObj = {}) {
     if (isString(rawObj)) {
       this.value = rawObj;
