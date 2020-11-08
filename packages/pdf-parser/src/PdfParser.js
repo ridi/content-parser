@@ -126,9 +126,12 @@ class PdfParser extends Parser {
   }
 
   /**
+   * @typedef {import('@ridi/parser-core/type/Parser').BaseReadContext} BaseReadContext
+   */
+  /**
    * load pdf document and get number of pages
-   * @param {import('@ridi/parser-core/type/Parser').BaseReadContext} context intermediate result
-   * @returns {Promise<import('@ridi/parser-core/type/Parser').BaseReadContext>} return Context containing document and page count
+   * @param {BaseReadContext} context intermediate result
+   * @returns {Promise<BaseReadContext>} return Context containing document and page count
    * @throws {Errors.EPDFJS} pdfjs error
    */
   async _loadDocuemnt(context) {
