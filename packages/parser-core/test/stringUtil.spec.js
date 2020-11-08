@@ -1,4 +1,4 @@
-import { should } from 'chai';
+import { should, expect } from 'chai';
 
 import { MatchOption, stringContains, safeDecodeURI } from '../src/stringUtil';
 
@@ -18,8 +18,16 @@ describe('Util - String util', () => {
     stringContains(list).should.be.false;
   });
 
-  it('safeDecodeURI test', () => {
-    safeDecodeURI('%E0%A4%A').should.equal('%E0%A4%A');
-    safeDecodeURI('Chapter%201.html').should.equal('Chapter 1.html');
+  describe('safeDecodeURI', () => {
+    it('should decode URI', () => {
+      safeDecodeURI('%E0%A4%A').should.equal('%E0%A4%A');
+      safeDecodeURI('Chapter%201.html').should.equal('Chapter 1.html');
+    })
+    it('should throw', () => {
+      const wrapper = () => {
+        return safeDecodeURI(Symbol('someStrig'));
+      }
+      expect(wrapper).to.throw();
+    })
   });
 });
