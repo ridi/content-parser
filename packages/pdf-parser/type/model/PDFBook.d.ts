@@ -1,5 +1,5 @@
-export default PDFBook;
-declare class PDFBook extends BaseBook {
+export default PdfBook;
+declare class PdfBook extends BaseBook {
     constructor(rawBook?: {});
     version: Version;
     title: any;

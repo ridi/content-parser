@@ -1,5 +1,5 @@
 export default OutlineItem;
-declare class OutlineItem {
+declare class OutlineItem extends BaseItem {
     constructor(rawObj?: {}, pageMap?: {});
     dest: any;
     url: any;
@@ -10,19 +10,6 @@ declare class OutlineItem {
     depth: any;
     children: any;
     page: any;
-    toRaw(): {
-        dest: any;
-        url: any;
-        title: any;
-        color: {
-            0: any;
-            1: any;
-            2: any;
-        };
-        bold: any;
-        italic: any;
-        children: any;
-        page: any;
-    };
 }
+import { BaseItem } from "@ridi/parser-core";
 import Color from "./Color";

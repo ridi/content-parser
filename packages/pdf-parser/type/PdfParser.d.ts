@@ -1,5 +1,5 @@
 export default PdfParser;
-declare class PdfParser {
+declare class PdfParser extends Parser {
     /**
      * Get default values of parse options
      */
@@ -17,31 +17,13 @@ declare class PdfParser {
     /**
      * Create new PdfParser
      * @param {string} input file
-     * @param {?CryptoProvider} cryptoProvider en/decrypto provider
-     * @param {?string} logLevel logging level
+     * @param {import('@ridi/parser-core/type/CryptoProvider').default} [cryptoProvider] en/decrypto provider
+     * @param {string} [logLevel] logging level
      * @throws {Errors.ENOENT} no such file
      * @throws {Errors.EINVAL} invalid input
      * @example new PdfParser('./foo/bar.pdf');
      */
-    constructor(input: string, cryptoProvider: any, logLevel: string | null);
-    /**
-     * @returns {ParseContext}
-     */
-    _getParseContextClass(): ParseContext;
-    /**
-     * @returns {Book}
-     */
-    _getBookClass(): Book;
-    _getReadContextClass(): void;
-    _getReadItemClass(): void;
-    /**
-     * @returns {ParseTask[]} return tasks
-     */
-    _parseTasks(): any[];
-    /**
-     * @returns {ParseTask[]} return after tasks
-     */
-    _parseAfterTasks(): any[];
+    constructor(input: string, cryptoProvider?: import('@ridi/parser-core/type/CryptoProvider').default, logLevel?: string);
     /**
      * @param {object} that
      * @param {function} fun
@@ -51,45 +33,43 @@ declare class PdfParser {
     _execute(that: object, fun: Function, args?: any[]): any;
     /**
      * load pdf document and get number of pages
-     * @param {ReadContext} context intermediate result
-     * @returns {Promise.<ReadContext>} return Context containing document and page count
+     * @param {import('@ridi/parser-core/type/Parser').BaseReadContext} context intermediate result
+     * @returns {Promise<import('@ridi/parser-core/type/Parser').BaseReadContext>} return Context containing document and page count
      * @throws {Errors.EPDFJS} pdfjs error
      */
-    _loadDocuemnt(context: any): Promise<any>;
+    _loadDocuemnt(context: import('@ridi/parser-core/type/Parser').BaseReadContext): Promise<import('@ridi/parser-core/type/Parser').BaseReadContext>;
     /**
      * Metadata parsing in Document
-     * @param {ParseContext} context intermediate result
-     * @returns {Promise.<ParseContext>} return Context containing metadata
+     * @param {PdfParseContext} context intermediate result
+     * @returns {Promise<PdfParseContext>} return Context containing metadata
      * @throws {Errors.EPDFJS} pdfjs error
      */
-    _parseMetadata(context: ParseContext): Promise<ParseContext>;
+    _parseMetadata(context: PdfParseContext): Promise<PdfParseContext>;
     /**
      * Outline parsing in Document
-     * @param {ParseContext} context intermediate result
-     * @returns {Promise.<ParseContext>} return Context containing outline
+     * @param {PdfParseContext} context intermediate result
+     * @returns {Promise<PdfParseContext>} return Context containing outline
      * @throws {Errors.EPDFJS} pdfjs error
      */
-    _parseOutline(context: ParseContext): Promise<ParseContext>;
+    _parseOutline(context: PdfParseContext): Promise<PdfParseContext>;
     /**
      * Permission parsing in Document
-     * @param {ParseContext} context intermediate result
-     * @returns {Promise.<ParseContext>} return Context containing permissions
+     * @param {PdfParseContext} context intermediate result
+     * @returns {Promise<PdfParseContext>} return Context containing permissions
      * @throws {Errors.EPDFJS} pdfjs error
      */
-    _parsePermission(context: ParseContext): Promise<ParseContext>;
+    _parsePermission(context: PdfParseContext): Promise<PdfParseContext>;
     /**
      * Destory fake worker.
-     * @param {ParseContext} context intermediate result
-     * @returns {Promise.<ParseContext>} return Context containing permissions
+     * @param {PdfParseContext} context intermediate result
+     * @returns {Promise<PdfParseContext>} return Context containing permissions
      */
-    _destoryWorkerIfNeeded(context: ParseContext): Promise<ParseContext>;
+    _destoryWorkerIfNeeded(context: PdfParseContext): Promise<PdfParseContext>;
     /**
      * Returns PDF file as Buffer
      * @returns {Buffer}
      */
     read(): Buffer;
-    _read(): void;
-    unzip(): void;
 }
-import ParseContext from "./model/ParseContext";
-import Book from "./model/Book";
+import { Parser } from "@ridi/parser-core";
+import PdfParseContext from "./model/PdfParseContext";
