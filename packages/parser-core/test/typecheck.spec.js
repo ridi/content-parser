@@ -1,6 +1,6 @@
 import { should } from 'chai';
 
-import Book from '../../epub-parser/src/model/Book';
+import EpubBook from '../../epub-parser/src/model/EpubBook';
 import { isArray, isBool, isExists, isFunc, isObject, isString, isUrl, getType } from '../src/typecheck';
 
 should(); // Initialize should
@@ -12,7 +12,7 @@ describe('Util - Type check', () => {
     getType(Array, true).should.equal('Array');
     getType(new Array(), true).should.equal('Array');
     getType({}, true).should.equal('Object');
-    getType(new Book(), true).should.equal('Book');
+    getType(new EpubBook(), true).should.equal('Book');
     getType('string', true).should.equal('String');
     getType([], true).should.equal('Array');
     getType(5, true).should.equal('Number');
@@ -27,7 +27,7 @@ describe('Util - Type check', () => {
     isArray(Array()).should.be.true;
     isArray(new Array()).should.be.true;
     isArray({}).should.be.false;
-    isArray(new Book()).should.be.false;
+    isArray(new EpubBook()).should.be.false;
     isArray('string').should.be.false;
     isArray([]).should.be.true;
     isArray(5).should.be.false;
@@ -45,7 +45,7 @@ describe('Util - Type check', () => {
 
   it('isBool test', () => {
     isBool({}).should.be.false;
-    isBool(new Book()).should.be.false;
+    isBool(new EpubBook()).should.be.false;
     isBool('string').should.be.false;
     isBool([]).should.be.false;
     isBool(5).should.be.false;
@@ -58,7 +58,7 @@ describe('Util - Type check', () => {
 
   it('isExists test', () => {
     isExists({}).should.be.true;
-    isExists(new Book()).should.be.true;
+    isExists(new EpubBook()).should.be.true;
     isExists('string').should.be.true;
     isExists([]).should.be.true;
     isExists(5).should.be.true;
@@ -71,7 +71,7 @@ describe('Util - Type check', () => {
 
   it('isFunc test', () => {
     isFunc({}).should.be.false;
-    isFunc(new Book()).should.be.false;
+    isFunc(new EpubBook()).should.be.false;
     isFunc('string').should.be.false;
     isFunc([]).should.be.false;
     isFunc(5).should.be.false;
@@ -84,7 +84,7 @@ describe('Util - Type check', () => {
 
   it('isObject test', () => {
     isObject({}).should.be.true;
-    isObject(new Book()).should.be.true;
+    isObject(new EpubBook()).should.be.true;
     isObject('string').should.be.false;
     isObject([]).should.be.false;
     isObject(5).should.be.false;
@@ -97,7 +97,7 @@ describe('Util - Type check', () => {
 
   it('isString test', () => {
     isString({}).should.be.false;
-    isString(new Book()).should.be.false;
+    isString(new EpubBook()).should.be.false;
     isString('string').should.be.true;
     isString([]).should.be.false;
     isString(5).should.be.false;

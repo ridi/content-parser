@@ -1,7 +1,7 @@
 import { assert, should } from 'chai';
 
 import DeadItem from '../../src/model/DeadItem';
-import Item from '../../src/model/Item';
+import BaseEpubItem from '../../src/model/BaseEpubItem';
 
 should(); // Initialize should
 
@@ -9,7 +9,7 @@ describe('Model - DeadItem', () => {
   it('Initialize test', () => {
     let item = new DeadItem();
     assert(item.reason === DeadItem.Reason.UNDEFINED);
-    assert(item instanceof Item);
+    assert(item instanceof BaseEpubItem);
 
     item = new DeadItem({
       id: 'toc.ncx', href: './toc.ncx', mediaType: 'application/x-dtbncx+xml', size: 151, reason: 'not_ncx'

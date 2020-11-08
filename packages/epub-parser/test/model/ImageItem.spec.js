@@ -1,7 +1,7 @@
 import { assert, should } from 'chai';
 
 import ImageItem from '../../src/model/ImageItem';
-import Item from '../../src/model/Item';
+import BaseEpubItem from '../../src/model/BaseEpubItem';
 
 should(); // Initialize should
 
@@ -9,7 +9,7 @@ describe('Model - ImageItem', () => {
   it('Initialize test', () => {
     let item = new ImageItem();
     item.isCover.should.be.false;
-    assert(item instanceof Item);
+    assert(item instanceof BaseEpubItem);
 
     item = new ImageItem({ id: 'cover.jpg', href: './cover.jpg', mediaType: 'image/jpeg', size: 105764, isCover: true });
     item.isCover.should.be.true;

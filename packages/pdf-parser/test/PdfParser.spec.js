@@ -1,6 +1,5 @@
 import { Errors, isExists, isString } from '@ridi/parser-core';
 import chai, { assert, expect, should } from 'chai';
-import spies from 'chai-spies';
 import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs-extra';
 import path from 'path';
@@ -14,7 +13,6 @@ import DummyDocument from './DummyDocument';
 import validationBook from './validationBook';
 
 chai.use(chaiAsPromised);
-chai.use(spies);
 should(); // Initialize should
 
 describe('PdfParser', () => {

@@ -1,14 +1,14 @@
 import { assert, should } from 'chai';
 
 import FontItem from '../../src/model/FontItem';
-import Item from '../../src/model/Item';
+import BaseEpubItem from '../../src/model/BaseEpubItem';
 
 should(); // Initialize should
 
 describe('Model - FontItem', () => {
   it('Initialize test', () => {
     const item = new FontItem();
-    assert(item instanceof Item);
+    assert(item instanceof BaseEpubItem);
     assert(item.defaultEncoding === undefined);
   });
 
