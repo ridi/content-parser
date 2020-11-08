@@ -1,14 +1,15 @@
 import { Errors, isExists, isString } from '@ridi/parser-core';
-import chai, { assert, should } from 'chai';
+import chai, { assert, expect, should } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs-extra';
 import path from 'path';
+import sinon from 'sinon';
 
-import Book from '../src/model/Book';
+import ComicBook from '../src/model/ComicBook';
 import ComicParser from '../src/ComicParser';
-import Item from '../src/model/Item';
-import ReadContext from '../src/model/ReadContext';
-import ParseContext from '../src/model/ParseContext';
+import ComicItem from '../src/model/ComicItem';
+import ComicReadContext from '../src/model/ComicReadContext';
+import ComicParseContext from '../src/model/ComicParseContext';
 import Paths from '../../../test/paths';
 import validationBook from './validationBook';
 
@@ -24,7 +25,7 @@ describe('ComicParser', () => {
 
       it('_prepareParse test', () => {
         return parser._prepareParse().then((context) => {
-          context.should.be.an.instanceOf(ParseContext);
+          context.should.be.an.instanceOf(ComicParseContext);
           context.options.should.deep.equal(ComicParser.parseDefaultOptions);
           context.entries.should.not.null;
           _context = context;
@@ -93,12 +94,21 @@ describe('ComicParser', () => {
       });
     });
   });
-
+  it('initialize without cryptoProvider', () => {
+    const comicParser = new ComicParser(Paths.COMIC, 'fakeProvider');
+    expect(comicParser.cryptoProvider).to.be.undefined;
+  })
+  it('parseImageSize return undefined when sizeof throws', async () => {
+    const comicParser = new ComicParser(Paths.COMIC, 'fakeProvider');
+    const imageSize = await comicParser._parseImageSize({getFile:sinon.fake.returns(Buffer.from(['f','a','k','e']))}, {parseImageSize: true});
+    expect(imageSize.height).to.be.undefined;
+    expect(imageSize.width).to.be.undefined;
+  });
   describe('Book serialization test', () => {
     it('Book -> RawBook -> Book', () => {
       return new ComicParser(Paths.COMIC).parse().then(book => {
         const rawBook = book.toRaw();
-        const newBook = new Book(rawBook);
+        const newBook = new ComicBook(rawBook);
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_COMIC_BOOK)));
       });
     });

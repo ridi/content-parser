@@ -1,6 +1,6 @@
 import { should } from 'chai';
 
-import ParseContext from '../../src/model/ParseContext';
+import ParseContext from '../../src/model/ComicParseContext';
 
 should(); // Initialize should
 
