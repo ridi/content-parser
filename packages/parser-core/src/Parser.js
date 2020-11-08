@@ -17,12 +17,14 @@ import {
 import readEntries from './readEntries';
 
 /**
- * @typedef {import('../type/BaseParseContext').default} BaseParseContext
- * @typedef {import('../type/BaseParseContext').BaseParserOption} BaseParserOption
- * @typedef {import('../type/BaseBook').default} BaseBook
- * @typedef {import('../type/BaseItem').default} BaseItem
- * @typedef {import('../type/BaseReadContext').default} BaseReadContext
- * @typedef {import('../type/BaseReadContext').BaseReadOption} BaseReadOption
+ * @typedef {import('./BaseParseContext').default} BaseParseContext
+ * @typedef {import('./BaseParseContext').BaseParserOption} BaseParserOption
+ * @typedef {import('./BaseParseContext').BaseParserOptionType} BaseParserOptionType
+ * @typedef {import('./BaseBook').default} BaseBook
+ * @typedef {import('./BaseItem').default} BaseItem
+ * @typedef {import('./BaseReadContext').default} BaseReadContext
+ * @typedef {import('./BaseReadContext').BaseReadOption} BaseReadOption
+ * @typedef {import('./BaseReadContext').BaseReadOptionType} BaseReadOptionType
  */
 
 /**
@@ -47,7 +49,7 @@ const Action = Object.freeze({
 /**
   * @typedef {(step:number, totalStep:number, action:string)=>void} OnProgressCallBack
   *
-  * @typedef Task
+  * @typedef {Object} Task
   * @property {Function} fun Action executor
   * @property {string} name Action name
 */
@@ -70,7 +72,7 @@ class Parser {
   /**
    * Get types of parse options
    * @static
-   * @return {ParserOptionType}
+   * @return {BaseParserOptionType}
    */
   static get parseOptionTypes() {
     return {
@@ -82,7 +84,7 @@ class Parser {
   /**
    * Get default values of read options
    * @static
-   * @returns {BaseParserOption}
+   * @returns {BaseReadOption}
    */
   static get readDefaultOptions() {
     return {
@@ -93,7 +95,7 @@ class Parser {
   /**
    * Get types of read option
    * @static
-   * @returns {ReadOptionType}
+   * @returns {BaseReadOptionType}
    */
   static get readOptionTypes() {
     return {

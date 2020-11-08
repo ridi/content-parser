@@ -143,7 +143,7 @@ const prepareHash = (any) => {
 };
 
 /**
- * @typedef {(any:any, encoding:EncodingObject)=>string} HashFunction Use `Encoding`
+ * @typedef {(any:any, encoding?:EncodingObject)=>string} HashFunction Use `Encoding`
  */
 
 /**

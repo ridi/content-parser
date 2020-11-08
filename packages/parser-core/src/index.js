@@ -8,6 +8,11 @@ import {
   writeCacheFile,
 } from './cacheFile';
 
+import BaseBook from './BaseBook';
+import BaseItem from './BaseItem';
+import BaseParseContext from './BaseParseContext';
+import BaseReadContext from './BaseReadContext';
+
 import AesCryptor from './AesCryptor';
 import CryptoProvider from './CryptoProvider';
 import { Hash } from './cryptoUtil';
@@ -46,6 +51,9 @@ import openZip from './zipUtil';
 export {
   trim, trimStart, trimEnd,
   getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile,
+  BaseBook, BaseItem,
+  BaseParseContext,
+  BaseReadContext,
   AesCryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Hash,

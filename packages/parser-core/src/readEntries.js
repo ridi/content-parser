@@ -182,20 +182,16 @@ function fromFile(filePath, cryptoProvider) {
     getFile: async (options = {}) => {
       const { encoding, end } = options;
       let file = await new Promise((resolve, reject) => {
-        if (fs.existsSync(filePath)) {
-          const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
-          let data = Buffer.from([]);
-          const totalSize = Math.min(end || Infinity, size);
-          stream
-            .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-            .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode,
-              createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
-            .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
-            .on('error', e => reject(e))
-            .on('end', () => resolve(data));
-        } else {
-          throw createError(Errors.ENOFILE, filePath);
-        }
+        const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
+        let data = Buffer.from([]);
+        const totalSize = Math.min(end || Infinity, size);
+        stream
+          .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+          .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode,
+            createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+          .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+          .on('error', e => reject(e))
+          .on('end', () => resolve(data));
       });
       if (cryptoProvider && !cryptoProvider.isStreamMode) {
         file = cryptoProvider.run(file, filePath, CryptoProvider.Purpose.READ_IN_DIR);

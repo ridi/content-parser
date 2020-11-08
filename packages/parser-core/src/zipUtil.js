@@ -23,7 +23,7 @@ import Errors, { createError } from './errors';
  * @property {AdmZip.IZipEntry[]} files
  * @property {CryptoProvider} cryptoProvider
  * @property {(entryPath: string) => AdmZip.IZipEntry} find
- * @property {(entry: AdmZip.IZipEntry, options?: GetFileOptions) => Promise<any>} getFile
+ * @property {(entry: AdmZip.IZipEntry, options?: GetFileOptions) => Promise<Buffer | String>} getFile
  * @property {(unzipPath: string, overwrite?: boolean) => Promise<any>} extractAll
  * @property {import('./Logger').default} logger
  */
@@ -53,26 +53,37 @@ function _getBufferSize(cryptoProvider) {
  *
  * @async
  * @this {ZipFileInformation}
- * @param {AdmZip.IZipEntry} entry
+ * @param {import('adm-zip').IZipEntry} entry
  * @param {GetFileOptions} options
  * @returns {Promise<Buffer | String>} String is encoding is provided, Buffer otherwise
  */
 async function getFile(entry, options = { encoding: undefined, end: undefined }) {
   const { encoding, end } = options;
-  let file = await new Promise((resolve, reject) => {
-    const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
+  let file = await new Promise((resolveFile) => {
     const bufferSize = _getBufferSize(this.cryptoProvider);
+    const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     let data = Buffer.from([]);
-    const readable = Readable.from(entry.getData());
-    readable
-      .pipe(conditionally(isExists(bufferSize),
-        new StreamChopper({ size: Math.min(bufferSize, entry.uncompressedSize) })))
-      .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-      .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode,
-        createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
-      .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
-      .on('error', e => reject(e))
-      .on('end', () => resolve(data));
+    const getReadable = new Promise(resolve => {
+      if (isExists(bufferSize)) {
+        const streamChopper = new StreamChopper({
+          size: Math.min(bufferSize, entry.uncompressedSize),
+          time: 1000,                 // or when it's been open for 1s,
+          type: StreamChopper.overflow, // but allow stream to exceed size slightly});
+        });
+        streamChopper.on('stream', (stream) => { resolve(stream); });
+        streamChopper.write(entry.getData());
+      } else {
+        resolve(Readable.from(entry.getData()));
+      }
+    });
+    getReadable.then(readable => {
+      readable
+        .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+        .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode,
+          createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+        .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+        .on('end', () => { resolveFile(data); });
+    });
   });
   if (this.cryptoProvider && !this.cryptoProvider.isStreamMode) {
     file = this.cryptoProvider.run(file, entry.path, CryptoProvider.Purpose.READ_IN_DIR);
