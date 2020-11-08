@@ -1,17 +1,20 @@
 import { Errors, isExists, isString } from '@ridi/parser-core';
-import chai, { assert, should } from 'chai';
+import chai, { assert, expect, should } from 'chai';
+import spies from 'chai-spies';
 import chaiAsPromised from 'chai-as-promised';
 import fs from 'fs-extra';
 import path from 'path';
+import sinon from 'sinon';
 
-import Book from '../src/model/Book';
-import ParseContext from '../src/model/ParseContext';
+import PdfBook from '../src/model/PdfBook';
+import PdfParseContext from '../src/model/PdfParseContext';
 import Paths from '../../../test/paths';
 import PdfParser from '../src/PdfParser';
 import DummyDocument from './DummyDocument';
 import validationBook from './validationBook';
 
 chai.use(chaiAsPromised);
+chai.use(spies);
 should(); // Initialize should
 
 describe('PdfParser', () => {
@@ -32,6 +35,10 @@ describe('PdfParser', () => {
       try { PdfParser.readOptionTypes; } catch (err) { err.code.should.equal(Errors.ENOIMP.code); }
     });
 
+    it('Unsupported readOptionTypes property', () => {
+      expect(new PdfParser(Paths.PDF)._read).to.throw('function not implemented.');
+    });
+
     it('Unsupported _getReadContextClass function', () => {
       try { new PdfParser(Paths.PDF)._getReadContextClass(); } catch (err) { err.code.should.equal(Errors.ENOIMP.code); }
     });
@@ -49,7 +56,7 @@ describe('PdfParser', () => {
 
       it('_prepareParse test', () => {
         return parser._prepareParse().then((context) => {
-          context.should.be.an.instanceOf(ParseContext);
+          context.should.be.an.instanceOf(PdfParseContext);
           context.options.should.deep.equal(PdfParser.parseDefaultOptions);
           context.entries.should.not.null;
           _context = context;
@@ -64,7 +71,14 @@ describe('PdfParser', () => {
         });
       });
 
-      it('_parseMetadata test', () => {
+      it('_parseMetadata test - not empty title', async () => {
+        const testBookTItle = 'sample title';
+        sinon.replace(_context.document, 'getMetadata', sinon.fake.resolves({ info: { Title: testBookTItle } }));
+        const newContext = await parser._parseMetadata(_context);
+        expect(newContext.rawBook.info.Title).to.equal(testBookTItle);
+        sinon.restore();
+      })
+      it('_parseMetadata test - proper test', () => {
         const expectedRawBook = JSON.parse(fs.readFileSync(Paths.EXPECTED_PDF_RAW_BOOK));
         return parser._parseMetadata(_context).then((context) => {
           const { document, rawBook } = context;
@@ -72,9 +86,16 @@ describe('PdfParser', () => {
           rawBook.info.should.deep.equal(expectedRawBook.info);
           _context = context;
         });
+      })
+      it('_parseOutline test - empty outline', async () => {
+        sinon.replace(_context.document, 'getOutline', sinon.fake.resolves(undefined));
+        await parser._parseOutline(_context).then((context) => {
+          const { rawBook } = context;
+          expect(rawBook.outline).to.be.undefined;
+        });
+        sinon.restore();
       });
-
-      it('_parseOutline test', () => {
+      it('_parseOutline test - proper outline', () => {
         const counting = (items) => {
           return (items || []).reduce((count, item) => {
             if (item.items.length > 0) {
@@ -99,11 +120,11 @@ describe('PdfParser', () => {
 
     it('Outline parse test by edge cases', () => {
       const parser = new PdfParser(Paths.PDF);
-      const context = new ParseContext();
+      const context = new PdfParseContext();
       context.document = new DummyDocument(JSON.parse(fs.readFileSync(Paths.OUTLINE)));
       return parser._parseOutline(context).then(context => {
         const expected = JSON.parse(fs.readFileSync(Paths.EXPECTED_OUTLINE));
-        const book = new Book(context.rawBook);
+        const book = new PdfBook(context.rawBook);
         const actual = book.outlineItems;
         actual.forEach((item, idx) => {
           const expectedItem = expected[idx];
@@ -124,13 +145,21 @@ describe('PdfParser', () => {
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_PDF_BOOK)));
       });
     });
+    it('Read should return a buffer', async () => {
+      const pdfParser = new PdfParser(Paths.PDF);
+      expect(await pdfParser.read()).to.deep.equal(fs.readFileSync(Paths.PDF));
+    });
+    it('Init with CryptoProvider', async () => {
+      const pdfParser = new PdfParser(Paths.PDF, 'fakeProvider');
+      expect(pdfParser.cryptoProvider).to.undefined;
+    });
   });
-  
+
   describe('Book serialization test', () => {
     it('Book -> RawBook -> Book', () => {
       return new PdfParser(Paths.PDF).parse().then(book => {
         const rawBook = book.toRaw();
-        const newBook = new Book(rawBook);
+        const newBook = new PdfBook(rawBook);
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_PDF_BOOK)));
       });
     });
