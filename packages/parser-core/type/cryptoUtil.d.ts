@@ -30,7 +30,7 @@ export type EncodingList = {
 /**
  * Use `Encoding`
  */
-export type HashFunction = (any: any, encoding: EncodingObject) => string;
+export type HashFunction = (any: any, encoding?: EncodingObject) => string;
 export type HashList = {
     md5: HashFunction;
     sha1: HashFunction;
@@ -76,7 +76,7 @@ export const Padding: PaddingList;
  */
 export const Encoding: EncodingList;
 /**
- * @typedef {(any:any, encoding:EncodingObject)=>string} HashFunction Use `Encoding`
+ * @typedef {(any:any, encoding?:EncodingObject)=>string} HashFunction Use `Encoding`
  */
 /**
  * @typedef {Object} HashList

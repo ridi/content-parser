@@ -15,8 +15,8 @@ export type ZipFileInformation = {
     files: any[];
     cryptoProvider: CryptoProvider;
     find: (entryPath: string) => any;
-    getFile: (entry: any, options?: GetFileOptions) => Promise<any>;
-    extractAll: (unzipPath: any, overwrite?: boolean) => Promise<any>;
+    getFile: (entry: any, options?: GetFileOptions) => Promise<Buffer | string>;
+    extractAll: (unzipPath: string, overwrite?: boolean) => Promise<any>;
     logger: import('./Logger').default;
 };
 import CryptoProvider from "./CryptoProvider";

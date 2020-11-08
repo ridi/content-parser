@@ -9,7 +9,7 @@ export type BaseParserOption = {
      */
     overwrite: boolean;
 };
-export type ParserOptionType = {
+export type BaseParserOptionType = {
     unzipPath: string;
     /**
      * /
@@ -23,7 +23,7 @@ export type ParserOptionType = {
   * @property {string} unzipPath If specified, unzip to that path.
   * @property {boolean} overwrite If true, overwrite to unzipPath when unzip. (only using if unzipPath specified.)
   *
-  * @typedef {Object} ParserOptionType
+  * @typedef {Object} BaseParserOptionType
   * @property {string} unzipPath
   * @property {string} overwrite
 * /
@@ -31,7 +31,7 @@ export type ParserOptionType = {
 /**
  * @class
  */
-declare abstract class BaseParseContext {
+declare class BaseParseContext {
     /**
      * @public
      * @type {BaseParserOption}
@@ -43,14 +43,13 @@ declare abstract class BaseParseContext {
      */
     public entries: import('./readEntries').ReadEntriesReturnType;
     /**
-     * @typedef {Object<string, BaseBook>} RawBookObject
+     * @typedef {Object<string, import('./BaseBook').default>} RawBookObject
      */
     /**
      * @public
      * @type {RawBookObject}
      */
     public rawBook: {
-        [x: string]: BaseBook;
+        [x: string]: import("./BaseBook").default;
     };
 }
-import BaseBook from "./BaseBook";

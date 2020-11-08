@@ -21,21 +21,20 @@ export type BaseReadOptionType = {
 /**
  * @class
  */
-declare abstract class BaseReadContext {
+declare class BaseReadContext {
     /**
-     * @public
+     * @pblic
      * @type {BaseReadOption}
      */
-    public options: BaseReadOption;
+    options: BaseReadOption;
     /**
      * @public
-     * @type {import('./readEntries').ReadEntriesReturnType>}
+     * @type {import('./readEntries').ReadEntriesReturnType[]}
      */
-    public entries: import('./readEntries').ReadEntriesReturnType;
+    public entries: import('./readEntries').ReadEntriesReturnType[];
     /**
      * @public
-     * @type {Array<BaseBook>}
+     * @type {Array<import('./BaseBook').default>}
      */
-    public items: Array<BaseBook>;
+    public items: Array<import('./BaseBook').default>;
 }
-import BaseBook from "./BaseBook";

@@ -3,9 +3,10 @@ export default BaseBook;
  * @abstract
  * @class
  */
-declare abstract class BaseBook {
+declare class BaseBook {
     /**
      * @virtual
+     * @returns {string}
      */
-    toRaw(): void;
+    toRaw(): string;
 }

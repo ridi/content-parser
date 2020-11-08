@@ -6,12 +6,11 @@ export type BaseItemParam = {
  * @typedef {Object} BaseItemParam
  * @property {number} size
 */
-declare abstract class BaseItem {
+declare class BaseItem {
     /**
-     *
      * @param {BaseItemParam} rawObj
      */
-    constructor(rawObj?: BaseItemParam);
+    constructor(rawObj: BaseItemParam);
     /**
      * @public
      * @type {number}
@@ -20,6 +19,7 @@ declare abstract class BaseItem {
     /**
      * @public
      * @virtual
+     * @returns {string}
      */
-    public toRaw(): void;
+    public toRaw(): string;
 }

@@ -1,4 +1,38 @@
 export default Parser;
+export type BaseParseContext = import("./BaseParseContext").default;
+export type BaseParserOption = {
+    /**
+     * If specified, unzip to that path.
+     */
+    unzipPath: string;
+    /**
+     * If true, overwrite to unzipPath when unzip. (only using if unzipPath specified.)
+     */
+    overwrite: boolean;
+};
+export type BaseParserOptionType = {
+    unzipPath: string;
+    /**
+     * /
+     *
+     * /**
+     */
+    overwrite: string;
+};
+export type BaseBook = import("./BaseBook").default;
+export type BaseItem = import("./BaseItem").default;
+export type BaseReadContext = import("./BaseReadContext").default;
+export type BaseReadOption = {
+    force: boolean;
+};
+export type BaseReadOptionType = {
+    /**
+     * /
+     *
+     * /**
+     */
+    force: string;
+};
 export type ParserAction = string;
 export type ActionEnum = {
     /**
@@ -31,25 +65,25 @@ declare class Parser {
      * @static
      * @return {BaseParserOption}
     */
-    static get parseDefaultOptions(): any;
+    static get parseDefaultOptions(): import("./BaseParseContext").BaseParserOption;
     /**
      * Get types of parse options
      * @static
-     * @return {ParserOptionType}
+     * @return {BaseParserOptionType}
      */
-    static get parseOptionTypes(): any;
+    static get parseOptionTypes(): import("./BaseParseContext").BaseParserOptionType;
     /**
      * Get default values of read options
      * @static
-     * @returns {BaseParserOption}
+     * @returns {BaseReadOption}
      */
-    static get readDefaultOptions(): any;
+    static get readDefaultOptions(): import("./BaseReadContext").BaseReadOption;
     /**
      * Get types of read option
      * @static
-     * @returns {ReadOptionType}
+     * @returns {BaseReadOptionType}
      */
-    static get readOptionTypes(): any;
+    static get readOptionTypes(): import("./BaseReadContext").BaseReadOptionType;
     /**
      * Create new Parser
      * @param {string} input file or directory
@@ -137,12 +171,12 @@ declare class Parser {
     /**
      * Parse the input
      * @async
-     * @param {import('./BaseParseContext').BaseParserOption} [options] parse options
+     * @param {BaseParserOption} [options] parse options
      * @returns {Promise<BaseBook>} return Book
      * @see Parser.parseDefaultOptions
      * @see Parser.parseOptionTypes
     */
-    parse(options?: import('./BaseParseContext').BaseParserOption): Promise<BaseBook>;
+    parse(options?: BaseParserOption): Promise<BaseBook>;
     /**
      * Validate parse options and get entries from input
      * @async
@@ -152,7 +186,7 @@ declare class Parser {
      * @throws {Errors.ENOENT} no such file or directory
      * @throws {Errors.ENOFILE} no such file
      */
-    _prepareParse(options?: any): Promise<BaseParseContext>;
+    _prepareParse(options?: BaseParserOption): Promise<BaseParseContext>;
     /**
      * Unzipping if zip source and unzipPath option specified
      * @async
@@ -187,33 +221,33 @@ declare class Parser {
     /**
      * Reading contents of Item
      * @param {BaseItem} item target
-     * @param {import('./BaseReadContext').BaseReadOption} [options] read options
+     * @param {BaseReadOption} [options] read options
      * @returns {(string|Buffer)} reading result
      * @see Parser.readDefaultOptions
      * @see Parser.readOptionTypes
      */
-    readItem(item: BaseItem, options?: import('./BaseReadContext').BaseReadOption): (string | Buffer);
+    readItem(item: BaseItem, options?: BaseReadOption): (string | Buffer);
     /**
      * Reading contents of Items
      * @async
      * @param {BaseItem[]} items targets
-     * @param {import('./BaseReadContext').BaseReadOption} [options] read options
+     * @param {BaseReadOption} [options] read options
      * @returns {(string|Buffer)[]} reading results
      * @see Parser.readDefaultOptions
      * @see Parser.readOptionTypes
      */
-    readItems(items: BaseItem[], options?: import('./BaseReadContext').BaseReadOption): (string | Buffer)[];
+    readItems(items: BaseItem[], options?: BaseReadOption): (string | Buffer)[];
     /**
      * Validate read options and get entries from input
      * @async
      * @param {Item[]} items targets
-     * @param {import('./BaseReadContext').BaseReadOption} [options] read options
+     * @param {BaseReadOption} [options] read options
      * @returns {Promise<BaseReadContext>} returns Context containing target items, read options, entries
      * @throws {Errors.EINVAL} invalid options or value type
      * @throws {Errors.ENOENT} no such file or directory
      * @throws {Errors.ENOFILE} no such file
      */
-    _prepareRead(items: any[], options?: import('./BaseReadContext').BaseReadOption): Promise<BaseReadContext>;
+    _prepareRead(items: any[], options?: BaseReadOption): Promise<BaseReadContext>;
     /**
      * Contents is read using loader suitable for context
      * @async
@@ -246,10 +280,16 @@ declare namespace Parser {
 }
 import CryptoProvider from "./CryptoProvider";
 import Logger from "./Logger";
-import BaseParseContext from "./BaseParseContext";
-import BaseBook from "./BaseBook";
-import BaseReadContext from "./BaseReadContext";
-import BaseItem from "./BaseItem";
+/**
+ * @typedef {import('./BaseParseContext').default} BaseParseContext
+ * @typedef {import('./BaseParseContext').BaseParserOption} BaseParserOption
+ * @typedef {import('./BaseParseContext').BaseParserOptionType} BaseParserOptionType
+ * @typedef {import('./BaseBook').default} BaseBook
+ * @typedef {import('./BaseItem').default} BaseItem
+ * @typedef {import('./BaseReadContext').default} BaseReadContext
+ * @typedef {import('./BaseReadContext').BaseReadOption} BaseReadOption
+ * @typedef {import('./BaseReadContext').BaseReadOptionType} BaseReadOptionType
+ */
 /**
  * @typedef {string} ParserAction
  *

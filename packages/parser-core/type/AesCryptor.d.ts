@@ -5,7 +5,7 @@ export type ModeConfig = {
 };
 export type ModeObject = {
     name: string;
-    op: import('../type/CryptoJs').BlockCipherMode;
+    op: any;
     configTypes: ModeConfig;
 };
 export type ModeList = {
