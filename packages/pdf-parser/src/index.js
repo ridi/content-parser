@@ -5,7 +5,7 @@ import {
 } from '@ridi/parser-core';
 
 import PdfParser from './PdfParser';
-import Book from './model/Book';
+import Book from './model/PdfBook';
 
 export {
   PdfParser,

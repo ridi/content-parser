@@ -1,12 +1,13 @@
 import {
   mergeObjects,
-  isArray, isExists, isString,
+  isArray, isExists, isString, BaseItem,
 } from '@ridi/parser-core';
 
 import Color from './Color';
 
-class OutlineItem {
+class OutlineItem extends BaseItem {
   constructor(rawObj = {}, pageMap = {}) {
+    super(rawObj);
     this.dest = rawObj.dest;
     this.url = rawObj.url;
     this.title = rawObj.title || '';

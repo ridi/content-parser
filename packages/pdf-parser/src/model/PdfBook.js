@@ -1,10 +1,121 @@
-import { Version } from '@ridi/parser-core';
+import { BaseBook, Version } from '@ridi/parser-core';
 
 import OutlineItem from './OutlineItem';
 import Permissions from './Permissions';
 
-class Book {
+class PdfBook extends BaseBook {
+  /**
+   * @type {import('@ridi/parser-core').Version}
+   */
+  version;
+
+  /**
+   * @type {string}
+   */
+  title;
+
+  /**
+   * @type {string}
+   */
+  author;
+
+  /**
+   * @type {string}
+   */
+  subject;
+
+  /**
+   * @type {string}
+   */
+  keywords;
+
+  /**
+   * @type {string}
+   */
+  creator;
+
+  /**
+   * @type {string}
+   */
+  producer;
+
+  /**
+   * @type {Date}
+   */
+  creationDate;
+
+  /**
+   * @type {Date}
+   */
+  modificationDate;
+
+  /**
+   * @type {boolean}
+   */
+  isLinearized;
+
+  /**
+   * @type {boolean}
+   */
+  isAcroFormPresent;
+
+  /**
+   * @type {boolean}
+   */
+  isXFAPresent;
+
+  /**
+   * @type {boolean}
+   */
+  isCollectionPresent;
+
+  /**
+   * @type {string}
+   */
+  userInfo;
+
+  /**
+   * @type {OutlineItem}
+   */
+  outlineItems;
+
+  /**
+   * @type {number}
+   */
+  pageCount;
+
+  /**
+   * @type {import('./Permissions').default}
+   */
+  permissions;
+
+  /**
+   * @typedef {Object} PdfBookParamInfo
+   * @property {string} [PDFFormatVersion]
+   * @property {string} [Title]
+   * @property {string} [Author]
+   * @property {string} [Subject]
+   * @property {string} [Keywords]
+   * @property {string} [Creator]
+   * @property {string} [Producer]
+   * @property {Date} [CreationDate]
+   * @property {Date} [ModDate]
+   * @property {boolean} [IsLinearized]
+   * @property {boolean} [IsAcroFormPresent]
+   * @property {boolean} [IsXFAPresent]
+   * @property {boolean} [IsCollectionPresent]
+   * @property {string} [Custom]
+   * @property {import('./OutlineItem')[]} [outline]
+   * @property {number} [pageCount]
+   * @property {import('./Permissions')} [permissions]
+   */
+
+  /**
+   *
+   * @param {{info:PdfBookParamInfo}} rawBook
+   */
   constructor(rawBook = {}) {
+    super();
     const info = rawBook.info || {};
     this.version = new Version(info.PDFFormatVersion);
     this.title = info.Title || '';
@@ -53,4 +164,4 @@ class Book {
   }
 }
 
-export default Book;
+export default PdfBook;
