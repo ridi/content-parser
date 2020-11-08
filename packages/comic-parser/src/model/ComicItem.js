@@ -1,7 +1,37 @@
-import { isExists } from '@ridi/parser-core';
+import { BaseItem, isExists } from '@ridi/parser-core';
 import path from 'path';
+/**
+ * @typedef {Object} ComicItemProperties
+ * @property {number} [index]
+ * @property {string} [path]
+ * @property {number} [width]
+ * @property {number} [height]
+ */
 
-class Item {
+class ComicItem extends BaseItem {
+  /**
+   * @type {number}
+   */
+  index;
+
+  /**
+   * @type {string}
+   */
+  path;
+
+  /**
+   * @type {number}
+   */
+  width;
+
+  /**
+     * @type {number}
+   */
+  height;
+
+  /**
+   * @return {string}
+   */
   get mimeType() {
     const ext = path.extname(this.path).toLocaleLowerCase().replace('.', '');
     switch (ext) {
@@ -16,10 +46,15 @@ class Item {
     }
   }
 
+  /**
+   *
+   * @param {ComicItemProperties} rawObj
+   * @param {boolean} freeze
+   */
   constructor(rawObj = {}, freeze = true) {
+    super(rawObj);
     this.index = rawObj.index;
     this.path = rawObj.path;
-    this.size = rawObj.size;
     if (isExists(rawObj.width)) {
       this.width = rawObj.width;
     }
@@ -27,7 +62,7 @@ class Item {
       this.height = rawObj.height;
     }
     /* istanbul ignore else */
-    if (freeze && this.constructor === Item) {
+    if (freeze && this.constructor === ComicItem) {
       Object.freeze(this);
     }
   }
@@ -43,4 +78,4 @@ class Item {
   }
 }
 
-export default Item;
+export default ComicItem;

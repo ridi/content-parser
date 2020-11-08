@@ -1,18 +1,14 @@
 import {
-  Errors, createError,
-  isExists, isString,
-  Parser,
-  stringContains,
+  Parser, isString, stringContains, isExists, createError, Errors,
 } from '@ridi/parser-core';
-
 import sizeOf from 'image-size';
-import path from 'path';
+import * as path from 'path';
 import naturalCompare from 'string-natural-compare';
 
-import Book from './model/Book';
-import Item from './model/Item';
-import ReadContext from './model/ReadContext';
-import ParseContext from './model/ParseContext';
+import ComicBook from './model/ComicBook';
+import ComicItem from './model/ComicItem';
+import ComicReadContext from './model/ComicReadContext';
+import ComicParseContext from './model/ComicParseContext';
 
 class ComicParser extends Parser {
   /**
@@ -63,8 +59,8 @@ class ComicParser extends Parser {
   /**
    * Create new ComicParser
    * @param {string} input file or directory
-   * @param {?CryptoProvider} cryptoProvider en/decrypto provider
-   * @param {?string} logLevel logging level
+   * @param {import('@ridi/parser-core').CryptoProvider} cryptoProvider en/decrypto provider
+   * @param {import('@ridi/parser-core').LogLevel} logLevel logging level
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example new ComicParser('./foo/bar.zip' or './foo/bar');
@@ -77,35 +73,35 @@ class ComicParser extends Parser {
   }
 
   /**
-   * @returns {ParseContext}
+   * @returns {ComicParseContext}
    */
   _getParseContextClass() {
-    return ParseContext;
+    return ComicParseContext;
   }
 
   /**
-   * @returns {Book}
+   * @returns {ComicBook}
    */
   _getBookClass() {
-    return Book;
+    return ComicBook;
   }
 
   /**
-   * @returns {ReadContext}
+   * @returns {ComicReadContext}
    */
   _getReadContextClass() {
-    return ReadContext;
+    return ComicReadContext;
   }
 
   /**
-   * @returns {Item}
+   * @returns {ComicItem}
    */
   _getReadItemClass() {
-    return Item;
+    return ComicItem;
   }
 
   /**
-   * @returns {ParseTask[]} return tasks
+   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return tasks
    */
   _parseTasks() {
     return [
@@ -116,8 +112,8 @@ class ComicParser extends Parser {
 
   /**
    * extracts only necessary metadata from entries and create item list
-   * @param {ReadContext} context intermediate result
-   * @returns {Promise.<ReadContext>} return Context containing item list
+   * @param {ComicReadContext} context intermediate result
+   * @returns {Promise<ComicReadContext>} return Context containing item list
    * @see ComicParser.parseDefaultOptions.ext
    * @see ComicParser.parseDefaultOptions.parseImageSize
    */
@@ -143,10 +139,16 @@ class ComicParser extends Parser {
   }
 
   /**
+   *
+   * @typedef {Object} ImageMetaData
+   * @property {number} width
+   * @property {number} height
+   */
+  /**
    * parse image size from entry
-   * @param {object} entry image entry
-   * @param {object} options parse options
-   * @returns {Promise.<object>} return image size
+   * @param {import('@ridi/parser-core/type/readEntries').EntryBasicInformation} entry image entry
+   * @param {ComicParser.parseDefaultOptions} options parse options
+   * @returns {Promise<ImageMetaData>} return image size
    */
   async _parseImageSize(entry, options) {
     const { parseImageSize } = options;
@@ -166,7 +168,7 @@ class ComicParser extends Parser {
 
   /**
    * Contents is read using loader suitable for context
-   * @param {ReadContext} context properties required for reading
+   * @param {ComicReadContext} context properties required for reading
    * @returns {(string|Buffer)[]} reading results
    * @throws {Errors.ENOFILE} no such file
    * @see ComicParser.readDefaultOptions.base64

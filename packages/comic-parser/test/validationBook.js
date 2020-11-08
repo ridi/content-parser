@@ -1,7 +1,7 @@
 import { isExists } from '@ridi/parser-core';
 
-import Book from '../src/model/Book';
-import Item from '../src/model/Item';
+import Book from '../src/model/ComicBook';
+import Item from '../src/model/ComicItem';
 
 export default function validationBook(book, expectedBook, parseOptions = {}) {
   book.should.be.an.instanceOf(Book);
