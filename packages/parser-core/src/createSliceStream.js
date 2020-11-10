@@ -1,8 +1,8 @@
 import * as es from 'event-stream';
 
 /**
- * @param  {number} start=0
- * @param  {number} end=Infinity
+ * @param {number} start=0
+ * @param {number} end=Infinity
  * @returns {es.MapStream}
  */
 const createSliceStream = (start = 0, end = Infinity) => {

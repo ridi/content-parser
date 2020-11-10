@@ -5,4 +5,6 @@ import { LogLevel } from "@ridi/parser-core";
 import { CryptoProvider } from "@ridi/parser-core";
 import { AesCryptor } from "@ridi/parser-core";
 import { Hash } from "@ridi/parser-core";
+import { PdfParser, PdfBook } from "@ridi/pdf-parser";
+import { EpubParser, EpubBook } from '@ridi/epub-parser';
 export { EpubParser, EpubBook, ComicParser, ComicBook, PdfParser, PdfBook, Errors, LogLevel, CryptoProvider, AesCryptor, Hash };

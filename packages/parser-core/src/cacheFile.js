@@ -16,7 +16,7 @@ export function getCachePath() {
 
 /**
  * Get a path to a stored cache
- * @param  {string} key Key of a cache file
+ * @param {string} key Key of a cache file
  * @returns {string} Path to a cache file
  */
 function getCacheFilePath(key) {
@@ -28,7 +28,7 @@ function getCacheFilePath(key) {
 
 /**
  * Remove the cache file with a key
- * @param  {string} key Key of a cache file
+ * @param {string} key Key of a cache file
  * @returns {void}
  */
 export function removeCacheFile(key) {
@@ -50,7 +50,7 @@ export function removeAllCacheFiles() {
 
 /**
  * Read the cache file with a key
- * @param  {string} key Key of a cache file
+ * @param {string} key Key of a cache file
  * @returns {string|null} `null` if cache does not exists, `string` otherwise
  */
 export function readCacheFile(key) {
@@ -63,9 +63,9 @@ export function readCacheFile(key) {
 
 /**
  * Write cache file
- * @param  {string} key Key of a cache file
- * @param  {string | NodeJS.ArrayBufferView} message Message to store
- * @param  {boolean} [overwrite=false]
+ * @param {string} key Key of a cache file
+ * @param {string | NodeJS.ArrayBufferView} message Message to store
+ * @param {boolean} [overwrite=false]
  * @returns {void}
  */
 export function writeCacheFile(key, message, overwrite = false) {

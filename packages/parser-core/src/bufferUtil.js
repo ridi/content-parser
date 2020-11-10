@@ -1,6 +1,6 @@
 /**
  * Removes all the leading non zero buffer chunk
- * @param  {Buffer} buffer
+ * @param {Buffer} buffer
  * @returns {Buffer} Trimmed buffer
  */
 export function trimStart(buffer) {
@@ -16,7 +16,7 @@ export function trimStart(buffer) {
 
 /**
  * Removes all the trailing non zero buffer chunk
- * @param  {Buffer} buffer
+ * @param {Buffer} buffer
  * @returns {Buffer} Trimmed buffer
  */
 export function trimEnd(buffer) {
@@ -32,7 +32,7 @@ export function trimEnd(buffer) {
 
 /**
  * Trim a buffer
- * @param  {Buffer} buffer
+ * @param {Buffer} buffer
  * @returns {Buffer} Trimmed buffer
  */
 export function trim(buffer) {

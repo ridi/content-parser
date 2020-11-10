@@ -1,8 +1,8 @@
 import { isExists, isObject } from './typecheck';
 /**
  * Merge Objects
- * @param  {T} obj1
- * @param  {S} obj2
+ * @param {T} obj1
+ * @param {S} obj2
  * @returns {K} merged object
  * @template T,S,K
  */

@@ -19,9 +19,9 @@ const MatchOption = {
 };
 
 /**
- * @param  {string[]} array=[]
- * @param  {string} string=''
- * @param  {MatchOption} matchOption=MatchOption.MATCHING
+ * @param {string[]} array=[]
+ * @param {string} string=''
+ * @param {MatchOption} matchOption=MatchOption.MATCHING
  */
 function stringContains(array = [], string = '', matchOption = MatchOption.MATCHING) {
   const lString = string.toLowerCase();
@@ -41,7 +41,7 @@ function stringContains(array = [], string = '', matchOption = MatchOption.MATCH
 }
 /**
  * Decode URI
- * @param  {string} uri
+ * @param {string} uri
  */
 function safeDecodeURI(uri) {
   try {

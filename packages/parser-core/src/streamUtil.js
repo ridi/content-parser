@@ -3,8 +3,8 @@ import * as es from 'event-stream';
 import { isFunc } from './typecheck';
 /**
  * Apply event stream conditionally
- * @param  {boolean | (()=>boolean)} condition
- * @param  {es.MapStream} stream
+ * @param {boolean | (()=>boolean)} condition
+ * @param {es.MapStream} stream
  * @returns {es.MapStream} Mapstream
  */
 export function conditionally(condition, stream) {

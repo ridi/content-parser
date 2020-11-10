@@ -27,7 +27,7 @@ class CryptoProvider {
    * Size of data to process at once
    *
    * `null` means use nodejs default (default: 65535)
-   * @returns {number}
+   * @returns {number | null}
    */
   get bufferSize() { return null; }
 

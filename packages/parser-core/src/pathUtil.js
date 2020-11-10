@@ -5,7 +5,7 @@ import naturalCompare from 'string-natural-compare';
 import { isString } from './typecheck';
 
 /**
- * @param  {string} target
+ * @param {string} target
  * @returns {string}
  */
 export function safePath(target) {
@@ -13,7 +13,7 @@ export function safePath(target) {
 }
 
 /**
- * @param  {string} target
+ * @param {string} target
  * @returns {string}
  */
 export function safeDirname(target) {
@@ -21,7 +21,7 @@ export function safeDirname(target) {
 }
 
 /**
- * @param  {string[]} components
+ * @param {string[]} components
  * @returns {string}
  */
 export function safePathJoin(...components) {
@@ -32,7 +32,7 @@ export function safePathJoin(...components) {
 }
 
 /**
- * @param  {string} target
+ * @param {string} target
  * @returns {string[]}
  */
 export function getPathes(target) {

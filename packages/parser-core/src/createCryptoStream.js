@@ -1,11 +1,12 @@
 import * as es from 'event-stream';
 // eslint-disable-next-line no-unused-vars
 import CryptoProvider from './CryptoProvider';
+
 /**
- * @param  {string} filePath
- * @param  {number} totalSize
- * @param  {CryptoProvider} cryptoProvider
- * @param  {import('./CryptoProvider').CryptoProviderOption} purpose
+ * @param {string} filePath
+ * @param {number} totalSize
+ * @param {CryptoProvider} cryptoProvider
+ * @param {import('./CryptoProvider').CryptoProviderOption} purpose
  * @returns {es.MapStream}
  */
 const createCryptoStream = (filePath, totalSize, cryptoProvider, purpose) => {

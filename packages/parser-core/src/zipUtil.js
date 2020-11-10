@@ -30,7 +30,7 @@ import Errors, { createError } from './errors';
 
 /**
  * Find the file with a path.
- * @param  {string} entryPath File Path
+ * @param {string} entryPath File Path
  * @returns {AdmZip.IZipEntry | undefined} A file with path or undefined if there is none.
  * */
 function find(entryPath) {
@@ -39,7 +39,7 @@ function find(entryPath) {
 
 /**
  * Get a buffersize
- * @param  {CryptoProvider} cryptoProvider
+ * @param {CryptoProvider} cryptoProvider
  * @returns {number} return buffer size, undefined if no CryptoProvider provided
  */
 function _getBufferSize(cryptoProvider) {
@@ -120,9 +120,9 @@ async function extractAll(unzipPath, overwrite = true) {
 }
 
 /**
- * @param  {string | Buffer} file
- * @param  {CryptoProvider} cryptoProvider
- * @param  {Logger} logger
+ * @param {string | Buffer} file
+ * @param {CryptoProvider} cryptoProvider
+ * @param {Logger} logger
  * @returns {ZipFileInformation}
  * @throws {Errors.ENOENT} When file can't be found
  */

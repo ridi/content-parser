@@ -19,7 +19,7 @@ import openZip from './zipUtil';
  */
 /**
  * Get read stream option
- * @param  {CryptoProvider} cryptoProvider
+ * @param {CryptoProvider} cryptoProvider
  * @returns {ReadStreamOption}
  */
 function getReadStreamOptions(cryptoProvider) {
@@ -43,8 +43,8 @@ function getReadStreamOptions(cryptoProvider) {
  */
 
 /**
- * @param  {T} source
- * @param  {S[]} entries
+ * @param {T} source
+ * @param {S[]} entries
  * @returns {FileEntryObject<T, S>}
  * @template T, S
  */
@@ -80,7 +80,7 @@ function create(source, entries) {
 
 /**
  * Get FileEntryObject from the zip file
- * @param  {import('./zipUtil').ZipFileInformation} zip
+ * @param {import('./zipUtil').ZipFileInformation} zip
  * @returns {FileEntryObject<string, IZipEntryPlus}
  */
 function fromZip(zip) {
@@ -109,8 +109,8 @@ function fromZip(zip) {
 }
 
 /**
- * @param  {string} dir
- * @param  {CryptoProvider} cryptoProvider
+ * @param {string} dir
+ * @param {CryptoProvider} cryptoProvider
  * @returns {FileEntryObject<string, EntryBasicInformation>}
  */
 function fromDirectory(dir, cryptoProvider) {
@@ -168,8 +168,8 @@ function fromDirectory(dir, cryptoProvider) {
 }
 
 /**
- * @param  {string} filePath
- * @param  {CryptoProvider} cryptoProvider
+ * @param {string} filePath
+ * @param {CryptoProvider} cryptoProvider
  * @returns {FileEntryObject<string, EntryBasicInformation>}
  */
 function fromFile(filePath, cryptoProvider) {
@@ -212,9 +212,9 @@ function fromFile(filePath, cryptoProvider) {
  */
 /**
  * @async
- * @param  {string} input
- * @param  {CryptoProvider} cryptoProvider
- * @param  {import('./Logger').default} logger
+ * @param {string} input
+ * @param {CryptoProvider} cryptoProvider
+ * @param {import('./Logger').default} logger
  * @returns {Promise<ReadEntriesReturnType>}
  */
 export default async function readEntries(input, cryptoProvider, logger) {

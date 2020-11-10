@@ -16,7 +16,7 @@ class Version {
 
   /**
    * Construct Version object with version.
-   * @param  {string} version
+   * @param {string} version
    */
   constructor(version) {
     if (!/(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,3}/gm.test(version)) {

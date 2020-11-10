@@ -129,7 +129,7 @@ const Encoding = Object.freeze({
 });
 
 /**
- * @param  {any} any
+ * @param {any} any
  * @returns {any}
  */
 const prepareHash = (any) => {

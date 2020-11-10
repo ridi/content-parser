@@ -1,7 +1,7 @@
 /**
  * Get type as string
- * @param  {any} any
- * @param  {boolean} strict=false
+ * @param {any} any
+ * @param {boolean} strict=false
  * @returns {string}
  */
 export function getType(any, strict = false) {
@@ -20,7 +20,7 @@ export function getType(any, strict = false) {
 
 /**
  * Return true if passed argument is an array
- * @param  {any} any
+ * @param {any} any
  * @returns {boolean}
  */
 export function isArray(any) {
@@ -32,7 +32,7 @@ export function isArray(any) {
 
 /**
  * Return true if passed argument is a boolean
- * @param  {any} any
+ * @param {any} any
  * @returns {boolean}
  */
 export function isBool(any) {
@@ -41,7 +41,7 @@ export function isBool(any) {
 
 /**
  * Return true if passed argument is undefined nor null
- * @param  {any} any
+ * @param {any} any
  * @returns {boolean}
  */
 export function isExists(any) {
@@ -50,7 +50,7 @@ export function isExists(any) {
 
 /**
  * Return true if passed argument is function
- * @param  {any} any
+ * @param {any} any
  * @returns {boolean}
  */
 export function isFunc(any) {
@@ -59,7 +59,7 @@ export function isFunc(any) {
 
 /**
  * Return true if passed argument is object
- * @param  {any} any
+ * @param {any} any
  * @returns {boolean}
  */
 export function isObject(any) {
@@ -68,7 +68,7 @@ export function isObject(any) {
 
 /**
  * Return true if passed argument is string
- * @param  {any} any
+ * @param {any} any
  * @returns {boolean}
  */
 export function isString(any) {
@@ -77,7 +77,7 @@ export function isString(any) {
 
 /**
  * Return true if passed argument is url
- * @param  {any} string
+ * @param {any} string
  * @returns {boolean}
  */
 export function isUrl(string) {
