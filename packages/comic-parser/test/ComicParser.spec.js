@@ -94,16 +94,19 @@ describe('ComicParser', () => {
       });
     });
   });
+
   it('initialize without cryptoProvider', () => {
     const comicParser = new ComicParser(Paths.COMIC, 'fakeProvider');
     expect(comicParser.cryptoProvider).to.be.undefined;
   })
+
   it('parseImageSize return undefined when sizeof throws', async () => {
     const comicParser = new ComicParser(Paths.COMIC, 'fakeProvider');
     const imageSize = await comicParser._parseImageSize({getFile:sinon.fake.returns(Buffer.from(['f','a','k','e']))}, {parseImageSize: true});
     expect(imageSize.height).to.be.undefined;
     expect(imageSize.width).to.be.undefined;
   });
+
   describe('Book serialization test', () => {
     it('Book -> RawBook -> Book', () => {
       return new ComicParser(Paths.COMIC).parse().then(book => {
