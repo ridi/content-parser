@@ -105,9 +105,9 @@ class PdfBook extends BaseBook {
    * @property {boolean} [IsXFAPresent]
    * @property {boolean} [IsCollectionPresent]
    * @property {string} [Custom]
-   * @property {import('./OutlineItem')[]} [outline]
+   * @property {import('./OutlineItem').default[]} [outline]
    * @property {number} [pageCount]
-   * @property {import('./Permissions')} [permissions]
+   * @property {import('./Permissions').default} [permissions]
    */
 
   /**

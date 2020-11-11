@@ -84,7 +84,7 @@ class Parser {
   /**
    * Get default values of read options
    * @static
-   * @returns {BaseReadOption}
+   * @returns {BaseReadOption | void}
    */
   static get readDefaultOptions() {
     return {
@@ -95,7 +95,7 @@ class Parser {
   /**
    * Get types of read option
    * @static
-   * @returns {BaseReadOptionType}
+   * @returns {BaseReadOptionType | void}
    */
   static get readOptionTypes() {
     return {

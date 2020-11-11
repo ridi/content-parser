@@ -36,7 +36,15 @@ class ComicParser extends Parser {
   }
 
   /**
+   * @typedef {Object} ComicReadOptionExtra
+   * @property {boolean} base64
+   *
+   * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOption & ComicReadOptionExtra} ComicReadOption
+   */
+
+  /**
    * Get default values of read options
+   * @returns {ComicReadOption}
    */
   static get readDefaultOptions() {
     return {
@@ -47,7 +55,16 @@ class ComicParser extends Parser {
   }
 
   /**
+   * @typedef {Object} ComicReadOptionTypeExtra
+   * @property {string} base64
+   *
+   * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOptionType
+   * & ComicReadOptionTypeExtra} ComicReadOptionType
+   */
+
+  /**
    * Get types of read option
+   * @returns {ComicReadOptionType}
    */
   static get readOptionTypes() {
     return {

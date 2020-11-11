@@ -4,11 +4,7 @@
   *
   * @typedef {Object} BaseReadOptionType
   * @property {string} force
-* /
-
-/**
- * @class
- */
+  */
 
 class BaseReadContext {
   /**

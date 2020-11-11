@@ -18,6 +18,7 @@ class PdfParser extends Parser {
    */
   static get parseDefaultOptions() {
     return {
+      ...super.parseDefaultOptions,
       // Use fake worker when used in a browser environment such as Electron Renderer Proccess.
       fakeWorker: false,
     };
@@ -28,6 +29,7 @@ class PdfParser extends Parser {
    */
   static get parseOptionTypes() {
     return {
+      ...super.parseOptionTypes,
       fakeWorker: 'Boolean',
     };
   }

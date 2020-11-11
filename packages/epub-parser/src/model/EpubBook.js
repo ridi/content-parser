@@ -222,7 +222,7 @@ class Book extends BaseBook {
    * @property {string} [rights]
    * @property {Version} [version]
    * @property {Meta[]} [metas]
-   * @property {import('./BaseEpubItem')[]} [items]
+   * @property {import('./BaseEpubItem').default[]} [items]
    *
    * @typedef {BaseBook & EpubBookExtra} EpubBookParam
    */

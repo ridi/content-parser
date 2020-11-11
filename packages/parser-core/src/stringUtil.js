@@ -22,6 +22,7 @@ const MatchOption = {
  * @param {string[]} array=[]
  * @param {string} string=''
  * @param {MatchOption} matchOption=MatchOption.MATCHING
+ * @returns {boolean}
  */
 function stringContains(array = [], string = '', matchOption = MatchOption.MATCHING) {
   const lString = string.toLowerCase();

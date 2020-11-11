@@ -68,7 +68,22 @@ class EpubParser extends Parser {
   }
 
   /**
+    * @typedef {Object} EpubReadOptionExtra
+    * @property {string} basePath
+    * @property {boolean} extractBody
+    * @property {boolean} serializedAnchor
+    * @property {boolean} ignoreScript
+    * @property {string[]} removeAtrules
+    * @property {string[]} removeTagSelector
+    * @property {string[]} removeIdSelector
+    * @property {string[]} removeClassSelector
+    *
+    * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOption & EpubReadOptionExtra} EpubReadOption
+    */
+
+  /**
    * Get default values of read options
+   * @returns {EpubReadOption}
    */
   static get readDefaultOptions() {
     return {
@@ -96,7 +111,22 @@ class EpubParser extends Parser {
   }
 
   /**
+   * @typedef {Object} EpubParserOptionTypeExtra
+   * @property {string} basePath
+   * @property {string} extractBody
+   * @property {string} serializedAnchor
+   * @property {string} ignoreScript
+   * @property {string} removeAtrules
+   * @property {string} removeTagSelector
+   * @property {string} removeIdSelector
+   * @property {string} removeClassSelector
+   *
+   * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOptionType &
+   *  EpubParserOptionTypeExtra} EpubParserOptionType
+   */
+  /**
    * Get types of read option
+   * @returns {EpubParserOptionType}
    */
   static get readOptionTypes() {
     return {
