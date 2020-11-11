@@ -1,0 +1,341 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@ridi/pdf-parser</title>
+	<meta name="description" content="Documentation for @ridi/pdf-parser">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@ridi/pdf-parser</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>@ridi/pdf-parser</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#ridipdf-parser" id="ridipdf-parser" style="color: inherit; text-decoration: none;">
+					<h1>@ridi/pdf-parser</h1>
+				</a>
+				<blockquote>
+					<p>Common PDF data parser for Ridibooks services</p>
+				</blockquote>
+				<p><a href="https://badge.fury.io/js/%40ridi%2Fpdf-parser"><img src="https://badge.fury.io/js/%40ridi%2Fpdf-parser.svg" alt="NPM version"></a>
+					<a href="https://travis-ci.org/ridi/content-parser"><img src="https://travis-ci.org/ridi/content-parser.svg?branch=master" alt="Build Status"></a>
+					<a href="https://codecov.io/gh/ridi/content-parser"><img src="https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg" alt="codecov"></a>
+				<a href="https://npm.im/%40ridi%2Fpdf-parser"><img src="https://img.shields.io/npm/dt/%40ridi%2Fpdf-parser.svg" alt="NPM total downloads"></a></p>
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h2>Features</h2>
+				</a>
+				<ul>
+					<li><input checked="" disabled="" type="checkbox"> Structure parsing</li>
+					<li><input disabled="" type="checkbox"> Read files<ul>
+							<li><input disabled="" type="checkbox"> Read cover page</li>
+						</ul>
+					</li>
+					<li><input checked="" disabled="" type="checkbox"> Encrypt and decrypt function when parsing or reading</li>
+					<li><input disabled="" type="checkbox"> Debug mode</li>
+					<li><input disabled="" type="checkbox"> Environment<ul>
+							<li><input checked="" disabled="" type="checkbox"> Node</li>
+							<li><input disabled="" type="checkbox"> CLI</li>
+							<li><input disabled="" type="checkbox"> Browser</li>
+						</ul>
+					</li>
+					<li><input disabled="" type="checkbox"> Online demo</li>
+				</ul>
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h2>Install</h2>
+				</a>
+				<pre><code class="language-bash">npm install @ridi/pdf-parser</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>Basic:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { PdfParser } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@ridi/pdf-parser&#x27;</span>;
+<span class="hljs-comment">// or const { PdfParser } = require(&#x27;@ridi/pdf-parser&#x27;);</span>
+
+<span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> PdfParser(<span class="hljs-string">&#x27;./foo/bar.pdf&#x27;</span>);
+parser.parse().then(<span class="hljs-function">(<span class="hljs-params">book</span>) =&gt;</span> {
+  ...
+});
+parser.read().then(<span class="hljs-function">(<span class="hljs-params">pdfFileBuffer</span>) =&gt;</span> {
+  ...
+});</code></pre>
+				<p>with <a href="https://github.com/ridi/content-parser/blob/master/src/cryptor/AesCryptor.js">AesCryptor</a>:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { CryptoProvider, AesCryptor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@ridi/pdf-parser&#x27;</span>;
+<span class="hljs-comment">// or const { CryptoProvider, AesCryptor } = require(&#x27;@ridi/pdf-parser&#x27;);</span>
+
+<span class="hljs-keyword">const</span> { Purpose } = CryptoProvider;
+<span class="hljs-keyword">const</span> { Mode, Padding } = AesCryptor;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ContentCryptoProvider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">CryptoProvider</span> </span>{
+  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">key</span>)</span> {
+    <span class="hljs-built_in">super</span>();
+    <span class="hljs-built_in">this</span>.cryptor = <span class="hljs-keyword">new</span> AesCryptor(Mode.ECB, { key });
+  }
+
+  <span class="hljs-function"><span class="hljs-title">getCryptor</span>(<span class="hljs-params">filePath, purpose</span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.cryptor;
+  }
+
+  <span class="hljs-comment">// If use as follows:</span>
+  <span class="hljs-comment">// const provider = new ContentCryptoProvider(...);</span>
+  <span class="hljs-comment">// const parser = new PdfParser(&#x27;encrypted.pdf&#x27;, provider);</span>
+  <span class="hljs-comment">// const book = await parser.parse();</span>
+  <span class="hljs-comment">// const cover = await parser.readItem(book.cover);</span>
+  <span class="hljs-comment">//</span>
+  <span class="hljs-comment">// It will be called as follows:</span>
+  <span class="hljs-comment">// 1. run(data, &#x27;encrypted.pdf&#x27;, Purpose.READ_IN_DIR)</span>
+  <span class="hljs-comment">// 2. run(data, &#x27;encrypted.pdf&#x27;, Purpose.READ_IN_DIR)</span>
+  <span class="hljs-comment">//</span>
+  <span class="hljs-function"><span class="hljs-title">run</span>(<span class="hljs-params">data, filePath, purpose</span>)</span> {
+    <span class="hljs-keyword">const</span> cryptor = <span class="hljs-built_in">this</span>.getCryptor(filePath, purpose);
+    <span class="hljs-keyword">if</span> (purpose === Purpose.READ_IN_DIR) {
+      <span class="hljs-keyword">return</span> cryptor.decrypt(data, { <span class="hljs-attr">padding</span>: Padding.AUTO });
+    }
+    <span class="hljs-keyword">return</span> data;
+  }
+}
+
+<span class="hljs-keyword">const</span> cryptoProvider = <span class="hljs-keyword">new</span> ContentCryptoProvider(key);
+<span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> PdfParser(<span class="hljs-string">&#x27;./foo/bar.pdf&#x27;</span>, cryptoProvider);</code></pre>
+				<p>Log level setting:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { LogLevel, ... } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@ridi/pdf-parser&#x27;</span>;
+<span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> PdfParser(<span class="hljs-comment">/* path */</span>, <span class="hljs-comment">/* cryptoProvider */</span>, <span class="hljs-comment">/* logLevel */</span>)
+<span class="hljs-comment">// or const parser = new PdfParser(/* path */, /* logLevel */)</span>
+parser.logger.logLevel = LogLevel.VERBOSE; <span class="hljs-comment">// SILENT, ERROR, WARN(default), INFO, DEBUG, VERBOSE</span></code></pre>
+				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
+					<h2>API</h2>
+				</a>
+				<a href="#parseparseoptions" id="parseparseoptions" style="color: inherit; text-decoration: none;">
+					<h3>parse(parseOptions)</h3>
+				</a>
+				<p>Returns <code>Promise&lt;PdfBook&gt;</code> with:</p>
+				<ul>
+					<li><a href="#book">PdfBook</a>: Instance with pages info.</li>
+				</ul>
+				<p>Or throw exception.</p>
+				<a href="#parseoptions-object" id="parseoptions-object" style="color: inherit; text-decoration: none;">
+					<h4><a href="#parseOptions">parseOptions</a>: <code>?object</code></h4>
+				</a>
+				<hr>
+				<a href="#read" id="read" style="color: inherit; text-decoration: none;">
+					<h3>read()</h3>
+				</a>
+				<p>Returns PDF file as <code>Buffer</code>.</p>
+				<hr>
+				<a href="#onprogress--callbackstep-totalstep-action" id="onprogress--callbackstep-totalstep-action" style="color: inherit; text-decoration: none;">
+					<h3>onProgress = callback(step, totalStep, action)</h3>
+				</a>
+				<p>Tells the progress of parser through <code>callback</code>.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { Action } = PdfParser; <span class="hljs-comment">// PARSE, READ_ITEMS</span>
+parser.onProgress = <span class="hljs-function">(<span class="hljs-params">step, totalStep, action</span>) =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`[<span class="hljs-subst">${action}</span>] <span class="hljs-subst">${step}</span> / <span class="hljs-subst">${totalStep}</span>`</span>);
+}</code></pre>
+				<a href="#model" id="model" style="color: inherit; text-decoration: none;">
+					<h2>Model</h2>
+				</a>
+				<p><a id="book"></a></p>
+				<a href="#pdfbook" id="pdfbook" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/Book.js">PdfBook</a></h3>
+				</a>
+				<ul>
+					<li>version: <em><a href="#version">Version</a></em></li>
+					<li>title: <em>string</em></li>
+					<li>author: <em>string</em></li>
+					<li>subject: <em>string</em></li>
+					<li>keywords: <em>string</em></li>
+					<li>creator: <em>string</em></li>
+					<li>producer: <em>string</em></li>
+					<li>creationDate: <em>?string</em></li>
+					<li>modificationDate: <em>?string</em></li>
+					<li>outlineItems: <em><a href="#outlineItem">OutlineItem</a>[]</em></li>
+					<li>isLinearized: <em>boolean</em></li>
+					<li>isAcroFormPresent: <em>boolean</em></li>
+					<li>isXFAPresent: <em>boolean</em></li>
+					<li>isCollectionPresent: <em>boolean</em></li>
+					<li>userInfo: <em>object</em></li>
+					<li>pageCount: <em>number</em></li>
+					<li>permissions: <em><a href="#permissions">Permissions</a></em></li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<p><a id="version"></a></p>
+				<a href="#version" id="version" style="color: inherit; text-decoration: none;">
+					<h3><a href="../parser-core/src/Version.js">Version</a></h3>
+				</a>
+				<ul>
+					<li>major: <em>number</em></li>
+					<li>minor: <em>number</em></li>
+					<li>patch: <em>number</em></li>
+					<li>toString(): <em>string</em></li>
+				</ul>
+				<p><a id="outlineItem"></a></p>
+				<a href="#outlineitem" id="outlineitem" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/OutlineItem.js">OutlineItem</a></h3>
+				</a>
+				<ul>
+					<li>dest: <em>?string|\</em>[]*</li>
+					<li>url: <em>?string</em></li>
+					<li>title: <em>string</em></li>
+					<li>color: <em><a href="#color">Color</a></em></li>
+					<li>bold: <em>boolean</em></li>
+					<li>italic: <em>boolean</em></li>
+					<li>depth: <em>number</em> (<strong>Default: 0</strong>)</li>
+					<li>children: <em><a href="#outlineItem">OutlineItem</a>[]</em></li>
+					<li>page: <em>?number</em></li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<p><a id="color"></a></p>
+				<a href="#color" id="color" style="color: inherit; text-decoration: none;">
+					<h3><a href="../src/model/Color.js">Color</a></h3>
+				</a>
+				<ul>
+					<li>red: <em>number</em></li>
+					<li>green: <em>number</em></li>
+					<li>blue: <em>number</em></li>
+					<li>intValue: <em>number</em> (ex: <code>7237488</code>)</li>
+					<li>hexString: <em>string</em> (ex: <code>&#39;#6e6f70&#39;</code>)</li>
+					<li>rgbString: <em>string</em> (ex: <code>&#39;rgb(110, 111, 112)&#39;</code>)</li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<p><a id="permissions"></a></p>
+				<a href="#permissions" id="permissions" style="color: inherit; text-decoration: none;">
+					<h3><a href="../src/model/Permissions.js">Permissions</a></h3>
+				</a>
+				<ul>
+					<li>allowPrinting: <em>boolean</em></li>
+					<li>allowContentsModifying: <em>boolean</em></li>
+					<li>allowCopying: <em>boolean</em></li>
+					<li>allowAnnotationsModifying: <em>boolean</em></li>
+					<li>allowInteractiveFormsModifying: <em>boolean</em></li>
+					<li>allowCopyingForAccessibility: <em>boolean</em></li>
+					<li>allowAssembling: <em>boolean</em></li>
+					<li>allowHighQualityPrinting: <em>boolean</em></li>
+					<li>toRaw(): <em>?number[]</em></li>
+				</ul>
+				<p><a id="parseOptions"></a></p>
+				<a href="#parse-options" id="parse-options" style="color: inherit; text-decoration: none;">
+					<h2>Parse Options</h2>
+				</a>
+				<ul>
+					<li><a href="#fakeWorker">fakeWorker</a></li>
+				</ul>
+				<hr>
+				<p><a id="fakeWorker"></a></p>
+				<a href="#fakeworker-boolean" id="fakeworker-boolean" style="color: inherit; text-decoration: none;">
+					<h3>fakeWorker: <em><code>boolean</code></em></h3>
+				</a>
+				<p>Use fake worker when used in a browser environment such as Electron Renderer Proccess.</p>
+				<p><strong>Default:</strong> <code>false</code></p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p><a href="https://github.com/ridi/content-parser/packages/pdf-parser/LICENSE">Apache-2.0</a></p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_pdfparser_.html">&quot;<wbr>Pdf<wbr>Parser&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_color_.html">&quot;model/<wbr>Color&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_outlineitem_.html">&quot;model/<wbr>Outline<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_pdfbook_.html">&quot;model/<wbr>Pdf<wbr>Book&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_pdfparsecontext_.html">&quot;model/<wbr>Pdf<wbr>Parse<wbr>Context&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_permissions_.html">&quot;model/<wbr>Permissions&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

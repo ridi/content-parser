@@ -1,0 +1,1101 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@ridi/epub-parser</title>
+	<meta name="description" content="Documentation for @ridi/epub-parser">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@ridi/epub-parser</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>@ridi/epub-parser</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#ridiepub-parser" id="ridiepub-parser" style="color: inherit; text-decoration: none;">
+					<h1>@ridi/epub-parser</h1>
+				</a>
+				<blockquote>
+					<p>Common EPUB2 data parser for Ridibooks services</p>
+				</blockquote>
+				<p><a href="https://badge.fury.io/js/%40ridi%2Fepub-parser"><img src="https://badge.fury.io/js/%40ridi%2Fepub-parser.svg" alt="NPM version"></a>
+					<a href="https://travis-ci.org/ridi/content-parser"><img src="https://travis-ci.org/ridi/content-parser.svg?branch=master" alt="Build Status"></a>
+					<a href="https://codecov.io/gh/ridi/content-parser"><img src="https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg" alt="codecov"></a>
+				<a href="https://npm.im/%40ridi%2Fepub-parser"><img src="https://img.shields.io/npm/dt/%40ridi%2Fepub-parser.svg" alt="NPM total downloads"></a></p>
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h2>Features</h2>
+				</a>
+				<ul>
+					<li><input checked="" disabled="" type="checkbox"> EPUB2 parsing</li>
+					<li><input disabled="" type="checkbox"> EPUB3 parsing</li>
+					<li><input checked="" disabled="" type="checkbox"> Package validation with option</li>
+					<li><input checked="" disabled="" type="checkbox"> Unzip epub file when parsing with options</li>
+					<li><input checked="" disabled="" type="checkbox"> Read files<ul>
+							<li><input checked="" disabled="" type="checkbox"> Extract inner HTML of body in Spine with option</li>
+							<li><input checked="" disabled="" type="checkbox"> Change base path of Spine, CSS and Inline style with option</li>
+							<li><input checked="" disabled="" type="checkbox"> Customize CSS, Inline Style with options</li>
+							<li><input disabled="" type="checkbox"> Truncate inner HTML of body in Spine with options</li>
+							<li><input disabled="" type="checkbox"> Minify HTML, CSS, Inline Style with options</li>
+						</ul>
+					</li>
+					<li><input checked="" disabled="" type="checkbox"> Encrypt and decrypt function when parsing or reading or unzipping</li>
+					<li><input disabled="" type="checkbox"> More <a href="http://www.idpf.org/epub/30/spec/epub30-ocf.html#sec-container-metainf">spec</a><ul>
+							<li><input disabled="" type="checkbox"> encryption.xml</li>
+							<li><input disabled="" type="checkbox"> manifest.xml</li>
+							<li><input disabled="" type="checkbox"> metadata.xml</li>
+							<li><input disabled="" type="checkbox"> rights.xml</li>
+							<li><input disabled="" type="checkbox"> signatures.xml</li>
+						</ul>
+					</li>
+					<li><input disabled="" type="checkbox"> Debug mode</li>
+					<li><input disabled="" type="checkbox"> Environment<ul>
+							<li><input checked="" disabled="" type="checkbox"> Node</li>
+							<li><input disabled="" type="checkbox"> CLI</li>
+							<li><input disabled="" type="checkbox"> Browser</li>
+						</ul>
+					</li>
+					<li><input disabled="" type="checkbox"> Online demo</li>
+				</ul>
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h2>Install</h2>
+				</a>
+				<pre><code class="language-bash">npm install @ridi/epub-parser</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>Basic:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { EpubParser } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@ridi/epub-parser&#x27;</span>;
+<span class="hljs-comment">// or const { EpubParser } = require(&#x27;@ridi/epub-parser&#x27;);</span>
+
+<span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> EpubParser(<span class="hljs-string">&#x27;./foo/bar.epub&#x27;</span> or <span class="hljs-string">&#x27;./unzippedPath&#x27;</span>);
+parser.parse(<span class="hljs-comment">/* { parseOptions } */</span>).then(<span class="hljs-function">(<span class="hljs-params">book</span>) =&gt;</span> {
+  parser.readItems(book.spines<span class="hljs-comment">/*, { readOptions } */</span>).then(<span class="hljs-function">(<span class="hljs-params">results</span>) =&gt;</span> {
+    ...
+  });
+  ...
+});</code></pre>
+				<p>with <a href="https://github.com/ridi/content-parser/blob/master/src/cryptor/AesCryptor.js">AesCryptor</a>:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { CryptoProvider, AesCryptor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@ridi/epub-parser&#x27;</span>;
+<span class="hljs-comment">// or const { CryptoProvider, AesCryptor } = require(&#x27;@ridi/epub-parser&#x27;);</span>
+
+<span class="hljs-keyword">const</span> { Purpose } = CryptoProvider;
+<span class="hljs-keyword">const</span> { Mode, Padding } = AesCryptor;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ContentCryptoProvider</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">CryptoProvider</span> </span>{
+  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">key</span>)</span> {
+    <span class="hljs-built_in">super</span>();
+    <span class="hljs-built_in">this</span>.cryptor = <span class="hljs-keyword">new</span> AesCryptor(Mode.ECB, { key });
+  }
+
+  <span class="hljs-function"><span class="hljs-title">getCryptor</span>(<span class="hljs-params">filePath, purpose</span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.cryptor;
+  }
+
+  <span class="hljs-comment">// If use as follows:</span>
+  <span class="hljs-comment">// const provider = new ContentCryptoProvider(...);</span>
+  <span class="hljs-comment">// const parser = new EpubParser(&#x27;encrypted.epub&#x27;, provider);</span>
+  <span class="hljs-comment">// const book = await parser.parse({ unzipPath: ... });</span>
+  <span class="hljs-comment">// const firstSpine = await parser.readItem(book.spines[0]);</span>
+  <span class="hljs-comment">//</span>
+  <span class="hljs-comment">// It will be called as follows:</span>
+  <span class="hljs-comment">// 1. run(data, &#x27;encrypted.epub&#x27;, Purpose.READ_IN_DIR)</span>
+  <span class="hljs-comment">// 2. run(data, &#x27;META-INF/container.xml&#x27;, Purpose.READ_IN_ZIP)</span>
+  <span class="hljs-comment">// 3. run(data, &#x27;OEBPS/content.opf&#x27;, Purpose.READ_IN_ZIP)</span>
+  <span class="hljs-comment">// ...</span>
+  <span class="hljs-comment">// 4. run(data, &#x27;mimetype&#x27;, Purpose.WRITE)</span>
+  <span class="hljs-comment">// ...</span>
+  <span class="hljs-comment">// 5. run(data, &#x27;OEBPS/Text/Section0001.xhtml&#x27;, Purpose.READ_IN_DIR)</span>
+  <span class="hljs-comment">//</span>
+  <span class="hljs-function"><span class="hljs-title">run</span>(<span class="hljs-params">data, filePath, purpose</span>)</span> {
+    <span class="hljs-keyword">const</span> cryptor = <span class="hljs-built_in">this</span>.getAesCryptor(filePath, purpose);
+    <span class="hljs-keyword">const</span> padding = Padding.AUTO;
+    <span class="hljs-keyword">if</span> (purpose === Purpose.READ_IN_DIR) {
+      <span class="hljs-keyword">return</span> cryptor.decrypt(data, { padding });
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (purpose === Purpose.WRITE) {
+      <span class="hljs-keyword">return</span> cryptor.encrypt(data, { padding });
+    }
+    <span class="hljs-keyword">return</span> data;
+  }
+}
+
+<span class="hljs-keyword">const</span> cryptoProvider = <span class="hljs-keyword">new</span> ContentCryptoProvider(key);
+<span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> EpubParser(<span class="hljs-string">&#x27;./encrypted.epub&#x27;</span> or <span class="hljs-string">&#x27;./unzippedPath&#x27;</span>, cryptoProvider);</code></pre>
+				<p>Log level setting:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { LogLevel, ... } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@ridi/epub-parser&#x27;</span>;
+<span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> EpubParser(<span class="hljs-comment">/* path */</span>, <span class="hljs-comment">/* cryptoProvider */</span>, <span class="hljs-comment">/* logLevel */</span>)
+<span class="hljs-comment">// or const parser = new EpubParser(/* path */, /* logLevel */)</span>
+parser.logger.logLevel = LogLevel.VERBOSE; <span class="hljs-comment">// SILENT, ERROR, WARN(default), INFO, DEBUG, VERBOSE</span></code></pre>
+				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
+					<h2>API</h2>
+				</a>
+				<a href="#parseparseoptions" id="parseparseoptions" style="color: inherit; text-decoration: none;">
+					<h3>parse(parseOptions)</h3>
+				</a>
+				<p>Returns <code>Promise&lt;EpubBook&gt;</code> with:</p>
+				<ul>
+					<li><a href="#book">EpubBook</a>: Instance with metadata, spine list, table of contents, etc.</li>
+				</ul>
+				<p>Or throw exception.</p>
+				<a href="#parseoptions-object" id="parseoptions-object" style="color: inherit; text-decoration: none;">
+					<h4><a href="#parseOptions">parseOptions</a>: <code>?object</code></h4>
+				</a>
+				<hr>
+				<a href="#readitemitem-readoptions" id="readitemitem-readoptions" style="color: inherit; text-decoration: none;">
+					<h3>readItem(item, readOptions)</h3>
+				</a>
+				<p>Returns <code>string</code> or <code>Buffer</code> in <code>Promise</code> with:</p>
+				<ul>
+					<li><p><a href="#spineItem">SpineItem</a>, <a href="#cssItem">CssItem</a>, <a href="#inlineCssItem">InlineCssItem</a>, <a href="#ncxItem">NcxItem</a>, <a href="#svgItem">SvgItem</a>:</p>
+						<ul>
+							<li><code>string</code></li>
+						</ul>
+					</li>
+					<li><p>Other items:</p>
+						<ul>
+							<li><code>Buffer</code></li>
+						</ul>
+					</li>
+				</ul>
+				<p>or throw exception.</p>
+				<a href="#item-item-see-item-types" id="item-item-see-item-types" style="color: inherit; text-decoration: none;">
+					<h4>item: <code>Item</code> (see: <a href="#itemTypes">Item Types</a>)</h4>
+				</a>
+				<a href="#readoptions-object" id="readoptions-object" style="color: inherit; text-decoration: none;">
+					<h4><a href="#readOptions">readOptions</a>: <code>?object</code></h4>
+				</a>
+				<hr>
+				<a href="#readitemsitems-readoptions" id="readitemsitems-readoptions" style="color: inherit; text-decoration: none;">
+					<h3>readItems(items, readOptions)</h3>
+				</a>
+				<p>Returns <code>string[]</code> or <code>Buffer[]</code> in <code>Promise</code> with:</p>
+				<ul>
+					<li><p><a href="#spineItem">SpineItem</a>, <a href="#cssItem">CssItem</a>, <a href="#inlineCssItem">InlineCssItem</a>, <a href="#ncxItem">NcxItem</a>, <a href="#svgItem">SvgItem</a>:</p>
+						<ul>
+							<li><code>string[]</code></li>
+						</ul>
+					</li>
+					<li><p>Other items:</p>
+						<ul>
+							<li><code>Buffer[]</code></li>
+						</ul>
+					</li>
+				</ul>
+				<p>or throw exception.</p>
+				<a href="#items-item-see-item-types" id="items-item-see-item-types" style="color: inherit; text-decoration: none;">
+					<h4>items: <code>Item[]</code> (see: <a href="#itemTypes">Item Types</a>)</h4>
+				</a>
+				<a href="#readoptions-object-1" id="readoptions-object-1" style="color: inherit; text-decoration: none;">
+					<h4><a href="#readOptions">readOptions</a>: <code>?object</code></h4>
+				</a>
+				<hr>
+				<a href="#unzipunzippath-overwrite" id="unzipunzippath-overwrite" style="color: inherit; text-decoration: none;">
+					<h3>unzip(unzipPath, overwrite)</h3>
+				</a>
+				<p>Returns <code>Promise&lt;boolean&gt;</code> with:</p>
+				<ul>
+					<li>If result is <code>true</code>, unzip is successful or has already been unzipped.</li>
+				</ul>
+				<p>Or throw exception.</p>
+				<a href="#unzippath-string" id="unzippath-string" style="color: inherit; text-decoration: none;">
+					<h4>unzipPath: <code>string</code></h4>
+				</a>
+				<a href="#overwrite-boolean" id="overwrite-boolean" style="color: inherit; text-decoration: none;">
+					<h4>overwrite: <code>boolean</code></h4>
+				</a>
+				<hr>
+				<a href="#onprogress--callbackstep-totalstep-action" id="onprogress--callbackstep-totalstep-action" style="color: inherit; text-decoration: none;">
+					<h3>onProgress = callback(step, totalStep, action)</h3>
+				</a>
+				<p>Tells the progress of parser through <code>callback</code>.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { Action } = EpubParser; <span class="hljs-comment">// PARSE, READ_ITEMS</span>
+parser.onProgress = <span class="hljs-function">(<span class="hljs-params">step, totalStep, action</span>) =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`[<span class="hljs-subst">${action}</span>] <span class="hljs-subst">${step}</span> / <span class="hljs-subst">${totalStep}</span>`</span>);
+}</code></pre>
+				<a href="#model" id="model" style="color: inherit; text-decoration: none;">
+					<h2>Model</h2>
+				</a>
+				<p><a id="book"></a></p>
+				<a href="#epubbook" id="epubbook" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/Book.js">EpubBook</a></h3>
+				</a>
+				<ul>
+					<li>titles: <em>string[]</em></li>
+					<li>creators: <em><a href="#author">Author</a>[]</em></li>
+					<li>subjects: <em>string[]</em></li>
+					<li>description: <em>?string</em></li>
+					<li>publisher: <em>?string</em></li>
+					<li>contributors: <em><a href="#author">Author</a>[]</em></li>
+					<li>dates: <em><a href="#dateTime">DateTime</a>[]</em></li>
+					<li>type: <em>?string</em></li>
+					<li>format: <em>?string</em></li>
+					<li>identifiers: <em><a href="#identifier">Identifier</a>[]</em></li>
+					<li>source: <em>?string</em></li>
+					<li>languages: <em>string[]</em></li>
+					<li>relation: <em>?string</em></li>
+					<li>rights: <em>?string</em></li>
+					<li>version: <em><a href="#version">Version</a></em></li>
+					<li>metas: <em><a href="#meta">Meta</a>[]</em></li>
+					<li>items: <em><a href="#item">Item</a>[]</em></li>
+					<li>spines: <em><a href="#spineItem">SpintItem</a>[]</em></li>
+					<li>ncx: <em>?<a href="#ncxItem">NcxItem</a></em></li>
+					<li>fonts: <em><a href="#fontItem">FontItem</a>[]</em></li>
+					<li>cover: <em>?<a href="#imageItem">ImageItem</a></em></li>
+					<li>images: <em><a href="#imageItem">ImageItem</a>[]</em></li>
+					<li>styles: <em><a href="#cssItem">CssItem</a>[]</em></li>
+					<li>guides: <em><a href="#Guide">Guide</a>[]</em></li>
+					<li>deadItems: <em><a href="#deadItem">DeadItem</a>[]</em></li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<p><a id="author"></a></p>
+				<a href="#author" id="author" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/Author.js">Author</a></h3>
+				</a>
+				<ul>
+					<li>name: <em>?string</em></li>
+					<li>fileAs: <em>?string</em></li>
+					<li>role: <em>string</em> (<strong>Default: Author.Roles.UNDEFINED</strong>)</li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<a href="#authorroles" id="authorroles" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/Author.js#L4">Author.Roles</a></h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>UNDEFINED</td>
+							<td>undefined</td>
+						</tr>
+						<tr>
+							<td>UNKNOWN</td>
+							<td>unknown</td>
+						</tr>
+						<tr>
+							<td>ADAPTER</td>
+							<td>adp</td>
+						</tr>
+						<tr>
+							<td>ANNOTATOR</td>
+							<td>ann</td>
+						</tr>
+						<tr>
+							<td>ARRANGER</td>
+							<td>arr</td>
+						</tr>
+						<tr>
+							<td>ARTIST</td>
+							<td>art</td>
+						</tr>
+						<tr>
+							<td>ASSOCIATEDNAME</td>
+							<td>asn</td>
+						</tr>
+						<tr>
+							<td>AUTHOR</td>
+							<td>aut</td>
+						</tr>
+						<tr>
+							<td>AUTHOR_IN_QUOTATIONS_OR_TEXT_EXTRACTS</td>
+							<td>aqt</td>
+						</tr>
+						<tr>
+							<td>AUTHOR_OF_AFTER_WORD_OR_COLOPHON_OR_ETC</td>
+							<td>aft</td>
+						</tr>
+						<tr>
+							<td>AUTHOR_OF_INTRODUCTIONOR_ETC</td>
+							<td>aui</td>
+						</tr>
+						<tr>
+							<td>BIBLIOGRAPHIC_ANTECEDENT</td>
+							<td>ant</td>
+						</tr>
+						<tr>
+							<td>BOOK_PRODUCER</td>
+							<td>bkp</td>
+						</tr>
+						<tr>
+							<td>COLLABORATOR</td>
+							<td>clb</td>
+						</tr>
+						<tr>
+							<td>COMMENTATOR</td>
+							<td>cmm</td>
+						</tr>
+						<tr>
+							<td>DESIGNER</td>
+							<td>dsr</td>
+						</tr>
+						<tr>
+							<td>EDITOR</td>
+							<td>edt</td>
+						</tr>
+						<tr>
+							<td>ILLUSTRATOR</td>
+							<td>ill</td>
+						</tr>
+						<tr>
+							<td>LYRICIST</td>
+							<td>lyr</td>
+						</tr>
+						<tr>
+							<td>METADATA_CONTACT</td>
+							<td>mdc</td>
+						</tr>
+						<tr>
+							<td>MUSICIAN</td>
+							<td>mus</td>
+						</tr>
+						<tr>
+							<td>NARRATOR</td>
+							<td>nrt</td>
+						</tr>
+						<tr>
+							<td>OTHER</td>
+							<td>oth</td>
+						</tr>
+						<tr>
+							<td>PHOTOGRAPHER</td>
+							<td>pht</td>
+						</tr>
+						<tr>
+							<td>PRINTER</td>
+							<td>prt</td>
+						</tr>
+						<tr>
+							<td>REDACTOR</td>
+							<td>red</td>
+						</tr>
+						<tr>
+							<td>REVIEWER</td>
+							<td>rev</td>
+						</tr>
+						<tr>
+							<td>SPONSOR</td>
+							<td>spn</td>
+						</tr>
+						<tr>
+							<td>THESIS_ADVISOR</td>
+							<td>ths</td>
+						</tr>
+						<tr>
+							<td>TRANSCRIBER</td>
+							<td>trc</td>
+						</tr>
+						<tr>
+							<td>TRANSLATOR</td>
+							<td>trl</td>
+						</tr>
+				</tbody></table>
+				<p><a id="dateTime"></a></p>
+				<a href="#datetime" id="datetime" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/DateTime.js">DateTime</a></h3>
+				</a>
+				<ul>
+					<li>value: <em>?string</em></li>
+					<li>event: <em>string</em> (<strong>Default: DateTime.Events.UNDEFINED</strong>)</li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<a href="#datetimeevents" id="datetimeevents" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/DateTime.js#L3">DateTime.Events</a></h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>UNDEFINED</td>
+							<td>undefined</td>
+						</tr>
+						<tr>
+							<td>UNKNOWN</td>
+							<td>unknown</td>
+						</tr>
+						<tr>
+							<td>CREATION</td>
+							<td>creation</td>
+						</tr>
+						<tr>
+							<td>MODIFICATION</td>
+							<td>modification</td>
+						</tr>
+						<tr>
+							<td>PUBLICATION</td>
+							<td>publication</td>
+						</tr>
+				</tbody></table>
+				<p><a id="identifier"></a></p>
+				<a href="#identifier" id="identifier" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/Identifier.js">Identifier</a></h3>
+				</a>
+				<ul>
+					<li>value: <em>?string</em></li>
+					<li>scheme: <em>string</em> (<strong>Default: Identifier.Schemes.UNDEFINED</strong>)</li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<a href="#identifierschemes" id="identifierschemes" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/Identifier.js#L3">Identifier.Schemes</a></h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>UNDEFINED</td>
+							<td>undefined</td>
+						</tr>
+						<tr>
+							<td>UNKNOWN</td>
+							<td>unknown</td>
+						</tr>
+						<tr>
+							<td>DOI</td>
+							<td>doi</td>
+						</tr>
+						<tr>
+							<td>ISBN</td>
+							<td>isbn</td>
+						</tr>
+						<tr>
+							<td>ISBN13</td>
+							<td>isbn13</td>
+						</tr>
+						<tr>
+							<td>ISBN10</td>
+							<td>isbn10</td>
+						</tr>
+						<tr>
+							<td>ISSN</td>
+							<td>issn</td>
+						</tr>
+						<tr>
+							<td>UUID</td>
+							<td>uuid</td>
+						</tr>
+						<tr>
+							<td>URI</td>
+							<td>uri</td>
+						</tr>
+				</tbody></table>
+				<p><a id="meta"></a></p>
+				<a href="#meta" id="meta" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/Meta.js">Meta</a></h3>
+				</a>
+				<ul>
+					<li>name: <em>?string</em></li>
+					<li>content: <em>?string</em></li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<p><a id="guide"></a></p>
+				<a href="#guide" id="guide" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/Guide.js">Guide</a></h3>
+				</a>
+				<ul>
+					<li>title: <em>?string</em></li>
+					<li>type: <em>string</em> (<strong>Default: Guide.Types.UNDEFINED</strong>)</li>
+					<li>href: <em>?string</em></li>
+					<li>item: <em>?<a href="#item">Item</a></em></li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<a href="#guidetypes" id="guidetypes" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/Guide.js#L3">Guide.Types</a></h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>UNDEFINED</td>
+							<td>undefined</td>
+						</tr>
+						<tr>
+							<td>UNKNOWN</td>
+							<td>unknown</td>
+						</tr>
+						<tr>
+							<td>COVER</td>
+							<td>cover</td>
+						</tr>
+						<tr>
+							<td>TITLE_PAGE</td>
+							<td>title-page</td>
+						</tr>
+						<tr>
+							<td>TOC</td>
+							<td>toc</td>
+						</tr>
+						<tr>
+							<td>INDEX</td>
+							<td>index</td>
+						</tr>
+						<tr>
+							<td>GLOSSARY</td>
+							<td>glossary</td>
+						</tr>
+						<tr>
+							<td>ACKNOWLEDGEMENTS</td>
+							<td>acknowledgements</td>
+						</tr>
+						<tr>
+							<td>BIBLIOGRAPHY</td>
+							<td>bibliography</td>
+						</tr>
+						<tr>
+							<td>COLOPHON</td>
+							<td>colophon</td>
+						</tr>
+						<tr>
+							<td>COPYRIGHT_PAGE</td>
+							<td>copyright-page</td>
+						</tr>
+						<tr>
+							<td>DEDICATION</td>
+							<td>dedication</td>
+						</tr>
+						<tr>
+							<td>EPIGRAPH</td>
+							<td>epigraph</td>
+						</tr>
+						<tr>
+							<td>FOREWORD</td>
+							<td>foreword</td>
+						</tr>
+						<tr>
+							<td>LOI</td>
+							<td>loi</td>
+						</tr>
+						<tr>
+							<td>LOT</td>
+							<td>lot</td>
+						</tr>
+						<tr>
+							<td>NOTES</td>
+							<td>notes</td>
+						</tr>
+						<tr>
+							<td>PREFACE</td>
+							<td>preface</td>
+						</tr>
+						<tr>
+							<td>TEXT</td>
+							<td>text</td>
+						</tr>
+				</tbody></table>
+				<p><a id="itemTypes"></a></p>
+				<a href="#item-types" id="item-types" style="color: inherit; text-decoration: none;">
+					<h3>Item Types</h3>
+				</a>
+				<p><a id="item"></a></p>
+				<a href="#item" id="item" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/Item.js">Item</a></h4>
+				</a>
+				<ul>
+					<li>id: <em>?string</em></li>
+					<li>href: <em>?string</em></li>
+					<li>mediaType: <em>?string</em></li>
+					<li>size: <em>?number</em></li>
+					<li>isFileExists: <em>boolean</em> (<strong>size !== undefined</strong>)</li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<p><a id="spineItem"></a></p>
+				<a href="#spineitem-extend-item" id="spineitem-extend-item" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/SpineItem.js">SpineItem</a> (extend <a href="#item">Item</a>)</h4>
+				</a>
+				<ul>
+					<li>index: <em>number</em> (<strong>Default: undefined</strong>)</li>
+					<li>isLinear: <em>boolean</em> (<strong>Default: true</strong>)</li>
+					<li>styles: <em>?<a href="#cssItem">CssItem</a>[]</em></li>
+					<li>first: <em>?<a href="#spineItem">SpineItem</a></em></li>
+					<li>prev: <em>?<a href="#spineItem">SpineItem</a></em></li>
+					<li>next: <em>?<a href="#spineItem">SpineItem</a></em></li>
+				</ul>
+				<p><a id="ncxItem"></a></p>
+				<a href="#ncxitem-extend-item" id="ncxitem-extend-item" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/NcxItem.js">NcxItem</a> (extend <a href="#item">Item</a>)</h4>
+				</a>
+				<ul>
+					<li>navPoints: <em><a href="#navPoint">NavPoint</a>[]</em></li>
+				</ul>
+				<p><a id="cssItem"></a></p>
+				<a href="#cssitem-extend-item" id="cssitem-extend-item" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/CssItem.js">CssItem</a> (extend <a href="#item">Item</a>)</h4>
+				</a>
+				<ul>
+					<li>namespace: <em>string</em></li>
+				</ul>
+				<p><a id="inlineCssItem"></a></p>
+				<a href="#inlinecssitem-extend-cssitem" id="inlinecssitem-extend-cssitem" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/InlineCssItem.js">InlineCssItem</a> (extend <a href="#cssItem">CssItem</a>)</h4>
+				</a>
+				<ul>
+					<li>style: <em>string</em> (<strong>Default: &#39;&#39;</strong>)</li>
+				</ul>
+				<p><a id="imageItem"></a></p>
+				<a href="#imageitem-extend-item" id="imageitem-extend-item" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/ImageItem.js">ImageItem</a> (extend <a href="#item">Item</a>)</h4>
+				</a>
+				<ul>
+					<li>isCover: <em>boolean</em> (<strong>Default: false</strong>)</li>
+				</ul>
+				<p><a id="svgItem"></a></p>
+				<a href="#svgitem-extend-imageitem" id="svgitem-extend-imageitem" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/SvgItem.js">SvgItem</a> (extend <a href="#imageItem">ImageItem</a>)</h4>
+				</a>
+				<p><a id="fontItem"></a></p>
+				<a href="#fontitem-extend-item" id="fontitem-extend-item" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/FontItem.js">FontItem</a> (extend <a href="#item">Item</a>)</h4>
+				</a>
+				<p><a id="deadItem"></a></p>
+				<a href="#deaditem-extend-item" id="deaditem-extend-item" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/DeadItem.js">DeadItem</a> (extend <a href="#item">Item</a>)</h4>
+				</a>
+				<ul>
+					<li>reason: <em>string</em> (<strong>Default: DeadItem.Reason.UNDEFINED</strong>)</li>
+				</ul>
+				<a href="#deaditemreason" id="deaditemreason" style="color: inherit; text-decoration: none;">
+					<h4><a href="./src/model/DeadItem.js#L3">DeadItem.Reason</a></h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>UNDEFINED</td>
+							<td>undefined</td>
+						</tr>
+						<tr>
+							<td>UNKNOWN</td>
+							<td>unknown</td>
+						</tr>
+						<tr>
+							<td>NOT_EXISTS</td>
+							<td>not_exists</td>
+						</tr>
+						<tr>
+							<td>NOT_SPINE</td>
+							<td>not_spine</td>
+						</tr>
+						<tr>
+							<td>NOT_NCX</td>
+							<td>not_ncx</td>
+						</tr>
+						<tr>
+							<td>NOT_SUPPORT_TYPE</td>
+							<td>not_support_type</td>
+						</tr>
+				</tbody></table>
+				<p><a id="navPoint"></a></p>
+				<a href="#navpoint" id="navpoint" style="color: inherit; text-decoration: none;">
+					<h3><a href="./src/model/NavPoint.js">NavPoint</a></h3>
+				</a>
+				<ul>
+					<li>id: <em>?string</em></li>
+					<li>label: <em>?string</em></li>
+					<li>src: <em>?string</em></li>
+					<li>anchor: <em>?string</em></li>
+					<li>depth: <em>number</em> (<strong>Default: 0</strong>)</li>
+					<li>children: <em>NavPoint[]</em></li>
+					<li>spine: <em>?<a href="#spineItem">SpineItem</a></em></li>
+					<li>toRaw(): <em>object</em></li>
+				</ul>
+				<p><a id="version"></a></p>
+				<a href="#version" id="version" style="color: inherit; text-decoration: none;">
+					<h3><a href="../parser-core/src/Version.js">Version</a></h3>
+				</a>
+				<ul>
+					<li>major: <em>number</em></li>
+					<li>minor: <em>number</em></li>
+					<li>patch: <em>number</em></li>
+					<li>toString(): <em>string</em></li>
+				</ul>
+				<p><a id="parseOptions"></a></p>
+				<a href="#parse-options" id="parse-options" style="color: inherit; text-decoration: none;">
+					<h2>Parse Options</h2>
+				</a>
+				<ul>
+					<li><a href="#validatePackage">validatePackage</a></li>
+					<li><a href="#allowNcxFileMissing">allowNcxFileMissing</a></li>
+					<li><a href="#unzipPath">unzipPath</a></li>
+					<li><a href="#overwrite">overwrite</a></li>
+					<li><a href="#parseStyle">parseStyle</a></li>
+					<li><a href="#styleNamespacePrefix">styleNamespacePrefix</a></li>
+					<li><a href="#additionalInlineStyle">additionalInlineStyle</a></li>
+				</ul>
+				<hr>
+				<p><a id="validatePackage"></a></p>
+				<a href="#validatepackage-boolean" id="validatepackage-boolean" style="color: inherit; text-decoration: none;">
+					<h3>validatePackage: <em><code>boolean</code></em></h3>
+				</a>
+				<p>If true, validation package specifications in <a href="http://www.idpf.org/doc_library/epub/OCF_2.0.1_draft.doc">IDPF listed</a> below.</p>
+				<blockquote>
+					<p>used only if input is EPUB file.</p>
+				</blockquote>
+				<ul>
+					<li>Zip header should not corrupt.</li>
+					<li><code>mimetype</code> file must be first file in archive.</li>
+					<li><code>mimetype</code> file should not compressed.</li>
+					<li><code>mimetype</code> file should only contain string <code>application/epub+zip</code>.</li>
+					<li>Should not use extra field feature of ZIP format for mimetype file.</li>
+				</ul>
+				<p><strong>Default:</strong> <code>false</code></p>
+				<hr>
+				<p><a id="allowNcxFileMissing"></a></p>
+				<a href="#allowncxfilemissing-boolean" id="allowncxfilemissing-boolean" style="color: inherit; text-decoration: none;">
+					<h3>allowNcxFileMissing: <em><code>boolean</code></em></h3>
+				</a>
+				<p>If false, stop parsing when NCX file not exists.</p>
+				<p><strong>Default:</strong> <code>true</code></p>
+				<hr>
+				<p><a id="unzipPath"></a></p>
+				<a href="#unzippath-string-1" id="unzippath-string-1" style="color: inherit; text-decoration: none;">
+					<h3>unzipPath: <em><code>?string</code></em></h3>
+				</a>
+				<p>If specified, unzip to that path.</p>
+				<blockquote>
+					<p>only using if input is EPUB file.</p>
+				</blockquote>
+				<p><strong>Default:</strong> <code>undefined</code></p>
+				<hr>
+				<p><a id="overwrite"></a></p>
+				<a href="#overwrite-boolean-1" id="overwrite-boolean-1" style="color: inherit; text-decoration: none;">
+					<h3>overwrite: <em><code>boolean</code></em></h3>
+				</a>
+				<p>If true, overwrite to <a href="#unzipPath">unzipPath</a> when unzip.</p>
+				<blockquote>
+					<p>only using if unzipPath specified.</p>
+				</blockquote>
+				<p><strong>Default:</strong> <code>true</code></p>
+				<hr>
+				<p><a id="parseStyle"></a></p>
+				<a href="#parsestyle-boolean" id="parsestyle-boolean" style="color: inherit; text-decoration: none;">
+					<h3>parseStyle: <em><code>boolean</code></em></h3>
+				</a>
+				<p>If true, styles used for spine is described, and one namespace is given per CSS file or inline style.</p>
+				<p>Otherwise it <a href="#cssItem">CssItem</a><code>.namespace</code>, <a href="#spineItem">SpineItem</a><code>.styles</code> is <code>undefined</code>.</p>
+				<p>In any list, <a href="#inlineCssItem">InlineCssItem</a> is always positioned after <a href="#CssItem">CssItem</a>. (<a href="#book">EpubBook</a><code>.styles</code>, <a href="#book">EpubBook</a><code>.items</code>, <a href="#spineItem">SpineItem</a><code>.styles</code>, ...)</p>
+				<p><strong>Default:</strong> <code>true</code></p>
+				<hr>
+				<p><a id="styleNamespacePrefix"></a></p>
+				<a href="#stylenamespaceprefix-string" id="stylenamespaceprefix-string" style="color: inherit; text-decoration: none;">
+					<h3>styleNamespacePrefix: <em><code>string</code></em></h3>
+				</a>
+				<p>Prepend given string to namespace for identification.</p>
+				<blockquote>
+					<p>only available if parseStyle is true.</p>
+				</blockquote>
+				<p><strong>Default:</strong> <code>&#39;ridi_style&#39;</code></p>
+				<hr>
+				<p><a id="additionalInlineStyle"></a></p>
+				<a href="#additionalinlinestyle-string" id="additionalinlinestyle-string" style="color: inherit; text-decoration: none;">
+					<h3>additionalInlineStyle: <em><code>?string</code></em></h3>
+				</a>
+				<p>If specified, added inline styles to all spines.</p>
+				<blockquote>
+					<p>only available if parseStyle is true.</p>
+				</blockquote>
+				<p><strong>Default:</strong> <code>undefined</code></p>
+				<p><a id="readOptions"></a></p>
+				<a href="#read-options" id="read-options" style="color: inherit; text-decoration: none;">
+					<h2>Read Options</h2>
+				</a>
+				<ul>
+					<li><a href="#force">force</a></li>
+					<li><a href="#basePath">basePath</a></li>
+					<li><a href="#extractBody">extractBody</a></li>
+					<li><a href="#serializedAnchor">serializedAnchor</a></li>
+					<li><a href="#ignoreScript">ignoreScript</a></li>
+					<li><a href="#removeAtrules">removeAtrules</a></li>
+					<li><a href="#removeTagSelector">removeTagSelector</a></li>
+					<li><a href="#removeIdSelector">removeIdSelector</a></li>
+					<li><a href="#removeClassSelector">removeClassSelector</a></li>
+				</ul>
+				<hr>
+				<p><a id="force"></a></p>
+				<a href="#force-boolean" id="force-boolean" style="color: inherit; text-decoration: none;">
+					<h3>force: <em>boolean</em></h3>
+				</a>
+				<p>If true, ignore any exceptions that occur within parser.</p>
+				<p><strong>Default:</strong> <code>false</code></p>
+				<hr>
+				<p><a id="basePath"></a></p>
+				<a href="#basepath-string" id="basepath-string" style="color: inherit; text-decoration: none;">
+					<h3>basePath: <em><code>?string</code></em></h3>
+				</a>
+				<p>If specified, change base path of paths used by spine and css.</p>
+				<p>HTML: <a href="#spineItem">SpineItem</a></p>
+				<pre><code class="language-html">...
+  <span class="hljs-comment">&lt;!-- Before --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../Images/cover.jpg&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- After --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;{basePath}/OEBPS/Images/cover.jpg&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+...</code></pre>
+				<p>CSS: <a href="#cssItem">CssItem</a>, <a href="#inlineCssItem">InlineCssItem</a></p>
+				<pre><code class="language-css"><span class="hljs-comment">/* Before */</span>
+<span class="hljs-keyword">@font-face</span> {
+  <span class="hljs-attribute">font-family</span>: NotoSansRegular;
+  <span class="hljs-attribute">src</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;../Fonts/NotoSans-Regular.ttf&quot;</span>);
+}
+<span class="hljs-comment">/* After */</span>
+<span class="hljs-keyword">@font-face</span> {
+  <span class="hljs-attribute">font-family</span>: NotoSansRegular;
+  <span class="hljs-attribute">src</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;{basePath}/OEBPS/Fonts/NotoSans-Regular.ttf&quot;</span>);
+}</code></pre>
+				<p><strong>Default:</strong> <code>undefined</code></p>
+				<hr>
+				<p><a id="extractBody"></a></p>
+				<a href="#extractbody-booleanfunction" id="extractbody-booleanfunction" style="color: inherit; text-decoration: none;">
+					<h3>extractBody: <em><code>boolean|function</code></em></h3>
+				</a>
+				<p>If true, extract body. Otherwise it returns a full string.
+				If specify a function instead of true, use function to transform body.</p>
+				<p><code>false</code>:</p>
+				<pre><code class="language-js"><span class="hljs-string">&#x27;&lt;!doctype&gt;&lt;html&gt;\n&lt;head&gt;\n&lt;/head&gt;\n&lt;body style=&quot;background-color: #000000;&quot;&gt;\n  &lt;p&gt;Extract style&lt;/p&gt;\n  &lt;img src=\&quot;../Images/api-map.jpg\&quot;/&gt;\n&lt;/body&gt;\n&lt;/html&gt;&#x27;</span></code></pre>
+				<p><code>true</code>:</p>
+				<pre><code class="language-js"><span class="hljs-string">&#x27;&lt;body style=&quot;background-color: #000000;&quot;&gt;\n  &lt;p&gt;Extract style&lt;/p&gt;\n  &lt;img src=\&quot;../Images/api-map.jpg\&quot;/&gt;\n&lt;/body&gt;&#x27;</span></code></pre>
+				<p><code>function</code>:</p>
+				<pre><code class="language-js">readOptions.extractBody = <span class="hljs-function">(<span class="hljs-params">innerHTML, attrs</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> string = attrs.map(<span class="hljs-function">(<span class="hljs-params">attr</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">` <span class="hljs-subst">${attr.key}</span>=\&quot;<span class="hljs-subst">${attr.value}</span>\&quot;`</span>;
+  }).join(<span class="hljs-string">&#x27; &#x27;</span>);
+  <span class="hljs-keyword">return</span> <span class="hljs-string">`&lt;article <span class="hljs-subst">${string}</span>&gt;<span class="hljs-subst">${innerHTML}</span>&lt;/article&gt;`</span>;
+};</code></pre>
+				<pre><code class="language-js"><span class="hljs-string">&#x27;&lt;article style=&quot;background-color: #000000;&quot;&gt;\n  &lt;p&gt;Extract style&lt;/p&gt;\n  &lt;img src=\&quot;../Images/api-map.jpg\&quot;/&gt;\n&lt;/article&gt;&#x27;</span></code></pre>
+				<p><strong>Default:</strong> <code>false</code></p>
+				<hr>
+				<p><a id="serializedAnchor"></a></p>
+				<a href="#serializedanchor-boolean" id="serializedanchor-boolean" style="color: inherit; text-decoration: none;">
+					<h3>serializedAnchor: <em><code>Boolean</code></em></h3>
+				</a>
+				<p>If true, replace file path of anchor in spine with spine index.</p>
+				<pre><code class="language-xml">...
+<span class="hljs-tag">&lt;<span class="hljs-name">spine</span> <span class="hljs-attr">toc</span>=<span class="hljs-string">&quot;ncx&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">itemref</span> <span class="hljs-attr">idref</span>=<span class="hljs-string">&quot;Section0001.xhtml&quot;</span>/&gt;</span> <span class="hljs-comment">&lt;!-- index: 0 --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">itemref</span> <span class="hljs-attr">idref</span>=<span class="hljs-string">&quot;Section0002.xhtml&quot;</span>/&gt;</span> <span class="hljs-comment">&lt;!-- index: 1 --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">itemref</span> <span class="hljs-attr">idref</span>=<span class="hljs-string">&quot;Section0003.xhtml&quot;</span>/&gt;</span> <span class="hljs-comment">&lt;!-- index: 2 --&gt;</span>
+  ...
+<span class="hljs-tag">&lt;/<span class="hljs-name">spine</span>&gt;</span>
+...</code></pre>
+				<pre><code class="language-html"><span class="hljs-comment">&lt;!-- Before --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;./Text/Section0002.xhtml#title&quot;</span>&gt;</span>Chapter 2<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- After --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;1#title&quot;</span>&gt;</span>Chapter 2<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></code></pre>
+				<p><strong>Default:</strong> <code>false</code></p>
+				<hr>
+				<p><a id="ignoreScript"></a></p>
+				<a href="#ignorescript-boolean" id="ignorescript-boolean" style="color: inherit; text-decoration: none;">
+					<h3>ignoreScript: <em><code>boolean</code></em></h3>
+				</a>
+				<p>Ignore all scripts from within HTML.</p>
+				<p><strong>Default:</strong> <code>false</code></p>
+				<hr>
+				<p><a id="removeAtrules"></a></p>
+				<a href="#removeatrules-string" id="removeatrules-string" style="color: inherit; text-decoration: none;">
+					<h3>removeAtrules: <em><code>string[]</code></em></h3>
+				</a>
+				<p>Remove at-rules.</p>
+				<p><strong>Default:</strong> <code>[]</code></p>
+				<hr>
+				<p><a id="removeTagSelector"></a></p>
+				<a href="#removetagselector-string" id="removetagselector-string" style="color: inherit; text-decoration: none;">
+					<h3>removeTagSelector: <em><code>string[]</code></em></h3>
+				</a>
+				<p>Remove selector that point to specified tags.</p>
+				<p><strong>Default:</strong> <code>[]</code></p>
+				<hr>
+				<p><a id="removeIdSelector"></a></p>
+				<a href="#removeidselector-string" id="removeidselector-string" style="color: inherit; text-decoration: none;">
+					<h3>removeIdSelector: <em><code>string[]</code></em></h3>
+				</a>
+				<p>Remove selector that point to specified ids.</p>
+				<p><strong>Default:</strong> <code>[]</code></p>
+				<hr>
+				<p><a id="removeClassSelector"></a></p>
+				<a href="#removeclassselector-string" id="removeclassselector-string" style="color: inherit; text-decoration: none;">
+					<h3>removeClassSelector: <em><code>string[]</code></em></h3>
+				</a>
+				<p>Remove selector that point to specified classes.</p>
+				<p><strong>Default:</strong> <code>[]</code></p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p><a href="https://github.com/ridi/content-parser/packages/epub-parser/LICENSE">MIT</a></p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_epubparser_.html">&quot;<wbr>Epub<wbr>Parser&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_loader_cssloader_.html">&quot;loader/css<wbr>Loader&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_loader_spineloader_.html">&quot;loader/spine<wbr>Loader&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_loader_xmlloader_.html">&quot;loader/xml<wbr>Loader&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_author_.html">&quot;model/<wbr>Author&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_baseepubitem_.html">&quot;model/<wbr>Base<wbr>Epub<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_cssitem_.html">&quot;model/<wbr>Css<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_datetime_.html">&quot;model/<wbr>Date<wbr>Time&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_deaditem_.html">&quot;model/<wbr>Dead<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_epubbook_.html">&quot;model/<wbr>Epub<wbr>Book&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_epubparsecontext_.html">&quot;model/<wbr>Epub<wbr>Parse<wbr>Context&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_epubreadcontext_.html">&quot;model/<wbr>Epub<wbr>Read<wbr>Context&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_fontitem_.html">&quot;model/<wbr>Font<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_guide_.html">&quot;model/<wbr>Guide&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_identifier_.html">&quot;model/<wbr>Identifier&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_imageitem_.html">&quot;model/<wbr>Image<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_inlinecssitem_.html">&quot;model/<wbr>Inline<wbr>Css<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_meta_.html">&quot;model/<wbr>Meta&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_navpoint_.html">&quot;model/<wbr>Nav<wbr>Point&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_ncxitem_.html">&quot;model/<wbr>Ncx<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_spineitem_.html">&quot;model/<wbr>Spine<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_svgitem_.html">&quot;model/<wbr>Svg<wbr>Item&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

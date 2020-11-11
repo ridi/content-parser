@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
+    "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp node_modules yarn.lock",
     "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
     "test": "yarn build && yarn lint && lerna exec --concurrency 1 -- nyc mocha --recursive",
     "type": "lerna exec -- tsc",
+    "type:doc": "lerna exec -- typedoc",
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
@@ -40,6 +41,7 @@
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "sinon": "^9.2.1",
+    "typedoc": "^0.19.2",
     "typescript": "^4.0.5"
   },
   "esm": {
