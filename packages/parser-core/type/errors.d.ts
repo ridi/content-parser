@@ -1,7 +1,7 @@
 /**
  * Create error
- * @param  {ErrorType} type
- * @param  {string[]} args
+ * @param {ErrorType} type
+ * @param {string[]} args
  * @returns {Error}
  */
 export function createError(type: ErrorType, ...args: string[]): Error;

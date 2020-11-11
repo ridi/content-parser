@@ -5,12 +5,16 @@ declare class PdfParser extends Parser {
      */
     static get parseDefaultOptions(): {
         fakeWorker: boolean;
+        unzipPath: string;
+        overwrite: boolean;
     };
     /**
      * Get types of parse options
      */
     static get parseOptionTypes(): {
         fakeWorker: string;
+        unzipPath: string;
+        overwrite: string;
     };
     static get readDefaultOptions(): void;
     static get readOptionTypes(): void;
@@ -32,12 +36,15 @@ declare class PdfParser extends Parser {
      */
     _execute(that: object, fun: Function, args?: any[]): any;
     /**
+     * @typedef {import('@ridi/parser-core/type/Parser').BaseReadContext} BaseReadContext
+     */
+    /**
      * load pdf document and get number of pages
-     * @param {import('@ridi/parser-core/type/Parser').BaseReadContext} context intermediate result
-     * @returns {Promise<import('@ridi/parser-core/type/Parser').BaseReadContext>} return Context containing document and page count
+     * @param {BaseReadContext} context intermediate result
+     * @returns {Promise<BaseReadContext>} return Context containing document and page count
      * @throws {Errors.EPDFJS} pdfjs error
      */
-    _loadDocuemnt(context: import('@ridi/parser-core/type/Parser').BaseReadContext): Promise<import('@ridi/parser-core/type/Parser').BaseReadContext>;
+    _loadDocuemnt(context: import("@ridi/parser-core/type/BaseReadContext").default): Promise<import("@ridi/parser-core/type/BaseReadContext").default>;
     /**
      * Metadata parsing in Document
      * @param {PdfParseContext} context intermediate result

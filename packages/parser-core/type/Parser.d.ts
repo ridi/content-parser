@@ -26,11 +26,6 @@ export type BaseReadOption = {
     force: boolean;
 };
 export type BaseReadOptionType = {
-    /**
-     * /
-     *
-     * /**
-     */
     force: string;
 };
 export type ParserAction = string;
@@ -75,15 +70,15 @@ declare class Parser {
     /**
      * Get default values of read options
      * @static
-     * @returns {BaseReadOption}
+     * @returns {BaseReadOption | void}
      */
-    static get readDefaultOptions(): import("./BaseReadContext").BaseReadOption;
+    static get readDefaultOptions(): void | import("./BaseReadContext").BaseReadOption;
     /**
      * Get types of read option
      * @static
-     * @returns {BaseReadOptionType}
+     * @returns {BaseReadOptionType | void}
      */
-    static get readOptionTypes(): import("./BaseReadContext").BaseReadOptionType;
+    static get readOptionTypes(): void | import("./BaseReadContext").BaseReadOptionType;
     /**
      * Create new Parser
      * @param {string} input file or directory

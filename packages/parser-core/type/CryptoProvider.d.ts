@@ -31,13 +31,6 @@ export type Purpose = {
 declare class CryptoProvider {
     isStreamMode: boolean;
     /**
-     * Size of data to process at once
-     *
-     * `null` means use nodejs default (default: 65535)
-     * @returns {number}
-     */
-    get bufferSize(): number;
-    /**
      * Create or reuse AesCryptor by condition
      * @abstract
      * @param {string} filePath

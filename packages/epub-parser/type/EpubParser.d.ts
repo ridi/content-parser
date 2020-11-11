@@ -25,23 +25,51 @@ declare class EpubParser extends Parser {
         overwrite: string;
     };
     /**
+      * @typedef {Object} EpubReadOptionExtra
+      * @property {string} basePath
+      * @property {boolean} extractBody
+      * @property {boolean} serializedAnchor
+      * @property {boolean} ignoreScript
+      * @property {string[]} removeAtrules
+      * @property {string[]} removeTagSelector
+      * @property {string[]} removeIdSelector
+      * @property {string[]} removeClassSelector
+      *
+      * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOption & EpubReadOptionExtra} EpubReadOption
+      */
+    /**
      * Get default values of read options
+     * @returns {EpubReadOption}
      */
-    static get readDefaultOptions(): {
-        basePath: any;
+    static get readDefaultOptions(): import("@ridi/parser-core/type/BaseReadContext").BaseReadOption & {
+        basePath: string;
         extractBody: boolean;
         serializedAnchor: boolean;
         ignoreScript: boolean;
-        removeAtrules: any[];
-        removeTagSelector: any[];
-        removeIdSelector: any[];
-        removeClassSelector: any[];
-        force: boolean;
+        removeAtrules: string[];
+        removeTagSelector: string[];
+        removeIdSelector: string[];
+        removeClassSelector: string[];
     };
     /**
-     * Get types of read option
+     * @typedef {Object} EpubParserOptionTypeExtra
+     * @property {string} basePath
+     * @property {string} extractBody
+     * @property {string} serializedAnchor
+     * @property {string} ignoreScript
+     * @property {string} removeAtrules
+     * @property {string} removeTagSelector
+     * @property {string} removeIdSelector
+     * @property {string} removeClassSelector
+     *
+     * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOptionType &
+     *  EpubParserOptionTypeExtra} EpubParserOptionType
      */
-    static get readOptionTypes(): {
+    /**
+     * Get types of read option
+     * @returns {EpubParserOptionType}
+     */
+    static get readOptionTypes(): import("@ridi/parser-core/type/BaseReadContext").BaseReadOptionType & {
         basePath: string;
         extractBody: string;
         serializedAnchor: string;
@@ -50,7 +78,6 @@ declare class EpubParser extends Parser {
         removeTagSelector: string;
         removeIdSelector: string;
         removeClassSelector: string;
-        force: string;
     };
     /**
      * Create new EpubParser

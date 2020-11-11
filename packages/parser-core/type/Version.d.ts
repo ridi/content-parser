@@ -2,7 +2,7 @@ export default Version;
 declare class Version {
     /**
      * Construct Version object with version.
-     * @param  {string} version
+     * @param {string} version
      */
     constructor(version: string);
     /**

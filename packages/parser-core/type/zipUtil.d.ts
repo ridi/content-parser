@@ -1,7 +1,7 @@
 /**
- * @param  {string | Buffer} file
- * @param  {CryptoProvider} cryptoProvider
- * @param  {Logger} logger
+ * @param {string | Buffer} file
+ * @param {CryptoProvider} cryptoProvider
+ * @param {Logger} logger
  * @returns {ZipFileInformation}
  * @throws {Errors.ENOENT} When file can't be found
  */

@@ -23,13 +23,14 @@ export namespace MatchOption {
     const ENDSWITH: number;
 }
 /**
- * @param  {string[]} array=[]
- * @param  {string} string=''
- * @param  {MatchOption} matchOption=MatchOption.MATCHING
+ * @param {string[]} array=[]
+ * @param {string} string=''
+ * @param {MatchOption} matchOption=MatchOption.MATCHING
+ * @returns {boolean}
  */
 export function stringContains(array?: string[], string?: string, matchOption?: MatchOption): boolean;
 /**
  * Decode URI
- * @param  {string} uri
+ * @param {string} uri
  */
 export function safeDecodeURI(uri: string): string;

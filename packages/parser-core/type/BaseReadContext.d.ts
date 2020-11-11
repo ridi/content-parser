@@ -3,11 +3,6 @@ export type BaseReadOption = {
     force: boolean;
 };
 export type BaseReadOptionType = {
-    /**
-     * /
-     *
-     * /**
-     */
     force: string;
 };
 /**
@@ -16,11 +11,7 @@ export type BaseReadOptionType = {
   *
   * @typedef {Object} BaseReadOptionType
   * @property {string} force
-* /
-
-/**
- * @class
- */
+  */
 declare class BaseReadContext {
     /**
      * @pblic

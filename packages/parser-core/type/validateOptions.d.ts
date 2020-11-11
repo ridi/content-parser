@@ -1,8 +1,8 @@
 /**
  * Validate option with interface. it will return void if it passes, throw error otherwise.
- * @param  {T} options
- * @param  {S} types
- * @param  {boolean} strict
+ * @param {T} options
+ * @param {S} types
+ * @param {boolean} strict
  * @template T, S
  * @returns {void}
  */

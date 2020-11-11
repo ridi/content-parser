@@ -18,8 +18,8 @@ export type ModeList = {
 declare class AesCryptor {
     /**
      * Construct AesCryptor
-     * @param  {ModeObject} mode Crypto mode
-     * @param  {ModeConfig} config Crypto config
+     * @param {ModeObject} mode Crypto mode
+     * @param {ModeConfig} config Crypto config
      */
     constructor(mode: ModeObject, config: ModeConfig);
     /**
@@ -37,8 +37,8 @@ declare class AesCryptor {
     /**
      * Make an operator
      * @private
-     * @param  {ModeObject} mode
-     * @param  {ModeConfig} config
+     * @param {ModeObject} mode
+     * @param {ModeConfig} config
      * @returns {Operator} Operator
      */
     private makeOperator;

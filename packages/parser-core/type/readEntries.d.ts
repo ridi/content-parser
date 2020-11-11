@@ -3,15 +3,12 @@
  */
 /**
  * @async
- * @param  {string} input
- * @param  {CryptoProvider} cryptoProvider
- * @param  {import('./Logger').default} logger
+ * @param {string} input
+ * @param {CryptoProvider} cryptoProvider
+ * @param {import('./Logger').default} logger
  * @returns {Promise<ReadEntriesReturnType>}
  */
 export default function readEntries(input: string, cryptoProvider: CryptoProvider, logger: import('./Logger').default): Promise<ReadEntriesReturnType>;
-export type ReadStreamOption = {
-    highWaterMark: number;
-};
 export type FileEntryObject<T, S> = {
     first: S;
     length: number;
