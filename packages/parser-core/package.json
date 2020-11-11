@@ -25,7 +25,6 @@
     "event-stream": "3.3.4",
     "fs-extra": "^9.0.1",
     "sha1": "^1.1.1",
-    "stream-chopper": "^3.0.1",
     "string-format": "^2.0.0",
     "string-natural-compare": "^3.0.1"
   },

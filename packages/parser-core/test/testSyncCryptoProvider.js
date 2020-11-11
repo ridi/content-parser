@@ -11,8 +11,6 @@ const { Mode, Padding } = AesCryptor;
 class TestSyncCryptoProvider extends CryptoProvider {
   isStreamMode = false;
 
-  get bufferSize() { return null; }
-
   constructor(key) {
     super();
   }

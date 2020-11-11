@@ -1,5 +1,4 @@
 import fs from 'fs-extra';
-import StreamChopper from 'stream-chopper';
 import AdmZip from 'adm-zip';
 import { Readable } from 'stream';
 
@@ -38,18 +37,6 @@ function find(entryPath) {
 }
 
 /**
- * Get a buffersize
- * @param {CryptoProvider} cryptoProvider
- * @returns {number} return buffer size, undefined if no CryptoProvider provided
- */
-function _getBufferSize(cryptoProvider) {
-  if (isExists(cryptoProvider)) {
-    return cryptoProvider.bufferSize;
-  }
-  return undefined;
-}
-
-/**
  *
  * @async
  * @this {ZipFileInformation}
@@ -60,30 +47,15 @@ function _getBufferSize(cryptoProvider) {
 async function getFile(entry, options = { encoding: undefined, end: undefined }) {
   const { encoding, end } = options;
   let file = await new Promise((resolveFile) => {
-    const bufferSize = _getBufferSize(this.cryptoProvider);
     const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     let data = Buffer.from([]);
-    const getReadable = new Promise(resolve => {
-      if (isExists(bufferSize)) {
-        const streamChopper = new StreamChopper({
-          size: Math.min(bufferSize, entry.uncompressedSize),
-          time: 1000,                 // or when it's been open for 1s,
-          type: StreamChopper.overflow, // but allow stream to exceed size slightly});
-        });
-        streamChopper.on('stream', (stream) => { resolve(stream); });
-        streamChopper.write(entry.getData());
-      } else {
-        resolve(Readable.from(entry.getData()));
-      }
-    });
-    getReadable.then(readable => {
-      readable
-        .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-        .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode,
-          createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
-        .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
-        .on('end', () => { resolveFile(data); });
-    });
+    const readable = Readable.from(entry.getData());
+    readable
+      .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+      .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode,
+        createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+      .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+      .on('end', () => { resolveFile(data); });
   });
   if (this.cryptoProvider && !this.cryptoProvider.isStreamMode) {
     file = this.cryptoProvider.run(file, entry.path, CryptoProvider.Purpose.READ_IN_DIR);

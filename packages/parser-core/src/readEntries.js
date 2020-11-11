@@ -14,22 +14,6 @@ import { isExists } from './typecheck';
 import openZip from './zipUtil';
 
 /**
- * @typedef {Object} ReadStreamOption
- * @property {number} highWaterMark
- */
-/**
- * Get read stream option
- * @param {CryptoProvider} cryptoProvider
- * @returns {ReadStreamOption}
- */
-function getReadStreamOptions(cryptoProvider) {
-  let options = {};
-  if (isExists(cryptoProvider) && isExists(cryptoProvider.bufferSize)) {
-    options = { highWaterMark: cryptoProvider.bufferSize };
-  }
-  return options;
-}
-/**
  * @typedef {Object} FileEntryObject
  * @property {S} first
  * @property {number} length
@@ -134,7 +118,7 @@ function fromDirectory(dir, cryptoProvider) {
         const { encoding, end } = options;
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
-            const stream = fs.createReadStream(fullPath, getReadStreamOptions(cryptoProvider));
+            const stream = fs.createReadStream(fullPath);
             const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
@@ -182,7 +166,7 @@ function fromFile(filePath, cryptoProvider) {
     getFile: async (options = {}) => {
       const { encoding, end } = options;
       let file = await new Promise((resolve, reject) => {
-        const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
+        const stream = fs.createReadStream(filePath);
         let data = Buffer.from([]);
         const totalSize = Math.min(end || Infinity, size);
         stream

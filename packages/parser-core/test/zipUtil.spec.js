@@ -51,17 +51,6 @@ describe('Util - Zip', () => {
     });
   });
   describe('works with CryptoProvider', () => {
-    it(': SyncCryptoProvider', async () => {
-      const testCryptoProvider = new TestSyncStreamCryptoProvider();
-      const bufferSize = testCryptoProvider.bufferSize;
-      expect(bufferSize).to.be.not.null;
-      const zip = await openZip(Paths.DEFAULT, testCryptoProvider);
-      const entry = zip.find('mimetype');
-      entry.should.be.not.undefined.and.not.null;
-      const buffer = await zip.getFile(entry);
-      Buffer.isBuffer(buffer).should.be.true;
-      expect(buffer).to.deep.equal(entry.getData());
-    })
     it(': AsyncCryptoProvider', async () => {
       const testCryptoProvider = new TestAsyncCryptoProvider();
       const zip = await openZip(Paths.DEFAULT, testCryptoProvider);

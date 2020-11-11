@@ -130,13 +130,6 @@ describe('Util - entry manager', () => {
       file.should.not.null;
     });
 
-    it('Read file with bufferSize option from directory', async () => {
-      const entries = await readEntries(Paths.UNZIPPED_DEFAULT);
-      const entry = entries.get(1);
-      const file = await entry.getFile({ bufferSize: 1024 });
-      file.length.should.equal(313144);
-    });
-
     describe('Error Situation', () => {
       it('Invalid file path', () => {
         return readEntries('?!').catch((err) => {
