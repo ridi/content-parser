@@ -5,7 +5,6 @@ packages/**/temp
 
 # Editor
 .idea
-.vscode
 
 # Logs
 logs
@@ -23,3 +22,4 @@ node_modules
 # Test resource directories
 decryptedDefault
 
+.DS_Store
