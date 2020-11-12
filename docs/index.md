@@ -3,35 +3,35 @@
 
 # Packages
 
-## [@ridi/parser-core](../parser-core/index.html)
+## [@ridi/parser-core](/parser-core/index.html)
 
 > Utilities for parsers
 
 [![NPM version](https://badge.fury.io/js/%40ridi%2Fparser-core.svg)](https://badge.fury.io/js/%40ridi%2Fparser-core)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fparser-core.svg)](https://npm.im/%40ridi%2Fparser-core)
 
-## [@ridi/content-parser](../content-parser/index.html)
+## [@ridi/content-parser](/content-parser/index.html)
 
 > Content data parser for Ridibooks services (epub-parser + comic-parser + pdf-parser)
 
 [![NPM version](https://badge.fury.io/js/%40ridi%2Fcontent-parser.svg)](https://badge.fury.io/js/%40ridi%2Fcontent-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcontent-parser.svg)](https://npm.im/%40ridi%2Fcontent-parser)
 
-## [@ridi/epub-parser](../epub-parser/index.html)
+## [@ridi/epub-parser](/epub-parser/index.html)
 
 > Common EPUB2 data parser for Ridibooks services
 
 [![NPM version](https://badge.fury.io/js/%40ridi%2Fepub-parser.svg)](https://badge.fury.io/js/%40ridi%2Fepub-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fepub-parser.svg)](https://npm.im/%40ridi%2Fepub-parser)
 
-## [@ridi/comic-parser](../comic-parser/index.html)
+## [@ridi/comic-parser](/comic-parser/index.html)
 
 > Common comic data parser for Ridibooks services
 
 [![NPM version](https://badge.fury.io/js/%40ridi%2Fcomic-parser.svg)](https://badge.fury.io/js/%40ridi%2Fcomic-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcomic-parser.svg)](https://npm.im/%40ridi%2Fcomic-parser)
 
-## [@ridi/pdf-parser](../pdf-parser/index.html)
+## [@ridi/pdf-parser](/pdf-parser/index.html)
 
 > Common PDF data parser for Ridibooks services
 
