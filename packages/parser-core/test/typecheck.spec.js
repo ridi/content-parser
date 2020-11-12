@@ -12,7 +12,7 @@ describe('Util - Type check', () => {
     getType(Array, true).should.equal('Array');
     getType(new Array(), true).should.equal('Array');
     getType({}, true).should.equal('Object');
-    getType(new EpubBook(), true).should.equal('Book');
+    getType(new EpubBook(), true).should.equal('EpubBook');
     getType('string', true).should.equal('String');
     getType([], true).should.equal('Array');
     getType(5, true).should.equal('Number');

@@ -10,11 +10,6 @@ export function createError(type: ErrorType, ...args: string[]): Error;
  * @returns {Error}
  */
 export function mustOverride(): Error;
-export default Errors;
-export type ErrorType = {
-    code: string;
-    format: string;
-};
 export type Errors = {
     ENOENT: ErrorType;
     ENOFILE: ErrorType;
@@ -28,7 +23,11 @@ export type Errors = {
     EPDFJS: ErrorType;
     ENOIMP: ErrorType;
 };
-declare namespace Errors {
+export type ErrorType = {
+    code: string;
+    format: string;
+};
+export namespace Errors {
     namespace ENOENT {
         const code: string;
         const format: string;

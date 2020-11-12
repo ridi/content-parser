@@ -9,8 +9,8 @@ import { isExists } from './typecheck';
  */
 
 /**
-* @enum {MatchOption}
-*/
+ * @type {MatchOption}
+ */
 const MatchOption = {
   MATCHING: 0,
   CONTAINING: 1,

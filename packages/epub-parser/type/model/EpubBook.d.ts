@@ -1,5 +1,5 @@
-export default Book;
-declare class Book extends BaseBook {
+export default EpubBook;
+declare class EpubBook extends BaseBook {
     /**
      * @typedef {Object} EpubBookExtra
      * @property {string} [titles]
