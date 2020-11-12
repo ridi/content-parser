@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp node_modules yarn.lock",
+    "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
     "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
     "test": "yarn build && yarn lint && lerna exec --concurrency 1 -- nyc mocha --recursive",
     "type": "lerna exec -- tsc",
