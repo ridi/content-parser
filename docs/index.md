@@ -1,37 +1,84 @@
-## Welcome to GitHub Pages
+[![Build Status](https://travis-ci.com/ridi/content-parser.svg?branch=master)](https://travis-ci.com/ridi/content-parser)
+[![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 
-You can use the [editor on GitHub](https://github.com/ridi/content-parser/edit/feature/docs/docs/index.md) to maintain and preview the content for your website in Markdown files.
+# Packages
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## [@ridi/parser-core](../parser-core/index.html)
 
-### Markdown
+> Utilities for parsers
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+[![NPM version](https://badge.fury.io/js/%40ridi%2Fparser-core.svg)](https://badge.fury.io/js/%40ridi%2Fparser-core)
+[![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fparser-core.svg)](https://npm.im/%40ridi%2Fparser-core)
 
-```markdown
-Syntax highlighted code block
+## [@ridi/content-parser](../content-parser/index.html)
 
-# Header 1
-## Header 2
-### Header 3
+> Content data parser for Ridibooks services (epub-parser + comic-parser + pdf-parser)
 
-- Bulleted
-- List
+[![NPM version](https://badge.fury.io/js/%40ridi%2Fcontent-parser.svg)](https://badge.fury.io/js/%40ridi%2Fcontent-parser)
+[![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcontent-parser.svg)](https://npm.im/%40ridi%2Fcontent-parser)
 
-1. Numbered
-2. List
+## [@ridi/epub-parser](../epub-parser/index.html)
 
-**Bold** and _Italic_ and `Code` text
+> Common EPUB2 data parser for Ridibooks services
 
-[Link](url) and ![Image](src)
+[![NPM version](https://badge.fury.io/js/%40ridi%2Fepub-parser.svg)](https://badge.fury.io/js/%40ridi%2Fepub-parser)
+[![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fepub-parser.svg)](https://npm.im/%40ridi%2Fepub-parser)
+
+## [@ridi/comic-parser](../comic-parser/index.html)
+
+> Common comic data parser for Ridibooks services
+
+[![NPM version](https://badge.fury.io/js/%40ridi%2Fcomic-parser.svg)](https://badge.fury.io/js/%40ridi%2Fcomic-parser)
+[![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fcomic-parser.svg)](https://npm.im/%40ridi%2Fcomic-parser)
+
+## [@ridi/pdf-parser](../pdf-parser/index.html)
+
+> Common PDF data parser for Ridibooks services
+
+[![NPM version](https://badge.fury.io/js/%40ridi%2Fpdf-parser.svg)](https://badge.fury.io/js/%40ridi%2Fpdf-parser)
+[![NPM total downloads](https://img.shields.io/npm/dt/%40ridi%2Fpdf-parser.svg)](https://npm.im/%40ridi%2Fpdf-parser)
+
+# Development
+
+## Setup
+
+```
+$ git clone git@github.com:ridi/content-parser.git
+$ yarn
+```
+> [yarn](https://yarnpkg.com) required.
+
+## Commands
+
+If you want install the development environment or add a new dependency to the package or add a new package, run the following command:
+
+```
+$ yarn
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+If you want only build, the following command:
 
-### Jekyll Themes
+```
+$ yarn build
+```
+> `yarn clean` are preceded.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ridi/content-parser/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+If you want only lint, the following command:
 
-### Support or Contact
+```
+$ yarn lint
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+To test each package, use the following command:
+
+```
+$ yarn test
+```
+> `yarn build` and `yarn lint` are preceded.
+
+To deploy the new version, use the following command:
+
+```
+$ yarn bump
+```
+> Version names must conform to [SemVer](https://semver.org).
