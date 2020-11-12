@@ -5,7 +5,7 @@ import {
 } from '@ridi/parser-core';
 
 import EpubParser from './EpubParser';
-import Book from './model/EpubBook';
+import EpubBook from './model/EpubBook';
 
 export {
   EpubParser,
@@ -14,5 +14,5 @@ export {
   CryptoProvider,
   AesCryptor,
   Hash,
-  Book as EpubBook,
+  EpubBook,
 };

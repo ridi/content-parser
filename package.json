@@ -4,7 +4,7 @@
     "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
     "test": "yarn build && yarn lint && lerna exec --concurrency 1 -- nyc mocha --recursive",
     "type": "lerna exec -- tsc",
-    "type:doc": "lerna exec -- typedoc",
+    "type:doc": "lerna exec --scope @ridi/content-parser -- typedoc",
     "lint": "eslint packages",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
@@ -42,6 +42,7 @@
     "rimraf": "^3.0.2",
     "sinon": "^9.2.1",
     "typedoc": "^0.19.2",
+    "typedoc-plugin-external-module-name": "^4.0.3",
     "typescript": "^4.0.5"
   },
   "esm": {

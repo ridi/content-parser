@@ -22,7 +22,7 @@ import format from 'string-format';
  */
 
 /**
- * @enum {Errors}
+ * @type {Errors}
  */
 const Errors = {
   ENOENT: { code: 'ENOENT', format: 'ENOENT: no such file or directory. (path: {0})' },

@@ -5,7 +5,7 @@ import {
 } from '@ridi/parser-core';
 
 import PdfParser from './PdfParser';
-import Book from './model/PdfBook';
+import PdfBook from './model/PdfBook';
 
 export {
   PdfParser,
@@ -14,5 +14,5 @@ export {
   CryptoProvider,
   AesCryptor,
   Hash,
-  Book as PdfBook,
+  PdfBook,
 };

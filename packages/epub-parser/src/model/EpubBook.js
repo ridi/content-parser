@@ -72,7 +72,7 @@ function getItemTypeFromString(string) {
 }
 
 /* eslint-disable new-cap */
-class Book extends BaseBook {
+class EpubBook extends BaseBook {
   /**
    * @type {string}
    */
@@ -298,4 +298,4 @@ class Book extends BaseBook {
   }
 }
 
-export default Book;
+export default EpubBook;

@@ -16,12 +16,17 @@ export type MatchOption = {
      */
     ENDSWITH: number;
 };
-export namespace MatchOption {
-    const MATCHING: number;
-    const CONTAINING: number;
-    const STARTSWITH: number;
-    const ENDSWITH: number;
-}
+/**
+ * @typedef MatchOption
+ * @property {number} MATCHING "0"
+ * @property {number} CONTAINING "1"
+ * @property {number} STARTSWITH "2"
+ * @property {number} ENDSWITH "3"
+ */
+/**
+ * @type {MatchOption}
+ */
+export const MatchOption: MatchOption;
 /**
  * @param {string[]} array=[]
  * @param {string} string=''
