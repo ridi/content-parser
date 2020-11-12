@@ -1,5 +1,9 @@
 {
-  "inputFiles": ["./src"],
+  "inputFiles": ["./type"],
   "mode": "modules",
-  "out": "../../docs/epub-parser"
+  "out": "../../docs/epub-parser",
+  "exclude": ["./node_modules/**"],
+  "externalPattern": ["node_modules/**"],
+  "includeDeclarations": true,
+  "excludeExternals": true
 }

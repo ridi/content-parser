@@ -1,5 +1,9 @@
 {
-  "inputFiles": ["./src"],
+  "inputFiles": ["./type"],
   "mode": "modules",
-  "out": "../../docs/pdf-parser"
+  "out": "../../docs/pdf-parser",
+  "exclude": ["./node_modules/**"],
+  "externalPattern": ["node_modules/**"],
+  "includeDeclarations": true,
+  "excludeExternals": true
 }
