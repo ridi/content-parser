@@ -15,7 +15,7 @@ export type ModeList = {
     OFB: ModeObject;
     CTR: ModeObject;
 };
-declare class AesCryptor {
+declare class AesCryptor extends BaseCryptor {
     /**
      * Construct AesCryptor
      * @param {ModeObject} mode Crypto mode
@@ -42,31 +42,6 @@ declare class AesCryptor {
      * @returns {Operator} Operator
      */
     private makeOperator;
-    /**
-     * @typedef {Object} CryptOption
-     * @property {import('./cryptoUtil').PaddingObject} padding
-     * @property {import('./cryptoUtil').EncodingObject} encoding
-     */
-    /**
-     * Encrypt string
-     * @param {string} data
-     * @param {CryptOption} options
-     * @returns {string} encrypted string
-     */
-    encrypt(data: string, options?: {
-        padding: import('./cryptoUtil').PaddingObject;
-        encoding: import('./cryptoUtil').EncodingObject;
-    }): string;
-    /**
-     * Decrupt string
-     * @param {string} data
-     * @param {CryptOption} options
-     * @returns {string} decrypted string
-     */
-    decrypt(data: string, options?: {
-        padding: import('./cryptoUtil').PaddingObject;
-        encoding: import('./cryptoUtil').EncodingObject;
-    }): string;
 }
 declare namespace AesCryptor {
     export { Padding };
@@ -92,4 +67,5 @@ import { Encoding } from "./cryptoUtil";
  * @type {ModeList}
 */
 export const Mode: ModeList;
+import BaseCryptor from "./BaseCryptor";
 export { Padding, Encoding };

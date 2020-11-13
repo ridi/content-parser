@@ -12,7 +12,7 @@ import BaseParseContext from "./BaseParseContext";
 import BaseReadContext from "./BaseReadContext";
 import AesCryptor from "./AesCryptor";
 import CryptoProvider from "./CryptoProvider";
-import { Errors } from "./errors";
+import Errors from "./errors";
 import { createError } from "./errors";
 import { mustOverride } from "./errors";
 import { Hash } from "./cryptoUtil";
