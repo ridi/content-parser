@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+
+## [0.7.1 (2020-11-13)]
+
+### Added
+* Types for Typescript support.
+* Documentations
+
 ## [0.7.0 (2020-10-31)]
 
 ### Changed
@@ -313,7 +320,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.7.0...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.7.1...HEAD
+[0.7.1 (2020-11-13)]: https://github.com/ridi/content-parser/compare/0.7.0...0.7.1
 [0.7.0 (2020-10-31)]: https://github.com/ridi/content-parser/compare/0.6.15...0.7.0
 [0.6.15 (2020-09-05)]: https://github.com/ridi/content-parser/compare/0.6.14...0.6.15
 [0.6.14 (2020-03-16)]: https://github.com/ridi/content-parser/compare/0.6.13...0.6.14
