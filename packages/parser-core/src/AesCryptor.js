@@ -6,6 +6,7 @@ import mergeObjects from './mergeObjects';
 import { stringContains } from './stringUtil';
 import validateOptions from './validateOptions';
 import { isExists, isObject, isString } from './typecheck';
+import BaseCryptor from './BaseCryptor';
 
 const { mode: aesMode, AES } = CryptoJs;
 
@@ -75,7 +76,7 @@ const Mode = Object.freeze({
   },
 });
 
-class AesCryptor {
+class AesCryptor extends BaseCryptor {
   /**
    * @typedef {(data: string | CryptoJs.lib.WordArray) => CryptoJs.lib.WordArray} EncodeAndDecode
    * @typedef {Object} Operator
@@ -96,6 +97,7 @@ class AesCryptor {
    * @param {ModeConfig} config Crypto config
    */
   constructor(mode, config) {
+    super();
     if (!isExists(mode)) {
       throw createError(Errors.EREQPRM, 'mode');
     } else if (!isObject(mode) || !stringContains(Object.keys(Mode), mode.name)) {
@@ -263,7 +265,6 @@ AesCryptor.Encoding = Encoding;
 AesCryptor.Mode = Mode;
 
 export default AesCryptor;
-
 export {
   Padding,
   Encoding,
