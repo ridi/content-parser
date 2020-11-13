@@ -1,4 +1,4 @@
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
 import sha1 from 'sha1';
@@ -6,10 +6,19 @@ import sha1 from 'sha1';
 import { isExists, isString } from './typecheck';
 import Errors, { createError } from './errors';
 
+/**
+ * Get path to store cache
+ * @returns {string} Path of a temp directory
+ */
 export function getCachePath() {
   return path.join(os.tmpdir(), 'parser-cache');
 }
 
+/**
+ * Get a path to a stored cache
+ * @param {string} key Key of a cache file
+ * @returns {string} Path to a cache file
+ */
 function getCacheFilePath(key) {
   if (!isExists(key) || !isString(key)) {
     throw createError(Errors.EINVAL, 'key', 'key', key);
@@ -17,13 +26,21 @@ function getCacheFilePath(key) {
   return path.join(getCachePath(), `${sha1(key)}.dat`);
 }
 
+/**
+ * Remove the cache file with a key
+ * @param {string} key Key of a cache file
+ * @returns {void}
+ */
 export function removeCacheFile(key) {
   const filePath = getCacheFilePath(key);
   if (fs.existsSync(filePath)) {
     fs.removeSync(filePath);
   }
 }
-
+/**
+ * Remove every cache file
+ * @returns {void}
+ */
 export function removeAllCacheFiles() {
   const cachePath = getCachePath();
   if (fs.existsSync(cachePath)) {
@@ -31,6 +48,11 @@ export function removeAllCacheFiles() {
   }
 }
 
+/**
+ * Read the cache file with a key
+ * @param {string} key Key of a cache file
+ * @returns {string|null} `null` if cache does not exists, `string` otherwise
+ */
 export function readCacheFile(key) {
   const filePath = getCacheFilePath(key);
   if (!fs.existsSync(filePath)) {
@@ -39,6 +61,13 @@ export function readCacheFile(key) {
   return fs.readFileSync(filePath, { encoding: 'utf8' });
 }
 
+/**
+ * Write cache file
+ * @param {string} key Key of a cache file
+ * @param {string | NodeJS.ArrayBufferView} message Message to store
+ * @param {boolean} [overwrite=false]
+ * @returns {void}
+ */
 export function writeCacheFile(key, message, overwrite = false) {
   const filePath = getCacheFilePath(key);
   const cachePath = path.dirname(filePath);

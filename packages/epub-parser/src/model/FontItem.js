@@ -1,8 +1,12 @@
 import { mergeObjects } from '@ridi/parser-core';
 
-import Item from './Item';
+import BaseEpubItem from './BaseEpubItem';
 
-class FontItem extends Item {
+class FontItem extends BaseEpubItem {
+  /**
+   * @param {import('./BaseEpubItem').BaseEpubItemParam} [rawObj]
+   * @param {boolean} [freeze]
+  */
   /* istanbul ignore next */
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);

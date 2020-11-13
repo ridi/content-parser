@@ -24,9 +24,11 @@
     "crypto"
   ],
   "files": [
-    "lib"
+    "lib",
+    "type"
   ],
   "main": "lib/index.js",
+  "types": "type/index.d.ts",
   "dependencies": {
     "@ridi/parser-core": "0.7.0",
     "css-tree": "^1.0.0-alpha.39",

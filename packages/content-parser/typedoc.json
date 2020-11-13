@@ -1,0 +1,15 @@
+{
+  "inputFiles": [
+    "./node_modules/@ridi/comic-parser/type",
+    "./node_modules/@ridi/epub-parser/type",
+    "./node_modules/@ridi/pdf-parser/type",
+    "./node_modules/@ridi/parser-core/type"
+  ],
+  "mode": "modules",
+  "out": "../../docs",
+  "exclude": ["./node_modules/**/node_modules"],
+  "includeDeclarations": true,
+  "excludeExternals": true,
+  "name": "@ridi/content-parser",
+  "readme": "./readme.md"
+}

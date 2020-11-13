@@ -1,7 +1,7 @@
 import { isExists } from '@ridi/parser-core';
 
-import Book from '../src/model/Book';
-import Item from '../src/model/Item';
+import Book from '../src/model/ComicBook';
+import Item from '../src/model/ComicItem';
 
 export default function validationBook(book, expectedBook, parseOptions = {}) {
   book.should.be.an.instanceOf(Book);
@@ -12,7 +12,7 @@ export default function validationBook(book, expectedBook, parseOptions = {}) {
     const { parseImageSize } = parseOptions;
     item.index.should.equal(expectedItem.index);
     item.path.should.equal(expectedItem.path);
-    item.fileSize.should.equal(expectedItem.fileSize);
+    item.size.should.equal(expectedItem.size);
     if (parseImageSize === true || Number.isInteger(parseImageSize)) {
       item.width.should.equal(expectedItem.width);
       item.height.should.equal(expectedItem.height);

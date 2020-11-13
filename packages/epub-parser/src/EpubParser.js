@@ -9,7 +9,7 @@ import {
 
 import { parse as parseHtml } from 'himalaya';
 
-import Book from './model/Book';
+import EpubBook from './model/EpubBook';
 import CssItem from './model/CssItem';
 import cssLoader from './loader/cssLoader';
 import DeadItem from './model/DeadItem';
@@ -17,13 +17,13 @@ import FontItem from './model/FontItem';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
 import InlineCssItem from './model/InlineCssItem';
-import Item from './model/Item';
+import BaseEpubItem from './model/BaseEpubItem';
 import NcxItem from './model/NcxItem';
-import ReadContext from './model/ReadContext';
+import EpubReadContext from './model/EpubReadContext';
 import SpineItem from './model/SpineItem';
 import spineLoader from './loader/spineLoader';
 import SvgItem from './model/SvgItem';
-import ParseContext from './model/ParseContext';
+import EpubParseContext from './model/EpubParseContext';
 import xmlLoader, { getValue, getValues, textNodeName } from './loader/xmlLoader';
 
 class EpubParser extends Parser {
@@ -68,7 +68,22 @@ class EpubParser extends Parser {
   }
 
   /**
+    * @typedef {Object} EpubReadOptionExtra
+    * @property {string} basePath
+    * @property {boolean} extractBody
+    * @property {boolean} serializedAnchor
+    * @property {boolean} ignoreScript
+    * @property {string[]} removeAtrules
+    * @property {string[]} removeTagSelector
+    * @property {string[]} removeIdSelector
+    * @property {string[]} removeClassSelector
+    *
+    * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOption & EpubReadOptionExtra} EpubReadOption
+    */
+
+  /**
    * Get default values of read options
+   * @returns {EpubReadOption}
    */
   static get readDefaultOptions() {
     return {
@@ -96,7 +111,22 @@ class EpubParser extends Parser {
   }
 
   /**
+   * @typedef {Object} EpubParserOptionTypeExtra
+   * @property {string} basePath
+   * @property {string} extractBody
+   * @property {string} serializedAnchor
+   * @property {string} ignoreScript
+   * @property {string} removeAtrules
+   * @property {string} removeTagSelector
+   * @property {string} removeIdSelector
+   * @property {string} removeClassSelector
+   *
+   * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOptionType &
+   *  EpubParserOptionTypeExtra} EpubParserOptionType
+   */
+  /**
    * Get types of read option
+   * @returns {EpubParserOptionType}
    */
   static get readOptionTypes() {
     return {
@@ -115,8 +145,8 @@ class EpubParser extends Parser {
   /**
    * Create new EpubParser
    * @param {string} input file or directory
-   * @param {?CryptoProvider} cryptoProvider en/decrypto provider
-   * @param {?string} logLevel logging level
+   * @param {import('@ridi/parser-core/type/CryptoProvider').default} [cryptoProvider] en/decrypto provider
+   * @param {string} [logLevel] logging level
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example new EpubParser('./foo/bar.epub' or './foo/bar');
@@ -129,35 +159,35 @@ class EpubParser extends Parser {
   }
 
   /**
-   * @returns {ParseContext}
+   * @returns {EpubParseContext}
    */
   _getParseContextClass() {
-    return ParseContext;
+    return EpubParseContext;
   }
 
   /**
-   * @returns {Book}
+   * @returns {EpubBook}
    */
   _getBookClass() {
-    return Book;
+    return EpubBook;
   }
 
   /**
-   * @returns {ReadContext}
+   * @returns {EpubReadContext}
    */
   _getReadContextClass() {
-    return ReadContext;
+    return EpubReadContext;
   }
 
   /**
-   * @returns {Item}
+   * @returns {BaseEpubItem}
    */
   _getReadItemClass() {
-    return Item;
+    return BaseEpubItem;
   }
 
   /**
-   * @returns {ParseTask[]} return before tasks
+   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return before tasks
    */
   _parseBeforeTasks() {
     return [
@@ -168,7 +198,7 @@ class EpubParser extends Parser {
   }
 
   /**
-   * @returns {ParseTask[]} return tasks
+   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return tasks
    */
   _parseTasks() {
     return [
@@ -180,7 +210,7 @@ class EpubParser extends Parser {
   }
 
   /**
-   * @returns {ParseTask[]} return after tasks
+   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return after tasks
    */
   _parseAfterTasks() {
     return [
@@ -191,8 +221,8 @@ class EpubParser extends Parser {
 
   /**
    * Validate package spec if zip source and validatePackage option specified
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context (no change at this step)
+   * @param {EpubParseContext} context intermediate result
+   * @returns {Promise.<EpubParseContext>} return Context (no change at this step)
    * @throws {Errors.EINVAL} invalid package
    * @see EpubParser.parseDefaultOptions.validatePackage
    */
@@ -218,8 +248,8 @@ class EpubParser extends Parser {
 
   /**
    * Locate OPF and base path in container.xml
-   * @param {ParseContext} context intermediate result
-   * @return {Promise.<ParseContext>} return Context containing OPF and base path
+   * @param {EpubParseContext} context intermediate result
+   * @return {Promise.<EpubParseContext>} return Context containing OPF and base path
    * @throws {Errors.ENOFILE} container.xml not found
    * @throws {Errors.EINVAL} invalid XML
    * @throws {Errors.ENOELMT} no such element in container.xml
@@ -270,8 +300,8 @@ class EpubParser extends Parser {
 
   /**
    * OPF parsing
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing OPF parsing result
+   * @param {EpubParseContext} context intermediate result
+   * @returns {Promise<EpubParseContext>} return Context containing OPF parsing result
    * @throws {Errors.EINVAL} invalid xml
    * @throws {Errors.ENOFILE} OPF not found
    * @throws {Errors.ENOELMT} no such element in OPF
@@ -316,8 +346,8 @@ class EpubParser extends Parser {
   /**
    * Metadata parsing in OPF
    * @param {object} metadata metadata AST
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing metadata
+   * @param {EpubParseContext} context intermediate result
+   * @returns {Promise<EpubParseContext>} return Context containing metadata
    */
   _parseMetadata(metadata, context) {
     return new Promise((resolve) => {
@@ -350,8 +380,8 @@ class EpubParser extends Parser {
    * Manifest and spine parsing in OPF
    * @param {object} manifest manifest AST
    * @param {object} spine spine AST
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing manifest and spine
+   * @param {EpubParseContext} context intermediate result
+   * @returns {Promise<EpubParseContext>} return Context containing manifest and spine
    * @see EpubParser.parseDefaultOptions.parseStyle
    * @see EpubParser.parseDefaultOptions.styleNamespacePrefix
    */
@@ -539,8 +569,8 @@ class EpubParser extends Parser {
   /**
    * Guide parsing in OPF
    * @param {object} guide guide AST
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing guide
+   * @param {EpubParseContext} context intermediate result
+   * @returns {Promise<EpubParseContext>} return Context containing guide
    */
   _parseGuide(guide, context) {
     return new Promise((resolve) => {
@@ -567,8 +597,8 @@ class EpubParser extends Parser {
 
   /**
    * NCX parsing
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing ncx if exists
+   * @param {EpubParseContext} context intermediate result
+   * @returns {Promise<EpubParseContext>} return Context containing ncx if exists
    * @throws {Errors.EINVAL} invalid XML
    * @throws {Errors.EINVAL} can not found ncx attribute OPF
    * @throws {Errors.ENOFILE} NCX not found
@@ -643,7 +673,7 @@ class EpubParser extends Parser {
   }
 
   /**
-   * @param {Book} book
+   * @param {EpubBook} book
    */
   _checkResult(book) {
     if (!isExists(book.cover)) {
@@ -657,8 +687,8 @@ class EpubParser extends Parser {
 
   /**
    * Contents is read using loader suitable for context
-   * @param {ReadContext} context properties required for reading
-   * @returns {(string[]|Buffer[])} reading results
+   * @param {EpubReadContext} context properties required for reading
+   * @returns {Promise<(string[]|Buffer[]>)} reading results
    * @throws {Errors.ENOFILE} no such file
    * @see EpubParser.readDefaultOptions.force
    */
@@ -691,7 +721,7 @@ class EpubParser extends Parser {
 
   /**
    * @param {string} mediaType
-   * @return {*} item type by media-type
+   * @return {FontItem| NcxItem | SpineItem | CssItem | ImageItem | SvgItem | DeadItem} item type by media-type
    */
   getItemTypeFromMediaType(mediaType) {
     // See: http://www.idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7

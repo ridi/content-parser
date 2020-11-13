@@ -39,6 +39,8 @@ jobs:
       uses: Borales/actions-yarn@v2.3.0
       with:
         cmd: test --timeout 4000
+    - name: submit coverage reports
+      uses: codecov/codecov-action@v1
     - name: Notify slack success
       if: success()
       env:

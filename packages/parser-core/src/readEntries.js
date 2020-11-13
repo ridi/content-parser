@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 import path from 'path';
 
 import { trimEnd } from './bufferUtil';
@@ -14,14 +13,25 @@ import { safeDecodeURI } from './stringUtil';
 import { isExists } from './typecheck';
 import openZip from './zipUtil';
 
-function getReadStreamOptions(cryptoProvider) {
-  let options = {};
-  if (isExists(cryptoProvider) && isExists(cryptoProvider.bufferSize)) {
-    options = { ...options, highWaterMark: cryptoProvider.bufferSize };
-  }
-  return options;
-}
+/**
+ * @typedef {Object} FileEntryObject
+ * @property {S} first
+ * @property {number} length
+ * @property {T} source
+ * @property {(idx:number)=>S} get
+ * @property {(entryPath:string,strict:boolean)=>S} find
+ * @property {(callback:(value: S, index: number, array: S[]) => void)=>void} forEach
+ * @property {(callback: (value: S, index: number, array: S[]) => any)=>void} map
+ * @property {(callback: (a: S, b: S) => number)=>void} sort
+ * @template T, S
+ */
 
+/**
+ * @param {T} source
+ * @param {S[]} entries
+ * @returns {FileEntryObject<T, S>}
+ * @template T, S
+ */
 function create(source, entries) {
   return {
     first: entries[0],
@@ -39,6 +49,24 @@ function create(source, entries) {
   };
 }
 
+/**
+ * @typedef {Object} EntryBasicInformation
+ * @property {string} entryPath
+ * @property {number} size
+ * @property {(options:{endocing:string, end: number})=>(Promise<Buffer>|Buffer)} getFile
+ *
+ * @typedef {Object} ZipfileEntryInformation
+ * @property {string} method
+ * @property {number} extraFieldLength
+ *
+ * @typedef {import('adm-zip').IZipEntry & EntryBasicInformation & ZipfileEntryInformation} IZipEntryPlus
+*/
+
+/**
+ * Get FileEntryObject from the zip file
+ * @param {import('./zipUtil').ZipFileInformation} zip
+ * @returns {FileEntryObject<string, IZipEntryPlus}
+ */
 function fromZip(zip) {
   const zipCopy = { ...zip };
   zipCopy.files = zip.files.map((file) => {
@@ -64,6 +92,11 @@ function fromZip(zip) {
   return create(zipCopy, zipCopy.files);
 }
 
+/**
+ * @param {string} dir
+ * @param {CryptoProvider} cryptoProvider
+ * @returns {FileEntryObject<string, EntryBasicInformation>}
+ */
 function fromDirectory(dir, cryptoProvider) {
   let paths = (() => {
     /* istanbul ignore next */
@@ -85,12 +118,13 @@ function fromDirectory(dir, cryptoProvider) {
         const { encoding, end } = options;
         let file = await new Promise((resolve, reject) => {
           if (fs.existsSync(fullPath)) {
-            const stream = fs.createReadStream(fullPath, getReadStreamOptions(cryptoProvider));
+            const stream = fs.createReadStream(fullPath);
             const totalSize = Math.min(end || Infinity, size);
             let data = Buffer.from([]);
             stream
               .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-              .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode, createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+              .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode,
+                createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
               .on('data', (chunk) => {
                 data = Buffer.concat([data, chunk]);
               })
@@ -117,6 +151,11 @@ function fromDirectory(dir, cryptoProvider) {
   }, []));
 }
 
+/**
+ * @param {string} filePath
+ * @param {CryptoProvider} cryptoProvider
+ * @returns {FileEntryObject<string, EntryBasicInformation>}
+ */
 function fromFile(filePath, cryptoProvider) {
   const size = (() => {
     /* istanbul ignore next */
@@ -127,19 +166,16 @@ function fromFile(filePath, cryptoProvider) {
     getFile: async (options = {}) => {
       const { encoding, end } = options;
       let file = await new Promise((resolve, reject) => {
-        if (fs.existsSync(filePath)) {
-          const stream = fs.createReadStream(filePath, getReadStreamOptions(cryptoProvider));
-          let data = Buffer.from([]);
-          const totalSize = Math.min(end || Infinity, size);
-          stream
-            .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-            .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode, createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
-            .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
-            .on('error', e => reject(e))
-            .on('end', () => resolve(data));
-        } else {
-          throw createError(Errors.ENOFILE, filePath);
-        }
+        const stream = fs.createReadStream(filePath);
+        let data = Buffer.from([]);
+        const totalSize = Math.min(end || Infinity, size);
+        stream
+          .pipe(conditionally(isExists(end), createSliceStream(0, end)))
+          .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode,
+            createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
+          .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+          .on('error', e => reject(e))
+          .on('end', () => resolve(data));
       });
       if (cryptoProvider && !cryptoProvider.isStreamMode) {
         file = cryptoProvider.run(file, filePath, CryptoProvider.Purpose.READ_IN_DIR);
@@ -155,7 +191,16 @@ function fromFile(filePath, cryptoProvider) {
     size,
   }]);
 }
-
+/**
+ * @typedef {FileEntryObject<string, EntryBasicInformation | IZipEntryPlus>} ReadEntriesReturnType
+ */
+/**
+ * @async
+ * @param {string} input
+ * @param {CryptoProvider} cryptoProvider
+ * @param {import('./Logger').default} logger
+ * @returns {Promise<ReadEntriesReturnType>}
+ */
 export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     if (path.extname(input).toLowerCase() === '.pdf') {

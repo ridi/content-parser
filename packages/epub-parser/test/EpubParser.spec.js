@@ -5,14 +5,14 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import EpubParser from '../src/EpubParser';
-import Book from '../src/model/Book';
+import EpubBook from '../src/model/EpubBook';
 import DeadItem from '../src/model/DeadItem';
 import InlineCssItem from '../src/model/InlineCssItem';
 import NcxItem from '../src/model/NcxItem';
 import SpineItem from '../src/model/SpineItem';
 import Paths from '../../../test/paths';
-import ReadContext from '../src/model/ReadContext';
-import ParseContext from '../src/model/ParseContext';
+import EpubReadContext from '../src/model/EpubReadContext';
+import EpubParseContext from '../src/model/EpubParseContext';
 import validationBook from './validationBook';
 import TestCryptoProvider from './TestCryptoProvider';
 
@@ -45,7 +45,7 @@ describe('EpubParser', () => {
           err.code.should.equal(Errors.EINVAL.code);
         });
       });
-  
+
       it('Invalid package (mimetype file must be first file in archive.)', () => {
         return new EpubParser(Paths.INVALID_PACKAGE1).parse({ validatePackage: true }).catch(err => {
           err.toString().should.equal('Error: EINVAL: invalid package. (reason: mimetype file must be first file in archive.)');
@@ -70,21 +70,21 @@ describe('EpubParser', () => {
         });
       });
     });
-  
+
     describe('Check context by step', () => {
       const expectedContext = JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_CONTEXT));
       let parser = new EpubParser(Paths.DEFAULT);
       let _context;
-    
+
       it('_prepareParse test', () => {
         return parser._prepareParse().then(context => {
-          context.should.be.an.instanceOf(ParseContext);
+          context.should.be.an.instanceOf(EpubParseContext);
           context.options.should.deep.equal(EpubParser.parseDefaultOptions);
           context.entries.should.not.null;
           _context = context;
         });
       });
-    
+
       it('_validatePackageIfNeeded test', () => {
         _context.options.validatePackage = true;
         return parser._validatePackageIfNeeded(_context).should.be.fulfilled;
@@ -94,7 +94,7 @@ describe('EpubParser', () => {
         _context.options.unzipPath = path.join('.', 'temp');
         return parser._unzipIfNeeded(_context).should.be.fulfilled;
       });
-    
+
       it('_parseMetaInf test', () => {
         return parser._parseMetaInf(_context).then(context => {
           context.opfPath.should.equal(expectedContext.opfPath);
@@ -102,7 +102,7 @@ describe('EpubParser', () => {
           _context = context;
         });
       });
-    
+
       it('_parseOpf test', () => {
         return parser._parseOpf(_context).then(context => {
           const { rawBook } = context;
@@ -124,7 +124,7 @@ describe('EpubParser', () => {
           rawBook.rights.should.equal(expectedRawBook.rights);
           rawBook.version.should.equal(expectedRawBook.version);
           rawBook.metas.should.deep.equal(expectedRawBook.metas);
-    
+
           rawBook.items.forEach((item, idx) => {
             const expectedItem = expectedRawBook.items[idx];
             item.id.should.equal(expectedItem.id);
@@ -141,13 +141,13 @@ describe('EpubParser', () => {
             }
           });
           rawBook.guides.should.deep.equal(expectedRawBook.guides);
-    
+
           context.foundCover.should.be.true;
-  
+
           _context = context;
         });
       });
-    
+
       it('_parseNcx test', () => {
         return parser._parseNcx(_context).then(context => {
           const { rawBook } = context;
@@ -171,20 +171,20 @@ describe('EpubParser', () => {
           _context = context;
         });
       });
-    
+
       it('_createBook test', () => {
         return parser._createBook(_context).then(book => {
           validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
         });
       });
     });
-  
+
     it('Parse with default options from file', () => {
       return new EpubParser(Paths.DEFAULT).parse().then(book => {
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
     });
-  
+
     it('Parse with default options from directory', () => {
       return new EpubParser(Paths.UNZIPPED_DEFAULT).parse().then(book => {
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
@@ -236,13 +236,13 @@ describe('EpubParser', () => {
           book.cover.should.be.not.null;
         });
       });
-  
+
       it('Pass edge cases (2)', () => {
         return new EpubParser(Paths.EDGE_CASES2).parse(book => {
           book.cover.should.be.not.null;
         });
       });
-  
+
       it('Pass edge cases (3)', () => {
         return new EpubParser(Paths.EDGE_CASES3).parse(book => {
           assert(book.cover === undefined);
@@ -255,11 +255,11 @@ describe('EpubParser', () => {
     it('Book -> RawBook -> Book', () => {
       return new EpubParser(Paths.DEFAULT).parse().then(book => {
         const rawBook = book.toRaw();
-        const newBook = new Book(rawBook);
+        const newBook = new EpubBook(rawBook);
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
       });
     });
-  
+
     it('Never build a cycle structure in a Book', () => {
       return new EpubParser(Paths.DEFAULT).parse().then(book => {
         isExists(JSON.stringify(book)).should.be.true;
@@ -273,7 +273,7 @@ describe('EpubParser', () => {
       });
     });
   });
-  
+
   describe('Reading test', () => {
     const parser = new EpubParser(Paths.UNZIPPED_EXTRACT_STYLE);
     parser.parse().then(book => {
@@ -283,7 +283,7 @@ describe('EpubParser', () => {
             assert(isString(result));
           });
         });
-  
+
         it('Read multiple items', () => {
           const items = book.spines.concat(book.styles).concat(book.fonts);
           return parser.readItems(items).then(results => {
@@ -303,11 +303,11 @@ describe('EpubParser', () => {
         after(() => {
           fs.removeSync(unzipPath);
         });
-  
+
         it('EPUB file decryption', () => {
           validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_DEFAULT_BOOK)));
         });
-    
+
         it('Item file decryption', () => {
           return parser.readItem(book.spines[0]).then((result) => {
             const actual = result.replace(/\r/g, '');

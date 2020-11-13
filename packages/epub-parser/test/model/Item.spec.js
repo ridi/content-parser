@@ -1,19 +1,19 @@
 import { assert, should } from 'chai';
 
-import Item from '../../src/model/Item';
+import BaseEpubItem from '../../src/model/BaseEpubItem';
 
 should(); // Initialize should
 
 describe('Model - Item', () => {
   it('Initialize test', () => {
-    let item = new Item();
+    let item = new BaseEpubItem();
     assert(item.id === undefined);
     assert(item.href === undefined);
     assert(item.mediaType === undefined);
     assert(item.size === undefined);
     assert(item.isFileExists === false);
 
-    item = new Item({
+    item = new BaseEpubItem({
       id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50
     });
     item.id.should.equal('Section0001.xhtml');
@@ -33,14 +33,14 @@ describe('Model - Item', () => {
   });
 
   it('toRaw test', () => {
-    let item = new Item({});
-    item.toRaw().should.deep.equal({ id: undefined, href: undefined, mediaType: undefined, size: undefined, itemType: Item.name });
+    let item = new BaseEpubItem({});
+    item.toRaw().should.deep.equal({ id: undefined, href: undefined, mediaType: undefined, size: undefined, itemType: 'Item' });
 
-    item = new Item({
+    item = new BaseEpubItem({
       id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50
     });
     item.toRaw().should.deep.equal({
-      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, itemType: Item.name
+      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, itemType: 'Item'
     });
   });
 });

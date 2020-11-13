@@ -14,9 +14,11 @@
   "bugs": "https://github.com/ridi/content-parser/issues",
   "homepage": "https://github.com/ridi/content-parser",
   "files": [
-    "lib"
+    "lib",
+    "type"
   ],
   "main": "lib/index.js",
+  "types": "type/index.d.ts",
   "dependencies": {
     "@ridi/comic-parser": "0.7.0",
     "@ridi/epub-parser": "0.7.0",

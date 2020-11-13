@@ -1,12 +1,12 @@
 import { should } from 'chai';
 
-import ParseContext from '../../src/model/ParseContext';
+import PdfParseContext from '../../src/model/PdfParseContext';
 
 should(); // Initialize should
 
 describe('Model - ParseContext', () => {
   it('Initialize test', () => {
-    const item = new ParseContext();
+    const item = new PdfParseContext();
     Object.keys(item).forEach((key) => {
       Object.getOwnPropertyDescriptor(item, key).writable.should.be.true;
     });

@@ -1,7 +1,7 @@
 import { assert, should } from 'chai';
 
 import Guide from '../../src/model/Guide';
-import Item from '../../src/model/Item';
+import BaseEpubItem from '../../src/model/BaseEpubItem';
 
 should(); // Initialize should
 
@@ -29,7 +29,7 @@ describe('Model - Guide', () => {
       guide.title = 'Title';
       guide.type = Guide.Types.TITLE_PAGE;
       guide.href = './title.xhtml';
-      guide.item = new Item({});
+      guide.item = new BaseEpubItem({});
     }).should.throw(/read only property/gi);
   });
 

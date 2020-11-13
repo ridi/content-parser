@@ -1,12 +1,12 @@
 import { isExists } from '@ridi/parser-core';
 import { assert } from 'chai';
 
-import Book from '../src/model/Book';
+import EpubBook from '../src/model/EpubBook';
 import EpubParser from '../src/EpubParser';
 import SpineItem from '../src/model/SpineItem';
 
 export default function validationBook(book, expectedBook, options = EpubParser.parseDefaultOptions) {
-  book.should.be.an.instanceOf(Book);
+  book.should.be.an.instanceOf(EpubBook);
 
   book.titles.should.have.lengthOf(expectedBook.titles.length);
   book.titles.forEach((title, idx) => {
@@ -55,7 +55,7 @@ export default function validationBook(book, expectedBook, options = EpubParser.
   });
 
   book.source.should.equal(expectedBook.source);
-  
+
   book.languages.should.deep.equal(expectedBook.languages);
 
   book.relation.should.equal(expectedBook.relation);

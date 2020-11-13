@@ -1,8 +1,24 @@
 import { mergeObjects } from '@ridi/parser-core';
 
-import Item from './Item';
+import BaseEpubItem from './BaseEpubItem';
 
-class ImageItem extends Item {
+/**
+ * @typedef {Object} ImageItemExtra
+ * @property {boolean} [isCover]
+ *
+ * @typedef {import('./BaseEpubItem').BaseEpubItemParam & ImageItemExtra} ImageItemParam
+ */
+class ImageItem extends BaseEpubItem {
+  /**
+   * @type {boolean}
+   */
+  isCover;
+
+  /**
+   *
+   * @param {ImageItemParam} rawObj
+   * @param {boolean} freeze
+   */
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
     this.isCover = rawObj.isCover || false;

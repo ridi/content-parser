@@ -9,8 +9,8 @@ import fs from 'fs';
 import pdfJs, { PDFWorker } from 'pdfjs-dist';
 import uuid from 'uuid/v4';
 
-import Book from './model/Book';
-import ParseContext from './model/ParseContext';
+import PdfBook from './model/PdfBook';
+import PdfParseContext from './model/PdfParseContext';
 
 class PdfParser extends Parser {
   /**
@@ -18,6 +18,7 @@ class PdfParser extends Parser {
    */
   static get parseDefaultOptions() {
     return {
+      ...super.parseDefaultOptions,
       // Use fake worker when used in a browser environment such as Electron Renderer Proccess.
       fakeWorker: false,
     };
@@ -28,6 +29,7 @@ class PdfParser extends Parser {
    */
   static get parseOptionTypes() {
     return {
+      ...super.parseOptionTypes,
       fakeWorker: 'Boolean',
     };
   }
@@ -43,8 +45,8 @@ class PdfParser extends Parser {
   /**
    * Create new PdfParser
    * @param {string} input file
-   * @param {?CryptoProvider} cryptoProvider en/decrypto provider
-   * @param {?string} logLevel logging level
+   * @param {import('@ridi/parser-core/type/CryptoProvider').default} [cryptoProvider] en/decrypto provider
+   * @param {string} [logLevel] logging level
    * @throws {Errors.ENOENT} no such file
    * @throws {Errors.EINVAL} invalid input
    * @example new PdfParser('./foo/bar.pdf');
@@ -60,17 +62,17 @@ class PdfParser extends Parser {
   }
 
   /**
-   * @returns {ParseContext}
+   * @returns {PdfParseContext}
    */
   _getParseContextClass() {
-    return ParseContext;
+    return PdfParseContext;
   }
 
   /**
-   * @returns {Book}
+   * @returns {PdfBook}
    */
   _getBookClass() {
-    return Book;
+    return PdfBook;
   }
 
   _getReadContextClass() {
@@ -82,7 +84,7 @@ class PdfParser extends Parser {
   }
 
   /**
-   * @returns {ParseTask[]} return tasks
+   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return tasks
    */
   _parseTasks() {
     return [
@@ -95,7 +97,7 @@ class PdfParser extends Parser {
   }
 
   /**
-   * @returns {ParseTask[]} return after tasks
+   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return after tasks
    */
   _parseAfterTasks() {
     return [
@@ -126,9 +128,12 @@ class PdfParser extends Parser {
   }
 
   /**
+   * @typedef {import('@ridi/parser-core/type/Parser').BaseReadContext} BaseReadContext
+   */
+  /**
    * load pdf document and get number of pages
-   * @param {ReadContext} context intermediate result
-   * @returns {Promise.<ReadContext>} return Context containing document and page count
+   * @param {BaseReadContext} context intermediate result
+   * @returns {Promise<BaseReadContext>} return Context containing document and page count
    * @throws {Errors.EPDFJS} pdfjs error
    */
   async _loadDocuemnt(context) {
@@ -144,8 +149,8 @@ class PdfParser extends Parser {
 
   /**
    * Metadata parsing in Document
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing metadata
+   * @param {PdfParseContext} context intermediate result
+   * @returns {Promise<PdfParseContext>} return Context containing metadata
    * @throws {Errors.EPDFJS} pdfjs error
    */
   async _parseMetadata(context) {
@@ -162,8 +167,8 @@ class PdfParser extends Parser {
 
   /**
    * Outline parsing in Document
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing outline
+   * @param {PdfParseContext} context intermediate result
+   * @returns {Promise<PdfParseContext>} return Context containing outline
    * @throws {Errors.EPDFJS} pdfjs error
    */
   async _parseOutline(context) {
@@ -172,7 +177,7 @@ class PdfParser extends Parser {
     if (isExists(outline)) {
       await new Promise((resolveAll) => {
         const makePromise = (items) => {
-          return (items || []).reduce((list, item) => {
+          return (items).reduce((list, item) => {
             list = [
               ...list,
               // eslint-disable-next-line no-async-promise-executor
@@ -220,8 +225,8 @@ class PdfParser extends Parser {
 
   /**
    * Permission parsing in Document
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing permissions
+   * @param {PdfParseContext} context intermediate result
+   * @returns {Promise<PdfParseContext>} return Context containing permissions
    * @throws {Errors.EPDFJS} pdfjs error
    */
   async _parsePermission(context) {
@@ -232,8 +237,8 @@ class PdfParser extends Parser {
 
   /**
    * Destory fake worker.
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context containing permissions
+   * @param {PdfParseContext} context intermediate result
+   * @returns {Promise<PdfParseContext>} return Context containing permissions
    */
   async _destoryWorkerIfNeeded(context) {
     const { worker } = context;

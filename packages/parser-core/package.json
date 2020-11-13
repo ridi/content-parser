@@ -14,17 +14,28 @@
   "bugs": "https://github.com/ridi/content-parser/issues",
   "homepage": "https://github.com/ridi/content-parser",
   "files": [
-    "lib"
+    "lib",
+    "type"
   ],
   "main": "lib/index.js",
+  "types": "type/index.d.ts",
   "dependencies": {
     "adm-zip": "^0.4.16",
     "crypto-js": "^4.0.0",
     "event-stream": "3.3.4",
     "fs-extra": "^9.0.1",
     "sha1": "^1.1.1",
-    "stream-chopper": "^3.0.1",
     "string-format": "^2.0.0",
     "string-natural-compare": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.4.33",
+    "@types/crypto-js": "^4.0.1",
+    "@types/event-stream": "^3.3.34",
+    "@types/fs-extra": "^9.0.3",
+    "@types/node": "^14.14.6",
+    "@types/sha1": "^1.1.2",
+    "@types/string-format": "^2.0.0",
+    "@types/string-natural-compare": "^3.0.0"
   }
 }

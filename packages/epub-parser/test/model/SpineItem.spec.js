@@ -1,6 +1,6 @@
 import { assert, should } from 'chai';
 
-import Item from '../../src/model/Item';
+import BaseEpubItem from '../../src/model/BaseEpubItem';
 import SpineItem from '../../src/model/SpineItem';
 
 should(); // Initialize should
@@ -14,7 +14,7 @@ describe('Model - SpineItem', () => {
     assert(item.prev() === undefined);
     assert(item.next() === undefined);
     assert(item.styles === undefined);
-    assert(item instanceof Item);
+    assert(item instanceof BaseEpubItem);
 
     item = new SpineItem({
       id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, index: 5

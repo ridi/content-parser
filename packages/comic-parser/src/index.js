@@ -5,14 +5,14 @@ import {
 } from '@ridi/parser-core';
 
 import ComicParser from './ComicParser';
-import Book from './model/Book';
+import ComicBook from './model/ComicBook';
 
 export {
   ComicParser,
+  ComicBook,
   Errors,
   LogLevel,
   CryptoProvider,
   AesCryptor,
   Hash,
-  Book as ComicBook,
 };

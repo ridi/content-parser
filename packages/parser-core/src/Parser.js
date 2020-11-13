@@ -1,4 +1,5 @@
 import fs from 'fs';
+import validateOptions from './validateOptions';
 
 import { removeCacheFile } from './cacheFile';
 import CryptoProvider from './CryptoProvider';
@@ -14,31 +15,64 @@ import {
 } from './typecheck';
 
 import readEntries from './readEntries';
-import validateOptions from './validateOptions';
 
+/**
+ * @typedef {import('./BaseParseContext').default} BaseParseContext
+ * @typedef {import('./BaseParseContext').BaseParserOption} BaseParserOption
+ * @typedef {import('./BaseParseContext').BaseParserOptionType} BaseParserOptionType
+ * @typedef {import('./BaseBook').default} BaseBook
+ * @typedef {import('./BaseItem').default} BaseItem
+ * @typedef {import('./BaseReadContext').default} BaseReadContext
+ * @typedef {import('./BaseReadContext').BaseReadOption} BaseReadOption
+ * @typedef {import('./BaseReadContext').BaseReadOptionType} BaseReadOptionType
+ */
+
+/**
+ * @typedef {string} ParserAction
+ *
+ * @typedef {Object} ActionEnum
+ * @property {ParserAction} PARSER "parse"
+ * @property {ParserAction} READ_ITEMS "readItems"
+ * @property {ParserAction} UNZIP "unzip"
+ */
+
+/**
+ * @readonly
+ * @type {ActionEnum}
+ */
 const Action = Object.freeze({
   PARSE: 'parse',
   READ_ITEMS: 'readItems',
   UNZIP: 'unzip',
 });
 
+/**
+  * @typedef {(step:number, totalStep:number, action:string)=>void} OnProgressCallBack
+  *
+  * @typedef {Object} Task
+  * @property {Function} fun Action executor
+  * @property {string} name Action name
+*/
+
 const privateProps = new WeakMap();
 
 class Parser {
   /**
    * Get default values of parse options
-   */
+   * @static
+   * @return {BaseParserOption}
+  */
   static get parseDefaultOptions() {
     return {
-      // If specified, unzip to that path.
       unzipPath: undefined,
-      // If true, overwrite to unzipPath when unzip. (only using if unzipPath specified.)
       overwrite: true,
     };
   }
 
   /**
    * Get types of parse options
+   * @static
+   * @return {BaseParserOptionType}
    */
   static get parseOptionTypes() {
     return {
@@ -49,16 +83,19 @@ class Parser {
 
   /**
    * Get default values of read options
+   * @static
+   * @returns {BaseReadOption | void}
    */
   static get readDefaultOptions() {
     return {
-      // If true, ignore any exceptions that occur within parser.
       force: false,
     };
   }
 
   /**
    * Get types of read option
+   * @static
+   * @returns {BaseReadOptionType | void}
    */
   static get readOptionTypes() {
     return {
@@ -68,27 +105,32 @@ class Parser {
 
   /**
    * Get file or directory
+   * @returns {string}
+   *
    */
   get input() { return privateProps.get(this).input; }
 
   /**
    * Get en/decrypto provider
+   * @returns {CryptoProvider}
    */
   get cryptoProvider() { return privateProps.get(this).cryptoProvider; }
 
   /**
    * Get logger
+   * @returns {Logger}
    */
   get logger() { return privateProps.get(this).logger; }
 
   /**
    * Get onProgress callback
+   * @returns {OnProgressCallBack}
    */
-  get onProgress() { return privateProps.get(this).onProgress || (() => {}); }
+  get onProgress() { return privateProps.get(this).onProgress || (() => { }); }
 
   /**
    * Set callback that tells progress of parse and readItems.
-   * @param {function} onProgress
+   * @param {OnProgressCallBack} onProgress
    * @example
    * parser.onProgress = (step, totalStep, action) => {
    *   console.log(`[${action}] ${step} / ${totalStep}`);
@@ -105,8 +147,8 @@ class Parser {
   /**
    * Create new Parser
    * @param {string} input file or directory
-   * @param {?CryptoProvider} cryptoProvider en/decrypto provider
-   * @param {?object} loggerOptions logger options
+   * @param {CryptoProvider} [cryptoProvider] en/decrypto provider
+   * @param {import('./Logger').LoggerOptions} [loggerOptions] logger options
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EINVAL} invalid input
    * @example
@@ -128,47 +170,50 @@ class Parser {
       throw createError(Errors.EINVAL, 'cryptoProvider', 'reason', 'must be CryptoProvider subclassing type');
     }
     const { namespace, logLevel } = loggerOptions;
-    const logger = new Logger(namespace || Parser.name);
-    logger.logLevel = logLevel;
+    const logger = new Logger(namespace || Parser.name, logLevel);
     logger.debug(`Create new parser with input: '${input}', cryptoProvider: ${isExists(cryptoProvider) ? 'Y' : 'N'}.`);
     privateProps.set(this, { input, cryptoProvider, logger });
   }
 
   /**
-   * @returns {ParseContext}
+   * @virtual
+   * @protected
+   * @returns {new ()=>BaseParseContext}
    */
   _getParseContextClass() {
     return mustOverride();
   }
 
   /**
-   * @returns {Book}
+   * @virtual
+   * @protected
+   * @returns {new ()=>BaseBook}
    */
   _getBookClass() {
     return mustOverride();
   }
 
   /**
-   * @returns {ReadContext}
+   * @virtual
+   * @protected
+   * @returns {new ()=>BaseReadContext}
    */
   _getReadContextClass() {
-    return mustOverride();
+    mustOverride();
   }
 
   /**
-   * @returns {Item}
+   * @virtual
+   * @protected
+   * @returns {new ()=>BaseItem}
    */
   _getReadItemClass() {
-    return mustOverride();
+    mustOverride();
   }
 
   /**
-   * @typedef ParseTask
-   * @property {function} fun Action executor
-   * @property {string} name Action name
-   */
-  /**
-   * @returns {ParseTask[]} return before tasks
+   * @protected
+   * @returns {Task[]} return before tasks
    */
   _parseBeforeTasks() {
     return [
@@ -178,14 +223,16 @@ class Parser {
   }
 
   /**
-   * @returns {ParseTask[]} return tasks
+   * @protected
+   * @returns {Task[]} return tasks
    */
   _parseTasks() {
     return [];
   }
 
   /**
-   * @returns {ParseTask[]} return after tasks
+   * @protected
+   * @returns {Task[]} return after tasks
    */
   _parseAfterTasks() {
     return [
@@ -194,12 +241,13 @@ class Parser {
   }
 
   /**
-   * Parsing
-   * @param {?object} options parse options
-   * @returns {Promise.<Book>} return Book
+   * Parse the input
+   * @async
+   * @param {BaseParserOption} [options] parse options
+   * @returns {Promise<BaseBook>} return Book
    * @see Parser.parseDefaultOptions
    * @see Parser.parseOptionTypes
-   */
+  */
   async parse(options = {}) {
     const action = Action.PARSE;
     const tasks = [].concat(
@@ -224,13 +272,12 @@ class Parser {
 
   /**
    * Validate parse options and get entries from input
-   * @param {?object} options parse options
-   * @returns {Promise.<ParseContext>} return Context containing parse options, entries
+   * @async
+   * @param {BaseParserOption} [options] parse options
+   * @returns {Promise<BaseParseContext>} return Context containing parse options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
-   * @see Parser.parseDefaultOptions
-   * @see Parser.parseOptionTypes
    */
   async _prepareParse(options = {}) {
     const { parseOptionTypes, parseDefaultOptions } = this.constructor;
@@ -245,12 +292,11 @@ class Parser {
 
   /**
    * Unzipping if zip source and unzipPath option specified
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<ParseContext>} return Context (no change at this step)
+   * @async
+   * @param {BaseParseContext} context intermediate result
+   * @returns {Promise<BaseParseContext>} return Context (no change at this step)
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.EEXIST} file or directory already exists
-   * @see Parser.parseDefaultOptions.unzipPath
-   * @see Parser.parseDefaultOptions.overwrite
    */
   async _unzipIfNeeded(context) {
     const { options, entries } = context;
@@ -266,8 +312,9 @@ class Parser {
 
   /**
    * Create new Book from context
-   * @param {ParseContext} context intermediate result
-   * @returns {Promise.<Book>} return Book
+   * @protected
+   * @param {BaseParseContext} context intermediate result
+   * @returns {Promise<BaseBook>} return Book
    */
   _createBook(context) {
     return new Promise((resolve) => {
@@ -277,12 +324,8 @@ class Parser {
   }
 
   /**
-   * @typedef ReadTask
-   * @property {function} fun Action executor
-   * @property {string} name Action name
-   */
-  /**
-   * @returns {ReadTask[]} return before tasks
+   * @protected
+   * @returns {Task[]} return before tasks
    */
   _readBeforeTasks() {
     return [
@@ -291,7 +334,8 @@ class Parser {
   }
 
   /**
-   * @returns {ReadTask[]} return tasks
+   * @protected
+   * @returns {Task[]} return tasks
    */
   _readTasks() {
     return [
@@ -300,7 +344,8 @@ class Parser {
   }
 
   /**
-   * @returns {ReadTask[]} return after tasks
+   * @protected
+   * @returns {Task[]} return after tasks
    */
   _readAfterTasks() {
     return [];
@@ -308,8 +353,8 @@ class Parser {
 
   /**
    * Reading contents of Item
-   * @param {Item} item target
-   * @param {?object} options read options
+   * @param {BaseItem} item target
+   * @param {BaseReadOption} [options] read options
    * @returns {(string|Buffer)} reading result
    * @see Parser.readDefaultOptions
    * @see Parser.readOptionTypes
@@ -321,8 +366,9 @@ class Parser {
 
   /**
    * Reading contents of Items
-   * @param {Item[]} items targets
-   * @param {?object} options read options
+   * @async
+   * @param {BaseItem[]} items targets
+   * @param {BaseReadOption} [options] read options
    * @returns {(string|Buffer)[]} reading results
    * @see Parser.readDefaultOptions
    * @see Parser.readOptionTypes
@@ -351,14 +397,13 @@ class Parser {
 
   /**
    * Validate read options and get entries from input
+   * @async
    * @param {Item[]} items targets
-   * @param {?object} options read options
-   * @returns {Promise.<ReadContext>} returns Context containing target items, read options, entries
+   * @param {BaseReadOption} [options] read options
+   * @returns {Promise<BaseReadContext>} returns Context containing target items, read options, entries
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file
-   * @see Parser.readDefaultOptions
-   * @see Parser.readOptionTypes
    */
   async _prepareRead(items, options = {}) {
     if (!options.force && items.find(item => !(item instanceof this._getReadItemClass()))) {
@@ -378,22 +423,21 @@ class Parser {
 
   /**
    * Contents is read using loader suitable for context
+   * @async
+   * @override
    * @param {ReadContext} context properties required for reading
-   * @returns {(string|Buffer)[]} reading results
+   * @returns {Promise<Array<string|Buffer>>} reading results
    * @throws {Errors.ENOFILE} no such file
    * @see Parser.readDefaultOptions.force
    */
-  async _read(context) { // eslint-disable-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars
+  async _read(context) {
     return mustOverride();
   }
 
   /**
-   * @typedef UnzipTask
-   * @property {function} fun Action executor
-   * @property {string} name Action name
-   */
-  /**
-   * @returns {UnzipTask[]} return tasks
+   * @private
+   * @returns {Task[]} return tasks
    */
   _unzipTasks() {
     return [
@@ -403,9 +447,11 @@ class Parser {
   }
 
   /**
+   * Unzip
+   * @async
    * @param {string} unzipPath
    * @param {boolean} overwrite
-   * @returns {boolean} success
+   * @returns {Promise<boolean>} success
    * @throws {Errors.EINVAL} invalid options or value type
    * @throws {Errors.ENOENT} no such file or directory
    * @throws {Errors.ENOFILE} no such file

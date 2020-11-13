@@ -29,8 +29,20 @@ describe('Util - stream', () => {
     });
   });
 
+  it('conditionally test (true)', () => {
+    return test(()=> true).then((data) => {
+      data.length.should.equal(150);
+    });
+  });
+
   it('conditionally test (false)', () => {
     return test(false).then((data) => {
+      data.length.should.equal(1196);
+    });
+  });
+
+  it('conditionally test (false)', () => {
+    return test(()=>false).then((data) => {
       data.length.should.equal(1196);
     });
   });

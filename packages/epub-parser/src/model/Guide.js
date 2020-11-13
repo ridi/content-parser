@@ -22,7 +22,17 @@ const Types = Object.freeze({
   TEXT: 'text', // First "real" page of content. (e.g. "Chapter 1")
 });
 
+/**
+ * @typedef {Object} GuideParam
+ * @property {string} [title]
+ * @property {string} [type]
+ * @property {string} [href]
+ */
 class Guide {
+  /**
+   * @param {GuideParam} rawObj
+   * @param {boolean} freeze
+   */
   constructor(rawObj = {}, freeze = true) {
     this.title = rawObj.title;
     if (isExists(rawObj.type)) {
