@@ -1,14 +1,9 @@
 import * as es from 'event-stream';
 
-/**
- * @param {number} start=0
- * @param {number} end=Infinity
- * @returns {es.MapStream}
- */
-const createSliceStream = (start = 0, end = Infinity) => {
+const createSliceStream = (start = 0, end = Infinity): es.MapStream => {
   let bytesReceived = 0;
   let finish = false;
-  return es.map((chunk, callback) => { // eslint-disable-line
+  return es.map((chunk: Buffer, callback: (nullable?: null, chunk?: Buffer)=>void) => {
     bytesReceived += chunk.length;
     if (!finish && bytesReceived >= start) {
       if (start - (bytesReceived - chunk.length) > 0) {

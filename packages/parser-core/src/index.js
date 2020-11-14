@@ -44,7 +44,7 @@ import {
   isObject,
   isString,
   isUrl,
-} from './typecheck';
+} from './typecheck.ts';
 
 import validateOptions from './validateOptions';
 import openZip from './zipUtil';

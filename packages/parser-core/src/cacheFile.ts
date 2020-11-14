@@ -1,37 +1,36 @@
 import * as fs from 'fs-extra';
-import os from 'os';
-import path from 'path';
-import sha1 from 'sha1';
+import * as os from 'os';
+import * as path from 'path';
+import * as crypto from 'crypto';
 
 import { isExists, isString } from './typecheck';
 import Errors, { createError } from './errors';
 
+const sha256 = (key: string): string => {
+  return crypto.createHash('sha256').update(key).digest('base64');
+}
+
 /**
  * Get path to store cache
- * @returns {string} Path of a temp directory
  */
-export function getCachePath() {
+export function getCachePath(): string {
   return path.join(os.tmpdir(), 'parser-cache');
 }
 
 /**
  * Get a path to a stored cache
- * @param {string} key Key of a cache file
- * @returns {string} Path to a cache file
  */
-function getCacheFilePath(key) {
+function getCacheFilePath(key: string): string {
   if (!isExists(key) || !isString(key)) {
     throw createError(Errors.EINVAL, 'key', 'key', key);
   }
-  return path.join(getCachePath(), `${sha1(key)}.dat`);
+  return path.join(getCachePath(), `${sha256(key)}.dat`);
 }
 
 /**
  * Remove the cache file with a key
- * @param {string} key Key of a cache file
- * @returns {void}
  */
-export function removeCacheFile(key) {
+export function removeCacheFile(key: string): void {
   const filePath = getCacheFilePath(key);
   if (fs.existsSync(filePath)) {
     fs.removeSync(filePath);
@@ -41,7 +40,7 @@ export function removeCacheFile(key) {
  * Remove every cache file
  * @returns {void}
  */
-export function removeAllCacheFiles() {
+export function removeAllCacheFiles(): void {
   const cachePath = getCachePath();
   if (fs.existsSync(cachePath)) {
     fs.removeSync(cachePath);
@@ -50,10 +49,8 @@ export function removeAllCacheFiles() {
 
 /**
  * Read the cache file with a key
- * @param {string} key Key of a cache file
- * @returns {string|null} `null` if cache does not exists, `string` otherwise
  */
-export function readCacheFile(key) {
+export function readCacheFile(key: string): string | null {
   const filePath = getCacheFilePath(key);
   if (!fs.existsSync(filePath)) {
     return null;
@@ -63,12 +60,8 @@ export function readCacheFile(key) {
 
 /**
  * Write cache file
- * @param {string} key Key of a cache file
- * @param {string | NodeJS.ArrayBufferView} message Message to store
- * @param {boolean} [overwrite=false]
- * @returns {void}
  */
-export function writeCacheFile(key, message, overwrite = false) {
+export function writeCacheFile(key: string, message: string, overwrite = false): void {
   const filePath = getCacheFilePath(key);
   const cachePath = path.dirname(filePath);
   if (!fs.existsSync(cachePath)) {

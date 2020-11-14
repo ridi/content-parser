@@ -1,9 +1,7 @@
 /**
  * Removes all the leading non zero buffer chunk
- * @param {Buffer} buffer
- * @returns {Buffer} Trimmed buffer
  */
-export function trimStart(buffer) {
+export function trimStart(buffer: Buffer): Buffer {
   let pos = 0;
   for (let i = 0; i <= buffer.length; i += 1) {
     if (buffer[i] !== 0x00) {
@@ -16,10 +14,8 @@ export function trimStart(buffer) {
 
 /**
  * Removes all the trailing non zero buffer chunk
- * @param {Buffer} buffer
- * @returns {Buffer} Trimmed buffer
  */
-export function trimEnd(buffer) {
+export function trimEnd(buffer: Buffer): Buffer {
   let pos = 0;
   for (let i = buffer.length - 1; i >= 0; i -= 1) {
     if (buffer[i] !== 0x00) {
@@ -32,9 +28,7 @@ export function trimEnd(buffer) {
 
 /**
  * Trim a buffer
- * @param {Buffer} buffer
- * @returns {Buffer} Trimmed buffer
  */
-export function trim(buffer) {
+export function trim(buffer: Buffer): Buffer {
   return trimEnd(trimStart(buffer));
 }
