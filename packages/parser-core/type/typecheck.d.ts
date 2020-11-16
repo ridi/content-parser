@@ -1,49 +1,32 @@
 /**
  * Get type as string
- * @param {any} any
- * @param {boolean} strict=false
- * @returns {string}
  */
-export function getType(any: any, strict?: boolean): string;
+export declare function getType(target: any, strict?: boolean): string;
 /**
  * Return true if passed argument is an array
- * @param {any} any
- * @returns {boolean}
  */
-export function isArray(any: any): boolean;
+export declare function isArray(target: any): boolean;
 /**
  * Return true if passed argument is a boolean
- * @param {any} any
- * @returns {boolean}
  */
-export function isBool(any: any): boolean;
+export declare function isBool(target: any): boolean;
 /**
  * Return true if passed argument is undefined nor null
- * @param {any} any
- * @returns {boolean}
  */
-export function isExists(any: any): boolean;
+export declare function isExists(target: any): boolean;
 /**
  * Return true if passed argument is function
- * @param {any} any
- * @returns {boolean}
  */
-export function isFunc(any: any): boolean;
+export declare function isFunc(target: any): boolean;
 /**
  * Return true if passed argument is object
- * @param {any} any
- * @returns {boolean}
  */
-export function isObject(any: any): boolean;
+export declare function isObject(target: any): boolean;
 /**
  * Return true if passed argument is string
- * @param {any} any
- * @returns {boolean}
  */
-export function isString(any: any): boolean;
+export declare function isString(target: any): boolean;
 /**
  * Return true if passed argument is url
- * @param {any} string
- * @returns {boolean}
  */
-export function isUrl(string: any): boolean;
+export declare function isUrl(string: string): boolean;

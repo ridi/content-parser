@@ -1,22 +1,13 @@
-import {
-  Errors, createError,
-  isArray, isExists, isString,
-  Parser,
-  readEntries,
-} from '@ridi/parser-core';
+import { BaseReadContext, createError, CryptoProvider, Errors, isExists, isString, LogLevel, Parser, readEntries, Task } from "@ridi/parser-core";
+import fs from 'fs-extra';
+import type { BaseParserOption } from "@ridi/parser-core/type/BaseParseContext";
+import pdfjs, { PDFWorker } from "pdfjs-dist";
+import PdfBook from "./model/PdfBook";
+import PdfParseContext from "./model/PdfParseContext";
 
-import fs from 'fs';
-import pdfJs, { PDFWorker } from 'pdfjs-dist';
-import uuid from 'uuid/v4';
 
-import PdfBook from './model/PdfBook';
-import PdfParseContext from './model/PdfParseContext';
-
-class PdfParser extends Parser {
-  /**
-   * Get default values of parse options
-   */
-  static get parseDefaultOptions() {
+class PdfParser extends Parser<PdfParseContext> {
+  static get parseDefaultOptions(): BaseParserOption & {fakeWorker: boolean} {
     return {
       ...super.parseDefaultOptions,
       // Use fake worker when used in a browser environment such as Electron Renderer Proccess.
@@ -24,21 +15,18 @@ class PdfParser extends Parser {
     };
   }
 
-  /**
-   * Get types of parse options
-   */
-  static get parseOptionTypes() {
+  static get parseOptionTypes(): Record<keyof BaseParserOption, string> & {fakeWorker: string} {
     return {
       ...super.parseOptionTypes,
       fakeWorker: 'Boolean',
     };
   }
 
-  static get readDefaultOptions() {
+  static get readDefaultOptions(): void {
     throw createError(Errors.ENOIMP);
   }
 
-  static get readOptionTypes() {
+  static get readOptionTypes(): void {
     throw createError(Errors.ENOIMP);
   }
 
@@ -51,9 +39,9 @@ class PdfParser extends Parser {
    * @throws {Errors.EINVAL} invalid input
    * @example new PdfParser('./foo/bar.pdf');
    */
-  constructor(input, cryptoProvider, logLevel) {
+  constructor(input: string, cryptoProvider?: CryptoProvider, logLevel?: LogLevel) {
     /* istanbul ignore next */
-    logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
+    logLevel = isString(logLevel) ? logLevel : LogLevel.WARN;
     cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
     super(input, cryptoProvider, { namespace: 'PdfParser', logLevel });
     if (fs.statSync(input).isDirectory()) {
@@ -61,48 +49,41 @@ class PdfParser extends Parser {
     }
   }
 
-  /**
-   * @returns {PdfParseContext}
-   */
-  _getParseContextClass() {
-    return PdfParseContext;
+  getParseContextClass(): PdfParseContext {
+    return new PdfParseContext;
   }
 
-  /**
-   * @returns {PdfBook}
-   */
-  _getBookClass() {
+
+  getBookClass(): typeof PdfBook {
     return PdfBook;
   }
 
-  _getReadContextClass() {
+  getReadContextClass(): void {
     throw createError(Errors.ENOIMP);
   }
 
-  _getReadItemClass() {
+  getReadItemClass(): void {
     throw createError(Errors.ENOIMP);
   }
 
-  /**
-   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return tasks
-   */
-  _parseTasks() {
+  protected createBook(): Promise<PdfBook> {
+    return new Promise(resolve=>resolve(new PdfBook()));
+  }
+
+  protected parseTasks(): Task<PdfParseContext>[] {
     return [
-      ...super._parseTasks(),
-      { fun: this._loadDocuemnt, name: 'loadDocuemnt' },
-      { fun: this._parseMetadata, name: 'parseMetadata' },
-      { fun: this._parseOutline, name: 'parseOutline' },
-      { fun: this._parsePermission, name: 'parsePermission' },
+      ...super.parseTasks(),
+      { fun: this.loadDocuemnt, name: 'loadDocuemnt' },
+      { fun: this.parseMetadata, name: 'parseMetadata' },
+      { fun: this.parseOutline, name: 'parseOutline' },
+      { fun: this.parsePermission, name: 'parsePermission' },
     ];
   }
 
-  /**
-   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return after tasks
-   */
-  _parseAfterTasks() {
+  protected parseAfterTasks(): Task<PdfParseContext>[] {
     return [
-      { fun: this._destoryWorkerIfNeeded, name: 'destoryWorkerIfNeeded' },
-      ...super._parseAfterTasks(),
+      { fun: this.destoryWorkerIfNeeded, name: 'destoryWorkerIfNeeded' },
+      ...super.parseAfterTasks(),
     ];
   }
 
@@ -112,7 +93,7 @@ class PdfParser extends Parser {
    * @param {*[]} args
    * @returns {*}
    */
-  async _execute(that, fun, args = []) {
+  private async execute(that, fun, args = []) {
     const result = await new Promise((resolve, reject) => {
       let runner = fun.apply(that, args);
       if (isExists(runner.promise)) {
@@ -127,20 +108,11 @@ class PdfParser extends Parser {
     return result;
   }
 
-  /**
-   * @typedef {import('@ridi/parser-core/type/Parser').BaseReadContext} BaseReadContext
-   */
-  /**
-   * load pdf document and get number of pages
-   * @param {BaseReadContext} context intermediate result
-   * @returns {Promise<BaseReadContext>} return Context containing document and page count
-   * @throws {Errors.EPDFJS} pdfjs error
-   */
-  async _loadDocuemnt(context) {
+  private async loadDocuemnt(context: PdfParseContext) {
     const { rawBook, entries, options } = context;
-    const worker = options.fakeWorker ? new PDFWorker(`pdfWorker_${uuid()}`) : null;
+    const worker = options?. ? new PDFWorker(`pdfWorker_${uuid()}`) : null;
     const data = await entries.first.getFile();
-    const document = await this._execute(pdfJs, pdfJs.getDocument, [{ data, worker }]);
+    const document = await this.execute(pdfJs, pdfJs.getDocument, [{ data, worker }]);
     context.document = document;
     context.worker = worker;
     rawBook.pageCount = document.numPages;
@@ -153,7 +125,7 @@ class PdfParser extends Parser {
    * @returns {Promise<PdfParseContext>} return Context containing metadata
    * @throws {Errors.EPDFJS} pdfjs error
    */
-  async _parseMetadata(context) {
+  private async parseMetadata(context) {
     const { rawBook, document } = context;
     const metadata = await this._execute(document, document.getMetadata);
     const { info } = metadata;
@@ -171,9 +143,9 @@ class PdfParser extends Parser {
    * @returns {Promise<PdfParseContext>} return Context containing outline
    * @throws {Errors.EPDFJS} pdfjs error
    */
-  async _parseOutline(context) {
+  private async parseOutline(context) {
     const { rawBook, document } = context;
-    const outline = await this._execute(document, document.getOutline);
+    const outline = await this.execute(document, document.getOutline);
     if (isExists(outline)) {
       await new Promise((resolveAll) => {
         const makePromise = (items) => {
@@ -187,7 +159,7 @@ class PdfParser extends Parser {
                 if (isArray(ref) && isExists(ref[0]) && isExists(ref[0].num)) {
                   key = ref[0].num;
                 } else if (isString(ref)) {
-                  ref = await this._execute(document, document.getDestination, [ref]);
+                  ref = await this.execute(document, document.getDestination, [ref]);
                 } else {
                   this.logger.warn('Outline \'%s\' ignored. (reason: pageIndexRef not found)', item.title);
                   resolve(null);
@@ -195,7 +167,7 @@ class PdfParser extends Parser {
                 }
 
                 try {
-                  const page = await this._execute(document, document.getPageIndex, [ref[0]]);
+                  const page = await this.execute(document, document.getPageIndex, [ref[0]]);
                   resolve({ [`${key}`]: page });
                 } catch (error) {
                   this.logger.warn('Outline \'%s\' ignored. (reason: %s)', item.title, error.toString());
@@ -229,40 +201,29 @@ class PdfParser extends Parser {
    * @returns {Promise<PdfParseContext>} return Context containing permissions
    * @throws {Errors.EPDFJS} pdfjs error
    */
-  async _parsePermission(context) {
+  private async parsePermission(context: PdfParseContext): Promise<PdfParseContext> {
     const { rawBook, document } = context;
-    rawBook.permissions = await this._execute(document, document.getPermissions);
+    if(rawBook && document){
+      rawBook.permissions = await this.execute(document, document.getPermissions);
+    }
     return context;
   }
 
-  /**
-   * Destory fake worker.
-   * @param {PdfParseContext} context intermediate result
-   * @returns {Promise<PdfParseContext>} return Context containing permissions
-   */
-  async _destoryWorkerIfNeeded(context) {
+  protected async destoryWorkerIfNeeded(context: PdfParseContext): Promise<PdfParseContext> {
     const { worker } = context;
-    if (isExists(worker)) {
+    if (worker && isExists(worker)) {
       worker.destroy();
     }
     return context;
   }
 
-  /**
-   * Returns PDF file as Buffer
-   * @returns {Buffer}
-   */
-  async read() {
+  async read(): Promise<void | (string | Buffer)[]> {
     const entries = await readEntries(this.input, this.cryptoProvider, this.logger);
     const file = await entries.first.getFile();
-    return file;
+    return [file];
   }
 
-  _read() {
-    throw createError(Errors.ENOIMP);
-  }
-
-  unzip() {
+  public async unzip(): Promise<void> {
     throw createError(Errors.ENOIMP);
   }
 }

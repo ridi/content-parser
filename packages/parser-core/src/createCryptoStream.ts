@@ -11,13 +11,10 @@ const createCryptoStream = (filePath: string, totalSize: number, cryptoProvider:
       tmpChunk = Buffer.concat([tmpChunk, chunk]);
       callback();
     } else {
-      const result = cryptoProvider.run(Buffer.concat([tmpChunk, chunk]), filePath, purpose);
-      if (Promise.resolve(result) === result) {
-        chunk = await chunk;
-      }
-      pushedSize += chunk.length;
+      const result = await cryptoProvider.run(Buffer.concat([tmpChunk, chunk]), filePath, purpose);
+      pushedSize += result.length;
       tmpChunk = Buffer.from([]);
-      callback(null, chunk);
+      callback(null, result);
     }
   });
 };

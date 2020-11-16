@@ -11,7 +11,7 @@ import type BaseCryptor from './BaseCryptor';
 const { mode: aesMode, AES } = CryptoJs;
 
 type PossibleDataTypes = string | Buffer | Uint8Array | Array<number>;
-interface ModeConfig { key: PossibleDataTypes; iv: Buffer | Uint8Array | Array<number> }
+interface ModeConfig { key: PossibleDataTypes; iv?: Buffer | Uint8Array | Array<number> }
 type ModeConfigType = { [key in keyof ModeConfig]: string }
 
 const defaultConfigTypes: Pick<ModeConfigType, 'key'> = {
@@ -52,11 +52,11 @@ interface IMode {
 }
 
 interface CryptOption {
-  padding: typeof Padding.PKCS7 | typeof Padding.NONE;
-  encoding: typeof Encoding.UTF8 | typeof Encoding.UINT8;
+  padding?: typeof Padding.PKCS7 | typeof Padding.NONE;
+  encoding?: typeof Encoding.UTF8 | typeof Encoding.UINT8;
 }
 
-const Mode: IMode = {
+export const Mode: IMode = {
   ECB: { // Electronic Codebook (key)
     name: 'ECB',
     op: aesMode.ECB,
@@ -193,7 +193,7 @@ class AesCryptor implements BaseCryptor {
     if (options?.padding) {
       const paddable = [Padding.PKCS7, Padding.AUTO];
       const length = isExists(data) && isExists(data.length) ? data.length : 0;
-      const selected = paddable.find((pad => { options.padding.name === pad.name || (options.padding.name === pad.name && length % 16 !== 0) }));
+      const selected = paddable.find((pad => { options?.padding?.name === pad.name || (options?.padding?.name === pad.name && length % 16 !== 0) }));
       selected?.pad(dataWordArray);
     }
 
@@ -218,7 +218,7 @@ class AesCryptor implements BaseCryptor {
     if (options?.padding) {
       const paddable = [Padding.PKCS7, Padding.AUTO];
       const length = isExists(data) && isExists(data.length) ? data.length : 0;
-      const selected = paddable.find((pad => { options.padding.name === pad.name || (options.padding.name === pad.name && length % 16 !== 0) }));
+      const selected = paddable.find((pad => { options?.padding?.name === pad.name || (options?.padding?.name === pad.name && length % 16 !== 0) }));
 
       if (padding === Padding.PKCS7 || padding === Padding.AUTO) {
         try {

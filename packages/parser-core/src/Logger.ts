@@ -25,7 +25,7 @@ const getOrder = (logLevel: LogLevel) => {
 
 export interface LoggerOption {
   namespace: string;
-  logLevel: LogLevel;
+  logLevel?: LogLevel;
 }
 
 const touchTime = (time: number) => new Date().getTime() - time;

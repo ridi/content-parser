@@ -5,11 +5,11 @@ export interface BaseReadOption {
   force: boolean;
 }
 
-interface BaseReadContext {
-  options: BaseReadOption;
+abstract class BaseReadContext {
+  options?: BaseReadOption;
 
-  entries: ReadEntriesReturnType;
+  entries?: ReadEntriesReturnType;
 
-  items: BaseItem[];
+  items?: BaseItem[];
 }
 export default BaseReadContext;

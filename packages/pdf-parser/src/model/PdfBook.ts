@@ -114,7 +114,7 @@ class PdfBook extends BaseBook {
    *
    * @param {{info:PdfBookParamInfo}} rawBook
    */
-  constructor(rawBook = {}) {
+  constructor() {
     super();
     const info = rawBook.info || {};
     this.version = new Version(info.PDFFormatVersion);

@@ -8,16 +8,12 @@ export interface BaseParserOption {
 
 
 class BaseParseContext {
-  options: BaseParserOption | undefined;
+  options?: BaseParserOption;
 
-  entries: ReadEntriesReturnType | undefined;
+  entries?: ReadEntriesReturnType;
 
-  rawBook: BaseBook | undefined;
+  rawBook?: BaseBook;
 
-  constructor() {
-    this.options = undefined;
-    this.entries = undefined;
-    this.rawBook = undefined;
-  }
+
 }
 export default BaseParseContext;

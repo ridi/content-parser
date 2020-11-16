@@ -33,14 +33,20 @@ enum Action {
   UNZIP = 'unzip',
 }
 
-export type TaskFunctions = ((context: BaseParseContext) => Promise<BaseParseContext>) | ((options?: BaseParserOption | undefined) => Promise<BaseParseContext>) | ((context: BaseParseContext) => Promise<BaseBook>) | ((items: BaseItem[], options?: BaseReadOption | undefined) => Promise<BaseReadContext>) | ((context: BaseReadContext) => Promise<Array<string | Buffer>>);
+export type TaskFunctions<T extends BaseParseContext> =
+((context: T) => Promise<T>)
+| ((options?: BaseParserOption | undefined) => Promise<T>)
+| ((context: T) => Promise<BaseBook>)
+| ((items: BaseItem[], options?: BaseReadOption | undefined) => Promise<BaseReadContext>)
+| ((context: BaseReadContext) => Promise<Array<string | Buffer>>)
+| ((context?: BaseReadContext)=> Promise<Array<string | Buffer> | void>);
 
 const privateProps = new WeakMap();
-interface Task {
-  fun: TaskFunctions
+export interface Task<T extends BaseParseContext>{
+  fun: TaskFunctions<T>
   name: string
 }
-abstract class Parser {
+abstract class Parser<T extends BaseParseContext> {
   static get parseDefaultOptions(): BaseParserOption {
     return {
       unzipPath: undefined,
@@ -101,7 +107,7 @@ abstract class Parser {
    * }
    * new FooParser('./foo/bar.zip' or './foo/bar');
    */
-  constructor(input: string, cryptoProvider: CryptoProvider, loggerOptions?: LoggerOption) {
+  constructor(input: string, cryptoProvider?: CryptoProvider, loggerOptions?: LoggerOption) {
     if (isString(input)) {
       if (!fs.existsSync(input)) {
         throw createError(Errors.ENOENT, input);
@@ -119,41 +125,41 @@ abstract class Parser {
   }
 
 
-  abstract _getParseContextClass(): BaseParseContext;
+  protected abstract getParseContextClass(): T;
 
-  abstract _getBookClass(): BaseBook;
+  protected abstract getBookClass(): typeof BaseBook;
 
-  abstract _getReadContextClass(): BaseReadContext;
+  protected abstract getReadContextClass(): typeof BaseReadContext | void;
 
-  abstract _getReadItemClass(): BaseItem;
+  protected abstract getReadItemClass(): typeof BaseItem | void;
 
-  _parseBeforeTasks(): Task[] {
+  protected parseBeforeTasks(): Task<T>[] {
     return [
-      { fun: this._prepareParse, name: 'prepareParse' },
-      { fun: this._unzipIfNeeded, name: 'unzipIfNeeded' },
+      { fun: this.prepareParse, name: 'prepareParse' },
+      { fun: this.unzipIfNeeded, name: 'unzipIfNeeded' },
     ];
   }
 
-  _parseTasks(): Task[] {
+  protected parseTasks(): Task<T>[] {
     return [];
   }
 
-  _parseAfterTasks(): Task[] {
+  protected parseAfterTasks(): Task<T>[] {
     return [
-      { fun: this._createBook, name: 'createBook' },
+      { fun: this.createBook, name: 'createBook' },
     ];
   }
 
-  async parse(options?: BaseParserOption): Promise<BaseBook> {
+  public async parse(options?: BaseParserOption): Promise<BaseBook> {
     const action = Action.PARSE;
     const tasks = [
-      ...this._parseBeforeTasks(),
-      ...this._parseTasks(),
-      ...this._parseAfterTasks(),
+      ...this.parseBeforeTasks(),
+      ...this.parseTasks(),
+      ...this.parseAfterTasks(),
     ]
     const context = options;
     this.onProgress(0, tasks.length, action);
-    const result: BaseBook = await tasks.reduce<Promise<any>>((prevPromise: Promise<any>, task: Task, index: number) => {
+    const result: BaseBook = await tasks.reduce<Promise<any>>((prevPromise: Promise<any>, task: Task<T>, index: number) => {
       const newPromise = new Promise<any>(resolve => {
         prevPromise.then(() => {
           const { fun, name } = task;
@@ -168,11 +174,11 @@ abstract class Parser {
     return result;
   }
 
-  async _prepareParse(options?: BaseParserOption): Promise<BaseParseContext> {
+  protected async prepareParse(options?: BaseParserOption): Promise<T> {
     // @ts-ignore
     const { parseOptionTypes, parseDefaultOptions } = this.constructor;
     validateOptions(options, parseOptionTypes);
-    const ParseContext = this._getParseContextClass();
+    const ParseContext = this.getParseContextClass();
     // @ts-ignore
     const context = new ParseContext();
     context.options = mergeObjects(parseDefaultOptions, options);
@@ -184,7 +190,7 @@ abstract class Parser {
   /**
    * Unzipping if zip source and unzipPath option specified
    */
-  async _unzipIfNeeded(context: BaseParseContext): Promise<BaseParseContext> {
+  protected async unzipIfNeeded(context: T): Promise<T> {
     const { options, entries } = context;
     if (entries && options?.unzipPath && entries.source && !(entries.source instanceof String)) {
       await (entries.source as ZipFileInformation).extractAll(options.unzipPath, options.overwrite);
@@ -195,35 +201,35 @@ abstract class Parser {
     return context;
   }
 
-  abstract _createBook(context: BaseParseContext): Promise<BaseBook>;
+  protected abstract createBook(context: T): Promise<BaseBook>;
 
-  _readBeforeTasks(): Task[] {
+  protected readBeforeTasks(): Task<T>[] {
     return [
-      { fun: this._prepareRead, name: 'prepareRead' },
+      { fun: this.prepareRead, name: 'prepareRead' },
     ];
   }
 
-  _readTasks(): Task[] {
+  protected readTasks(): Task<T>[] {
     return [
-      { fun: this._read, name: 'read' },
+      { fun: this.read, name: 'read' },
     ];
   }
 
-  _readAfterTasks(): Task[] {
+  protected readAfterTasks(): Task<T>[] {
     return [];
   }
 
-  async readItem(item: BaseItem, options?: BaseReadOption): Promise<(BaseItem[] | BaseReadOption | undefined)> {
+  public async readItem(item: BaseItem, options?: BaseReadOption): Promise<(BaseItem[] | BaseReadOption | undefined)> {
     const results = await this.readItems([item], options);
     return results[0];
   }
 
-  async readItems(items: BaseItem[], options?: BaseReadOption): Promise<(BaseItem[] | BaseReadOption | undefined)[]> {
+  public async readItems(items: BaseItem[], options?: BaseReadOption): Promise<(BaseItem[] | BaseReadOption | undefined)[]> {
     const action = Action.READ_ITEMS;
     const tasks = [
-      ...this._readBeforeTasks(),
-      ...this._readTasks(),
-      ...this._readAfterTasks(),
+      ...this.readBeforeTasks(),
+      ...this.readTasks(),
+      ...this.readAfterTasks(),
     ]
     let context = [items, options];
     this.onProgress(0, tasks.length, action);
@@ -240,16 +246,16 @@ abstract class Parser {
     return context;
   }
 
-  async _prepareRead(items: BaseItem[], options?: BaseReadOption): Promise<BaseReadContext> {
+  protected async prepareRead(items: BaseItem[], options?: BaseReadOption): Promise<BaseReadContext> {
     // @ts-ignore
-    if (!options?.force && items.find(item => !(item instanceof this._getReadItemClass()))) {
-      throw createError(Errors.EINVAL, 'item', 'reason', 'must be Parser._getReadItemClass type');
+    if (!options?.force && items.find(item => !(item instanceof this.getReadItemClass()))) {
+      throw createError(Errors.EINVAL, 'item', 'reason', 'must be Parser.getReadItemClass type');
     }
     // @ts-ignore
     const { readOptionTypes, readDefaultOptions } = this.constructor;
     validateOptions(options, readOptionTypes);
     const entries = await readEntries(this.input, this.cryptoProvider, this.logger);
-    const ReadContext = this._getReadContextClass();
+    const ReadContext = this.getReadContextClass();
     // @ts-ignore
     const context = new ReadContext();
     context.items = items;
@@ -259,18 +265,18 @@ abstract class Parser {
     return context;
   }
 
-  abstract async _read(context: BaseReadContext): Promise<Array<string | Buffer>>;
+  abstract async read(context?: BaseReadContext): Promise<Array<string | Buffer> | void>;
 
-  _unzipTasks(): Task[] {
+  protected unzipTasks(): Task<T>[] {
     return [
-      { fun: this._prepareParse, name: 'prepareParse' },
-      { fun: this._unzipIfNeeded, name: 'unzipIfNeeded' },
+      { fun: this.prepareParse, name: 'prepareParse' },
+      { fun: this.unzipIfNeeded, name: 'unzipIfNeeded' },
     ];
   }
 
-  async unzip(unzipPath: string, overwrite = true): Promise<boolean> {
+  async unzip(unzipPath?: string, overwrite = true): Promise<boolean | void> {
     const action = Action.UNZIP;
-    const tasks = this._unzipTasks();
+    const tasks = this.unzipTasks();
     let context = { unzipPath, overwrite };
     this.onProgress(0, tasks.length, action);
     await tasks.reduce((prevPromise, task, index) => {

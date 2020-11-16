@@ -1,71 +1,62 @@
-export default AesCryptor;
-export type ModeConfig = {
-    key: string;
-    iv?: string;
+/// <reference types="node" />
+import * as CryptoJs from 'crypto-js';
+import { Padding, Encoding } from './cryptoUtil';
+import type BaseCryptor from './BaseCryptor';
+declare type PossibleDataTypes = string | Buffer | Uint8Array | Array<number>;
+interface ModeConfig {
+    key: PossibleDataTypes;
+    iv?: Buffer | Uint8Array | Array<number>;
+}
+declare type ModeConfigType = {
+    [key in keyof ModeConfig]: string;
 };
-export type ModeObject = {
+interface Cipher {
+    keySize: number;
+    ivSize: number;
+    readonly _ENC_XFORM_MODE: number;
+    readonly _DEV_XFORM_MODE: number;
+    reset(): void;
+    process(dataUpdate: CryptoJS.lib.WordArray | string): CryptoJS.lib.WordArray;
+    finalize(dataUpdate?: CryptoJS.lib.WordArray | string): CryptoJS.lib.WordArray;
+}
+interface Mode {
+    processBlock(words: number[], offset: number): void;
+}
+interface BlockCipherMode {
+    createEncryptor(cipher: Cipher): Mode;
+}
+interface ModeObject {
     name: string;
-    op: any;
-    configTypes: ModeConfig;
-};
-export type ModeList = {
-    ECB: ModeObject;
-    CBC: ModeObject;
-    CFB: ModeObject;
-    OFB: ModeObject;
-    CTR: ModeObject;
-};
-declare class AesCryptor extends BaseCryptor {
-    /**
-     * Construct AesCryptor
-     * @param {ModeObject} mode Crypto mode
-     * @param {ModeConfig} config Crypto config
-     */
-    constructor(mode: ModeObject, config: ModeConfig);
-    /**
-     * @typedef {(data: string | CryptoJs.lib.WordArray) => CryptoJs.lib.WordArray} EncodeAndDecode
-     * @typedef {Object} Operator
-     * @property {string} name
-     * @property {EncodeAndDecode} encrypt
-     * @property {EncodeAndDecode} decrypt
-     */
-    /**
-     * @private
-     * @type {Operator}
-     */
+    op: BlockCipherMode;
+    configTypes: ModeConfigType;
+}
+interface IMode {
+    readonly ECB: Omit<ModeObject, 'configTypes'> & {
+        configTypes: Pick<ModeConfigType, 'key'>;
+    };
+    readonly CBC: ModeObject;
+    readonly CFB: ModeObject;
+    readonly OFB: ModeObject;
+    readonly CTR: ModeObject;
+}
+interface CryptOption {
+    padding?: typeof Padding.PKCS7 | typeof Padding.NONE;
+    encoding?: typeof Encoding.UTF8 | typeof Encoding.UINT8;
+}
+export declare const Mode: IMode;
+interface Operator {
+    name: string;
+    encrypt: (data: CryptoJs.lib.WordArray) => CryptoJs.lib.WordArray;
+    decrypt: (data: CryptoJs.lib.WordArray) => CryptoJs.lib.WordArray;
+}
+declare class AesCryptor implements BaseCryptor {
     private operator;
     /**
-     * Make an operator
-     * @private
-     * @param {ModeObject} mode
-     * @param {ModeConfig} config
-     * @returns {Operator} Operator
+     * Construct AesCryptor
      */
-    private makeOperator;
+    constructor(mode: ModeObject, config: ModeConfig);
+    makeOperator(mode: ModeObject, config: ModeConfig): Operator;
+    encrypt(data: string | Buffer | Uint8Array | number[], options?: CryptOption): string | Uint8Array;
+    decrypt(data: Buffer | Uint8Array | number[], options?: CryptOption): string | Uint8Array;
 }
-declare namespace AesCryptor {
-    export { Padding };
-    export { Encoding };
-    export { Mode };
-}
-import { Padding } from "./cryptoUtil";
-import { Encoding } from "./cryptoUtil";
-/**
- * @typedef {Object} ModeObject
- * @property {string} name
- * @property {import('../type/CryptoJs').BlockCipherMode} op
- * @property {ModeConfig} configTypes
- *
- * @typedef {Object} ModeList
- * @property {ModeObject} ECB
- * @property {ModeObject} CBC
- * @property {ModeObject} CFB
- * @property {ModeObject} OFB
- * @property {ModeObject} CTR
-*/
-/**
- * @type {ModeList}
-*/
-export const Mode: ModeList;
-import BaseCryptor from "./BaseCryptor";
-export { Padding, Encoding };
+export default AesCryptor;

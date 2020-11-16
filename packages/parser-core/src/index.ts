@@ -12,7 +12,7 @@ import BaseCryptor from './BaseCryptor';
 import BaseBook from './BaseBook';
 import BaseItem from './BaseItem';
 import BaseParseContext from './BaseParseContext';
-import BaseReadContext from './BaseReadContext';
+import type BaseReadContext from './BaseReadContext';
 
 import AesCryptor from './AesCryptor';
 import CryptoProvider from './CryptoProvider';
@@ -44,7 +44,7 @@ import {
   isObject,
   isString,
   isUrl,
-} from './typecheck.ts';
+} from './typecheck';
 
 import validateOptions from './validateOptions';
 import openZip from './zipUtil';
@@ -55,7 +55,6 @@ export {
   BaseCryptor,
   BaseBook, BaseItem,
   BaseParseContext,
-  BaseReadContext,
   AesCryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Hash,
@@ -71,5 +70,6 @@ export {
   getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl,
   validateOptions,
   openZip,
-  Version,
-};
+  Version
+};  export type { BaseReadContext };
+

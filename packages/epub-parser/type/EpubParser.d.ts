@@ -1,5 +1,5 @@
 export default EpubParser;
-declare class EpubParser extends Parser {
+declare class EpubParser extends Parser<BaseParseContext> {
     /**
      * Get default values of parse options
      */
@@ -184,7 +184,7 @@ declare class EpubParser extends Parser {
      */
     getItemTypeFromMediaType(mediaType: string): FontItem | NcxItem | SpineItem | CssItem | ImageItem | SvgItem | DeadItem;
 }
-import { Parser } from "@ridi/parser-core";
+import { BaseParseContext, Parser } from "@ridi/parser-core";
 import EpubParseContext from "./model/EpubParseContext";
 import EpubBook from "./model/EpubBook";
 import FontItem from "./model/FontItem";

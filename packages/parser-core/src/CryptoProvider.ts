@@ -9,7 +9,7 @@ export enum Purpose {
 abstract class CryptoProvider {
   isStreamMode = true;
 
-  abstract getCryptor(filePath: string, purpose: Purpose) : BaseCryptor
+  protected abstract getCryptor() : BaseCryptor
 
   abstract run(data: Buffer, filePath: string, purpose: Purpose): Promise<Buffer> | Buffer;
 

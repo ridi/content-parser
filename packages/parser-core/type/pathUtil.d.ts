@@ -1,20 +1,4 @@
-/**
- * @param {string} target
- * @returns {string}
- */
-export function safePath(target: string): string;
-/**
- * @param {string} target
- * @returns {string}
- */
-export function safeDirname(target: string): string;
-/**
- * @param {string[]} components
- * @returns {string}
- */
-export function safePathJoin(...components: string[]): string;
-/**
- * @param {string} target
- * @returns {string[]}
- */
-export function getPathes(target: string): string[];
+export declare function safePath(target: string): string;
+export declare function safeDirname(target: string): string;
+export declare function safePathJoin(...components: string[]): string;
+export declare function getPathes(target: string): string[];

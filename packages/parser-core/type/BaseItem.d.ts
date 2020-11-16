@@ -1,25 +1,8 @@
-export default BaseItem;
-export type BaseItemParam = {
+declare abstract class BaseItem {
     size: number;
-};
-/**
- * @typedef {Object} BaseItemParam
- * @property {number} size
-*/
-declare class BaseItem {
-    /**
-     * @param {BaseItemParam} rawObj
-     */
-    constructor(rawObj: BaseItemParam);
-    /**
-     * @public
-     * @type {number}
-     */
-    public size: number;
-    /**
-     * @public
-     * @virtual
-     * @returns {string}
-     */
-    public toRaw(): string;
+    constructor(rawObj: {
+        size: number;
+    });
+    abstract toRaw: () => string;
 }
+export default BaseItem;

@@ -6,14 +6,14 @@ const {
 const { Pkcs7 } = pad;
 const { Utf8, Hex } = enc;
 
-interface Padding {
+interface IPadding {
   pad(data: CryptoJS.lib.WordArray, blockSize: number): void;
   unpad(data: CryptoJS.lib.WordArray): void;
 }
 
 export interface PaddingObject {
   name: string;
-  op: Padding;
+  op: IPadding;
   pad: ((data: CryptoJS.lib.WordArray) => void);
   unpad: ((data: CryptoJS.lib.WordArray) => void);
 }
@@ -23,6 +23,7 @@ interface Paddings {
   readonly PKCS7: PaddingObject;
   readonly NONE: Pick<PaddingObject, 'name' | 'op'>;
 }
+
 const Padding: Paddings = {
   AUTO: {
     name: 'auto',

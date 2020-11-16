@@ -1,31 +1,11 @@
-export default BaseReadContext;
-export type BaseReadOption = {
+import type BaseItem from "./BaseItem";
+import type { ReadEntriesReturnType } from "./readEntries";
+export interface BaseReadOption {
     force: boolean;
-};
-export type BaseReadOptionType = {
-    force: string;
-};
-/**
-  * @typedef {Object} BaseReadOption
-  * @property {boolean} force
-  *
-  * @typedef {Object} BaseReadOptionType
-  * @property {string} force
-  */
-declare class BaseReadContext {
-    /**
-     * @pblic
-     * @type {BaseReadOption}
-     */
-    options: BaseReadOption;
-    /**
-     * @public
-     * @type {import('./readEntries').ReadEntriesReturnType[]}
-     */
-    public entries: import('./readEntries').ReadEntriesReturnType[];
-    /**
-     * @public
-     * @type {Array<import('./BaseBook').default>}
-     */
-    public items: Array<import('./BaseBook').default>;
 }
+declare abstract class BaseReadContext {
+    options?: BaseReadOption;
+    entries?: ReadEntriesReturnType;
+    items?: BaseItem[];
+}
+export default BaseReadContext;

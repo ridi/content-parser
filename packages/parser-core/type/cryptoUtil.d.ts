@@ -1,96 +1,47 @@
-export type PaddingObject = {
+/// <reference types="node" />
+import * as CryptoJs from 'crypto-js';
+interface IPadding {
+    pad(data: CryptoJS.lib.WordArray, blockSize: number): void;
+    unpad(data: CryptoJS.lib.WordArray): void;
+}
+export interface PaddingObject {
     name: string;
-    op: PaddingList;
-    pad: (data: CryptoJs.lib.WordArray) => void;
-    unpad: (data: CryptoJs.lib.WordArray) => void;
-};
-export type PaddingList = {
-    AUTO: PaddingObject;
-    PKCS7: PaddingObject;
-    NONE: PaddingObject;
-};
-export type IterableObject = any[] | Uint8Array | Buffer;
-export type DecodeFunction = (uint8ArrayOrBufferOrArray: IterableObject) => CryptoJs.lib.WordArray;
-export type EncodeFunction = (wordArray: CryptoJs.lib.WordArray) => Uint8Array;
-export type UINT8Object = {
-    decode: DecodeFunction;
-    encode: EncodeFunction;
-};
-export type EncodingObject = {
+    op: IPadding;
+    pad: ((data: CryptoJS.lib.WordArray) => void);
+    unpad: ((data: CryptoJS.lib.WordArray) => void);
+}
+interface Paddings {
+    readonly AUTO: PaddingObject;
+    readonly PKCS7: PaddingObject;
+    readonly NONE: Pick<PaddingObject, 'name' | 'op'>;
+}
+declare const Padding: Paddings;
+interface EncodingObject {
     name: string;
-    decode: (str: string | IterableObject) => CryptoJs.lib.WordArray;
-    encode: (wordArray: CryptoJs.lib.WordArray) => (string | Uint8Array);
+    decode: (str: string) => CryptoJs.lib.WordArray;
+    encode: (wordArray: CryptoJs.lib.WordArray) => string;
+}
+declare type Uint8andBufferEncodingObject = Omit<Omit<EncodingObject, 'decode'>, 'encode'> & {
+    decode: (uint8ArrayOrBufferOrArray: Uint8Array | Buffer | Array<number>) => CryptoJs.lib.WordArray;
+    encode: (wordArray: CryptoJs.lib.WordArray) => Uint8Array;
 };
-export type EncodingList = {
-    UTF8: EncodingObject;
-    HEX: EncodingObject;
-    UINT8: EncodingObject;
-    BUFFER: EncodingObject;
-};
-/**
- * Use `Encoding`
- */
-export type HashFunction = (any: any, encoding?: EncodingObject) => string;
-export type HashList = {
-    md5: HashFunction;
-    sha1: HashFunction;
-    sha224: HashFunction;
-    sha256: HashFunction;
-    sha384: HashFunction;
-    sha512: HashFunction;
-    sha3: HashFunction;
-    ripemd160: HashFunction;
-};
-/**
- * @typedef {Object} PaddingObject
- * @property {string} name
- * @property {Padding} op
- * @property {(data:CryptoJs.lib.WordArray)=>void} pad
- * @property {(data:CryptoJs.lib.WordArray)=>void} unpad
- */
-/**
- * @typedef {Object} PaddingList
- * @property {PaddingObject} AUTO
- * @property {PaddingObject} PKCS7
- * @property {PaddingObject} NONE
- */
-/**
- * @type {PaddingList}
- */
-export const Padding: PaddingList;
-/**
- * @typedef {Object} EncodingObject
- * @property {string} name
- * @property {(str: string|IterableObject)=>CryptoJs.lib.WordArray} decode
- * @property {(wordArray: CryptoJs.lib.WordArray)=>(string|Uint8Array)} encode
- */
-/**
- * @typedef {Object} EncodingList
- * @property {EncodingObject} UTF8
- * @property {EncodingObject} HEX
- * @property {EncodingObject} UINT8
- * @property {EncodingObject} BUFFER
- */
-/**
- * @type {EncodingList}
- */
-export const Encoding: EncodingList;
-/**
- * @typedef {(any:any, encoding?:EncodingObject)=>string} HashFunction Use `Encoding`
- */
-/**
- * @typedef {Object} HashList
- * @property {HashFunction} md5
- * @property {HashFunction} sha1
- * @property {HashFunction} sha224
- * @property {HashFunction} sha256
- * @property {HashFunction} sha384
- * @property {HashFunction} sha512
- * @property {HashFunction} sha3
- * @property {HashFunction} ripemd160
- */
-/**
- * @type {HashList}
- */
-export const Hash: HashList;
-import * as CryptoJs from "crypto-js";
+interface Encodings {
+    readonly UTF8: EncodingObject;
+    readonly HEX: EncodingObject;
+    readonly UINT8: Uint8andBufferEncodingObject;
+    readonly BUFFER: Uint8andBufferEncodingObject;
+}
+declare const Encoding: Encodings;
+declare type HashableType = Buffer | string | Array<number> | Uint8Array;
+declare type Hashing = (target: HashableType, encoding?: EncodingObject) => string;
+declare type HashingWithSize = (target: HashableType, size: number, encoding?: EncodingObject) => string;
+interface Hashs {
+    readonly sha224: Hashing;
+    readonly sha256: Hashing;
+    readonly sha384: Hashing;
+    readonly sha512: Hashing;
+    readonly sha3: HashingWithSize;
+    readonly ripemd160: Hashing;
+}
+declare const Hash: Hashs;
+export { Padding, Encoding, Hash, };

@@ -1,53 +1,27 @@
-/**
- * Create error
- * @param {ErrorType} type
- * @param {string[]} args
- * @returns {Error}
- */
-export function createError(type: ErrorType, ...args: string[]): Error;
-/**
- * Create MustOverride error
- * @returns {Error}
- */
-export function mustOverride(): Error;
-export default Errors;
-export type ErrorType = {
+interface Error {
     code: string;
     format: string;
-};
-export type Errors = {
-    ENOENT: ErrorType;
-    ENOFILE: ErrorType;
-    EEXIST: ErrorType;
-    EINVAL: ErrorType;
-    ENOELMT: ErrorType;
-    ENOATTR: ErrorType;
-    EREQPRM: ErrorType;
-    EINTR: ErrorType;
-    ECRYT: ErrorType;
-    EPDFJS: ErrorType;
-    ENOIMP: ErrorType;
-};
+}
+interface IErrors {
+    ENOENT: Error;
+    ENOFILE: Error;
+    EEXIST: Error;
+    EINVAL: Error;
+    ENOELMT: Error;
+    ENOATTR: Error;
+    EREQPRM: Error;
+    EINTR: Error;
+    ECRYT: Error;
+    EPDFJS: Error;
+    ENOIMP: Error;
+}
+declare const Errors: IErrors;
+export default Errors;
 /**
- * @typedef ErrorType
- * @property {string} code
- * @property {string} format
-*/
-/**
- * @typedef Errors
- * @property {ErrorType} ENOENT
- * @property {ErrorType} ENOFILE
- * @property {ErrorType} EEXIST
- * @property {ErrorType} EINVAL
- * @property {ErrorType} ENOELMT
- * @property {ErrorType} ENOATTR
- * @property {ErrorType} EREQPRM
- * @property {ErrorType} EINTR
- * @property {ErrorType} ECRYT
- * @property {ErrorType} EPDFJS
- * @property {ErrorType} ENOIMP
+ * Create error
  */
+export declare function createError(type: Error, ...args: string[]): globalThis.Error;
 /**
- * @type {Errors}
+ * Create MustOverride error
  */
-declare const Errors: Errors;
+export declare function mustOverride(): void;

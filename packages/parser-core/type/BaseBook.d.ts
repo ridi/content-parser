@@ -1,12 +1,4 @@
-export default BaseBook;
-/**
- * @abstract
- * @class
- */
-declare class BaseBook {
-    /**
-     * @virtual
-     * @returns {string}
-     */
-    toRaw(): string;
+declare abstract class BaseBook {
+    abstract toRaw(): Record<string, unknown>;
 }
+export default BaseBook;
