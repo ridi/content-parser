@@ -30,6 +30,13 @@ class CryptoProvider {
   }
 
   /**
+   * Size of data to process at once
+   * `null` means use nodejs default (default: 65535)
+   * @returns {number | null}
+   */
+  get bufferSize() { return null; }
+
+  /**
    * Create or reuse AesCryptor by condition
    * @abstract
    * @param {string} filePath

@@ -166,7 +166,7 @@ function fromFile(filePath, cryptoProvider) {
     getFile: async (options = {}) => {
       const { encoding, end } = options;
       let file = await new Promise((resolve, reject) => {
-        const stream = fs.createReadStream(filePath, { highWaterMark: Math.min(1024 * 1024 * 1024, Math.ceil(size)) });
+        const stream = fs.createReadStream(filePath, { highWaterMark: cryptoProvider.bufferSize });
         let data = Buffer.from([]);
         const totalSize = Math.min(end || Infinity, size);
         stream
