@@ -1,3 +1,5 @@
+export interface ColorProps {0: number; 1: number; 2: number}
+
 class Color {
 
   get intValue(): number {
@@ -19,7 +21,7 @@ class Color {
 
   blue: number;
 
-  constructor(rawObj?: {0: number; 1: number; 2: number}) {
+  constructor(rawObj?: ColorProps) {
     this.red = rawObj?.['0'] || 0;
     this.green = rawObj?.['1'] || 0;
     this.blue = rawObj?.['2'] || 0;

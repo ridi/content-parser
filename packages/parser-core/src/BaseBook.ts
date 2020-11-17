@@ -1,4 +1,4 @@
 abstract class BaseBook {
-  abstract toRaw(): string;
+  abstract toRaw(): Record<string,string>;
 }
 export default BaseBook;
