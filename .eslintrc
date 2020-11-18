@@ -1,11 +1,5 @@
 {
-  "parser": "babel-eslint",
-  "extends": "@ridi/eslint-config",
-  "rules": {
-    "arrow-body-style": 0,
-    "arrow-parens": 0,
-    "no-param-reassign": 0,
-    "no-underscore-dangle": 0,
-    "react/destructuring-assignment": 0
-  }
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": ["plugin:@typescript-eslint/recommended"]
 }

@@ -1,17 +1,33 @@
 {
-  // Change this to match your project
-  "include": [
-    "src/**/*"
-  ],
   "compilerOptions": {
-    // Tells TypeScript to read JS files, as
-    // normally they are ignored as source files
-    "allowJs": true,
-    // Generate d.ts files
+    "target": "es2017",
+    "module": "commonjs",
+    // Object.fromEntries
+    "lib": ["dom", "es2017", "es2019.object"],
     "declaration": true,
-    // This compiler run should
-    // only output d.ts files
+    "composite": true,
     "emitDeclarationOnly": true,
-    "outDir": "type"
+    "isolatedModules": true,
+    "importsNotUsedAsValues": "error",
+    "allowJs": false,
+    "strict": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    /* This needs to be false so our types are possible to consume without setting this */
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+
+    "rootDir": "src",
+    "outDir": "lib",
+    "declarationDir": "type"
   },
+  "include": ["src"],
+  "exclude": ["lib","type"]
 }
