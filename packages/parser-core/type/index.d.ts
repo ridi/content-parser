@@ -3,7 +3,6 @@ import { getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writ
 import BaseCryptor from './BaseCryptor';
 import BaseBook from './BaseBook';
 import BaseItem from './BaseItem';
-import BaseParseContext from './BaseParseContext';
 import type BaseReadContext from './BaseReadContext';
 import AesCryptor from './AesCryptor';
 import CryptoProvider from './CryptoProvider';
@@ -21,5 +20,5 @@ import { MatchOption, stringContains, safeDecodeURI } from './stringUtil';
 import { getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl } from './typecheck';
 import validateOptions from './validateOptions';
 import openZip from './zipUtil';
-export { trim, trimStart, trimEnd, getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile, BaseCryptor, BaseBook, BaseItem, BaseParseContext, AesCryptor, CryptoProvider, Errors, createError, mustOverride, Hash, Logger, LogLevel, mergeObjects, parseBool, Parser, safeDirname, safePath, safePathJoin, getPathes, readEntries, conditionally, MatchOption, stringContains, safeDecodeURI, getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl, validateOptions, openZip, Version };
+export { trim, trimStart, trimEnd, getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile, BaseCryptor, BaseBook, BaseItem, AesCryptor, CryptoProvider, Errors, createError, mustOverride, Hash, Logger, LogLevel, mergeObjects, parseBool, Parser, safeDirname, safePath, safePathJoin, getPathes, readEntries, conditionally, MatchOption, stringContains, safeDecodeURI, getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl, validateOptions, openZip, Version };
 export type { BaseReadContext };

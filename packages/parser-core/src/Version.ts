@@ -5,8 +5,12 @@ class Version {
 
   private patch: number;
 
-  constructor(version: string) {
-    if (!/(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,3}/gm.test(version)) {
+  constructor(version?: string) {
+    if (version) {
+      if (!/(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,3}/gm.test(version)) {
+        version = '1.0';
+      }
+    }else{
       version = '1.0';
     }
     const result = version.split('.');

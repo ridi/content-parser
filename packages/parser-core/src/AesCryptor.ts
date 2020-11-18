@@ -176,7 +176,7 @@ class AesCryptor implements BaseCryptor {
     };
   }
 
-  encrypt(data: string | Buffer | Uint8Array | number[], options?: CryptOption): string | Uint8Array {
+  encrypt(data: string | Buffer | Uint8Array | number[], options?: CryptOption): string {
 
     const encoding = options?.encoding || Encoding.BUFFER;
 
@@ -198,10 +198,14 @@ class AesCryptor implements BaseCryptor {
     }
 
     // encrypt data and convert to encoding type
-    return encoding.encode(this.operator.encrypt(dataWordArray));
+    const encoded = encoding.encode(this.operator.encrypt(dataWordArray));
+    if(encoded instanceof Uint8Array){
+      return new TextDecoder('utf-8').decode(encoded)
+    }
+    return encoded;
   }
 
-  decrypt(data: Buffer | Uint8Array | number[], options?: CryptOption): string | Uint8Array {
+  decrypt(data: Buffer | Uint8Array | number[], options?: CryptOption): string {
     const padding = options?.padding || Padding.NONE;
     const encoding = options?.encoding || Encoding.BUFFER;
     let dataWordArray: CryptoJs.lib.WordArray;
@@ -245,8 +249,11 @@ class AesCryptor implements BaseCryptor {
       }
     }
 
-    // convert WordArray to encoding type
-    return encoding.encode(decryptedData);
+    const encoded = encoding.encode(this.operator.encrypt(decryptedData));
+    if(encoded instanceof Uint8Array){
+      return new TextDecoder('utf-8').decode(encoded)
+    }
+    return encoded;
   }
 }
 

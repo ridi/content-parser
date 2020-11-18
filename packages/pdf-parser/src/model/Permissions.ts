@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import { isExists } from '@ridi/parser-core';
 
+export type PermissionsProps = Array<number>;
 class Permissions {
   // Permission flags from Table 22, Section 7.6.3.2 of the PDF specification.
   static RawValue = {
@@ -13,17 +14,26 @@ class Permissions {
     ASSEMBLE: 0x400,
     PRINT_HIGH_QUALITY: 0x800,
   };
+  _rawValue: any;
+  allowPrinting: any;
+  allowContentsModifying: any;
+  allowCopying: any;
+  allowAnnotationsModifying: any;
+  allowInteractiveFormsModifying: any;
+  allowCopyingForAccessibility: any;
+  allowAssembling: any;
+  allowHighQualityPrinting: any;
 
-  constructor(rawValue) {
+  constructor(rawValue?:PermissionsProps) {
     this._rawValue = rawValue;
-    this.allowPrinting = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.PRINT) : true;
-    this.allowContentsModifying = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.MODIFY_CONTENTS) : true;
-    this.allowCopying = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.COPY) : true;
-    this.allowAnnotationsModifying = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.MODIFY_ANNOTATIONS) : true;
-    this.allowInteractiveFormsModifying = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.FILL_INTERACTIVE_FORMS) : true;
-    this.allowCopyingForAccessibility = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.COPY_FOR_ACCESSIBILITY) : true;
-    this.allowAssembling = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.ASSEMBLE) : true;
-    this.allowHighQualityPrinting = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.PRINT_HIGH_QUALITY) : true;
+    this.allowPrinting = isExists(rawValue) ? rawValue?.includes(Permissions.RawValue.PRINT) : true;
+    this.allowContentsModifying = isExists(rawValue) ? rawValue?.includes(Permissions.RawValue.MODIFY_CONTENTS) : true;
+    this.allowCopying = isExists(rawValue) ? rawValue?.includes(Permissions.RawValue.COPY) : true;
+    this.allowAnnotationsModifying = isExists(rawValue) ? rawValue?.includes(Permissions.RawValue.MODIFY_ANNOTATIONS) : true;
+    this.allowInteractiveFormsModifying = isExists(rawValue) ? rawValue?.includes(Permissions.RawValue.FILL_INTERACTIVE_FORMS) : true;
+    this.allowCopyingForAccessibility = isExists(rawValue) ? rawValue?.includes(Permissions.RawValue.COPY_FOR_ACCESSIBILITY) : true;
+    this.allowAssembling = isExists(rawValue) ? rawValue?.includes(Permissions.RawValue.ASSEMBLE) : true;
+    this.allowHighQualityPrinting = isExists(rawValue) ? rawValue?.includes(Permissions.RawValue.PRINT_HIGH_QUALITY) : true;
     Object.freeze(this);
   }
 

@@ -11,7 +11,6 @@ import {
 import BaseCryptor from './BaseCryptor';
 import BaseBook from './BaseBook';
 import BaseItem from './BaseItem';
-import BaseParseContext from './BaseParseContext';
 import type BaseReadContext from './BaseReadContext';
 
 import AesCryptor from './AesCryptor';
@@ -54,7 +53,6 @@ export {
   getCachePath, removeCacheFile, removeAllCacheFiles, readCacheFile, writeCacheFile,
   BaseCryptor,
   BaseBook, BaseItem,
-  BaseParseContext,
   AesCryptor, CryptoProvider,
   Errors, createError, mustOverride,
   Hash,

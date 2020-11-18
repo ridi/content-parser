@@ -8,12 +8,12 @@ import type BaseParseContext from './BaseParseContext';
 import type BaseReadContext from './BaseReadContext';
 import type BaseBook from './BaseBook';
 import type BaseItem from './BaseItem';
-export declare type TaskFunctions<T extends BaseParseContext> = ((context: T) => Promise<T>) | ((options?: BaseParserOption | undefined) => Promise<T>) | ((context: T) => Promise<BaseBook>) | ((items: BaseItem[], options?: BaseReadOption | undefined) => Promise<BaseReadContext>) | ((context: BaseReadContext) => Promise<Array<string | Buffer>>) | ((context?: BaseReadContext) => Promise<Array<string | Buffer> | void>);
-export interface Task<T extends BaseParseContext> {
+export declare type TaskFunctions<T extends BaseParseContext<BaseBook>> = ((context: T) => Promise<T>) | ((options?: BaseParserOption | undefined) => Promise<T>) | ((context: T) => Promise<BaseBook>) | ((items: BaseItem[], options?: BaseReadOption | undefined) => Promise<BaseReadContext>) | ((context: BaseReadContext) => Promise<Array<string | Buffer>>) | ((context?: BaseReadContext) => Promise<Array<string | Buffer> | void>);
+export interface Task<T extends BaseParseContext<BaseBook>> {
     fun: TaskFunctions<T>;
     name: string;
 }
-declare abstract class Parser<T extends BaseParseContext> {
+declare abstract class Parser<T extends BaseParseContext<BaseBook>> {
     static get parseDefaultOptions(): BaseParserOption;
     static get parseOptionTypes(): {
         [key in keyof BaseParserOption]: string;

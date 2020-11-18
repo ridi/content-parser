@@ -7,13 +7,12 @@ export interface BaseParserOption {
 }
 
 
-class BaseParseContext {
+interface BaseParseContext<T extends BaseBook> {
   options?: BaseParserOption;
 
   entries?: ReadEntriesReturnType;
 
-  rawBook?: BaseBook;
-
+  rawBook: T;
 
 }
 export default BaseParseContext;

@@ -1,141 +1,95 @@
 import { BaseBook, Version } from '@ridi/parser-core';
 
-import OutlineItem from './OutlineItem';
-import Permissions from './Permissions';
+import OutlineItem, { OutlineItemProps } from './OutlineItem';
+import Permissions, { PermissionsProps } from './Permissions';
 
+interface PdfBookProps {
+  info: {
+    PDFFormatVersion: string;
+    Version: Version;
+    Title: string;
+    Author: string;
+    Subject: string;
+    Keywords: string;
+    Creator: string;
+    Producer: string;
+    CreationDate: Date
+    ModDate: Date
+    IsLinearized: boolean
+    IsAcroFormPresent: boolean
+    IsXFAPresent: boolean
+    IsCollectionPresent: boolean
+    UserInfo: string;
+    OutlineItems: OutlineItem
+    PageCount: number
+    Permissions: Permissions
+    Custom: unknown;
+  }
+  outline: OutlineItemProps[]
+  pageMap?: Record<string, number>
+  pageCount?: number;
+  permissions: PermissionsProps;
+}
 class PdfBook extends BaseBook {
-  /**
-   * @type {import('@ridi/parser-core').Version}
-   */
-  version;
+  version: Version;
 
-  /**
-   * @type {string}
-   */
-  title;
+  title: string;
 
-  /**
-   * @type {string}
-   */
-  author;
+  author: string;
 
-  /**
-   * @type {string}
-   */
-  subject;
+  subject: string;
 
-  /**
-   * @type {string}
-   */
-  keywords;
+  keywords: string;
 
-  /**
-   * @type {string}
-   */
-  creator;
+  creator: string;
 
-  /**
-   * @type {string}
-   */
-  producer;
+  producer: string;
 
-  /**
-   * @type {Date}
-   */
-  creationDate;
+  creationDate?: Date
 
-  /**
-   * @type {Date}
-   */
-  modificationDate;
+  modificationDate?: Date
 
-  /**
-   * @type {boolean}
-   */
-  isLinearized;
+  isLinearized: boolean
 
-  /**
-   * @type {boolean}
-   */
-  isAcroFormPresent;
+  isAcroFormPresent: boolean
 
-  /**
-   * @type {boolean}
-   */
-  isXFAPresent;
+  isXFAPresent: boolean
 
-  /**
-   * @type {boolean}
-   */
-  isCollectionPresent;
+  isCollectionPresent: boolean
 
-  /**
-   * @type {string}
-   */
-  userInfo;
+  userInfo: unknown;
 
-  /**
-   * @type {OutlineItem}
-   */
-  outlineItems;
+  outlineItems: OutlineItem[]
 
-  /**
-   * @type {number}
-   */
-  pageCount;
+  pageCount: number
 
-  /**
-   * @type {import('./Permissions').default}
-   */
-  permissions;
+  permissions: Permissions
 
-  /**
-   * @typedef {Object} PdfBookParamInfo
-   * @property {string} [PDFFormatVersion]
-   * @property {string} [Title]
-   * @property {string} [Author]
-   * @property {string} [Subject]
-   * @property {string} [Keywords]
-   * @property {string} [Creator]
-   * @property {string} [Producer]
-   * @property {Date} [CreationDate]
-   * @property {Date} [ModDate]
-   * @property {boolean} [IsLinearized]
-   * @property {boolean} [IsAcroFormPresent]
-   * @property {boolean} [IsXFAPresent]
-   * @property {boolean} [IsCollectionPresent]
-   * @property {string} [Custom]
-   * @property {import('./OutlineItem').default[]} [outline]
-   * @property {number} [pageCount]
-   * @property {import('./Permissions').default} [permissions]
-   */
+  info: unknown
 
-  /**
-   *
-   * @param {{info:PdfBookParamInfo}} rawBook
-   */
-  constructor() {
+
+  constructor(rawBook?: PdfBookProps) {
     super();
-    const info = rawBook.info || {};
-    this.version = new Version(info.PDFFormatVersion);
-    this.title = info.Title || '';
-    this.author = info.Author || '';
-    this.subject = info.Subject || '';
-    this.keywords = info.Keywords || '';
-    this.creator = info.Creator || '';
-    this.producer = info.Producer || '';
-    this.creationDate = info.CreationDate;
-    this.modificationDate = info.ModDate;
-    this.isLinearized = info.IsLinearized || false;
-    this.isAcroFormPresent = info.IsAcroFormPresent || false;
-    this.isXFAPresent = info.IsXFAPresent || false;
-    this.isCollectionPresent = info.IsCollectionPresent || false;
-    this.userInfo = info.Custom || {};
-    this.outlineItems = (rawBook.outline || []).map((outlineItem) => {
-      return new OutlineItem(outlineItem, rawBook.pageMap);
+    const info = rawBook?.info;
+    this.version = new Version(info?.PDFFormatVersion);
+    this.title = info?.Title || '';
+    this.author = info?.Author || '';
+    this.subject = info?.Subject || '';
+    this.keywords = info?.Keywords || '';
+    this.creator = info?.Creator || '';
+    this.producer = info?.Producer || '';
+    this.creationDate = info?.CreationDate;
+    this.modificationDate = info?.ModDate;
+    this.isLinearized = info?.IsLinearized || false;
+    this.isAcroFormPresent = info?.IsAcroFormPresent || false;
+    this.isXFAPresent = info?.IsXFAPresent || false;
+    this.isCollectionPresent = info?.IsCollectionPresent || false;
+    this.userInfo = info?.Custom || {};
+    this.outlineItems = (rawBook?.outline || []).map((outlineItem) => {
+      return new OutlineItem(outlineItem, rawBook?.pageMap);
     });
-    this.pageCount = rawBook.pageCount || 0;
-    this.permissions = new Permissions(rawBook.permissions);
+    this.pageCount = rawBook?.pageCount || 0;
+    this.permissions = new Permissions(rawBook?.permissions);
     Object.freeze(this);
   }
 

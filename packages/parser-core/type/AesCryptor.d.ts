@@ -56,7 +56,7 @@ declare class AesCryptor implements BaseCryptor {
      */
     constructor(mode: ModeObject, config: ModeConfig);
     makeOperator(mode: ModeObject, config: ModeConfig): Operator;
-    encrypt(data: string | Buffer | Uint8Array | number[], options?: CryptOption): string | Uint8Array;
-    decrypt(data: Buffer | Uint8Array | number[], options?: CryptOption): string | Uint8Array;
+    encrypt(data: string | Buffer | Uint8Array | number[], options?: CryptOption): string;
+    decrypt(data: Buffer | Uint8Array | number[], options?: CryptOption): string;
 }
 export default AesCryptor;

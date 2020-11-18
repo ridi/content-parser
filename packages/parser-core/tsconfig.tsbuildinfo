@@ -187,23 +187,23 @@
         "affectsGlobalScope": false
       },
       "./src/basecryptor.ts": {
-        "version": "eb8ae4faaae4523259197b12eb4db1221726b5ede1bc88de913a8db22c410aca",
-        "signature": "ebe6c9c4f9d363c9095f65ff054c71b519ab76831742481d57271f6055f3a214",
+        "version": "123fc85532ffb422c2021ff62c9cd531a44fef8510c99c4684770740c9cf78fb",
+        "signature": "b4311af45163f3b0124738bd01e7807e986f49f4c5d14c63b5ff1747137ee4e3",
         "affectsGlobalScope": false
       },
       "./src/aescryptor.ts": {
-        "version": "8ea56b8e012ea1617bf8770c582b6d4222586f0e3b2cc3e8d55f191a1511783d",
-        "signature": "61242972fdfb980c37c938fe08f3836d885341751a79a7ee56db4333226b988a",
+        "version": "764524e43eb70ca9fa59d3101c88ef8d48e86d710023d8a631d101a0efe385ae",
+        "signature": "ed56d8da75edd9ba859cacfca77c420c6d4283af470aae423f58ce112d326211",
         "affectsGlobalScope": false
       },
       "./src/basebook.ts": {
-        "version": "6dad263b7de46a966be2a657f2c8bd33028eccf097da096ed9f0cfe700687813",
-        "signature": "5ffcd9613547c6c55d012108b680631e452d98646400ef08334817dffcf6e326",
+        "version": "f868727c6193372209edf42fde8028a9a541dbb7cc849f825385bb6c52bdd7ae",
+        "signature": "2627124fbbf123418576fab952ca7413a574db6799fde84afbd5413696b5d1c2",
         "affectsGlobalScope": false
       },
       "./src/baseitem.ts": {
-        "version": "220ac664c118d511d70b8fd57d99a63c074fb980093223b2b7f3fa9f5ee34abb",
-        "signature": "3483c4ecd5adad2bf6b7dc2b9f2b1c5530a0988f2f79d1189fedc0e34e091aa3",
+        "version": "c90021a00c71edce8e9603cbe4f6e5ec640e9172e3fb7ab353ff464c71e84aa9",
+        "signature": "e7d520d182e0b8bea8fa2a215fdd277e7dfa84fb9625f07caa2b398556a2f65f",
         "affectsGlobalScope": false
       },
       "./node_modules/@types/node/globals.d.ts": {
@@ -512,8 +512,8 @@
         "affectsGlobalScope": false
       },
       "./src/baseparsecontext.ts": {
-        "version": "9adc017e4d448903c43ecfd17468e58239fa9c879a9101df0a736fb46afe838b",
-        "signature": "4e08c19a641b8e8430c0cc4f650333783bd8819c01db2dbd5664290375fadd46",
+        "version": "9ef2fd1c07e02ef15226aeec69914174e71767a0ee749a24ea725bc11fed75f6",
+        "signature": "964fe3376c206866909d73a2a9e8b01e696b91d7f45587f31cd6f4e258568443",
         "affectsGlobalScope": false
       },
       "./src/basereadcontext.ts": {
@@ -522,13 +522,13 @@
         "affectsGlobalScope": false
       },
       "./src/parser.ts": {
-        "version": "521f58627a15c21bd227659890333c99d1d4bd881436a34396323beb5e31fda1",
-        "signature": "fba21b19a344b717ffc515914e9223a1aadc7ae81a01ebf92cf6dba0f3357d1f",
+        "version": "80a8f36ae69b30fca9c67290ad15bc6489f9c56378a2eda0fca14fba19cc66ed",
+        "signature": "3806f4c3a9d2769c422425d3009579fee23569f1519707cec368a222f169a785",
         "affectsGlobalScope": false
       },
       "./src/version.ts": {
-        "version": "96d5fd98586914b7b8a5903367f09e7b0d473f9f4f45124654ba93c79a630035",
-        "signature": "1b870da87a4753eda285e308815d0a5c12339ec47585ec08278c9ca763aca9f5",
+        "version": "ee89295fa58ee0ff787363b43cf15e0e4ccb4e1ed2f3ec4a9189e227ac385feb",
+        "signature": "61d8eba1790241b83b76add81512069517d4a0cb380c1055ad28bf9b1e2c6dc5",
         "affectsGlobalScope": false
       },
       "./src/parsebool.ts": {
@@ -537,8 +537,8 @@
         "affectsGlobalScope": false
       },
       "./src/index.ts": {
-        "version": "03cb1d953280bfe76bc4a3bfba688b35788048b8647be97d3cdcc672bf07b85f",
-        "signature": "8f7cb4011ff3a4abfc4b512d5b6c5e029da41ba2935179de740ef0472e86e127",
+        "version": "737e72113579c9ff3d000172d4d9fbd49eff888edcf7a664cda0fddcef0d3cbe",
+        "signature": "2768f3024331fc0571ff051a80ac22b847e985cc80760572cd98668a2ce6da85",
         "affectsGlobalScope": false
       },
       "./node_modules/@types/sha1/index.d.ts": {
@@ -869,7 +869,6 @@
         "./src/basebook.ts",
         "./src/basecryptor.ts",
         "./src/baseitem.ts",
-        "./src/baseparsecontext.ts",
         "./src/basereadcontext.ts",
         "./src/bufferutil.ts",
         "./src/cachefile.ts",
@@ -1185,7 +1184,6 @@
         "./src/basebook.ts",
         "./src/basecryptor.ts",
         "./src/baseitem.ts",
-        "./src/baseparsecontext.ts",
         "./src/basereadcontext.ts",
         "./src/bufferutil.ts",
         "./src/cachefile.ts",

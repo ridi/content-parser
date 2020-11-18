@@ -2,7 +2,7 @@ declare class Version {
     private major;
     private minor;
     private patch;
-    constructor(version: string);
+    constructor(version?: string);
     /**
      * Get Version as string
      * @returns {string} version

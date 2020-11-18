@@ -4,7 +4,7 @@ import {
 } from '@ridi/parser-core';
 import type { BaseItemProps } from '@ridi/parser-core/type/BaseItem';
 import Color, { ColorProps } from './Color';
-interface OutlineItemProps extends BaseItemProps {
+export interface OutlineItemProps extends BaseItemProps {
   dest?: string | number | { num: number }[];
   url?: string;
   title?: string;

@@ -33,7 +33,7 @@ enum Action {
   UNZIP = 'unzip',
 }
 
-export type TaskFunctions<T extends BaseParseContext> =
+export type TaskFunctions<T extends BaseParseContext<BaseBook>> =
 ((context: T) => Promise<T>)
 | ((options?: BaseParserOption | undefined) => Promise<T>)
 | ((context: T) => Promise<BaseBook>)
@@ -42,11 +42,11 @@ export type TaskFunctions<T extends BaseParseContext> =
 | ((context?: BaseReadContext)=> Promise<Array<string | Buffer> | void>);
 
 const privateProps = new WeakMap();
-export interface Task<T extends BaseParseContext>{
+export interface Task<T extends BaseParseContext<BaseBook>>{
   fun: TaskFunctions<T>
   name: string
 }
-abstract class Parser<T extends BaseParseContext> {
+abstract class Parser<T extends BaseParseContext<BaseBook>> {
   static get parseDefaultOptions(): BaseParserOption {
     return {
       unzipPath: undefined,

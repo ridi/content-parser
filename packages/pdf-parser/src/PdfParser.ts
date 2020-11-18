@@ -1,7 +1,7 @@
 import { BaseReadContext, createError, CryptoProvider, Errors, isExists, isString, LogLevel, Parser, readEntries, Task } from "@ridi/parser-core";
 import fs from 'fs-extra';
 import type { BaseParserOption } from "@ridi/parser-core/type/BaseParseContext";
-import pdfjs, { PDFWorker } from "pdfjs-dist";
+import pdfJs, { PDFLoadingTask, PDFPromise, PDFWorker } from "pdfjs-dist";
 import PdfBook from "./model/PdfBook";
 import PdfParseContext from "./model/PdfParseContext";
 
@@ -93,28 +93,23 @@ class PdfParser extends Parser<PdfParseContext> {
    * @param {*[]} args
    * @returns {*}
    */
-  private async execute(that, fun, args = []) {
-    const result = await new Promise((resolve, reject) => {
-      let runner = fun.apply(that, args);
-      if (isExists(runner.promise)) {
-        runner = runner.promise;
-      }
-      runner.then((data) => {
+  private async execute<T>(that: any, fun:(...param: any[]) => PDFLoadingTask<T> | PDFPromise<T>, args?: any[]): Promise<T> {
+    return new Promise((resolve) => {
+      const runner = fun.apply(that, args);
+      const runnerPromise = runner.promise;
+      runnerPromise.then((data) => {
         resolve(data);
-      }).catch((error) => {
-        reject(createError(Errors.EPDFJS, error));
-      });
+      })
     });
-    return result;
   }
 
   private async loadDocuemnt(context: PdfParseContext) {
     const { rawBook, entries, options } = context;
-    const worker = options?. ? new PDFWorker(`pdfWorker_${uuid()}`) : null;
-    const data = await entries.first.getFile();
-    const document = await this.execute(pdfJs, pdfJs.getDocument, [{ data, worker }]);
+    const worker = options? new PDFWorker(`pdfWorker_${uuid()}`) : null;
+    const data = await entries?.first.getFile();
+    const document = await this.execute<pdfJs.PDFDocumentProxy>(pdfJs, pdfJs.getDocument, [{ data, worker }]);
     context.document = document;
-    context.worker = worker;
+    context.worker = worker || undefined;
     rawBook.pageCount = document.numPages;
     return context;
   }
@@ -125,9 +120,9 @@ class PdfParser extends Parser<PdfParseContext> {
    * @returns {Promise<PdfParseContext>} return Context containing metadata
    * @throws {Errors.EPDFJS} pdfjs error
    */
-  private async parseMetadata(context) {
+  private async parseMetadata(context: PdfParseContext) {
     const { rawBook, document } = context;
-    const metadata = await this._execute(document, document.getMetadata);
+    const metadata = await this.execute<any>(document, document.getMetadata);
     const { info } = metadata;
     const { Title: title } = info;
     if (!isExists(title) || title.length === 0) {
@@ -143,7 +138,7 @@ class PdfParser extends Parser<PdfParseContext> {
    * @returns {Promise<PdfParseContext>} return Context containing outline
    * @throws {Errors.EPDFJS} pdfjs error
    */
-  private async parseOutline(context) {
+  private async parseOutline(context: PdfParseContext) {
     const { rawBook, document } = context;
     const outline = await this.execute(document, document.getOutline);
     if (isExists(outline)) {
