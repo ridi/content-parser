@@ -130,6 +130,17 @@ describe('Util - entry manager', () => {
       file.should.not.null;
     });
 
+    it('Read entries from file', async () => {
+      const entries = await readEntries(Paths.PDF, new TestAsyncCryptoProvider);
+      entries.source.should.equal(Paths.PDF);
+      entries.length.should.equal(1);
+
+      const entry = entries.first;
+      entry.entryPath.should.equal(Paths.PDF);
+      const file = await entry.getFile();
+      file.should.not.null;
+    });
+
     describe('Error Situation', () => {
       it('Invalid file path', () => {
         return readEntries('?!').catch((err) => {

@@ -11,6 +11,8 @@ const { Mode, Padding } = AesCryptor;
 class TestAsyncCryptoProvider extends CryptoProvider {
   isStreamMode = false;
 
+  bufferSize = 1024;
+
   constructor(key) {
     super();
   }
