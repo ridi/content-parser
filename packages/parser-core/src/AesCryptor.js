@@ -181,7 +181,7 @@ class AesCryptor {
 
   /**
    * Encrypt string
-   * @param {string} data
+   * @param {Buffer | Uint8Array | number[]} data
    * @param {CryptOption} options
    * @returns {string} encrypted string
    */
@@ -210,7 +210,7 @@ class AesCryptor {
 
   /**
    * Decrupt string
-   * @param {string} data
+   * @param {Buffer | Uint8Array | number[]} data
    * @param {CryptOption} options
    * @returns {string} decrypted string
    */

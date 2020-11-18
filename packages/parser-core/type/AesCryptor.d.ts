@@ -49,21 +49,21 @@ declare class AesCryptor {
      */
     /**
      * Encrypt string
-     * @param {string} data
+     * @param {Buffer | Uint8Array | number[]} data
      * @param {CryptOption} options
      * @returns {string} encrypted string
      */
-    encrypt(data: string, options?: {
+    encrypt(data: Buffer | Uint8Array | number[], options?: {
         padding: import('./cryptoUtil').PaddingObject;
         encoding: import('./cryptoUtil').EncodingObject;
     }): string;
     /**
      * Decrupt string
-     * @param {string} data
+     * @param {Buffer | Uint8Array | number[]} data
      * @param {CryptOption} options
      * @returns {string} decrypted string
      */
-    decrypt(data: string, options?: {
+    decrypt(data: Buffer | Uint8Array | number[], options?: {
         padding: import('./cryptoUtil').PaddingObject;
         encoding: import('./cryptoUtil').EncodingObject;
     }): string;
