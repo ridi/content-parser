@@ -1,13 +1,11 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { isBool, isString } from './typecheck';
 import { stringContains } from './stringUtil';
-/**
- * Return boolean form of any input
- * @param {any} any
- * @returns {boolean}
- */
-export default function parseBool(any) {
-  if (isBool(any)) {
-    return any;
+
+export default function parseBool(target: any): boolean {
+  if (isBool(target)) {
+    return target;
   }
-  return isString(any) ? stringContains(['true', 't', '1', 'yes', 'y'], any) : false;
+  return isString(target) ? stringContains(['true', 't', '1', 'yes', 'y'], target) : false;
 }
