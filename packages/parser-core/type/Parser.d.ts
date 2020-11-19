@@ -4,7 +4,7 @@ import Logger from './Logger';
 import type { BaseParserOption } from './BaseParseContext';
 import type { BaseReadOption } from './BaseReadContext';
 import type { LoggerOption } from './Logger';
-import type BaseParseContext from './BaseParseContext';
+import type { BaseParseContext } from './BaseParseContext';
 import type BaseReadContext from './BaseReadContext';
 import type BaseBook from './BaseBook';
 import type BaseItem from './BaseItem';

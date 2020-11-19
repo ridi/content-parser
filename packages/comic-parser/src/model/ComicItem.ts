@@ -1,4 +1,5 @@
 import { BaseItem, isExists } from '@ridi/parser-core';
+import { BaseItemProps } from '@ridi/parser-core/type/BaseItem';
 import path from 'path';
 /**
  * @typedef {Object} ComicItemProperties
@@ -7,32 +8,23 @@ import path from 'path';
  * @property {number} [width]
  * @property {number} [height]
  */
-
+interface ComicItemProps extends BaseItemProps {
+  index: number;
+  path: string;
+  width: number;
+  height: number;
+}
 class ComicItem extends BaseItem {
-  /**
-   * @type {number}
-   */
-  index;
 
-  /**
-   * @type {string}
-   */
-  path;
+  index: number;
 
-  /**
-   * @type {number}
-   */
-  width;
+  path: string;
 
-  /**
-     * @type {number}
-   */
-  height;
+  width: number;
 
-  /**
-   * @return {string}
-   */
-  get mimeType() {
+  height: number;
+
+  get mimeType(): string {
     const ext = path.extname(this.path).toLocaleLowerCase().replace('.', '');
     switch (ext) {
       case 'jpg':
@@ -51,7 +43,7 @@ class ComicItem extends BaseItem {
    * @param {ComicItemProperties} rawObj
    * @param {boolean} freeze
    */
-  constructor(rawObj = {}, freeze = true) {
+  constructor(rawObj: ComicItemProps, freeze = true) {
     super(rawObj);
     this.index = rawObj.index;
     this.path = rawObj.path;

@@ -512,8 +512,8 @@
         "affectsGlobalScope": false
       },
       "./src/baseparsecontext.ts": {
-        "version": "9ef2fd1c07e02ef15226aeec69914174e71767a0ee749a24ea725bc11fed75f6",
-        "signature": "964fe3376c206866909d73a2a9e8b01e696b91d7f45587f31cd6f4e258568443",
+        "version": "c7e66691960013211cc961396fbb6592427464371ddffd0a95170b4a7f265b08",
+        "signature": "240f54f315200fd5eaf54bd1a686f8e3328269c411734f8954bf0e7ab78aceee",
         "affectsGlobalScope": false
       },
       "./src/basereadcontext.ts": {
@@ -522,8 +522,8 @@
         "affectsGlobalScope": false
       },
       "./src/parser.ts": {
-        "version": "80a8f36ae69b30fca9c67290ad15bc6489f9c56378a2eda0fca14fba19cc66ed",
-        "signature": "3806f4c3a9d2769c422425d3009579fee23569f1519707cec368a222f169a785",
+        "version": "0b7208f93fd148c46c698974f97df7940546072eeb26f68cdd1387e38255b15c",
+        "signature": "9a70b0352285d49f1c8003825d94a94abfbab4136ef7d576163b8a63255cd6d2",
         "affectsGlobalScope": false
       },
       "./src/version.ts": {
@@ -537,8 +537,8 @@
         "affectsGlobalScope": false
       },
       "./src/index.ts": {
-        "version": "737e72113579c9ff3d000172d4d9fbd49eff888edcf7a664cda0fddcef0d3cbe",
-        "signature": "2768f3024331fc0571ff051a80ac22b847e985cc80760572cd98668a2ce6da85",
+        "version": "5b95c2fa39bc9d1b3e8450ef0acc287259d389aeae66ced55d9c767d153d32e2",
+        "signature": "335f61a68aed92fef6f3359fd313c1030094e73f9b4679cf261ee2432c6a0068",
         "affectsGlobalScope": false
       },
       "./node_modules/@types/sha1/index.d.ts": {
@@ -869,6 +869,7 @@
         "./src/basebook.ts",
         "./src/basecryptor.ts",
         "./src/baseitem.ts",
+        "./src/baseparsecontext.ts",
         "./src/basereadcontext.ts",
         "./src/bufferutil.ts",
         "./src/cachefile.ts",
@@ -1184,6 +1185,7 @@
         "./src/basebook.ts",
         "./src/basecryptor.ts",
         "./src/baseitem.ts",
+        "./src/baseparsecontext.ts",
         "./src/basereadcontext.ts",
         "./src/bufferutil.ts",
         "./src/cachefile.ts",

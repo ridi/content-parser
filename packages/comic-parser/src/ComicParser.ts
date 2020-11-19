@@ -1,7 +1,7 @@
 import {
-  Parser, isString, stringContains, isExists, createError, Errors,
+  Parser, isString, stringContains, isExists, createError, Errors, BaseCryptor, LogLevel, CryptoProvider,
 } from '@ridi/parser-core';
-import sizeOf from 'image-size';
+import * as imageSize from 'image-size';
 import * as path from 'path';
 import naturalCompare from 'string-natural-compare';
 
@@ -9,12 +9,15 @@ import ComicBook from './model/ComicBook';
 import ComicItem from './model/ComicItem';
 import ComicReadContext from './model/ComicReadContext';
 import ComicParseContext from './model/ComicParseContext';
+import type { BaseParserOption } from '@ridi/parser-core/type/BaseParseContext';
+import type { BaseReadOption } from '@ridi/parser-core/type/BaseReadContext';
+import type { Task } from '@ridi/parser-core/type/Parser';
 
-class ComicParser extends Parser {
+class ComicParser extends Parser<ComicParseContext> {
   /**
    * Get default values of parse options
    */
-  static get parseDefaultOptions() {
+  static get parseDefaultOptions(): BaseParserOption & { ext: string[], parseImageSize: boolean } {
     return {
       ...super.parseDefaultOptions,
       // File extension to allow when extracting lists.
@@ -27,7 +30,7 @@ class ComicParser extends Parser {
   /**
    * Get types of parse options
    */
-  static get parseOptionTypes() {
+  static get parseOptionTypes(): Record<keyof BaseParserOption, string> & { ext: string, parseImageSize: string } {
     return {
       ...super.parseOptionTypes,
       ext: 'Array',
@@ -36,17 +39,10 @@ class ComicParser extends Parser {
   }
 
   /**
-   * @typedef {Object} ComicReadOptionExtra
-   * @property {boolean} base64
-   *
-   * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOption & ComicReadOptionExtra} ComicReadOption
-   */
-
-  /**
    * Get default values of read options
    * @returns {ComicReadOption}
    */
-  static get readDefaultOptions() {
+  static get readDefaultOptions(): BaseReadOption & { base64: boolean } {
     return {
       ...super.readDefaultOptions,
       // If false, reads image into a buffer.
@@ -55,18 +51,10 @@ class ComicParser extends Parser {
   }
 
   /**
-   * @typedef {Object} ComicReadOptionTypeExtra
-   * @property {string} base64
-   *
-   * @typedef {import('@ridi/parser-core/type/BaseReadContext').BaseReadOptionType
-   * & ComicReadOptionTypeExtra} ComicReadOptionType
-   */
-
-  /**
    * Get types of read option
    * @returns {ComicReadOptionType}
    */
-  static get readOptionTypes() {
+  static get readOptionTypes(): Record<keyof BaseReadOption, string> & { base64: string } {
     return {
       ...super.readOptionTypes,
       base64: 'Boolean',
@@ -75,66 +63,42 @@ class ComicParser extends Parser {
 
   /**
    * Create new ComicParser
-   * @param {string} input file or directory
-   * @param {import('@ridi/parser-core').CryptoProvider} cryptoProvider en/decrypto provider
-   * @param {import('@ridi/parser-core').LogLevel} logLevel logging level
-   * @throws {Errors.ENOENT} no such file or directory
-   * @throws {Errors.EINVAL} invalid input
    * @example new ComicParser('./foo/bar.zip' or './foo/bar');
    */
-  constructor(input, cryptoProvider, logLevel) {
+  constructor(input: string, cryptoProvider?: CryptoProvider, logLevel?: LogLevel) {
     /* istanbul ignore next */
-    logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
+    logLevel = isString(cryptoProvider) ? LogLevel.WARN : logLevel;
     cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
     super(input, cryptoProvider, { namespace: 'ComicParser', logLevel });
   }
 
-  /**
-   * @returns {ComicParseContext}
-   */
-  _getParseContextClass() {
-    return ComicParseContext;
+  getParseContextClass(): ComicParseContext {
+    return new ComicParseContext;
   }
 
-  /**
-   * @returns {ComicBook}
-   */
-  _getBookClass() {
+  getBookClass(): typeof ComicBook {
     return ComicBook;
   }
 
-  /**
-   * @returns {ComicReadContext}
-   */
-  _getReadContextClass() {
+  getReadContextClass(): ComicReadContext {
     return ComicReadContext;
   }
 
-  /**
-   * @returns {ComicItem}
-   */
-  _getReadItemClass() {
+  getReadItemClass(): typeof ComicItem {
     return ComicItem;
   }
 
-  /**
-   * @returns {import('@ridi/parser-core/type/Parser').Task[]} return tasks
-   */
-  _parseTasks() {
+  parseTasks(): Task<ComicParseContext>[] {
     return [
-      ...super._parseTasks(),
+      ...super.parseTasks(),
       { fun: this._parse, name: 'parse' },
     ];
   }
 
   /**
    * extracts only necessary metadata from entries and create item list
-   * @param {ComicReadContext} context intermediate result
-   * @returns {Promise<ComicReadContext>} return Context containing item list
-   * @see ComicParser.parseDefaultOptions.ext
-   * @see ComicParser.parseDefaultOptions.parseImageSize
    */
-  async _parse(context) {
+  async parse(context: ComicReadContext): Promise<ComicReadContext> {
     const { entries, rawBook, options } = context;
     const items = entries.sort((e1, e2) => naturalCompare(e1.entryPath, e2.entryPath))
       .filter((entry) => {
@@ -148,7 +112,7 @@ class ComicParser extends Parser {
           index,
           path: item.entryPath,
           size: item.size,
-          ...await this._parseImageSize(item, options),
+          ...await this.parseImageSize(item, options),
         });
       });
     }, Promise.resolve());
@@ -167,7 +131,7 @@ class ComicParser extends Parser {
    * @param {ComicParser.parseDefaultOptions} options parse options
    * @returns {Promise<ImageMetaData>} return image size
    */
-  async _parseImageSize(entry, options) {
+  async parseImageSize(entry, options) {
     const { parseImageSize } = options;
     if (parseImageSize === false) {
       return {};
@@ -175,7 +139,7 @@ class ComicParser extends Parser {
     const readOptions = Number.isInteger(parseImageSize) ? { end: parseImageSize } : {};
     const buffer = await entry.getFile(readOptions);
     try {
-      const size = sizeOf(buffer);
+      const size = imageSize.imageSize(buffer);
       return { width: size.width, height: size.height };
     } catch (e) {
       this.logger.error(e);

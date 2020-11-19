@@ -11,6 +11,7 @@ import {
 import BaseCryptor from './BaseCryptor';
 import BaseBook from './BaseBook';
 import BaseItem from './BaseItem';
+import type { BaseParseContext } from './BaseParseContext';
 import type BaseReadContext from './BaseReadContext';
 
 import AesCryptor from './AesCryptor';
@@ -69,5 +70,5 @@ export {
   validateOptions,
   openZip,
   Version
-};  export type { BaseReadContext };
+}; export type { BaseReadContext, BaseParseContext};
 

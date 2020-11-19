@@ -1,6 +1,5 @@
-import { BaseReadContext, createError, CryptoProvider, Errors, isExists, isString, LogLevel, Parser, readEntries, Task } from "@ridi/parser-core";
+import {  createError, CryptoProvider, Errors, isExists, isString, LogLevel, Parser, readEntries, Task } from "@ridi/parser-core";
 import fs from 'fs-extra';
-import type { BaseParserOption } from "@ridi/parser-core/type/BaseParseContext";
 import pdfJs, { PDFLoadingTask, PDFPromise, PDFWorker } from "pdfjs-dist";
 import PdfBook from "./model/PdfBook";
 import PdfParseContext from "./model/PdfParseContext";
