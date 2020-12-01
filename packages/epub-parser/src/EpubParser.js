@@ -356,7 +356,8 @@ class EpubParser extends Parser {
         title, creator, subject, description, publisher, contributor, date, type,
         format, identifier, source, language, relation, coverage, rights, meta,
       } = metadata;
-      rawBook.titles = getValues(title);
+      /* istanbul ignore next */
+      rawBook.titles = getValues(title, key => (key === textNodeName ? 'name' : key));
       rawBook.creators = getValues(creator, key => (key === textNodeName ? 'name' : key));
       rawBook.subjects = getValues(subject);
       rawBook.description = getValue(description);
