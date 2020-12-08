@@ -699,7 +699,7 @@ class EpubParser extends Parser {
     await items.reduce((prevPromise, item) => {
       return prevPromise.then(async () => {
         if (item instanceof InlineCssItem) {
-          results.push(cssLoader(item, item.text, options));
+          results.push(cssLoader(item, item.style, options));
           return;
         }
 
