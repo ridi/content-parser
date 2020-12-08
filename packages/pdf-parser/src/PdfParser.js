@@ -6,7 +6,7 @@ import {
 } from '@ridi/parser-core';
 
 import fs from 'fs';
-import * as pdfjsLib from 'pdfjs-dist';
+import * as pdfjsLib from 'pdfjs-dist/es5/build/pdf';
 import uuid from 'uuid/v4';
 
 import PdfBook from './model/PdfBook';
