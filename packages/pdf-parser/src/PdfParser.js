@@ -6,7 +6,7 @@ import {
 } from '@ridi/parser-core';
 
 import fs from 'fs';
-import * as PDFJS from 'pdfjs-dist/es5/build/pdf';
+import * as pdfjsLib from 'pdfjs-dist';
 import uuid from 'uuid/v4';
 
 import PdfBook from './model/PdfBook';
@@ -138,9 +138,9 @@ class PdfParser extends Parser {
    */
   async _loadDocuemnt(context) {
     const { rawBook, entries, options } = context;
-    const worker = options.fakeWorker ? new PDFJS.PDFWorker(`pdfWorker_${uuid()}`) : null;
+    const worker = options.fakeWorker ? new pdfjsLib.PDFWorker(`pdfWorker_${uuid()}`) : null;
     const data = await entries.first.getFile();
-    const document = await this._execute(PDFJS, PDFJS.getDocument, [{ data, worker }]);
+    const document = await this._execute(pdfjsLib, pdfjsLib.getDocument, [{ data, worker }]);
     context.document = document;
     context.worker = worker;
     rawBook.pageCount = document.numPages;
