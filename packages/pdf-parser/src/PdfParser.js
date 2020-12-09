@@ -7,8 +7,7 @@ import {
 
 import fs from 'fs';
 import * as pdfjsLib from 'pdfjs-dist/es5/build/pdf';
-import uuid from 'uuid/v4';
-
+import { v4 as uuid } from 'uuid';
 import PdfBook from './model/PdfBook';
 import PdfParseContext from './model/PdfParseContext';
 
