@@ -6,9 +6,8 @@ import {
 } from '@ridi/parser-core';
 
 import fs from 'fs';
-import pdfJs, { PDFWorker } from 'pdfjs-dist';
+import * as pdfjsLib from 'pdfjs-dist/es5/build/pdf';
 import { v4 as uuid } from 'uuid';
-
 import PdfBook from './model/PdfBook';
 import PdfParseContext from './model/PdfParseContext';
 
@@ -134,13 +133,13 @@ class PdfParser extends Parser {
    * load pdf document and get number of pages
    * @param {BaseReadContext} context intermediate result
    * @returns {Promise<BaseReadContext>} return Context containing document and page count
-   * @throws {Errors.EPDFJS} pdfjs error
+   * @throws {Errors.EPDFJS} PDFJS error
    */
   async _loadDocuemnt(context) {
     const { rawBook, entries, options } = context;
-    const worker = options.fakeWorker ? new PDFWorker(`pdfWorker_${uuid()}`) : null;
+    const worker = options.fakeWorker ? new pdfjsLib.PDFWorker(`pdfWorker_${uuid()}`) : null;
     const data = await entries.first.getFile();
-    const document = await this._execute(pdfJs, pdfJs.getDocument, [{ data, worker }]);
+    const document = await this._execute(pdfjsLib, pdfjsLib.getDocument, [{ data, worker }]);
     context.document = document;
     context.worker = worker;
     rawBook.pageCount = document.numPages;
@@ -151,7 +150,7 @@ class PdfParser extends Parser {
    * Metadata parsing in Document
    * @param {PdfParseContext} context intermediate result
    * @returns {Promise<PdfParseContext>} return Context containing metadata
-   * @throws {Errors.EPDFJS} pdfjs error
+   * @throws {Errors.EPDFJS} PDFJS error
    */
   async _parseMetadata(context) {
     const { rawBook, document } = context;
@@ -169,7 +168,7 @@ class PdfParser extends Parser {
    * Outline parsing in Document
    * @param {PdfParseContext} context intermediate result
    * @returns {Promise<PdfParseContext>} return Context containing outline
-   * @throws {Errors.EPDFJS} pdfjs error
+   * @throws {Errors.EPDFJS} PDFJS error
    */
   async _parseOutline(context) {
     const { rawBook, document } = context;
@@ -227,7 +226,7 @@ class PdfParser extends Parser {
    * Permission parsing in Document
    * @param {PdfParseContext} context intermediate result
    * @returns {Promise<PdfParseContext>} return Context containing permissions
-   * @throws {Errors.EPDFJS} pdfjs error
+   * @throws {Errors.EPDFJS} PDFJS error
    */
   async _parsePermission(context) {
     const { rawBook, document } = context;

@@ -21,12 +21,12 @@
   "types": "type/index.d.ts",
   "dependencies": {
     "@ridi/parser-core": "0.7.2-alpha.3",
-    "pdfjs-dist": "2.2.228",
+    "pdfjs-dist": "2.5.207",
     "uuid": "^8.3.0",
     "worker-loader": "^3.0.2"
   },
   "devDependencies": {
-    "@types/pdfjs-dist": "^2.1.6",
+    "@types/pdfjs-dist": "^2.1.7",
     "@types/uuid": "^8.3.0",
     "fs-extra": "^9.0.1"
   }
