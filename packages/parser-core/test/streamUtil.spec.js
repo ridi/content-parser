@@ -37,13 +37,13 @@ describe('Util - stream', () => {
 
   it('conditionally test (false)', () => {
     return test(false).then((data) => {
-      data.length.should.equal(1196);
+      data.length.should.equal(1222);
     });
   });
 
   it('conditionally test (false)', () => {
     return test(()=>false).then((data) => {
-      data.length.should.equal(1196);
+      data.length.should.equal(1222);
     });
   });
 });

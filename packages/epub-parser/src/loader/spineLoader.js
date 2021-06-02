@@ -65,6 +65,9 @@ function formatAttributes(attributes, options) {
         return `${attrs} ${key}="${safePathJoin(basePath, value)}"`;
       }
     }
+    if (options.ignoreScript && key.toLowerCase().startsWith('on')) {
+      return attrs;
+    }
     return `${attrs} ${key}="${value}"`;
   }, '');
 }
