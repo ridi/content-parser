@@ -7,10 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.7.2 (2021-06-02)]
+
+### Changed
+
+* Improve PDF parsing speed.
+* Bump `PDF.js` version to 2.5.207.
+
+### Fixed
+
+* Fix an issue where title in OPF could not be read when it was identified by id.
+* Fix an issue where inline styles could not be read.
 
 ## [0.7.1 (2020-11-13)]
 
 ### Added
+
 * Types for Typescript support.
 * Documentations
 
@@ -19,8 +31,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 * Replace `unzipper` with `adm-zip`.
-* Changed Parsers to accept async CryptoProvider methods.
-* Added an option to the CryptoProvider to not handle stream in chunks.
+* Changed Parsers to accept async `CryptoProvider` methods.
+* Added an option to the `CryptoProvider` to not handle stream in chunks.
 
 ### Fixed
 
@@ -320,7 +332,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.7.1...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.7.2...HEAD
+[0.7.2 (2021-06-02)]: https://github.com/ridi/content-parser/compare/0.7.1...0.7.2
 [0.7.1 (2020-11-13)]: https://github.com/ridi/content-parser/compare/0.7.0...0.7.1
 [0.7.0 (2020-10-31)]: https://github.com/ridi/content-parser/compare/0.6.15...0.7.0
 [0.6.15 (2020-09-05)]: https://github.com/ridi/content-parser/compare/0.6.14...0.6.15
