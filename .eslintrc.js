@@ -1,7 +1,4 @@
 module.exports = {
-  extends: [
-    '@ridi/eslint-config',
-  ],
   parser: '@babel/eslint-parser',
   parserOptions: {
     babelOptions: {
