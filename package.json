@@ -5,7 +5,7 @@
     "test": "yarn build && yarn lint && lerna exec --concurrency 1 -- nyc mocha --recursive",
     "type": "lerna exec -- tsc",
     "type:doc": "lerna exec --scope @ridi/content-parser -- typedoc",
-    "lint": "eslint packages",
+    "lint": "eslint .",
     "postinstall": "yarn build && yarn bootstrap",
     "bootstrap": "lerna bootstrap",
     "bump": "lerna publish --force-publish=* --exact"
