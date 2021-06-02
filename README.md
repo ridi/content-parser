@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/ridi/content-parser.svg?branch=master)](https://travis-ci.com/ridi/content-parser)
+[![Check](https://github.com/ridi/content-parser/actions/workflows/check.yml/badge.svg)](https://github.com/ridi/content-parser/actions/workflows/check.yml)
 [![codecov](https://codecov.io/gh/ridi/content-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/ridi/content-parser)
 
 # Packages
