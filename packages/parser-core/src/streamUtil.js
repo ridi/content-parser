@@ -1,6 +1,7 @@
-/* eslint-disable import/prefer-default-export */
 import * as es from 'event-stream';
+
 import { isFunc } from './typecheck';
+
 /**
  * Apply event stream conditionally
  * @param {boolean | (()=>boolean)} condition

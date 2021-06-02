@@ -1,5 +1,9 @@
+import AesCryptor from './AesCryptor';
+import BaseBook from './BaseBook';
+import BaseItem from './BaseItem';
+import BaseParseContext from './BaseParseContext';
+import BaseReadContext from './BaseReadContext';
 import { trim, trimStart, trimEnd } from './bufferUtil';
-
 import {
   getCachePath,
   removeCacheFile,
@@ -7,13 +11,6 @@ import {
   readCacheFile,
   writeCacheFile,
 } from './cacheFile';
-
-import BaseBook from './BaseBook';
-import BaseItem from './BaseItem';
-import BaseParseContext from './BaseParseContext';
-import BaseReadContext from './BaseReadContext';
-
-import AesCryptor from './AesCryptor';
 import CryptoProvider from './CryptoProvider';
 import { Hash } from './cryptoUtil';
 import Errors, { createError, mustOverride } from './errors';
@@ -21,19 +18,15 @@ import Logger, { LogLevel } from './Logger';
 import mergeObjects from './mergeObjects';
 import parseBool from './parseBool';
 import Parser from './Parser';
-import Version from './Version';
-
 import {
   safeDirname,
   safePath,
   safePathJoin,
   getPathes,
 } from './pathUtil';
-
 import readEntries from './readEntries';
 import { conditionally } from './streamUtil';
 import { MatchOption, stringContains, safeDecodeURI } from './stringUtil';
-
 import {
   getType,
   isArray,
@@ -44,8 +37,8 @@ import {
   isString,
   isUrl,
 } from './typecheck';
-
 import validateOptions from './validateOptions';
+import Version from './Version';
 import openZip from './zipUtil';
 
 export {

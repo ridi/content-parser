@@ -24,9 +24,7 @@ class NcxItem extends BaseEpubItem {
    */
   constructor(rawObj = {}, freeze = true) {
     super(rawObj, freeze);
-    this.navPoints = (rawObj.navPoints || []).map((navPoint) => {
-      return new NavPoint(navPoint, freeze);
-    });
+    this.navPoints = (rawObj.navPoints || []).map(navPoint => new NavPoint(navPoint, freeze));
     /* istanbul ignore else */
     if (freeze) {
       Object.freeze(this);
@@ -36,7 +34,7 @@ class NcxItem extends BaseEpubItem {
   toRaw() {
     return mergeObjects(super.toRaw(), {
       navPoints: this.navPoints.map(navPoint => navPoint.toRaw()),
-      itemType: 'NcxItem',
+      ItemType: 'NcxItem',
     });
   }
 }

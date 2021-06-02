@@ -31,7 +31,7 @@ class ImageItem extends BaseEpubItem {
   toRaw() {
     return mergeObjects(super.toRaw(), {
       isCover: this.isCover,
-      itemType: 'ImageItem',
+      ItemType: 'ImageItem',
     });
   }
 }

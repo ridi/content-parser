@@ -1,10 +1,11 @@
 import * as fs from 'fs-extra';
-import os from 'os';
-import path from 'path';
 import sha1 from 'sha1';
 
-import { isExists, isString } from './typecheck';
+import os from 'os';
+import path from 'path';
+
 import Errors, { createError } from './errors';
+import { isExists, isString } from './typecheck';
 
 /**
  * Get path to store cache

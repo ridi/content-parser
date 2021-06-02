@@ -1,20 +1,18 @@
 import fs from 'fs';
-import validateOptions from './validateOptions';
 
 import { removeCacheFile } from './cacheFile';
 import CryptoProvider from './CryptoProvider';
 import Errors, { createError, mustOverride } from './errors';
 import Logger from './Logger';
 import mergeObjects from './mergeObjects';
-
+import readEntries from './readEntries';
 import {
   isArray,
   isExists,
   isFunc,
   isString,
 } from './typecheck';
-
-import readEntries from './readEntries';
+import validateOptions from './validateOptions';
 
 /**
  * @typedef {import('./BaseParseContext').default} BaseParseContext
@@ -317,7 +315,7 @@ class Parser {
    * @returns {Promise<BaseBook>} return Book
    */
   _createBook(context) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const Book = this._getBookClass();
       resolve(new Book(context.rawBook));
     });

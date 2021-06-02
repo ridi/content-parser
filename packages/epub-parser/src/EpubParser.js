@@ -6,25 +6,24 @@ import {
   Parser,
   safeDirname, safePath, safePathJoin,
 } from '@ridi/parser-core';
-
 import { parse as parseHtml } from 'himalaya';
 
-import EpubBook from './model/EpubBook';
-import CssItem from './model/CssItem';
 import cssLoader from './loader/cssLoader';
+import spineLoader from './loader/spineLoader';
+import xmlLoader, { getValue, getValues, textNodeName } from './loader/xmlLoader';
+import BaseEpubItem from './model/BaseEpubItem';
+import CssItem from './model/CssItem';
 import DeadItem from './model/DeadItem';
+import EpubBook from './model/EpubBook';
+import EpubParseContext from './model/EpubParseContext';
+import EpubReadContext from './model/EpubReadContext';
 import FontItem from './model/FontItem';
 import Guide from './model/Guide';
 import ImageItem from './model/ImageItem';
 import InlineCssItem from './model/InlineCssItem';
-import BaseEpubItem from './model/BaseEpubItem';
 import NcxItem from './model/NcxItem';
-import EpubReadContext from './model/EpubReadContext';
 import SpineItem from './model/SpineItem';
-import spineLoader from './loader/spineLoader';
 import SvgItem from './model/SvgItem';
-import EpubParseContext from './model/EpubParseContext';
-import xmlLoader, { getValue, getValues, textNodeName } from './loader/xmlLoader';
 
 class EpubParser extends Parser {
   /**
@@ -153,9 +152,14 @@ class EpubParser extends Parser {
    */
   constructor(input, cryptoProvider, logLevel) {
     /* istanbul ignore next */
-    logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
-    cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
-    super(input, cryptoProvider, { namespace: 'EpubParser', logLevel });
+    super(
+      input,
+      isString(cryptoProvider) ? undefined : cryptoProvider,
+      {
+        namespace: 'EpubParser',
+        logLevel: isString(cryptoProvider) ? cryptoProvider : logLevel,
+      },
+    );
   }
 
   /**
@@ -280,9 +284,10 @@ class EpubParser extends Parser {
     }
 
     const { rootfiles } = container;
-    const rootfile = (isArray(rootfiles.rootfile) ? rootfiles.rootfile : [rootfiles.rootfile]).find((item) => {
-      return item['media-type'] === 'application/oebps-package+xml';
-    });
+    const rootfile
+      = (isArray(rootfiles.rootfile)
+        ? rootfiles.rootfile
+        : [rootfiles.rootfile]).find(item => item['media-type'] === 'application/oebps-package+xml');
     if (!isExists(rootfile)) {
       throw createError(Errors.ENOELMT, 'rootfile', entryPath);
     }
@@ -335,10 +340,12 @@ class EpubParser extends Parser {
       throw createError(Errors.ENOELMT, 'metadata or manifest or spine', opfPath);
     }
 
+    /* eslint-disable no-param-reassign */
     context.rawBook.version = root.version;
     context = await this._parseMetadata(root.metadata, context);
     context = await this._parseManifestAndSpine(root.manifest, root.spine, context);
     context = await this._parseGuide(root.guide, context);
+    /* eslint-enable no-param-reassign */
 
     return context;
   }
@@ -350,7 +357,7 @@ class EpubParser extends Parser {
    * @returns {Promise<EpubParseContext>} return Context containing metadata
    */
   _parseMetadata(metadata, context) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const { rawBook } = context;
       const {
         title, creator, subject, description, publisher, contributor, date, type,
@@ -397,77 +404,75 @@ class EpubParser extends Parser {
     let inlineStyles = [];
 
     rawBook.items = [];
-    await items.reduce((prevPromise, item, idx) => {
-      return prevPromise.then(async () => {
-        const rawItem = {};
-        rawItem.id = item.id;
-        if (isExists(item.href)) {
-          // ../Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
-          rawItem.href = safePathJoin(basePath, item.href);
-        }
-        rawItem.mediaType = item['media-type'];
-        rawItem.itemType = this.getItemTypeFromMediaType(rawItem.mediaType);
-        if (rawItem.itemType === DeadItem) {
-          rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
-          this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
-        }
+    await items.reduce((prevPromise, item, idx) => prevPromise.then(async () => {
+      const rawItem = {};
+      rawItem.id = item.id;
+      if (isExists(item.href)) {
+        // ../Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
+        rawItem.href = safePathJoin(basePath, item.href);
+      }
+      rawItem.mediaType = item['media-type'];
+      rawItem.ItemType = this.getItemTypeFromMediaType(rawItem.mediaType);
+      if (rawItem.ItemType === DeadItem) {
+        rawItem.reason = DeadItem.Reason.NOT_SUPPORT_TYPE;
+        this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
+      }
 
-        const itemEntry = entries.find(rawItem.href, false);
-        if (isExists(itemEntry)) {
-          rawItem.size = itemEntry.size;
+      const itemEntry = entries.find(rawItem.href, false);
+      if (isExists(itemEntry)) {
+        rawItem.size = itemEntry.size;
 
-          if (rawItem.itemType === SpineItem) {
-            // Checks if item is referenced in spine list.
-            const refIndex = itemRefs.findIndex(itemRef => itemRef.idref === rawItem.id);
-            if (refIndex >= 0) {
-              const ref = itemRefs[refIndex];
-              rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
-              rawItem.index = refIndex;
-            } else {
-              rawItem.itemType = DeadItem;
-              rawItem.reason = DeadItem.Reason.NOT_SPINE;
-              this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
-            }
-          } else if (rawItem.itemType === ImageItem) {
-            if (!context.foundCover) {
-              // EPUB2 spec doesn't have cover image declaration, it founding for cover image in order listed below.
-              // 1. metadata.meta[name="cover"].content === imageItem.id
-              // 2. imageItem.id === 'cover'
-              // 3. guide.reference[type="cover"].href === imageItem.href (see _parseGuide)
-              if (isExists(coverMeta) && rawItem.id === coverMeta.content) {
-                rawItem.isCover = true;
-                context.foundCover = true;
-              } else if (rawItem.id.toLowerCase() === 'cover') {
-                rawItem.isCover = true;
-                context.foundCover = true;
-              }
-            }
-          } else if (rawItem.itemType === NcxItem) {
-            // NCX is valid only if rawItem.id matches tocId.
-            if (rawItem.id !== tocId) {
-              rawItem.itemType = DeadItem;
-              rawItem.reason = DeadItem.Reason.NOT_NCX;
-              this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
+        if (rawItem.ItemType === SpineItem) {
+          // Checks if item is referenced in spine list.
+          const refIndex = itemRefs.findIndex(itemRef => itemRef.idref === rawItem.id);
+          if (refIndex >= 0) {
+            const ref = itemRefs[refIndex];
+            rawItem.isLinear = isExists(ref.linear) ? parseBool(ref.linear) : true;
+            rawItem.index = refIndex;
+          } else {
+            rawItem.ItemType = DeadItem;
+            rawItem.reason = DeadItem.Reason.NOT_SPINE;
+            this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
+          }
+        } else if (rawItem.ItemType === ImageItem) {
+          if (!context.foundCover) {
+            // EPUB2 spec doesn't have cover image declaration, it founding for cover image in order listed below.
+            // 1. metadata.meta[name="cover"].content === imageItem.id
+            // 2. imageItem.id === 'cover'
+            // 3. guide.reference[type="cover"].href === imageItem.href (see _parseGuide)
+            if (isExists(coverMeta) && rawItem.id === coverMeta.content) {
+              rawItem.isCover = true;
+              context.foundCover = true;
+            } else if (rawItem.id.toLowerCase() === 'cover') {
+              rawItem.isCover = true;
+              context.foundCover = true;
             }
           }
-
-          if (options.parseStyle) {
-            if (rawItem.itemType === CssItem) {
-              rawItem.namespace = `${options.styleNamespacePrefix}${idx}`;
-            } else if (rawItem.itemType === SpineItem) {
-              const result = await this._parseSpineStyle(rawItem, itemEntry, options);
-              rawItem.styles = result.styles;
-              inlineStyles = inlineStyles.concat(result.inlineStyles);
-            }
+        } else if (rawItem.ItemType === NcxItem) {
+          // NCX is valid only if rawItem.id matches tocId.
+          if (rawItem.id !== tocId) {
+            rawItem.ItemType = DeadItem;
+            rawItem.reason = DeadItem.Reason.NOT_NCX;
+            this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
           }
-        } else {
-          rawItem.itemType = DeadItem;
-          rawItem.reason = DeadItem.Reason.NOT_EXISTS;
-          this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
         }
-        rawBook.items.push(rawItem);
-      });
-    }, Promise.resolve());
+
+        if (options.parseStyle) {
+          if (rawItem.ItemType === CssItem) {
+            rawItem.namespace = `${options.styleNamespacePrefix}${idx}`;
+          } else if (rawItem.ItemType === SpineItem) {
+            const result = await this._parseSpineStyle(rawItem, itemEntry, options);
+            rawItem.styles = result.styles;
+            inlineStyles = inlineStyles.concat(result.inlineStyles);
+          }
+        }
+      } else {
+        rawItem.ItemType = DeadItem;
+        rawItem.reason = DeadItem.Reason.NOT_EXISTS;
+        this.logger.warn('Referenced resource \'%s\' ignored. (reason: %s)', rawItem.id, rawItem.reason);
+      }
+      rawBook.items.push(rawItem);
+    }), Promise.resolve());
 
     const { additionalInlineStyle: userStyle } = options;
     if (isExists(userStyle)) {
@@ -478,7 +483,7 @@ class EpubParser extends Parser {
         href: `${basePath}/${id}`,
         mediaType: 'text/css',
         size: userStyle.length,
-        itemType: InlineCssItem,
+        ItemType: InlineCssItem,
         namespace,
         style: userStyle,
       });
@@ -523,7 +528,7 @@ class EpubParser extends Parser {
 
     // <link rel="stylesheet" type="text/css" href="..." ... />
     //                                              ^~~
-    filter(head.children, 'tagName', 'link').forEach((link) => {
+    filter(head.children, 'tagName', 'link').forEach(link => {
       const { attributes: attrs } = link;
       /* istanbul ignore else */
       if (isExists(attrs)) {
@@ -555,7 +560,7 @@ class EpubParser extends Parser {
           href,
           mediaType: 'text/css',
           size: content.length,
-          itemType: InlineCssItem,
+          ItemType: InlineCssItem,
           namespace,
           style: content,
         };
@@ -574,22 +579,22 @@ class EpubParser extends Parser {
    * @returns {Promise<EpubParseContext>} return Context containing guide
    */
   _parseGuide(guide, context) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const { rawBook } = context;
       let { foundCover } = context;
       rawBook.guides = [];
       if (isExists(guide)) {
-        getValues(guide.reference).forEach((reference) => {
-          reference = mergeObjects(reference, { href: safePathJoin(context.basePath, reference.href) });
+        getValues(guide.reference).forEach(reference => {
           // If reference.type equal 'cover' and there is an image item matching reference.href, it is cover image.
+          const referenceHref = safePathJoin(context.basePath, reference.href);
           if (!foundCover && isExists(reference.type) && reference.type.toLowerCase() === Guide.Types.COVER) {
-            const imageItem = rawBook.items.find(item => item.itemType === ImageItem && item.href === reference.href);
+            const imageItem = rawBook.items.find(item => item.ItemType === ImageItem && item.href === referenceHref);
             if (isExists(imageItem)) {
               imageItem.isCover = true;
               foundCover = true;
             }
           }
-          rawBook.guides.push(reference);
+          rawBook.guides.push(mergeObjects(reference, { href: referenceHref }));
         });
       }
       resolve(context);
@@ -609,7 +614,7 @@ class EpubParser extends Parser {
   async _parseNcx(context) {
     const { rawBook, entries, options } = context;
     const { allowNcxFileMissing } = options;
-    const ncxItem = rawBook.items.find(item => item.itemType === NcxItem);
+    const ncxItem = rawBook.items.find(item => item.ItemType === NcxItem);
     if (isExists(ncxItem)) {
       const ncxEntry = entries.find(ncxItem.href, false);
 
@@ -640,19 +645,19 @@ class EpubParser extends Parser {
 
       ncxItem.navPoints = [];
 
-      const normalizeSrc = (np) => {
-        if (isExists(np.children)) {
-          np.children.forEach((child, idx) => {
-            np.children[idx] = normalizeSrc(child);
+      const normalizeSrc = draft => {
+        if (isExists(draft.children)) {
+          draft.children.forEach((child, idx) => {
+            draft.children[idx] = normalizeSrc(child);
           });
         }
         // Text/Section0001.xhtml => {basePath}/Text/Section0001.xhtml
-        np.content.src = safePathJoin(context.basePath, np.content.src);
-        return np;
+        draft.content.src = safePathJoin(context.basePath, draft.content.src);
+        return draft;
       };
 
       const keyTranslator = key => (key === 'navPoint' ? 'children' : key);
-      getValues(ncx.navMap.navPoint, keyTranslator).forEach((navPoint) => {
+      getValues(ncx.navMap.navPoint, keyTranslator).forEach(navPoint => {
         const { id, content } = navPoint;
         if (isExists(id) && isExists(content) && isExists(content.src) && content.src.length > 0) {
           ncxItem.navPoints.push(normalizeSrc(navPoint));
@@ -661,9 +666,9 @@ class EpubParser extends Parser {
         }
       });
     } else if (!allowNcxFileMissing) {
-      const prevNcxItem = rawBook.items.find((item) => {
-        return this.getItemTypeFromMediaType(item.mediaType) === NcxItem && item.itemType === DeadItem;
-      });
+      const prevNcxItem = rawBook.items.find(
+        item => this.getItemTypeFromMediaType(item.mediaType) === NcxItem && item.ItemType === DeadItem,
+      );
       if (isExists(prevNcxItem)) {
         throw createError(Errors.ENOFILE, prevNcxItem.href);
       }
@@ -696,27 +701,25 @@ class EpubParser extends Parser {
   async _read(context) {
     const { items, entries, options } = context;
     const results = [];
-    await items.reduce((prevPromise, item) => {
-      return prevPromise.then(async () => {
-        if (item instanceof InlineCssItem) {
-          results.push(cssLoader(item, item.style, options));
-          return;
-        }
+    await items.reduce((prevPromise, item) => prevPromise.then(async () => {
+      if (item instanceof InlineCssItem) {
+        results.push(cssLoader(item, item.style, options));
+        return;
+      }
 
-        const entry = entries.find(item.href, false);
-        if (!options.force && !isExists(entry)) {
-          throw createError(Errors.ENOFILE, item.href);
-        }
-        const file = await entry.getFile({ encoding: item.defaultEncoding });
-        if (item instanceof SpineItem) {
-          results.push(spineLoader(item, file, options));
-        } else if (item instanceof CssItem) {
-          results.push(cssLoader(item, file, options));
-        } else {
-          results.push(file);
-        }
-      });
-    }, Promise.resolve());
+      const entry = entries.find(item.href, false);
+      if (!options.force && !isExists(entry)) {
+        throw createError(Errors.ENOFILE, item.href);
+      }
+      const file = await entry.getFile({ encoding: item.defaultEncoding });
+      if (item instanceof SpineItem) {
+        results.push(spineLoader(item, file, options));
+      } else if (item instanceof CssItem) {
+        results.push(cssLoader(item, file, options));
+      } else {
+        results.push(file);
+      }
+    }), Promise.resolve());
     return results;
   }
 

@@ -1,5 +1,5 @@
-import { getType, isExists, isString } from './typecheck';
 import Errors, { createError } from './errors';
+import { getType, isExists, isString } from './typecheck';
 
 /**
  * Validate option with interface. it will return void if it passes, throw error otherwise.

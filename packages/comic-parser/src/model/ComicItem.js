@@ -1,5 +1,7 @@
 import { BaseItem, isExists } from '@ridi/parser-core';
+
 import path from 'path';
+
 /**
  * @typedef {Object} ComicItemProperties
  * @property {number} [index]

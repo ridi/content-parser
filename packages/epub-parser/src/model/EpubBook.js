@@ -3,6 +3,7 @@ import {
 } from '@ridi/parser-core';
 
 import Author from './Author';
+import BaseEpubItem from './BaseEpubItem';
 import CssItem from './CssItem';
 import DateTime from './DateTime';
 import DeadItem from './DeadItem';
@@ -14,36 +15,35 @@ import InlineCssItem from './InlineCssItem';
 import Meta from './Meta';
 import NcxItem from './NcxItem';
 import SpineItem from './SpineItem';
-import BaseEpubItem from './BaseEpubItem';
 
 function postSpines(spines, styles) {
   const firstSpine = spines[0];
   spines.sort((s1, s2) => s1.index - s2.index)
-    .forEach((spine, idx, list) => {
+    .forEach((draft, idx, list) => {
       const prevSpine = list[idx - 1];
       const nextSpine = list[idx + 1];
-      spine.prev = () => prevSpine;
-      spine.next = () => nextSpine;
-      spine.first = () => firstSpine;
+      draft.prev = () => prevSpine;
+      draft.next = () => nextSpine;
+      draft.first = () => firstSpine;
       /* istanbul ignore else */
-      if (isExists(spine.styles)) {
-        spine.styles = spine.styles
+      if (isExists(draft.styles)) {
+        draft.styles = draft.styles
           .map(href => styles.find(style => style.href === href))
           .filter(style => isExists(style));
       }
-      Object.freeze(spine);
+      Object.freeze(draft);
     });
 }
 
 function postNcx(ncx, spines) {
   if (isExists(ncx)) {
-    const spineMapping = (navPoint) => {
-      navPoint.spine = spines.find((spine) => {
-        const href = navPoint.src.replace(`#${navPoint.anchor || ''}`, '');
+    const spineMapping = draft => {
+      draft.spine = spines.find(spine => {
+        const href = draft.src.replace(`#${draft.anchor || ''}`, '');
         return spine.href === href;
       });
-      navPoint.children.forEach(child => spineMapping(child));
-      Object.freeze(navPoint);
+      draft.children.forEach(child => spineMapping(child));
+      Object.freeze(draft);
     };
     ncx.navPoints.forEach(navPoint => spineMapping(navPoint));
     Object.freeze(ncx);
@@ -51,9 +51,9 @@ function postNcx(ncx, spines) {
 }
 
 function postGuides(guides, spines) {
-  guides.forEach((guide) => {
-    guide.item = spines.find(spine => spine.href === guide.href);
-    Object.freeze(guide);
+  guides.forEach(draft => {
+    draft.item = spines.find(spine => spine.href === draft.href);
+    Object.freeze(draft);
   });
 }
 
@@ -71,7 +71,6 @@ function getItemTypeFromString(string) {
   }
 }
 
-/* eslint-disable new-cap */
 class EpubBook extends BaseBook {
   /**
    * @type {string}
@@ -249,13 +248,13 @@ class EpubBook extends BaseBook {
     this.rights = rawBook.rights;
     this.version = new Version(rawBook.version);
     this.metas = (rawBook.metas || []).map(rawObj => new Meta(rawObj));
-    this.items = (rawBook.items || []).map((rawObj) => {
-      let { itemType } = rawObj;
-      if (isString(itemType)) {
-        itemType = getItemTypeFromString(itemType);
+    this.items = (rawBook.items || []).map(rawObj => {
+      let { ItemType } = rawObj;
+      if (isString(ItemType)) {
+        ItemType = getItemTypeFromString(ItemType);
       }
-      const freeze = !(itemType === SpineItem || itemType === NcxItem);
-      return new itemType(rawObj, freeze);
+      const freeze = !(ItemType === SpineItem || ItemType === NcxItem);
+      return new ItemType(rawObj, freeze);
     });
     this.spines = this.items
       .filter(item => item instanceof SpineItem)

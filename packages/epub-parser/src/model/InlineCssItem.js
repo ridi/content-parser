@@ -31,7 +31,7 @@ class InlineCssItem extends CssItem {
   toRaw() {
     return mergeObjects(super.toRaw(), {
       style: this.style,
-      itemType: 'InlineCssItem',
+      ItemType: 'InlineCssItem',
     });
   }
 }

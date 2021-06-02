@@ -15,7 +15,7 @@ describe('Model - FontItem', () => {
   it('toRaw test', () => {
     const item = new FontItem({ id: 'default.otf', href: './default.otf', mediaType: 'font/otf', size: 87964 });
     item.toRaw().should.deep.equal({
-      id: 'default.otf', href: './default.otf', mediaType: 'font/otf', size: 87964, itemType: 'FontItem'
+      id: 'default.otf', href: './default.otf', mediaType: 'font/otf', size: 87964, ItemType: 'FontItem'
     });
   });
 });

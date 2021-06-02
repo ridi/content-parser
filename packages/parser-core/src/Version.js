@@ -1,3 +1,10 @@
+const normalize = version => {
+  if (!/(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,3}/gm.test(version)) {
+    return '1.0';
+  }
+  return version;
+};
+
 class Version {
   /**
    * @private
@@ -19,13 +26,10 @@ class Version {
    * @param {string} version
    */
   constructor(version) {
-    if (!/(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,3}/gm.test(version)) {
-      version = '1.0';
-    }
-    const result = version.split('.');
-    this.major = parseInt(result[0], 10);
-    this.minor = parseInt(result[1] || 0, 10) || 0;
-    this.patch = parseInt(result[2] || 0, 10) || 0;
+    const component = normalize(version).split('.');
+    this.major = parseInt(component[0], 10);
+    this.minor = parseInt(component[1] || 0, 10) || 0;
+    this.patch = parseInt(component[2] || 0, 10) || 0;
     Object.freeze(this);
   }
 

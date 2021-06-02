@@ -58,7 +58,7 @@ const Padding = Object.freeze({
  * @type {UINT8Object}
  */
 const Uint8 = {
-  decode: (uint8ArrayOrBufferOrArray) => {
+  decode: uint8ArrayOrBufferOrArray => {
     let uint8Array = uint8ArrayOrBufferOrArray;
     if (Buffer.isBuffer(uint8ArrayOrBufferOrArray)) {
       const buffer = uint8ArrayOrBufferOrArray;
@@ -71,7 +71,7 @@ const Uint8 = {
     }
     return CryptoJs.lib.WordArray.create(uint8Array);
   },
-  encode: (wordArray) => {
+  encode: wordArray => {
     const { words, sigBytes } = wordArray;
     const uint8Array = new Uint8Array(sigBytes);
     let offset = 0;
@@ -132,7 +132,7 @@ const Encoding = Object.freeze({
  * @param {any} any
  * @returns {any}
  */
-const prepareHash = (any) => {
+const prepareHash = any => {
   if (Buffer.isBuffer(any)) {
     return Encoding.BUFFER.decode(any);
   }

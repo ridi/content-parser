@@ -18,7 +18,7 @@ class FontItem extends BaseEpubItem {
 
   toRaw() {
     return mergeObjects(super.toRaw(), {
-      itemType: 'FontItem',
+      ItemType: 'FontItem',
     });
   }
 }

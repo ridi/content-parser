@@ -4,8 +4,8 @@ import {
   LogLevel,
 } from '@ridi/parser-core';
 
-import PdfParser from './PdfParser';
 import PdfBook from './model/PdfBook';
+import PdfParser from './PdfParser';
 
 export {
   PdfParser,

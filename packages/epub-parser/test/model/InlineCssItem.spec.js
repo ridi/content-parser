@@ -28,7 +28,7 @@ describe('Model - InlineCssItem', () => {
       id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', style: 'body { color: black; }', size: 22, namespace: 'css_1'
     });
     item.toRaw().should.deep.equal({
-      id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', style: 'body { color: black; }', size: 22, namespace: 'css_1', itemType: 'InlineCssItem'
+      id: 'style.css_css_1', href: './style.css_css_1', mediaType: 'text/css', style: 'body { color: black; }', size: 22, namespace: 'css_1', ItemType: 'InlineCssItem'
     });
   });
 });

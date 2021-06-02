@@ -12,6 +12,6 @@ declare class Item {
         href: any;
         mediaType: any;
         size: any;
-        itemType: string;
+        ItemType: string;
     };
 }

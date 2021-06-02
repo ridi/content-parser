@@ -7,14 +7,14 @@ import { isExists, isObject } from './typecheck';
  * @template T,S,K
  */
 export default function mergeObjects(obj1, obj2) {
-  return [obj1, obj2].reduce((merged, obj) => {
-    Object.keys(obj).forEach((key) => {
-      if (isObject(merged[key]) && isExists(obj[key])) {
-        merged[key] = mergeObjects(merged[key], obj[key]);
+  return [obj1, obj2].reduce((draft, obj) => {
+    Object.keys(obj).forEach(key => {
+      if (isObject(draft[key]) && isExists(obj[key])) {
+        draft[key] = mergeObjects(draft[key], obj[key]);
       } else {
-        merged[key] = obj[key];
+        draft[key] = obj[key];
       }
     });
-    return merged;
+    return draft;
   }, {});
 }

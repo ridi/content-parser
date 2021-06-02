@@ -1,4 +1,5 @@
 import { BaseParseContext } from '@ridi/parser-core';
+
 import EpubBook from './EpubBook';
 
 class EpubParseContext extends BaseParseContext {
@@ -25,7 +26,7 @@ class EpubParseContext extends BaseParseContext {
   constructor() {
     super();
     const rawBook = {};
-    Object.keys(new EpubBook()).forEach((key) => { rawBook[key] = undefined; });
+    Object.keys(new EpubBook()).forEach(key => { rawBook[key] = undefined; });
     this.rawBook = rawBook;
     this.opfPath = undefined;
     this.basePath = undefined;

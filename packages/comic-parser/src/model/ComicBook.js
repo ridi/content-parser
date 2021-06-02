@@ -1,4 +1,5 @@
 import { BaseBook } from '@ridi/parser-core';
+
 import ComicItem from './ComicItem';
 
 class ComicBook extends BaseBook {

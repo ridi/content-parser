@@ -1,5 +1,5 @@
-import { isBool, isString } from './typecheck';
 import { stringContains } from './stringUtil';
+import { isBool, isString } from './typecheck';
 /**
  * Return boolean form of any input
  * @param {any} any

@@ -56,7 +56,7 @@ class BaseEpubItem extends BaseItem {
       href: this.href,
       mediaType: this.mediaType,
       size: this.size,
-      itemType: 'Item',
+      ItemType: 'Item',
     };
   }
 }

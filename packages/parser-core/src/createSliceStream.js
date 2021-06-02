@@ -5,6 +5,7 @@ import * as es from 'event-stream';
  * @param {number} end=Infinity
  * @returns {es.MapStream}
  */
+/* eslint-disable no-param-reassign */
 const createSliceStream = (start = 0, end = Infinity) => {
   let bytesReceived = 0;
   let finish = false;
@@ -25,5 +26,6 @@ const createSliceStream = (start = 0, end = Infinity) => {
     }
   });
 };
+/* eslint-enable no-param-reassign */
 
 export default createSliceStream;

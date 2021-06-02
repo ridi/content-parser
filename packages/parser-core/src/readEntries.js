@@ -1,4 +1,5 @@
 import * as fs from 'fs-extra';
+
 import path from 'path';
 
 import { trimEnd } from './bufferUtil';
@@ -69,7 +70,7 @@ function create(source, entries) {
  */
 function fromZip(zip) {
   const zipCopy = { ...zip };
-  zipCopy.files = zip.files.map((file) => {
+  zipCopy.files = zip.files.map(file => {
     const getFile = (options = {}) => {
       let data = file.getData();
       if (options.encoding) {
@@ -125,7 +126,7 @@ function fromDirectory(dir, cryptoProvider) {
               .pipe(conditionally(isExists(end), createSliceStream(0, end)))
               .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode,
                 createCryptoStream(fullPath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
-              .on('data', (chunk) => {
+              .on('data', chunk => {
                 data = Buffer.concat([data, chunk]);
               })
               .on('error', e => reject(e))
@@ -176,7 +177,7 @@ function fromFile(filePath, cryptoProvider) {
           .pipe(conditionally(isExists(end), createSliceStream(0, end)))
           .pipe(conditionally(cryptoProvider && !!cryptoProvider.isStreamMode,
             createCryptoStream(filePath, totalSize, cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
-          .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+          .on('data', chunk => { data = Buffer.concat([data, chunk]); })
           .on('error', e => reject(e))
           .on('end', () => resolve(data));
       });
@@ -204,6 +205,7 @@ function fromFile(filePath, cryptoProvider) {
  * @param {import('./Logger').default} logger
  * @returns {Promise<ReadEntriesReturnType>}
  */
+/* eslint-disable no-param-reassign */
 export default async function readEntries(input, cryptoProvider, logger) {
   if (fs.lstatSync(input).isFile()) { // TODO: When input is Buffer.
     if (path.extname(input).toLowerCase() === '.pdf') {
@@ -222,3 +224,4 @@ export default async function readEntries(input, cryptoProvider, logger) {
   }
   return fromDirectory(input, cryptoProvider);
 }
+/* eslint-enable no-param-reassign */

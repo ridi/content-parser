@@ -15,9 +15,8 @@ class OutlineItem extends BaseItem {
     this.bold = rawObj.bold || false;
     this.italic = rawObj.italic || false;
     this.depth = rawObj.depth || 0;
-    this.children = (rawObj.items || []).map((item) => {
-      return new OutlineItem(mergeObjects(item, { depth: this.depth + 1 }), pageMap);
-    });
+    this.children
+      = (rawObj.items || []).map(item => new OutlineItem(mergeObjects(item, { depth: this.depth + 1 }), pageMap));
     if (isString(this.dest)) {
       const page = pageMap[this.dest];
       this.page = isExists(page) ? page : rawObj.page;

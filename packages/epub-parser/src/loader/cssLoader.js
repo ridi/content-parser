@@ -6,7 +6,6 @@ import {
   safeDirname,
   safePathJoin,
 } from '@ridi/parser-core';
-
 import csstree, { List } from 'css-tree';
 
 // Type reference: https://github.com/csstree/csstree/blob/master/docs/ast.md
@@ -100,7 +99,7 @@ function handleRulePrelude(selectorList, options, cssItem) {
 }
 
 function handleRuleBlock(declarationList, options, cssItem) {
-  declarationList.children.each((declaration) => {
+  declarationList.children.each(declaration => {
     let oldItem;
     let newItem;
     csstree.walk(declaration, (node, item) => {

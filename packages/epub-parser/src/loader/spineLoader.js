@@ -3,9 +3,9 @@ import {
   mergeObjects,
   safeDirname, safePathJoin,
 } from '@ridi/parser-core';
-
-import { arrayIncludes } from 'himalaya/lib/compat';
 import { parse, parseDefaults } from 'himalaya';
+import { arrayIncludes } from 'himalaya/lib/compat';
+
 import path from 'path';
 
 import CssItem from '../model/CssItem';
@@ -70,7 +70,7 @@ function formatAttributes(attributes, options) {
 }
 
 function stringify(ast, options) {
-  return ast.map((node) => {
+  return ast.map(node => {
     if (node.type === Types.TEXT) {
       return node.content;
     }

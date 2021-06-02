@@ -4,16 +4,15 @@ import {
   isObject,
   isString,
 } from '@ridi/parser-core';
-
-import he from 'he';
 import XmlParser from 'fast-xml-parser';
+import he from 'he';
 
 const normalizeKey = (obj, keyTranslator) => {
   if (isString(obj)) {
     return obj;
   }
   const newObj = {};
-  Object.keys(obj).forEach((oldKey) => {
+  Object.keys(obj).forEach(oldKey => {
     const newKey = isExists(keyTranslator) ? keyTranslator(oldKey) : oldKey;
     let value = obj[oldKey];
     if (isArray(value)) {
@@ -39,7 +38,7 @@ const getValue = (any, keyTranslator) => {
     if (!isExists(first)) {
       return undefined;
     }
-    any = first;
+    return normalizeKey(first, keyTranslator);
   }
   return normalizeKey(any, keyTranslator);
 };

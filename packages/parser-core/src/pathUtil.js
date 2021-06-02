@@ -1,6 +1,7 @@
+import naturalCompare from 'string-natural-compare';
+
 import fs from 'fs';
 import path from 'path';
-import naturalCompare from 'string-natural-compare';
 
 import { isString } from './typecheck';
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { isExists } from './typecheck';
 import { stringContains } from './stringUtil';
+import { isExists } from './typecheck';
 
 /**
  * @typedef LogLevel
@@ -33,7 +33,7 @@ const LogLevel = Object.freeze({
  * @param {LogLevel} logLevel
  * @returns {number} order of a level
  */
-const getOrder = (logLevel) => {
+const getOrder = logLevel => {
   switch (logLevel) {
     case LogLevel.ERROR: return 1;
     case LogLevel.WARN: return 2;

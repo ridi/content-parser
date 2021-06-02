@@ -35,7 +35,7 @@ class CssItem extends BaseEpubItem {
   toRaw() {
     return mergeObjects(super.toRaw(), {
       namespace: this.namespace,
-      itemType: 'CssItem',
+      ItemType: 'CssItem',
     });
   }
 }

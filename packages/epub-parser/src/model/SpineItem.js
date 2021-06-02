@@ -55,7 +55,7 @@ class SpineItem extends BaseEpubItem {
     let rawObject = mergeObjects(super.toRaw(), {
       index: this.index,
       isLinear: this.isLinear,
-      itemType: 'SpineItem',
+      ItemType: 'SpineItem',
     });
     if (isExists(this.styles)) {
       rawObject = mergeObjects(rawObject, {

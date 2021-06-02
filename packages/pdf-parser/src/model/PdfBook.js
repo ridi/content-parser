@@ -131,9 +131,7 @@ class PdfBook extends BaseBook {
     this.isXFAPresent = info.IsXFAPresent || false;
     this.isCollectionPresent = info.IsCollectionPresent || false;
     this.userInfo = info.Custom || {};
-    this.outlineItems = (rawBook.outline || []).map((outlineItem) => {
-      return new OutlineItem(outlineItem, rawBook.pageMap);
-    });
+    this.outlineItems = (rawBook.outline || []).map(outlineItem => new OutlineItem(outlineItem, rawBook.pageMap));
     this.pageCount = rawBook.pageCount || 0;
     this.permissions = new Permissions(rawBook.permissions);
     Object.freeze(this);

@@ -3,7 +3,7 @@ declare class DeadItem extends BaseEpubItem {
     /**
      * @typedef {Object} DeadItemExtra
      * @property {string} [reason]
-     * @property {string} [itemType]
+     * @property {string} [ItemType]
      *
      * @typedef {import('./BaseEpubItem').BaseEpubItemParam & DeadItemExtra} DeadItemParam
      */
@@ -14,7 +14,7 @@ declare class DeadItem extends BaseEpubItem {
      */
     constructor(rawObj?: import("@ridi/parser-core/type/BaseItem").BaseItemParam & import("./BaseEpubItem").BaseEpubItemExtra & {
         reason?: string;
-        itemType?: string;
+        ItemType?: string;
     }, freeze?: boolean);
     /**
      * @type {string}
@@ -23,7 +23,7 @@ declare class DeadItem extends BaseEpubItem {
     /**
      * @type {string}
      */
-    itemType: string;
+    ItemType: string;
 }
 declare namespace DeadItem {
     export { Reason };

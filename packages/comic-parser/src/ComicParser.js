@@ -2,13 +2,14 @@ import {
   Parser, isString, stringContains, isExists, createError, Errors,
 } from '@ridi/parser-core';
 import sizeOf from 'image-size';
-import * as path from 'path';
 import naturalCompare from 'string-natural-compare';
+
+import * as path from 'path';
 
 import ComicBook from './model/ComicBook';
 import ComicItem from './model/ComicItem';
-import ComicReadContext from './model/ComicReadContext';
 import ComicParseContext from './model/ComicParseContext';
+import ComicReadContext from './model/ComicReadContext';
 
 class ComicParser extends Parser {
   /**
@@ -84,9 +85,14 @@ class ComicParser extends Parser {
    */
   constructor(input, cryptoProvider, logLevel) {
     /* istanbul ignore next */
-    logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
-    cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
-    super(input, cryptoProvider, { namespace: 'ComicParser', logLevel });
+    super(
+      input,
+      isString(cryptoProvider) ? undefined : cryptoProvider,
+      {
+        namespace: 'ComicParser',
+        logLevel: isString(cryptoProvider) ? cryptoProvider : logLevel,
+      },
+    );
   }
 
   /**
@@ -137,21 +143,19 @@ class ComicParser extends Parser {
   async _parse(context) {
     const { entries, rawBook, options } = context;
     const items = entries.sort((e1, e2) => naturalCompare(e1.entryPath, e2.entryPath))
-      .filter((entry) => {
+      .filter(entry => {
         const ext = path.extname(entry.entryPath);
         return ext.length > 0 && stringContains(options.ext.map(e => `.${e}`), ext);
       });
     rawBook.items = [];
-    await items.reduce((prevPromise, item, index) => {
-      return prevPromise.then(async () => {
-        rawBook.items.push({
-          index,
-          path: item.entryPath,
-          size: item.size,
-          ...await this._parseImageSize(item, options),
-        });
+    await items.reduce((prevPromise, item, index) => prevPromise.then(async () => {
+      rawBook.items.push({
+        index,
+        path: item.entryPath,
+        size: item.size,
+        ...await this._parseImageSize(item, options),
       });
-    }, Promise.resolve());
+    }), Promise.resolve());
     return context;
   }
 
@@ -193,22 +197,20 @@ class ComicParser extends Parser {
   async _read(context) {
     const { items, entries, options } = context;
     const results = [];
-    await items.reduce((prevPromise, item) => {
-      return prevPromise.then(async () => {
-        const entry = entries.find(item.path);
+    await items.reduce((prevPromise, item) => prevPromise.then(async () => {
+      const entry = entries.find(item.path);
+      /* istanbul ignore next */
+      if (!options.force && !isExists(entry)) {
         /* istanbul ignore next */
-        if (!options.force && !isExists(entry)) {
-          /* istanbul ignore next */
-          throw createError(Errors.ENOFILE, item.path);
-        }
-        const file = await entry.getFile();
-        if (options.base64) {
-          results.push(`data:${item.mimeType};base64,${file.toString('base64')}`);
-        } else {
-          results.push(file);
-        }
-      });
-    }, Promise.resolve());
+        throw createError(Errors.ENOFILE, item.path);
+      }
+      const file = await entry.getFile();
+      if (options.base64) {
+        results.push(`data:${item.mimeType};base64,${file.toString('base64')}`);
+      } else {
+        results.push(file);
+      }
+    }), Promise.resolve());
     return results;
   }
 }

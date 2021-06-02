@@ -26,7 +26,7 @@ const MatchOption = {
  */
 function stringContains(array = [], string = '', matchOption = MatchOption.MATCHING) {
   const lString = string.toLowerCase();
-  return isExists(array.find((item) => {
+  return isExists(array.find(item => {
     const lItem = item.toLowerCase();
     switch (matchOption) {
       case MatchOption.CONTAINING:

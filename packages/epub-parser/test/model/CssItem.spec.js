@@ -24,7 +24,7 @@ describe('Model - CssItem', () => {
   it('toRaw test', () => {
     let item = new CssItem({ id: 'style.css', href: './style.css', mediaType: 'text/css', size: 15, namespace: 'css_1' });
     item.toRaw().should.deep.equal({
-      id: 'style.css', href: './style.css', mediaType: 'text/css', size: 15, namespace: 'css_1', itemType: 'CssItem'
+      id: 'style.css', href: './style.css', mediaType: 'text/css', size: 15, namespace: 'css_1', ItemType: 'CssItem'
     });
   });
 });

@@ -34,13 +34,13 @@ describe('Model - Item', () => {
 
   it('toRaw test', () => {
     let item = new BaseEpubItem({});
-    item.toRaw().should.deep.equal({ id: undefined, href: undefined, mediaType: undefined, size: undefined, itemType: 'Item' });
+    item.toRaw().should.deep.equal({ id: undefined, href: undefined, mediaType: undefined, size: undefined, ItemType: 'Item' });
 
     item = new BaseEpubItem({
       id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50
     });
     item.toRaw().should.deep.equal({
-      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, itemType: 'Item'
+      id: 'Section0001.xhtml', href: './Section0001.xhtml', mediaType: 'application/xhtml+xml', size: 50, ItemType: 'Item'
     });
   });
 });

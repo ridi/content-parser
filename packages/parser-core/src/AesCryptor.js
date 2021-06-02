@@ -4,8 +4,8 @@ import { Padding, Encoding } from './cryptoUtil';
 import Errors, { createError } from './errors';
 import mergeObjects from './mergeObjects';
 import { stringContains } from './stringUtil';
-import validateOptions from './validateOptions';
 import { isExists, isObject, isString } from './typecheck';
+import validateOptions from './validateOptions';
 
 const { mode: aesMode, AES } = CryptoJs;
 
@@ -166,7 +166,7 @@ class AesCryptor {
     return { // Note that all data and return type is a WordArray
       name: mode.name,
       encrypt: data => AES.encrypt(checkType(data, 'or String'), key, options).ciphertext,
-      decrypt: (data) => {
+      decrypt: data => {
         const cipherParams = CryptoJs.lib.CipherParams.create({ ciphertext: checkType(data) });
         return AES.decrypt(cipherParams, key, options);
       },
@@ -185,6 +185,7 @@ class AesCryptor {
    * @param {CryptOption} options
    * @returns {string} encrypted string
    */
+  /* eslint-disable no-param-reassign */
   encrypt(data, options = {}) {
     const padding = options.padding || Padding.NONE;
     const encoding = options.encoding || Encoding.BUFFER;
@@ -207,6 +208,7 @@ class AesCryptor {
     // encrypt data and convert to encoding type
     return encoding.encode(this.operator.encrypt(data));
   }
+  /* eslint-enable no-param-reassign */
 
   /**
    * Decrupt string
@@ -214,6 +216,7 @@ class AesCryptor {
    * @param {CryptOption} options
    * @returns {string} decrypted string
    */
+  /* eslint-disable no-param-reassign */
   decrypt(data, options = {}) {
     const padding = options.padding || Padding.NONE;
     const encoding = options.encoding || Encoding.BUFFER;
@@ -256,6 +259,7 @@ class AesCryptor {
     // convert WordArray to encoding type
     return encoding.encode(decryptedData);
   }
+  /* eslint-enable no-param-reassign */
 }
 
 AesCryptor.Padding = Padding;

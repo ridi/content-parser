@@ -130,8 +130,8 @@ describe('EpubParser', () => {
             item.id.should.equal(expectedItem.id);
             item.href.should.equal(expectedItem.href);
             item.mediaType.should.equal(expectedItem.mediaType);
-            item.itemType.name.should.equal(expectedItem.itemType);
-            if (item.itemType === DeadItem) {
+            item.ItemType.name.should.equal(expectedItem.ItemType);
+            if (item.ItemType === DeadItem) {
               item.reason.should.equal(expectedItem.reason);
               if (item.reason === DeadItem.Reason.NOT_EXISTS) {
                 isExists(item.size).should.be.false;
@@ -152,7 +152,7 @@ describe('EpubParser', () => {
         return parser._parseNcx(_context).then(context => {
           const { rawBook } = context;
           const { rawBook: expectedRawBook } = expectedContext;
-          const ncxItem = rawBook.items.find(item => item.itemType === NcxItem);
+          const ncxItem = rawBook.items.find(item => item.ItemType === NcxItem);
           const expectedNcxItem = expectedRawBook.items[0];
           const shouldEqual = (navPoints, expectedNavPoints) => {
             navPoints.forEach((navPoint, idx) => {

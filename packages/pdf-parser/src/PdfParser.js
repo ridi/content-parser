@@ -4,10 +4,11 @@ import {
   Parser,
   readEntries,
 } from '@ridi/parser-core';
-
-import fs from 'fs';
 import * as pdfjsLib from 'pdfjs-dist/es5/build/pdf';
 import { v4 as uuid } from 'uuid';
+
+import fs from 'fs';
+
 import PdfBook from './model/PdfBook';
 import PdfParseContext from './model/PdfParseContext';
 
@@ -52,9 +53,14 @@ class PdfParser extends Parser {
    */
   constructor(input, cryptoProvider, logLevel) {
     /* istanbul ignore next */
-    logLevel = isString(cryptoProvider) ? cryptoProvider : logLevel;
-    cryptoProvider = isString(cryptoProvider) ? undefined : cryptoProvider;
-    super(input, cryptoProvider, { namespace: 'PdfParser', logLevel });
+    super(
+      input,
+      isString(cryptoProvider) ? undefined : cryptoProvider,
+      {
+        namespace: 'PdfParser',
+        logLevel: isString(cryptoProvider) ? cryptoProvider : logLevel,
+      },
+    );
     if (fs.statSync(input).isDirectory()) {
       throw createError(Errors.EINVAL, 'input', 'reason', 'must be file path');
     }
@@ -117,9 +123,9 @@ class PdfParser extends Parser {
       if (isExists(runner.promise)) {
         runner = runner.promise;
       }
-      runner.then((data) => {
+      runner.then(data => {
         resolve(data);
-      }).catch((error) => {
+      }).catch(error => {
         reject(createError(Errors.EPDFJS, error));
       });
     });
@@ -174,41 +180,36 @@ class PdfParser extends Parser {
     const { rawBook, document } = context;
     const outline = await this._execute(document, document.getOutline);
     if (isExists(outline)) {
-      await new Promise((resolveAll) => {
-        const makePromise = (items) => {
-          return (items).reduce((list, item) => {
-            list = [
-              ...list,
-              // eslint-disable-next-line no-async-promise-executor
-              new Promise(async (resolve) => {
-                let ref = item.dest;
-                let key = ref;
-                if (isArray(ref) && isExists(ref[0]) && isExists(ref[0].num)) {
-                  key = ref[0].num;
-                } else if (isString(ref)) {
-                  ref = await this._execute(document, document.getDestination, [ref]);
-                } else {
-                  this.logger.warn('Outline \'%s\' ignored. (reason: pageIndexRef not found)', item.title);
-                  resolve(null);
-                  return;
-                }
+      await new Promise(resolveAll => {
+        const makePromise = items => (items).reduce((list, item) => [
+          ...list,
+          // eslint-disable-next-line no-async-promise-executor
+          new Promise(async resolve => {
+            let ref = item.dest;
+            let key = ref;
+            if (isArray(ref) && isExists(ref[0]) && isExists(ref[0].num)) {
+              key = ref[0].num;
+            } else if (isString(ref)) {
+              ref = await this._execute(document, document.getDestination, [ref]);
+            } else {
+              this.logger.warn('Outline \'%s\' ignored. (reason: pageIndexRef not found)', item.title);
+              resolve(null);
+              return;
+            }
 
-                try {
-                  const page = await this._execute(document, document.getPageIndex, [ref[0]]);
-                  resolve({ [`${key}`]: page });
-                } catch (error) {
-                  this.logger.warn('Outline \'%s\' ignored. (reason: %s)', item.title, error.toString());
-                  resolve(null);
-                }
-              }),
-              ...makePromise(item.items),
-            ];
-            return list;
-          }, []);
-        };
-        Promise.all(makePromise(outline)).then((results) => {
+            try {
+              const page = await this._execute(document, document.getPageIndex, [ref[0]]);
+              resolve({ [`${key}`]: page });
+            } catch (error) {
+              this.logger.warn('Outline \'%s\' ignored. (reason: %s)', item.title, error.toString());
+              resolve(null);
+            }
+          }),
+          ...makePromise(item.items),
+        ], []);
+        Promise.all(makePromise(outline)).then(results => {
           let pageMap = {};
-          results.forEach((result) => {
+          results.forEach(result => {
             if (isExists(result)) {
               pageMap = { ...pageMap, ...result };
             }

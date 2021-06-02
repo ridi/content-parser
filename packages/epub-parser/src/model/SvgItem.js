@@ -1,4 +1,5 @@
 import { mergeObjects } from '@ridi/parser-core';
+
 import ImageItem from './ImageItem';
 
 class SvgItem extends ImageItem {
@@ -23,7 +24,7 @@ class SvgItem extends ImageItem {
 
   toRaw() {
     return mergeObjects(super.toRaw(), {
-      itemType: 'SvgItem',
+      ItemType: 'SvgItem',
     });
   }
 }

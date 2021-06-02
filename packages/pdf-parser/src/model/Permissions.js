@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { isExists } from '@ridi/parser-core';
 
 class Permissions {
@@ -19,11 +18,15 @@ class Permissions {
     this.allowPrinting = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.PRINT) : true;
     this.allowContentsModifying = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.MODIFY_CONTENTS) : true;
     this.allowCopying = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.COPY) : true;
-    this.allowAnnotationsModifying = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.MODIFY_ANNOTATIONS) : true;
-    this.allowInteractiveFormsModifying = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.FILL_INTERACTIVE_FORMS) : true;
-    this.allowCopyingForAccessibility = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.COPY_FOR_ACCESSIBILITY) : true;
+    this.allowAnnotationsModifying
+      = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.MODIFY_ANNOTATIONS) : true;
+    this.allowInteractiveFormsModifying
+      = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.FILL_INTERACTIVE_FORMS) : true;
+    this.allowCopyingForAccessibility
+      = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.COPY_FOR_ACCESSIBILITY) : true;
     this.allowAssembling = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.ASSEMBLE) : true;
-    this.allowHighQualityPrinting = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.PRINT_HIGH_QUALITY) : true;
+    this.allowHighQualityPrinting
+      = isExists(rawValue) ? rawValue.includes(Permissions.RawValue.PRINT_HIGH_QUALITY) : true;
     Object.freeze(this);
   }
 

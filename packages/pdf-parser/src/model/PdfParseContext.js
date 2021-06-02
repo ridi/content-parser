@@ -1,4 +1,5 @@
 import { BaseParseContext } from '@ridi/parser-core';
+
 import PdfBook from './PdfBook';
 
 class PdfParseContext extends BaseParseContext {
@@ -15,7 +16,7 @@ class PdfParseContext extends BaseParseContext {
   constructor() {
     super();
     const rawBook = {};
-    Object.keys(new PdfBook()).forEach((key) => { rawBook[key] = undefined; });
+    Object.keys(new PdfBook()).forEach(key => { rawBook[key] = undefined; });
     this.rawBook = rawBook;
     this.document = undefined;
     this.worker = undefined;

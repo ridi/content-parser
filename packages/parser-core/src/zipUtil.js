@@ -1,14 +1,15 @@
-import fs from 'fs-extra';
 import AdmZip from 'adm-zip';
+import fs from 'fs-extra';
+
 import { Readable } from 'stream';
 
 import { trimEnd } from './bufferUtil';
 import createCryptoStream from './createCryptoStream';
 import createSliceStream from './createSliceStream';
 import CryptoProvider from './CryptoProvider';
-import { isExists } from './typecheck';
-import { conditionally } from './streamUtil';
 import Errors, { createError } from './errors';
+import { conditionally } from './streamUtil';
+import { isExists } from './typecheck';
 
 /**
  * @typedef GetFileOptions
@@ -46,7 +47,7 @@ function find(entryPath) {
  */
 async function getFile(entry, options = { encoding: undefined, end: undefined }) {
   const { encoding, end } = options;
-  let file = await new Promise((resolveFile) => {
+  let file = await new Promise(resolveFile => {
     const totalSize = Math.min(end || Infinity, entry.uncompressedSize);
     let data = Buffer.from([]);
     const readable = Readable.from(entry.getData());
@@ -54,7 +55,7 @@ async function getFile(entry, options = { encoding: undefined, end: undefined })
       .pipe(conditionally(isExists(end), createSliceStream(0, end)))
       .pipe(conditionally(this.cryptoProvider && !!this.cryptoProvider.isStreamMode,
         createCryptoStream(entry.path, totalSize, this.cryptoProvider, CryptoProvider.Purpose.READ_IN_DIR)))
-      .on('data', (chunk) => { data = Buffer.concat([data, chunk]); })
+      .on('data', chunk => { data = Buffer.concat([data, chunk]); })
       .on('end', () => { resolveFile(data); });
   });
   if (this.cryptoProvider && !this.cryptoProvider.isStreamMode) {
@@ -82,7 +83,7 @@ async function extractAll(unzipPath, overwrite = true) {
   }
   fs.mkdirpSync(unzipPath);
   const zip = new AdmZip();
-  await Promise.all(this.files.map(async (entry) => {
+  await Promise.all(this.files.map(async entry => {
     if (this.cryptoProvider && !entry.isDirectory) {
       entry.setData(await this.cryptoProvider.run(entry.getData(), entry.entryPath, CryptoProvider.Purpose.WRITE));
     }
