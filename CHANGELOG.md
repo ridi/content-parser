@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.7.3 (2021-06-02)]
+
+### Changed
+
+- Optimizing bundle size.
+- Ignore script in event attribute with `ignoreScript` option.
+
 ## [0.7.2 (2021-06-02)]
 
 ### Changed
@@ -332,7 +339,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - First release.
 
-[Unreleased]: https://github.com/ridi/content-parser/compare/0.7.2...HEAD
+[Unreleased]: https://github.com/ridi/content-parser/compare/0.7.3...HEAD
+[0.7.3 (2021-06-02)]: https://github.com/ridi/content-parser/compare/0.7.2...0.7.3
 [0.7.2 (2021-06-02)]: https://github.com/ridi/content-parser/compare/0.7.1...0.7.2
 [0.7.1 (2020-11-13)]: https://github.com/ridi/content-parser/compare/0.7.0...0.7.1
 [0.7.0 (2020-10-31)]: https://github.com/ridi/content-parser/compare/0.6.15...0.7.0
