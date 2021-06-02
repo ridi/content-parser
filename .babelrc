@@ -1,12 +1,18 @@
 {
   "presets": [
-		["@babel/preset-env"]
-	],
-	"plugins": [
-		"add-module-exports",
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "add-module-exports",
     ["@babel/plugin-proposal-class-properties", { "loose": false }],
-		"@babel/plugin-proposal-object-rest-spread",
-		"@babel/transform-runtime"
-	],
-	"comments": false
+    "@babel/plugin-proposal-object-rest-spread"
+  ],
+  "comments": false
 }
