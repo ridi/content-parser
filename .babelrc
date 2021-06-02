@@ -11,8 +11,7 @@
   ],
   "plugins": [
     "add-module-exports",
-    ["@babel/plugin-proposal-class-properties", { "loose": false }],
-    "@babel/plugin-proposal-object-rest-spread"
+    ["@babel/plugin-proposal-class-properties", { "loose": false }]
   ],
   "comments": false
 }

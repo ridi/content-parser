@@ -1,5 +1,11 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "configFile": "./.babelrc"
+    }
+  },
   "extends": "@ridi/eslint-config",
   "rules": {
     "arrow-body-style": 0,
