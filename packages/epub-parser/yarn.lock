@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ridi/parser-core@0.7.2-alpha.3":
-  version "0.7.2-alpha.3"
-  resolved "https://registry.yarnpkg.com/@ridi/parser-core/-/parser-core-0.7.2-alpha.3.tgz#1413ace27f3655646ea33d5ee8e47278b19803eb"
-  integrity sha512-JkZ+EPnVdxcSWjL2BS66kz2er1YFknrqkPqGQ4r9stTgZ/r+QDWcYPsa14sczN4Kci/Q4liiHheXuliMh6suaw==
+"@ridi/parser-core@0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@ridi/parser-core/-/parser-core-0.7.3.tgz#9a668303b5b5c5f61104386b8f07b5dbde7b8847"
+  integrity sha512-+eDw0/kXJe1UVVJvZU+5hFbIHuMSlF3C8WJoNBTbQLAzsxe8Hdob96mRfn5Jj5CC1f9dBrBuhlGiZ++AhkbBsQ==
   dependencies:
     adm-zip "^0.4.16"
     crypto-js "^4.0.0"
@@ -57,10 +57,10 @@ crypto-random-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
   integrity sha1-ojD2T1aDEOFJgAmUB5DsmVRbyn4=
 
-css-tree@^1.0.0-alpha.39:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/css-tree/-/css-tree-1.1.2.tgz#9ae393b5dafd7dae8a622475caec78d3d8fbd7b5"
-  integrity sha512-wCoWush5Aeo48GLhfHPbmvZs59Z+M7k5+B1xDnXbdWNcEF423DoFdqSWE0PM5aNk5nI5cp1q7ms36zGApY/sKQ==
+css-tree@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/css-tree/-/css-tree-1.1.3.tgz#eb4870fb6fd7707327ec95c2ff2ab09b5e8db91d"
+  integrity sha512-tRpdppF7TRazZrjJ6v3stzv93qxRcSsFmW6cX0Zm2NVKpxE1WV1HblnghVv9TreireHkqI/VDEsfolRF1p6y7Q==
   dependencies:
     mdn-data "2.0.14"
     source-map "^0.6.1"
