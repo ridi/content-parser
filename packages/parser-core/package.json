@@ -23,7 +23,7 @@
     "adm-zip": "^0.5.5",
     "crypto-js": "^4.0.0",
     "event-stream": "3.3.4",
-    "fs-extra": "^9.0.1",
+    "fs-extra": "^10.0.0",
     "sha1": "^1.1.1",
     "string-format": "^2.0.0",
     "string-natural-compare": "^3.0.1"
@@ -32,7 +32,7 @@
     "@types/adm-zip": "^0.4.34",
     "@types/crypto-js": "^4.0.1",
     "@types/event-stream": "^3.3.34",
-    "@types/fs-extra": "^9.0.3",
+    "@types/fs-extra": "^9.0.11",
     "@types/node": "^14.14.6",
     "@types/sha1": "^1.1.2",
     "@types/string-format": "^2.0.0",
