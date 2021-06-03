@@ -22,7 +22,7 @@
   "dependencies": {
     "@ridi/parser-core": "0.7.3",
     "fs-extra": "^9.0.1",
-    "image-size": "^0.9.1",
+    "image-size": "^1.0.0",
     "string-natural-compare": "^3.0.1"
   },
   "devDependencies": {

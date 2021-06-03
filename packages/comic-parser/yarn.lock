@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ridi/parser-core@0.7.2-alpha.3":
-  version "0.7.2-alpha.3"
-  resolved "https://registry.yarnpkg.com/@ridi/parser-core/-/parser-core-0.7.2-alpha.3.tgz#1413ace27f3655646ea33d5ee8e47278b19803eb"
-  integrity sha512-JkZ+EPnVdxcSWjL2BS66kz2er1YFknrqkPqGQ4r9stTgZ/r+QDWcYPsa14sczN4Kci/Q4liiHheXuliMh6suaw==
+"@ridi/parser-core@0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@ridi/parser-core/-/parser-core-0.7.3.tgz#9a668303b5b5c5f61104386b8f07b5dbde7b8847"
+  integrity sha512-+eDw0/kXJe1UVVJvZU+5hFbIHuMSlF3C8WJoNBTbQLAzsxe8Hdob96mRfn5Jj5CC1f9dBrBuhlGiZ++AhkbBsQ==
   dependencies:
     adm-zip "^0.4.16"
     crypto-js "^4.0.0"
@@ -83,12 +83,12 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-image-size@^0.9.1:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.9.3.tgz#f7efce6b0a1649b44b9bc43b9d9a5acf272264b6"
-  integrity sha512-5SakFa79uhUVSjKeQE30GVzzLJ0QNzB53+I+/VD1vIesD6GP6uatWIlgU0uisFNLt1u0d6kBydp7yfk+lLJhLQ==
+image-size@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/image-size/-/image-size-1.0.0.tgz#58b31fe4743b1cec0a0ac26f5c914d3c5b2f0750"
+  integrity sha512-JLJ6OwBfO1KcA+TvJT+v8gbE6iWbj24LyDNFgFEN0lzegn6cC6a/p3NIDaepMsJjQjlUWqIC7wJv8lBFxPNjcw==
   dependencies:
-    queue "6.0.1"
+    queue "6.0.2"
 
 inherits@~2.0.3:
   version "2.0.4"
@@ -116,10 +116,10 @@ pause-stream@0.0.11:
   dependencies:
     through "~2.3"
 
-queue@6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/queue/-/queue-6.0.1.tgz#abd5a5b0376912f070a25729e0b6a7d565683791"
-  integrity sha512-AJBQabRCCNr9ANq8v77RJEv73DPbn55cdTb+Giq4X0AVnNVZvMHlYp7XlQiN+1npCZj1DuSmaA2hYVUUDgxFDg==
+queue@6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/queue/-/queue-6.0.2.tgz#b91525283e2315c7553d2efa18d83e76432fed65"
+  integrity sha512-iHZWu+q3IdFZFX36ro/lKBkSvfkztY5Y7HMiPlOUjhupPcG2JMfst2KKEpu5XndviX/3UhFbRngUPNKtgvtZiA==
   dependencies:
     inherits "~2.0.3"
 
