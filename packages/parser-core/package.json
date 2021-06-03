@@ -20,7 +20,7 @@
   "main": "lib/index.js",
   "types": "type/index.d.ts",
   "dependencies": {
-    "adm-zip": "^0.4.16",
+    "adm-zip": "^0.5.5",
     "crypto-js": "^4.0.0",
     "event-stream": "3.3.4",
     "fs-extra": "^9.0.1",
@@ -29,7 +29,7 @@
     "string-natural-compare": "^3.0.1"
   },
   "devDependencies": {
-    "@types/adm-zip": "^0.4.33",
+    "@types/adm-zip": "^0.4.34",
     "@types/crypto-js": "^4.0.1",
     "@types/event-stream": "^3.3.34",
     "@types/fs-extra": "^9.0.3",
