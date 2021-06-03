@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ridi/parser-core@0.7.2-alpha.3":
-  version "0.7.2-alpha.3"
-  resolved "https://registry.yarnpkg.com/@ridi/parser-core/-/parser-core-0.7.2-alpha.3.tgz#1413ace27f3655646ea33d5ee8e47278b19803eb"
-  integrity sha512-JkZ+EPnVdxcSWjL2BS66kz2er1YFknrqkPqGQ4r9stTgZ/r+QDWcYPsa14sczN4Kci/Q4liiHheXuliMh6suaw==
+"@ridi/parser-core@0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@ridi/parser-core/-/parser-core-0.7.3.tgz#9a668303b5b5c5f61104386b8f07b5dbde7b8847"
+  integrity sha512-+eDw0/kXJe1UVVJvZU+5hFbIHuMSlF3C8WJoNBTbQLAzsxe8Hdob96mRfn5Jj5CC1f9dBrBuhlGiZ++AhkbBsQ==
   dependencies:
     adm-zip "^0.4.16"
     crypto-js "^4.0.0"
@@ -248,7 +248,7 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-uuid@^8.3.0:
+uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
