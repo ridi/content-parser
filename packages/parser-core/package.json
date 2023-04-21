@@ -7,6 +7,9 @@
     "mail": "viewer.team@ridi.com"
   },
   "license": "MIT",
+  "scripts": {
+    "build": "npx tsc || exit 0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ridi/content-parser"
@@ -17,8 +20,8 @@
     "lib",
     "type"
   ],
-  "main": "lib/index.js",
-  "types": "type/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "dependencies": {
     "adm-zip": "^0.5.5",
     "crypto-js": "^4.0.0",

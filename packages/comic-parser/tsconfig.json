@@ -1,17 +1,18 @@
 {
   // Change this to match your project
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "compilerOptions": {
+    "target": "ES2015",
+    "module": "CommonJS",
     // Tells TypeScript to read JS files, as
     // normally they are ignored as source files
     "allowJs": true,
     // Generate d.ts files
     "declaration": true,
     // This compiler run should
-    // only output d.ts files
-    "emitDeclarationOnly": true,
-    "outDir": "type"
-  },
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "outDir": "lib",
+    "useDefineForClassFields": false
+  }
 }
