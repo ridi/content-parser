@@ -64,7 +64,6 @@ describe('ComicParser', () => {
 
     it('Parse with default options from file', () => {
       const cp = new ComicParser(Paths.COMIC);
-      console.log('cp._getBookClass() === Book2', cp._getBookClass() === Book2, cp._getBookClass(), Book2);
       return new ComicParser(Paths.COMIC).parse().then(book => {
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_COMIC_BOOK)));
       });
