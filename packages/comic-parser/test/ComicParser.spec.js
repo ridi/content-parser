@@ -5,13 +5,15 @@ import fs from 'fs-extra';
 import path from 'path';
 import sinon from 'sinon';
 
-import ComicBook from '../src/model/ComicBook';
-import ComicParser from '../src/ComicParser';
-import ComicItem from '../src/model/ComicItem';
-import ComicReadContext from '../src/model/ComicReadContext';
-import ComicParseContext from '../src/model/ComicParseContext';
+import ComicBook from '../lib/model/ComicBook';
+import ComicParser from '../lib/ComicParser';
+import ComicItem from '../lib/model/ComicItem';
+import ComicReadContext from '../lib/model/ComicReadContext';
+import ComicParseContext from '../lib/model/ComicParseContext';
 import Paths from '../../../test/paths';
-import validationBook from './validationBook';
+import validationBook, { Book2 } from './validationBook';
+
+console.log('ComicBook === Book2', ComicBook === Book2)
 
 chai.use(chaiAsPromised);
 should(); // Initialize should
@@ -61,6 +63,8 @@ describe('ComicParser', () => {
     });
 
     it('Parse with default options from file', () => {
+      const cp = new ComicParser(Paths.COMIC);
+      console.log('cp._getBookClass() === Book2', cp._getBookClass() === Book2, cp._getBookClass(), Book2);
       return new ComicParser(Paths.COMIC).parse().then(book => {
         validationBook(book, JSON.parse(fs.readFileSync(Paths.EXPECTED_COMIC_BOOK)));
       });
@@ -102,7 +106,7 @@ describe('ComicParser', () => {
 
   it('parseImageSize return undefined when sizeof throws', async () => {
     const comicParser = new ComicParser(Paths.COMIC, 'fakeProvider');
-    const imageSize = await comicParser._parseImageSize({getFile:sinon.fake.returns(Buffer.from(['f','a','k','e']))}, {parseImageSize: true});
+    const imageSize = await comicParser._parseImageSize({ getFile: sinon.fake.returns(Buffer.from(['f', 'a', 'k', 'e'])) }, { parseImageSize: true });
     expect(imageSize.height).to.be.undefined;
     expect(imageSize.width).to.be.undefined;
   });

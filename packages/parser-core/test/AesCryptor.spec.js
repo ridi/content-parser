@@ -4,8 +4,8 @@ import AesCryptor, {
   Padding,
   Encoding,
   Mode,
-} from '../src/AesCryptor';
-import Errors from '../src/errors';
+} from '../lib/AesCryptor';
+import Errors from '../lib/errors';
 
 should(); // Initialize should
 
@@ -224,12 +224,12 @@ describe('AesCryptor', () => {
     it('Length is divisible by 16', () => {
       // An example string key
       const key = '1234567890123456';
-  
+
       const text = 'TextMustBe16Byte';
       const cryptor = new AesCryptor(Mode.ECB, { key });
-  
+
       cryptor.encrypt(text, { encoding: Encoding.HEX }).should.equal('3ba6941b0b398d96e87e34660ecd435f');
-  
+
       const encryptedBytes = cryptor.encrypt(text);
       cryptor.decrypt(encryptedBytes, { encoding: Encoding.UTF8 }).should.equal(text);
     });

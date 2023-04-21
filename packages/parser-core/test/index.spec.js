@@ -15,7 +15,7 @@ import {
   getType, isArray, isBool, isExists, isFunc, isObject, isString, isUrl,
   validateOptions,
   openZip,
-} from '../src/index';
+} from '../lib/index';
 
 describe('parser-core', () => {
   it('Check imports', () => {

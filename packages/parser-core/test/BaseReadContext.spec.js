@@ -1,5 +1,5 @@
 import { expect, should } from 'chai';
-import BaseReadContext from '../src/BaseReadContext';
+import BaseReadContext from '../lib/BaseReadContext';
 
 should(); // Initialize should
 

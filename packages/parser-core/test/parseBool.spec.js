@@ -1,6 +1,6 @@
 import { should } from 'chai';
 
-import parseBool from '../src/parseBool';
+import parseBool from '../lib/parseBool';
 
 should(); // Initialize should
 

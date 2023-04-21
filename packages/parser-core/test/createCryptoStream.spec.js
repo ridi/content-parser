@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import fs from 'fs';
 
-import createCryptoStream from '../src/createCryptoStream';
+import createCryptoStream from '../lib/createCryptoStream';
 import Paths from '../../../test/paths';
 import TestCryptoProvider from '../../epub-parser/test/TestCryptoProvider';
 import TestPromiseCryptoProvider from '../../epub-parser/test/TestPromiseCryptoProvider';

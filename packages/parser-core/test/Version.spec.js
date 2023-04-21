@@ -1,6 +1,6 @@
 import { assert, should } from 'chai';
 
-import Version from '../src/Version';
+import Version from '../lib/Version';
 
 should(); // Initialize should
 

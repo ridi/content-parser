@@ -1,6 +1,6 @@
 import { should } from 'chai';
 
-import { trim, trimStart, trimEnd } from '../src/bufferUtil';
+import { trim, trimStart, trimEnd } from '../lib/bufferUtil';
 
 should(); // Initialize should
 

@@ -1,9 +1,9 @@
 
 import fs from 'fs';
 import Paths from '../../../test/paths';
-import AesCryptor from '../src/AesCryptor';
-import CryptoProvider from '../src/CryptoProvider';
-import { Hash } from '../src/cryptoUtil';
+import AesCryptor from '../lib/AesCryptor';
+import CryptoProvider from '../lib/CryptoProvider';
+import { Hash } from '../lib/cryptoUtil';
 
 const { Purpose } = CryptoProvider;
 const { Mode, Padding } = AesCryptor;

@@ -1,6 +1,6 @@
 import { should } from 'chai';
 
-import { Encoding, Hash } from '../src/cryptoUtil';
+import { Encoding, Hash } from '../lib/cryptoUtil';
 
 should(); // Initialize should
 

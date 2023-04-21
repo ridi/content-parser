@@ -1,8 +1,8 @@
 import { should } from 'chai';
 import fs from 'fs';
 
-import createSliceStream from '../src/createSliceStream';
-import { conditionally } from '../src/streamUtil';
+import createSliceStream from '../lib/createSliceStream';
+import { conditionally } from '../lib/streamUtil';
 import Paths from '../../../test/paths';
 
 should(); // Initialize should
@@ -30,7 +30,7 @@ describe('Util - stream', () => {
   });
 
   it('conditionally test (true)', () => {
-    return test(()=> true).then((data) => {
+    return test(() => true).then((data) => {
       data.length.should.equal(150);
     });
   });
@@ -42,7 +42,7 @@ describe('Util - stream', () => {
   });
 
   it('conditionally test (false)', () => {
-    return test(()=>false).then((data) => {
+    return test(() => false).then((data) => {
       data.length.should.equal(1222);
     });
   });

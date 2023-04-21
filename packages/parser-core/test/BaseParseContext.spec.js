@@ -1,5 +1,5 @@
 import { expect, should } from 'chai';
-import BaseParseContext from '../src/BaseParseContext';
+import BaseParseContext from '../lib/BaseParseContext';
 
 should(); // Initialize should
 
