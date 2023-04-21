@@ -1,104 +1,113 @@
 import * as CryptoJs from 'crypto-js';
 
-import { Padding, Encoding } from './cryptoUtil';
+import { Padding, Encoding, PaddingObject, EncodingObject } from './cryptoUtil';
 import Errors, { createError } from './errors';
 import mergeObjects from './mergeObjects';
 import { stringContains } from './stringUtil';
 import { isExists, isObject, isString } from './typecheck';
 import validateOptions from './validateOptions';
+import { ValueOf } from './helper';
 
 const { mode: aesMode, AES } = CryptoJs;
 
-/**
- * @typedef {Object} ModeConfig
- * @property {string} key
- * @property {string} [iv]
-*/
+type WordArray = CryptoJs.lib.WordArray;
 
-/**
- * @type {ModeConfig}
- */
-const defaultConfigTypes = {
+type ModeConfig = {
+  key: string | WordArray | number[] | Buffer | Uint8Array;
+  iv?: WordArray | number[] | Buffer;
+};
+
+const defaultConfigTypes: ModeConfig = {
   key: 'String|Buffer|Uint8Array|Array',
 };
 
-/**
- * @typedef {Object} ModeObject
- * @property {string} name
- * @property {import('../type/CryptoJs').BlockCipherMode} op
- * @property {ModeConfig} configTypes
- *
- * @typedef {Object} ModeList
- * @property {ModeObject} ECB
- * @property {ModeObject} CBC
- * @property {ModeObject} CFB
- * @property {ModeObject} OFB
- * @property {ModeObject} CTR
-*/
+type BlockCipherMode = ValueOf<typeof CryptoJs.mode>;
 
-/**
- * @type {ModeList}
-*/
-const Mode = Object.freeze({
-  ECB: { // Electronic Codebook (key)
+type ModeObject = {
+  name: string;
+  op: BlockCipherMode;
+  configTypes: ModeConfig;
+};
+
+type ModeList = {
+  ECB: ModeObject;
+  CBC: ModeObject;
+  CFB: ModeObject;
+  OFB: ModeObject;
+  CTR: ModeObject;
+};
+
+const Mode: ModeList = {
+  ECB: {
+    // Electronic Codebook (key)
     name: 'ECB',
     op: aesMode.ECB,
     configTypes: defaultConfigTypes,
   },
-  CBC: { // Cipher-Block Chaining (key + iv)
+  CBC: {
+    // Cipher-Block Chaining (key + iv)
     name: 'CBC',
     op: aesMode.CBC,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
     }),
   },
-  CFB: { // Cipher Feedback (key + iv + {segmentSize})
+  CFB: {
+    // Cipher Feedback (key + iv + {segmentSize})
     name: 'CFB',
     op: aesMode.CFB,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
     }),
   },
-  OFB: { // Output Feedback (key + iv)
+  OFB: {
+    // Output Feedback (key + iv)
     name: 'OFB',
     op: aesMode.OFB,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
     }),
   },
-  CTR: { // Counter (key + iv + {counter})
+  CTR: {
+    // Counter (key + iv + {counter})
     name: 'CTR',
     op: aesMode.CTR,
     configTypes: mergeObjects(defaultConfigTypes, {
       iv: 'Buffer|Uint8Array|Array',
     }),
   },
-});
+};
+
+type EncodeAndDecode = (data: string | WordArray) => WordArray;
+
+type Operator = {
+  name: string;
+  encrypt: EncodeAndDecode;
+  decrypt: EncodeAndDecode;
+};
+
+type CryptOption = {
+  padding: PaddingObject;
+  encoding: EncodingObject;
+};
 
 class AesCryptor {
-  /**
-   * @typedef {(data: string | CryptoJs.lib.WordArray) => CryptoJs.lib.WordArray} EncodeAndDecode
-   * @typedef {Object} Operator
-   * @property {string} name
-   * @property {EncodeAndDecode} encrypt
-   * @property {EncodeAndDecode} decrypt
-   */
+  static Padding = Padding;
+  static Encoding = Encoding;
+  static Mode = Mode;
 
-  /**
-   * @private
-   * @type {Operator}
-   */
-  operator;
+  private operator: Operator;
 
   /**
    * Construct AesCryptor
-   * @param {ModeObject} mode Crypto mode
-   * @param {ModeConfig} config Crypto config
    */
-  constructor(mode, config) {
+  constructor(mode: ModeObject, config: ModeConfig) {
     if (!isExists(mode)) {
       throw createError(Errors.EREQPRM, 'mode');
-    } else if (!isObject(mode) || !stringContains(Object.keys(Mode), mode.name)) {
+    } else if (
+      !isObject(mode) ||
+      !stringContains(Object.keys(Mode), mode.name)
+    ) {
       throw createError(Errors.EINVAL, 'mode', 'mode', 'use Modes');
     }
     if (!isExists(config)) {
@@ -116,7 +125,8 @@ class AesCryptor {
           throw createError(Errors.EREQPRM, 'config.iv');
         }
         break;
-      default: break;
+      default:
+        break;
     }
     validateOptions(config, mode.configTypes, true);
     this.operator = this.makeOperator(mode, config);
@@ -125,12 +135,8 @@ class AesCryptor {
 
   /**
    * Make an operator
-   * @private
-   * @param {ModeObject} mode
-   * @param {ModeConfig} config
-   * @returns {Operator} Operator
    */
-  makeOperator(mode, config) {
+  private makeOperator(mode: ModeObject, config: ModeConfig): Operator {
     let { key, iv } = config;
 
     // convert key to WordArray
@@ -138,6 +144,7 @@ class AesCryptor {
       const { length } = key;
       key = Encoding.UTF8.decode(key);
       if (length % 16 !== 0) {
+        // ** 콛, 확인필요
         Padding.PKCS7.pad(key);
       }
     } else if (Buffer.isBuffer(key)) {
@@ -153,43 +160,48 @@ class AesCryptor {
       iv = Encoding.UINT8.decode(iv);
     }
 
-    const checkType = (data, allow) => {
+    const checkType = <T>(data: T, allow?: string) => {
       if (!isExists(data)) {
-        const message = `require Buffer or Uint8Array or Array${isExists(allow) ? ` ${allow}` : ''}`;
+        const message = `require Buffer or Uint8Array or Array${
+          isExists(allow) ? ` ${allow}` : ''
+        }`;
         throw createError(Errors.ECRYT, 'data type', 'reason', message);
       }
       return data;
     };
 
     // return operator
-    const options = { iv, mode: mode.op, padding: Padding.NONE.op };
-    return { // Note that all data and return type is a WordArray
+    const options = {
+      iv,
+      mode: mode.op,
+      padding: Padding.NONE.op,
+    };
+    return {
+      // Note that all data and return type is a WordArray
       name: mode.name,
-      encrypt: data => AES.encrypt(checkType(data, 'or String'), key, options).ciphertext,
-      decrypt: data => {
-        const cipherParams = CryptoJs.lib.CipherParams.create({ ciphertext: checkType(data) });
-        return AES.decrypt(cipherParams, key, options);
+      encrypt: (data) =>
+        AES.encrypt(checkType(data, 'or String'), key as any, options)
+          .ciphertext,
+      decrypt: (data) => {
+        const cipherParams = CryptoJs.lib.CipherParams.create({
+          ciphertext: checkType(data) as WordArray,
+        });
+        return AES.decrypt(cipherParams, key as any, options);
       },
     };
   }
 
-  /**
-   * @typedef {Object} CryptOption
-   * @property {import('./cryptoUtil').PaddingObject} padding
-   * @property {import('./cryptoUtil').EncodingObject} encoding
-   */
-
-  /**
-   * Encrypt string
-   * @param {Buffer | Uint8Array | number[]} data
-   * @param {CryptOption} options
-   * @returns {string} encrypted string
-   */
   /* eslint-disable no-param-reassign */
-  encrypt(data, options = {}) {
+  encrypt(
+    data: string | Buffer | Uint8Array | number[] | WordArray,
+    options: Partial<CryptOption> = {}
+  ) {
     const padding = options.padding || Padding.NONE;
     const encoding = options.encoding || Encoding.BUFFER;
-    const length = isExists(data) && isExists(data.length) ? data.length : 0;
+    const length =
+      isExists(data) && isExists((data as any).length)
+        ? (data as any).length
+        : 0;
 
     // convert data to WordArray
     if (isString(data)) {
@@ -201,7 +213,10 @@ class AesCryptor {
     }
 
     // padding data if needed as padding type
-    if (padding === Padding.PKCS7 || (padding === Padding.AUTO && length % 16 !== 0)) {
+    if (
+      padding === Padding.PKCS7 ||
+      (padding === Padding.AUTO && length % 16 !== 0)
+    ) {
       padding.pad(data);
     }
 
@@ -212,12 +227,13 @@ class AesCryptor {
 
   /**
    * Decrupt string
-   * @param {Buffer | Uint8Array | number[]} data
-   * @param {CryptOption} options
    * @returns {string} decrypted string
    */
   /* eslint-disable no-param-reassign */
-  decrypt(data, options = {}) {
+  decrypt(
+    data: string | Buffer | Uint8Array | number[] | WordArray,
+    options: Partial<CryptOption> = {}
+  ) {
     const padding = options.padding || Padding.NONE;
     const encoding = options.encoding || Encoding.BUFFER;
 
@@ -234,7 +250,7 @@ class AesCryptor {
     // unpadding data if needed as padding type
     if (padding === Padding.PKCS7 || padding === Padding.AUTO) {
       try {
-        const array = Encoding.UINT8.encode(decryptedData);
+        const array = Encoding.UINT8.encode(decryptedData) as Uint8Array;
         if (array.length < 16) {
           throw createError(Errors.ECRYT, 'invalid data length');
         }
@@ -262,14 +278,6 @@ class AesCryptor {
   /* eslint-enable no-param-reassign */
 }
 
-AesCryptor.Padding = Padding;
-AesCryptor.Encoding = Encoding;
-AesCryptor.Mode = Mode;
-
 export default AesCryptor;
 
-export {
-  Padding,
-  Encoding,
-  Mode,
-};
+export { Padding, Encoding, Mode };
