@@ -20,9 +20,9 @@ import ComicReadContext from "./model/ComicReadContext";
 import {
   BaseReadOption,
   BaseReadOptionType,
-} from "@ridi/parser-core/dist/BaseReadContext";
-import { Task } from "@ridi/parser-core/dist/Parser";
-import { EntryBasicInformation } from "@ridi/parser-core/dist/readEntries";
+} from "@ridi/parser-core/lib/BaseReadContext";
+import { Task } from "@ridi/parser-core/lib/Parser";
+import { EntryBasicInformation } from "@ridi/parser-core/lib/readEntries";
 
 type ComicReadOptionExtra = {
   base64: boolean;
