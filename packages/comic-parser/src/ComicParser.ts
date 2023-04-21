@@ -96,8 +96,8 @@ class ComicParser extends Parser {
   constructor(
     input: string,
     // FIXME: 추후 수정
-    cryptoProvider: CryptoProvider | LogLevel,
-    logLevel: LogLevel
+    cryptoProvider?: CryptoProvider | LogLevel,
+    logLevel?: LogLevel
   ) {
     /* istanbul ignore next */
     super(input, isString(cryptoProvider) ? undefined : cryptoProvider, {
