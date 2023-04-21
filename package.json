@@ -1,7 +1,7 @@
 {
   "scripts": {
     "clean": "rimraf ./*.log && lerna exec --parallel -- rimraf coverage lib/* temp",
-    "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc",
+    "build": "yarn clean && lerna exec --parallel -- babel src --out-dir lib --config-file ../../.babelrc && lerna run build",
     "test": "yarn build && yarn lint && lerna exec --concurrency 1 -- nyc mocha --recursive",
     "type": "lerna exec -- tsc",
     "type:doc": "lerna exec --scope @ridi/content-parser -- typedoc",
