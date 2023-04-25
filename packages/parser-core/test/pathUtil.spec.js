@@ -1,7 +1,7 @@
 import { should } from 'chai';
 import path from 'path';
 
-import { getPathes, safeDirname, safePathJoin } from '../src/pathUtil';
+import { getPathes, safeDirname, safePathJoin } from '../lib/pathUtil';
 import Paths from '../../../test/paths';
 
 should(); // Initialize should

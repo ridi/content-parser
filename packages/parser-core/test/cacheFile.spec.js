@@ -7,9 +7,9 @@ import {
   removeAllCacheFiles,
   readCacheFile,
   writeCacheFile,
-} from '../src/cacheFile';
+} from '../lib/cacheFile';
 
-import Errors from '../src/errors';
+import Errors from '../lib/errors';
 
 should(); // Initialize should
 

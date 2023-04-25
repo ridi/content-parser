@@ -1,9 +1,10 @@
 import { isExists } from '@ridi/parser-core';
 
-import Book from '../src/model/ComicBook';
-import Item from '../src/model/ComicItem';
+import Book from '../lib/model/ComicBook';
+import Item from '../lib/model/ComicItem';
 
 export default function validationBook(book, expectedBook, parseOptions = {}) {
+  console.log('book', book.constructor, Book);
   book.should.be.an.instanceOf(Book);
 
   book.items.should.have.lengthOf(expectedBook.items.length);
@@ -22,3 +23,4 @@ export default function validationBook(book, expectedBook, parseOptions = {}) {
     }
   });
 }
+export const Book2 = Book

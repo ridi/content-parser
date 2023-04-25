@@ -8,7 +8,7 @@ import {
   CryptoProvider,
   AesCryptor,
   Hash,
-} from '../src/index';
+} from '../lib/index';
 
 describe('comic-parser', () => {
   it('Check imports', () => {

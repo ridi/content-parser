@@ -1,6 +1,6 @@
 import { should, expect } from 'chai';
 
-import { MatchOption, stringContains, safeDecodeURI } from '../src/stringUtil';
+import { MatchOption, stringContains, safeDecodeURI } from '../lib/stringUtil';
 
 should(); // Initialize should
 

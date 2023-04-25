@@ -1,11 +1,11 @@
 import { should } from 'chai';
 
 import EpubBook from '../../epub-parser/src/model/EpubBook';
-import { isArray, isBool, isExists, isFunc, isObject, isString, isUrl, getType } from '../src/typecheck';
+import { isArray, isBool, isExists, isFunc, isObject, isString, isUrl, getType } from '../lib/typecheck';
 
 should(); // Initialize should
 
-function test() {}
+function test() { }
 
 describe('Util - Type check', () => {
   it('getType strict mode test', () => {
@@ -19,7 +19,7 @@ describe('Util - Type check', () => {
     getType(false, true).should.equal('Boolean');
     getType(null, true).should.equal('Null');
     getType(undefined, true).should.equal('Undefined');
-    getType(() => {}, true).should.equal('');
+    getType(() => { }, true).should.equal('');
     getType(test, true).should.equal('test');
   });
 
@@ -34,7 +34,7 @@ describe('Util - Type check', () => {
     isArray(false).should.be.false;
     isArray(null).should.be.false;
     isArray(undefined).should.be.false;
-    isArray(() => {}).should.be.false;
+    isArray(() => { }).should.be.false;
     isArray(test).should.be.false;
 
     const temp = Array.isArray;
@@ -52,7 +52,7 @@ describe('Util - Type check', () => {
     isBool(false).should.be.true;
     isBool(null).should.be.false;
     isBool(undefined).should.be.false;
-    isBool(() => {}).should.be.false;
+    isBool(() => { }).should.be.false;
     isBool(test).should.be.false;
   });
 
@@ -65,7 +65,7 @@ describe('Util - Type check', () => {
     isExists(false).should.be.true;
     isExists(null).should.be.false;
     isExists(undefined).should.be.false;
-    isExists(() => {}).should.be.true;
+    isExists(() => { }).should.be.true;
     isExists(test).should.be.true;
   });
 
@@ -78,7 +78,7 @@ describe('Util - Type check', () => {
     isFunc(false).should.be.false;
     isFunc(null).should.be.false;
     isFunc(undefined).should.be.false;
-    isFunc(() => {}).should.be.true;
+    isFunc(() => { }).should.be.true;
     isFunc(test).should.be.true;
   });
 
@@ -91,7 +91,7 @@ describe('Util - Type check', () => {
     isObject(false).should.be.false;
     isObject(null).should.be.false;
     isObject(undefined).should.be.false;
-    isObject(() => {}).should.be.false;
+    isObject(() => { }).should.be.false;
     isObject(test).should.be.false;
   });
 
@@ -104,7 +104,7 @@ describe('Util - Type check', () => {
     isString(false).should.be.false;
     isString(null).should.be.false;
     isString(undefined).should.be.false;
-    isString(() => {}).should.be.false;
+    isString(() => { }).should.be.false;
     isString(test).should.be.false;
   });
 

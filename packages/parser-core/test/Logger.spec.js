@@ -1,6 +1,6 @@
 import { should } from 'chai';
 
-import Logger, { LogLevel } from '../src/Logger';
+import Logger, { LogLevel } from '../lib/Logger';
 
 should(); // Initialize should
 
@@ -122,7 +122,7 @@ describe('Logger', () => {
       logger.info('info', 'test', 'log');
       current.should.equal(`[Logger] info test log`);
     });
-  
+
     it('warn test', () => {
       const logger = new Logger();
       logger.logLevel = LogLevel.WARN;
@@ -133,7 +133,7 @@ describe('Logger', () => {
       logger.warn('warn', 'test', 'log');
       current.should.equal(`[Logger] warn test log`);
     });
-  
+
     it('error test', () => {
       const logger = new Logger();
       logger.logLevel = LogLevel.ERROR;

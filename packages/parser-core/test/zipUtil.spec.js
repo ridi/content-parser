@@ -1,8 +1,8 @@
 import { expect, should } from 'chai';
 import fs from 'fs-extra';
 
-import Errors from '../src/errors';
-import openZip from '../src/zipUtil';
+import Errors from '../lib/errors';
+import openZip from '../lib/zipUtil';
 import Paths from '../../../test/paths';
 import TestSyncCryptoProvider from './testSyncCryptoProvider';
 import TestSyncStreamCryptoProvider from './testSyncStreamCryptoProvider';

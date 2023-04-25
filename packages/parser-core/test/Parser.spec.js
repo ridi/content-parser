@@ -1,16 +1,16 @@
 import { should, assert } from 'chai';
 import path from 'path';
 
-import CryptoProvider from '../src/CryptoProvider';
-import Errors from '../src/errors';
-import { LogLevel } from '../src/Logger';
-import Parser from '../src/Parser';
+import CryptoProvider from '../lib/CryptoProvider';
+import Errors from '../lib/errors';
+import { LogLevel } from '../lib/Logger';
+import Parser from '../lib/Parser';
 import Paths from '../../../test/paths';
-import { isString } from '../src/typecheck';
+import { isString } from '../lib/typecheck';
 
 should(); // Initialize should
 
-class TestCryptoProvider extends CryptoProvider {}
+class TestCryptoProvider extends CryptoProvider { }
 
 class Item {
   constructor(rawObj) {

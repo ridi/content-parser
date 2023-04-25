@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import fs from 'fs';
 
-import createSliceStream from '../src/createSliceStream';
+import createSliceStream from '../lib/createSliceStream';
 import Paths from '../../../test/paths';
 
 describe('Util - createSliceStream', () => {

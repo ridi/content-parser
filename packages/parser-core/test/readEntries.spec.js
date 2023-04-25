@@ -2,11 +2,11 @@ import { should, expect } from 'chai';
 import fs from 'fs';
 import path from 'path';
 
-import { readCacheFile, writeCacheFile } from '../src/cacheFile';
-import Errors from '../src/errors';
-import { isExists, isString } from '../src/typecheck';
-import readEntries from '../src/readEntries';
-import { stringContains } from '../src/stringUtil';
+import { readCacheFile, writeCacheFile } from '../lib/cacheFile';
+import Errors from '../lib/errors';
+import { isExists, isString } from '../lib/typecheck';
+import readEntries from '../lib/readEntries';
+import { stringContains } from '../lib/stringUtil';
 import Paths from '../../../test/paths';
 import TestSyncStreamCryptoProvider from './testSyncStreamCryptoProvider';
 import TestSyncCryptoProvider from './testSyncCryptoProvider';
@@ -252,7 +252,7 @@ describe('Util - entry manager', () => {
 
         const entry = entries.first;
         entry.entryPath.should.equal(Paths.PDF);
-        const file = await entry.getFile({encoding: 'utf-8'});
+        const file = await entry.getFile({ encoding: 'utf-8' });
         file.should.not.null;
       });
     });
