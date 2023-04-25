@@ -7,6 +7,7 @@ import {
   Errors,
   CryptoProvider,
   LogLevel,
+  BaseItem,
 } from "@ridi/parser-core";
 import sizeOf from "image-size";
 import naturalCompare from "string-natural-compare";
@@ -23,6 +24,18 @@ import {
 } from "@ridi/parser-core/lib/BaseReadContext";
 import { Task } from "@ridi/parser-core/lib/Parser";
 import { EntryBasicInformation } from "@ridi/parser-core/lib/readEntries";
+import { PassThrough, Stream } from "stream";
+import AdmZip, { IZipEntry } from "adm-zip";
+import crypto from "crypto";
+
+const MODE = "aes-128-cbc";
+
+function createStream(data: Buffer | string | null | undefined) {
+  const rv = new PassThrough(); // PassThrough is also a Readable stream
+  rv.push(data);
+  rv.push(null);
+  return rv;
+}
 
 type ComicReadOptionExtra = {
   base64: boolean;
@@ -40,7 +53,20 @@ type ImageMetaData = {
   height: number;
 };
 
-class ComicParser extends Parser {
+interface AltParser {
+  entries: {
+    [path: string]: IZipEntry;
+  };
+
+  init(input: string, options: { secretKey }): void;
+
+  readStream(item: BaseItem): Stream;
+}
+
+class ComicParser extends Parser implements AltParser {
+  entries!: {
+    [entryName: string]: IZipEntry;
+  };
   /**
    * Get default values of parse options
    */
@@ -223,6 +249,51 @@ class ComicParser extends Parser {
       Promise.resolve()
     );
     return results;
+  }
+
+  _secretKey: any;
+  init(input: string, { secretKey }: { secretKey: any }) {
+    if (this.entries) throw new Error("이미 entries 초기화 됨");
+
+    this._secretKey = secretKey;
+    this.entries = new AdmZip(input)
+      .getEntries()
+      .reduce<typeof this.entries>((acc, entry) => {
+        return {
+          ...acc,
+          [entry.entryName]: entry,
+        };
+      }, {});
+  }
+  readData(entryName: string) {
+    if (!this.entries)
+      throw new Error(
+        "entries가 초기화 되지 않음. 먼저 this.init()를 호출해주세요."
+      );
+
+    const entry = this.entries[entryName];
+
+    const data = entry.getData();
+    const iv = data.slice(0, 16);
+
+    const decipher = crypto.createDecipheriv(MODE, this._secretKey, iv);
+
+    return Buffer.concat([decipher.update(data.slice(16)), decipher.final()]);
+  }
+  readStream(entryName: string) {
+    if (!this.entries)
+      throw new Error(
+        "entries가 초기화 되지 않음. 먼저 this.init()를 호출해주세요."
+      );
+
+    const entry = this.entries[entryName];
+
+    const data = entry.getData();
+    const iv = data.slice(0, 16);
+
+    const decipher = crypto.createDecipheriv(MODE, this._secretKey, iv);
+
+    return createStream(data.slice(16)).pipe(decipher);
   }
 }
 
