@@ -60,7 +60,6 @@ export type EntryBasicInformation = {
     encoding?: BufferEncoding;
     end?: number;
   }): Promise<Buffer | string> | Buffer | string;
-  getStream(options?: { encoding?: BufferEncoding; end?: number }): Stream;
 };
 
 type ZipfileEntryInformation = {
@@ -93,15 +92,9 @@ function fromZip(
         return data;
       };
 
-      const getStream: EntryBasicInformation["getStream"] = () => {
-        throw new Error("테스트 중");
-        return Readable.from(file.getData());
-      };
-
       return {
         ...file,
         getFile,
-        getStream,
         entryPath: file.entryName,
         size: file.header.size,
         method: file.header.method,
@@ -190,31 +183,6 @@ function fromDirectory(
             }
             return file;
           },
-          getStream(options) {
-            throw new Error("테스트 중");
-            const { encoding, end } = options;
-            if (!fs.existsSync(fullPath)) {
-              removeCacheFile(dir);
-              throw createError(Errors.ENOFILE, fullPath);
-            }
-            const stream = fs.createReadStream(fullPath);
-            const totalSize = Math.min(end || Infinity, size);
-            stream
-              .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-              .pipe(
-                conditionally(
-                  cryptoProvider && !!cryptoProvider.isStreamMode,
-                  createCryptoStream(
-                    fullPath,
-                    totalSize,
-                    cryptoProvider,
-                    CryptoProvider.Purpose.READ_IN_DIR
-                  )
-                )
-              );
-
-            return stream;
-          },
           size,
         },
       ]);
@@ -279,33 +247,6 @@ function fromFile(
           file = trimEnd(file).toString(encoding);
         }
         return file;
-      },
-      getStream(options) {
-        throw new Error("테스트 중");
-        const { encoding, end } = options;
-        const streamOption =
-          cryptoProvider && cryptoProvider.bufferSize
-            ? { highWaterMark: cryptoProvider.bufferSize }
-            : {};
-
-        const stream = fs.createReadStream(filePath, streamOption);
-        let data = Buffer.from([]);
-        const totalSize = Math.min(end || Infinity, size);
-        stream
-          .pipe(conditionally(isExists(end), createSliceStream(0, end)))
-          .pipe(
-            conditionally(
-              cryptoProvider && !!cryptoProvider.isStreamMode,
-              createCryptoStream(
-                filePath,
-                totalSize,
-                cryptoProvider,
-                CryptoProvider.Purpose.READ_IN_DIR
-              )
-            )
-          );
-
-        return stream;
       },
       size,
     },
